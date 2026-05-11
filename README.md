@@ -1,2 +1,1 @@
-# kneo-agent.github.io
-Kneo Agent Platform
+# Kneo Agent Platform
