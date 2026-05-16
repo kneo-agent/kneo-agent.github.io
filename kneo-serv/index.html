@@ -395,10 +395,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sections" class="md-nav__link">
+  <a href="#capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sections
+        Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI quickstart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service quickstart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-and-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status and scope
       
     </span>
   </a>
@@ -1383,10 +1427,54 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sections" class="md-nav__link">
+  <a href="#capabilities" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sections
+        Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI quickstart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service quickstart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-and-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status and scope
       
     </span>
   </a>
@@ -1412,15 +1500,109 @@
 
 <p><a href="https://kneo-agent.github.io/">← Back to Kneo Agent</a></p>
 <h1 id="kneo-agent-platform">Kneo Agent Platform<a class="headerlink" href="#kneo-agent-platform" title="Permanent link">&para;</a></h1>
-<p>The service and control plane that runs Kneo Agent SDK agents in production —
-deployment, CLI, HTTP API, security hardening, observability, backup and
-recovery.</p>
-<h2 id="sections">Sections<a class="headerlink" href="#sections" title="Permanent link">&para;</a></h2>
+<p><strong>Kneo Agent Platform</strong> is the service and control plane for agents built on
+the Kneo Agent SDK. It is distributed as the <code>kneo-serv</code> Python package: a
+YAML spec compiler, a FastAPI service, a Typer CLI, durable run state,
+human-in-the-loop pause/resume, and pluggable persistence.</p>
+<p>Agent runtime, tools, MCP, and middleware primitives come from the SDK. The
+platform owns everything around them — spec compilation, run state,
+checkpoints, audit events, API-key auth, request limits, structured logging,
+and persistent backends.</p>
+<h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
+<p>Kneo Agent Platform 0.1.0 (<code>kneo-serv</code> 0.1.0) ships:</p>
 <ul>
-<li><a href="user/">User guides</a> — quickstart, deployment, operations, troubleshooting</li>
-<li><a href="pub/">Reference</a> — operation guide, tutorial, API reference, release notes</li>
-<li><a href="examples/">Examples</a> — agent specs, workflow definitions, project configs</li>
+<li>An SDK-backed <code>Agent</code> compatibility layer over <code>kneo-agent&gt;=1.1.1,&lt;2.0.0</code>.</li>
+<li>Bridge, native, and adapter runtime modes with retry, timeout, and
+  cancellation policies.</li>
+<li>A tool registry with MCP import, declarative tool policy, and a guarded
+  registry on top of SDK primitives.</li>
+<li>Sequential, graph, concurrent, handoff, and group-chat workflows.</li>
+<li>Human-in-the-loop pause/resume with durable workflow reconstruction.</li>
+<li>Persistent run state, checkpoints, audit events, and continuations on
+  in-memory, file, SQLite, or PostgreSQL stores, with versioned migrations.</li>
+<li>A durable worker queue with leases for background runs, cooperative
+  cancellation, and idempotency keys on retry-safe <code>POST</code>s.</li>
+<li>A FastAPI service with API-key auth, scope-based authorization, request
+  limits, structured JSON logs, and <code>/v1</code> versioned routes alongside legacy
+  paths.</li>
+<li>A Typer CLI for local and service-backed workflows, plus per-environment
+  service profiles.</li>
+<li>A spec parser, normalizer, validator, resolver, compiler, environment
+  overlays, signed spec bundles, and policy reports.</li>
+<li>Optional OpenTelemetry tracing through <code>kneo-agent[telemetry]</code>.</li>
+<li>Generated OpenAPI and CLI reference.</li>
+<li>Operational tooling for retention pruning, SQLite backup/restore, a seeded
+  PostgreSQL recovery drill, and deployment smoke tests.</li>
 </ul>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kneo-serv
+</code></pre></div>
+<p>The package exposes the <code>kneo</code> command.</p>
+<h2 id="cli-quickstart">CLI quickstart<a class="headerlink" href="#cli-quickstart" title="Permanent link">&para;</a></h2>
+<p>Validate, compile, and run a spec locally:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/research_agent.yaml
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;Analyze Nvidia AI business&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow
+</code></pre></div>
+<p>Inspect the resulting run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kneo<span class="w"> </span>runs<span class="w"> </span>get<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kneo<span class="w"> </span>runs<span class="w"> </span>trace<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>kneo<span class="w"> </span>runs<span class="w"> </span>checkpoints<span class="w"> </span>&lt;run_id&gt;
+</code></pre></div>
+<p>Resume a human-in-the-loop workflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
+</code></pre></div>
+<p>Local CLI runs persist state in <code>.kneo/kneo_runs.sqlite</code> and continuations in
+<code>.kneo/continuations</code> unless project config overrides those paths. For the
+full CLI surface, see <a href="user/cli/">CLI usage</a> and
+<a href="user/cli_reference/">CLI reference</a>.</p>
+<h2 id="service-quickstart">Service quickstart<a class="headerlink" href="#service-quickstart" title="Permanent link">&para;</a></h2>
+<p>Start the API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kneo<span class="w"> </span>service<span class="w"> </span>serve<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<p>For protected deployments, enable API-key auth:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:operator-token:operator;reviewer:reviewer-token:reviewer&#39;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_ADMIN_API_KEY</span><span class="o">=</span><span class="s1">&#39;admin-token&#39;</span>
+</code></pre></div>
+<p>Authenticated clients send either <code>Authorization: Bearer &lt;api-key&gt;</code> or
+<code>X-Kneo-Api-Key: &lt;api-key&gt;</code>; the CLI service client reads <code>KNEO_SERV_API_KEY</code>.
+The full HTTP contract, including worked <code>curl</code> examples, request limits,
+idempotency, cancellation, audit events, and policies, lives in
+<a href="user/service_api/">Platform service API</a>.</p>
+<p>Drive the service from the CLI by passing <code>--service-url</code> (or storing it in a
+profile):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEY</span><span class="o">=</span>operator-token
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span>staging<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>--service-url<span class="w"> </span>https://staging.example.com<span class="w"> </span>--api-key<span class="w"> </span>staging-token
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>kneo<span class="w"> </span>human<span class="w"> </span>list<span class="w"> </span>--profile<span class="w"> </span>staging
+</code></pre></div>
+<p>Profiles live at <code>~/.kneo_serv/profiles.json</code> with owner-only permissions;
+the CLI never prints stored tokens. See <a href="user/cli/">CLI usage</a> for the
+full profile workflow and
+<a href="user/tutorial_postgres_deployment/">Tutorial — deploying with PostgreSQL from zero</a>
+for a zero-to-running Docker Compose walkthrough.</p>
+<h2 id="status-and-scope">Status and scope<a class="headerlink" href="#status-and-scope" title="Permanent link">&para;</a></h2>
+<p>Kneo Agent Platform 0.1.0 is a production-ready release within its supported
+scope: single-tenant deployment, API-key auth with scope-based authorization,
+PostgreSQL or SQLite persistence, durable background runs, audit events, and
+signed spec bundles. See <a href="pub/release_notes_0.1.0/">Release notes 0.1.0</a>.</p>
+<p>Out of scope for the <code>0.1.x</code> series:</p>
+<ul>
+<li>OIDC, SSO, or per-user identity (auth is API-key only).</li>
+<li>Multi-region replication or cross-region failover.</li>
+<li>Cross-tenant isolation in a single deployment.</li>
+<li>Built-in dashboards (telemetry exports through OpenTelemetry).</li>
+</ul>
+<p>For upgrade conventions and version-specific notes, see
+<a href="user/upgrade/">Upgrade guide</a>.</p>
 
 
 
