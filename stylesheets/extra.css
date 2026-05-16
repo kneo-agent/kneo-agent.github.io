@@ -48,6 +48,16 @@
   width: auto;
 }
 
+/* Product wordmark injected by hooks/header_link.py in place of the
+   site-title text. Sized to match the company logo height; the image
+   has its own padding around the artwork. */
+.md-header__wordmark {
+  height: 1.6rem;
+  width: auto;
+  vertical-align: middle;
+  display: inline-block;
+}
+
 /* Responsive: scale the hero down on smaller screens. */
 @media (max-width: 48rem) {
   .md-typeset h1:first-of-type {
