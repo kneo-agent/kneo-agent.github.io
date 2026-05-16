@@ -196,18 +196,6 @@
       
     
     
-      <div class="md-header__source">
-        <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-      </div>
-    
   </nav>
   
 </header>
@@ -339,18 +327,6 @@
     </a>
     Kneo Agent Platform
   </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-    </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
     
@@ -1644,9 +1620,9 @@ and trace events.</p>
 <p>This tutorial walks the path from "I have a Python function" to "an agent
 uses it in production" so you can see every layer the call passes through.</p>
 <p>For the recipe-style summary, see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#1-custom-tool"><code>extending.md § 1</code></a>. For the public-API
+<code>extending.md § 1</code>. For the public-API
 surface, see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/implementation_map.md#tools-toolmcp-registry"><code>implementation_map.md § tools/</code></a>.</p>
+<code>implementation_map.md § tools/</code>.</p>
 <h2 id="what-were-building">What we're building<a class="headerlink" href="#what-were-building" title="Permanent link">&para;</a></h2>
 <p>A <code>lookup_user</code> tool that takes a user id and returns the user's
 email. We'll start with a function, register it as a tool, and run a
@@ -1681,7 +1657,7 @@ small agent that uses it.</p>
 </ul>
 <h2 id="2-register-the-tool-with-toolregistry">2 · Register the tool with <code>ToolRegistry</code><a class="headerlink" href="#2-register-the-tool-with-toolregistry" title="Permanent link">&para;</a></h2>
 <p>Tools live in a <code>ToolRegistry</code>. The default service registry is built
-in <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L111"><code>service/factory.py</code></a>; to
+in <code>service/factory.py</code>; to
 add a custom tool you need a registry that includes it. The cleanest
 approach is to construct a custom registry and pass it into the
 platform manager.</p>
@@ -1813,7 +1789,7 @@ review; see <a href="../environment/#observability"><code>environment.md</code> 
 <p>The audit log records the run (not individual tool calls) at
 <code>run.created</code> / <code>run.cancelled</code> / <code>run.continued</code>. Tool arguments are
 not persisted in audit events under any flag — see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#audit-payload-review">production_readiness_review.md § Audit Payload Review</a>.</p>
+production_readiness_review.md § Audit Payload Review.</p>
 <h2 id="6-lock-down-the-tool-with-policy">6 · Lock down the tool with policy<a class="headerlink" href="#6-lock-down-the-tool-with-policy" title="Permanent link">&para;</a></h2>
 <p>For production, restrict what the agent can do with your tool. Add to
 the spec under <code>agent</code>:</p>
@@ -1904,9 +1880,9 @@ references it, including service-backed CLI calls and HTTP <code>POST /v1/runs</
 <ul>
 <li>More examples and orchestration patterns: <a href="../examples/"><code>examples.md</code></a>.</li>
 <li>Custom MCP servers (similar pattern, externally hosted tools):
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#2-custom-mcp-server"><code>extending.md</code> § 2</a>.</li>
+  <code>extending.md</code> § 2.</li>
 <li>Custom middleware around tool calls (rate-limiting, logging):
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#3-custom-middleware"><code>extending.md</code> § 3</a>.</li>
+  <code>extending.md</code> § 3.</li>
 </ul>
 
 

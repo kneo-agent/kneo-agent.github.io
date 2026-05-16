@@ -196,18 +196,6 @@
       
     
     
-      <div class="md-header__source">
-        <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-      </div>
-    
   </nav>
   
 </header>
@@ -339,18 +327,6 @@
     </a>
     Kneo Agent Platform
   </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-    </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
     
@@ -4617,7 +4593,7 @@ swap:</p>
 <h4 id="6-lock-down-container-and-host">6. Lock down container and host<a class="headerlink" href="#6-lock-down-container-and-host" title="Permanent link">&para;</a></h4>
 <p>The bundled Dockerfile already enforces a non-root user (<code>kneo</code>); you
 do not need to override it.
-(<a href="https://github.com/kneo-agent/kneo-serv/blob/main/Dockerfile"><code>Dockerfile</code></a>)</p>
+(<code>Dockerfile</code>)</p>
 <ul>
 <li>[ ] Container runs as the non-root <code>kneo</code> user (default).</li>
 <li>[ ] Image is pulled from a trusted registry; tags are pinned by digest
@@ -4676,7 +4652,7 @@ inventing it:</p>
   aggregator.</li>
 </ul>
 <p>These are tracked in the roadmap, not bugs. See
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/roadmap.md"><code>docs/plan/roadmap.md</code></a>.</p>
+<code>docs/plan/roadmap.md</code>.</p>
 <h2 id="observability">Observability<a class="headerlink" href="#observability" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/observability/"><code>docs/user/observability.md</code></a></em></p>
 <p>Operator guide for wiring <code>kneo-serv</code>'s structured logs, request tracing,
@@ -4736,7 +4712,7 @@ from your reverse-proxy access logs or from OTel span attributes.</p>
 them: <code>run_id</code>, <code>continuation_id</code>. When the request raises:
 <code>error</code> (exception class name) and <code>message</code> (exception message).
 Redaction is applied to every payload before it reaches the log line.
-(<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/observability/structured_logging.py"><code>kneo_serv/observability/structured_logging.py</code></a>)</p>
+(<code>kneo_serv/observability/structured_logging.py</code>)</p>
 <h4 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
@@ -4874,8 +4850,8 @@ aggregated logs; the service does not push its own alerts.</p>
   reverse proxy.</li>
 <li><strong>Tracing internals.</strong> For the design of the in-process tracer and
   checkpoint events, see
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md"><code>docs/dev/design.md</code></a> and
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/implementation_map.md"><code>docs/dev/implementation_map.md</code></a>.</li>
+  <code>docs/dev/design.md</code> and
+  <code>docs/dev/implementation_map.md</code>.</li>
 </ul>
 <h2 id="backup-and-recovery">Backup and recovery<a class="headerlink" href="#backup-and-recovery" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/backup_and_recovery/"><code>docs/user/backup_and_recovery.md</code></a></em></p>
@@ -5118,19 +5094,19 @@ through at least one business cycle.</p>
 <ul>
 <li><strong>Performance and capacity sizing.</strong> Deferred until the benchmark
   suite ships — see
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/TODO-docs.md"><code>TODO-docs.md § Performance and capacity guide</code></a>.</li>
+  <code>TODO-docs.md § Performance and capacity guide</code>.</li>
 <li><strong>The Python backup API surface.</strong> Stays in
   <a href="../../user/service_api/#backup-and-restore"><code>service_api.md § Backup and restore</code></a>.</li>
 <li><strong>Release-team verification gates</strong> for the GA cut. Those live in
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md"><code>release_checklist.md</code></a>.</li>
+  <code>release_checklist.md</code>.</li>
 </ul>
 <h2 id="upgrade-guide">Upgrade guide<a class="headerlink" href="#upgrade-guide" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/upgrade/"><code>docs/user/upgrade.md</code></a></em></p>
 <p>Conventions for upgrading Kneo Agent Platform (<code>kneo-serv</code>) between
 releases, plus version-specific notes when a release has breaking changes.</p>
 <p>For the release process itself (gates, tagging, artifacts), see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a>. For the supported
-<code>kneo_agent</code> SDK range, see <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/sdk_alignment.md">sdk_alignment.md</a>.</p>
+release_checklist.md. For the supported
+<code>kneo_agent</code> SDK range, see sdk_alignment.md.</p>
 <h3 id="versioning">Versioning<a class="headerlink" href="#versioning" title="Permanent link">&para;</a></h3>
 <p>Kneo Agent Platform follows semantic versioning:</p>
 <ul>
@@ -5145,7 +5121,7 @@ releases, plus version-specific notes when a release has breaking changes.</p>
 </ul>
 <p>The HTTP API is also versioned at the URL prefix (<code>/v1</code>); legacy unversioned
 routes remain available alongside <code>/v1</code>. See
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md#13-stability-and-versioning">design.md § 13</a>.</p>
+design.md § 13.</p>
 <h3 id="standard-upgrade-procedure">Standard upgrade procedure<a class="headerlink" href="#standard-upgrade-procedure" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>Read the release notes</strong> for every minor/major version between your
@@ -5187,7 +5163,7 @@ running on a partially-migrated schema. Fix the underlying cause
 <p>Downgrades are not supported. Restore from backup if you need to revert.</p>
 <p>For contributors authoring new migrations (conventions, the dialect
 portability rules, the test patterns), see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/migrations.md"><code>docs/dev/migrations.md</code></a>.</p>
+<code>docs/dev/migrations.md</code>.</p>
 <h3 id="spec-migrations">Spec migrations<a class="headerlink" href="#spec-migrations" title="Permanent link">&para;</a></h3>
 <p>The YAML spec format is versioned at <code>version: v1</code>. The compiler accepts
 older shapes through automatic normalization, but for clarity the CLI can
@@ -5222,7 +5198,7 @@ release notes:</p>
 <li>Removed variables are removed only at major versions.</li>
 </ul>
 <p>After upgrading, diff your env file against the latest
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/deploy/production.env.example">deploy/production.env.example</a> (or
+deploy/production.env.example (or
 <code>staging.env.example</code>) to spot any new optional variables.</p>
 <h3 id="cli-changes">CLI changes<a class="headerlink" href="#cli-changes" title="Permanent link">&para;</a></h3>
 <p>The <code>kneo</code> CLI is regenerated each release; see
@@ -5299,7 +5275,7 @@ them from anywhere you can reach the service port.</p>
 <p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code> with
 <code>{"error": "not_ready", "metadata": {"checks": {...}}}</code>. The keys you
 will see and what each means:
-(<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/routes_health.py"><code>kneo_serv/service/routes_health.py</code></a>)</p>
+(<code>kneo_serv/service/routes_health.py</code>)</p>
 <table>
 <thead>
 <tr>
@@ -5338,13 +5314,13 @@ will see and what each means:
 <td><code>runtime_registry</code></td>
 <td>Number of registered runtimes (declared via factories)</td>
 <td>Empty registry — service started without runtimes</td>
-<td><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md"><code>extending.md</code></a> for runtime registration</td>
+<td><code>extending.md</code> for runtime registration</td>
 </tr>
 <tr>
 <td><code>tool_registry</code></td>
 <td>Number of registered tools</td>
 <td>Empty registry — service started without tools</td>
-<td><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md"><code>extending.md</code></a></td>
+<td><code>extending.md</code></td>
 </tr>
 <tr>
 <td><code>providers</code></td>
@@ -5463,7 +5439,7 @@ progress. Diagnose first.</p>
   not by <code>kneo-serv</code>.</li>
 <li><strong>Post-incident review template.</strong> Out of scope.</li>
 <li><strong>Failure modes during a <code>kneo-serv</code> release itself</strong> — those are in
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md"><code>release_checklist.md</code></a> and
+  <code>release_checklist.md</code> and
   <a href="#9-release-and-supply-chain"><code>troubleshooting.md § 9</code></a>.</li>
 </ul>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
@@ -5482,7 +5458,7 @@ one of its check entries.</p>
 <h3 id="1-service-wont-start-or-wont-accept-traffic">1. Service won't start or won't accept traffic<a class="headerlink" href="#1-service-wont-start-or-wont-accept-traffic" title="Permanent link">&para;</a></h3>
 <h4 id="11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured">1.1 <code>RuntimeError: KNEO service auth is enabled but no API keys are configured</code><a class="headerlink" href="#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured" title="Permanent link">&para;</a></h4>
 <p>The service refuses to start when auth is enabled without keys.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L109"><code>service/auth.py</code></a></p>
+<code>service/auth.py</code></p>
 <ul>
 <li>Confirm: check the startup log for the message above.</li>
 <li>Fix: set <code>KNEO_SERV_API_KEYS</code> (entries are
@@ -5490,12 +5466,12 @@ one of its check entries.</p>
   <code>KNEO_SERV_ADMIN_API_KEY</code>. To run without auth, set
   <code>KNEO_SERV_AUTH_ENABLED=false</code> (only for local dev).</li>
 <li>Reference: <a href="../../user/environment/#service-auth">environment.md § Service Auth</a>,
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md">production_readiness_review.md § Role Boundary Review</a>.</li>
+  production_readiness_review.md § Role Boundary Review.</li>
 </ul>
 <h4 id="12-readyz-returns-503">1.2 <code>/readyz</code> returns 503<a class="headerlink" href="#12-readyz-returns-503" title="Permanent link">&para;</a></h4>
 <p><code>GET /readyz</code> returns
 <code>{"error": "not_ready", "metadata": {"checks": {...}}}</code> when any dependency
-check fails. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/routes_health.py#L53"><code>service/routes_health.py</code></a></p>
+check fails. <code>service/routes_health.py</code></p>
 <ul>
 <li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq</code>. Each per-dependency
   entry has <code>ok: false</code> plus <code>error</code> and <code>message</code> for failed checks.</li>
@@ -5509,7 +5485,7 @@ check fails. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_ser
 <p>The default <code>app</code> factory configures the platform manager automatically. This
 error appears when you pass <code>configure_default_manager=False</code> to
 <code>create_app()</code> and never call <code>set_platform_manager()</code> before serving.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/dependencies.py#L26"><code>service/dependencies.py</code></a></p>
+<code>service/dependencies.py</code></p>
 <ul>
 <li>Fix: either drop the override, or call
   <code>kneo_serv.service.dependencies.set_platform_manager(...)</code> before the first
@@ -5518,19 +5494,19 @@ error appears when you pass <code>configure_default_manager=False</code> to
 <h4 id="14-runtimeerror-invalid-kneo_serv_api_keys-entry">1.4 <code>RuntimeError: Invalid KNEO_SERV_API_KEYS entry</code><a class="headerlink" href="#14-runtimeerror-invalid-kneo_serv_api_keys-entry" title="Permanent link">&para;</a></h4>
 <p>The format is <code>name:key:role_or_scope[,role_or_scope]</code> per entry, separated
 by semicolons. Whitespace inside entries is trimmed; missing colons trigger
-this error. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L169"><code>service/auth.py</code></a></p>
+this error. <code>service/auth.py</code></p>
 <ul>
 <li>Fix: re-render <code>KNEO_SERV_API_KEYS</code>. Examples:</li>
 <li><code>operator:OP_TOKEN:operator;reviewer:REV_TOKEN:reviewer</code></li>
 <li><code>svc:SVC_TOKEN:runs:write,human:read,human:write</code></li>
 <li>Reference: <a href="../../user/environment/#service-auth">environment.md § Service Auth</a>,
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</li>
+  production_readiness_review.md § Route Scope Matrix.</li>
 </ul>
 <h3 id="2-persistence-and-store-failures">2. Persistence and store failures<a class="headerlink" href="#2-persistence-and-store-failures" title="Permanent link">&para;</a></h3>
 <h4 id="21-postgresql-dsn-configured-but-service-falls-back-to-sqlite">2.1 PostgreSQL DSN configured but service falls back to SQLite<a class="headerlink" href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite" title="Permanent link">&para;</a></h4>
 <p>The service uses PostgreSQL only when <code>KNEO_SERV_DATABASE_URL</code> is set <strong>and</strong>
 the <code>[postgres]</code> or <code>[deploy]</code> extra is installed. See
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L140"><code>service/factory.py</code></a>.</p>
+<code>service/factory.py</code>.</p>
 <ul>
 <li>Confirm: in a dev shell, <code>python -c "import psycopg; print(psycopg.__version__)"</code>.</li>
 <li>Fix: install <code>kneo-serv[deploy]</code> (Docker image already does this), or
@@ -5569,14 +5545,14 @@ incompatible SQLite versions can fail.</p>
 <ul>
 <li>Fix: align <code>sqlite3</code> versions, or migrate to PostgreSQL where backup goes
   through <code>pg_dump</code> / <code>pg_restore</code>. See
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/staging_release_runbook.md">staging_release_runbook.md</a> and
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a> for the seeded recovery drill.</li>
+  staging_release_runbook.md and
+  release_checklist.md for the seeded recovery drill.</li>
 </ul>
 <h3 id="3-secrets-credentials-and-provider-integration">3. Secrets, credentials, and provider integration<a class="headerlink" href="#3-secrets-credentials-and-provider-integration" title="Permanent link">&para;</a></h3>
 <h4 id="31-missingsecreterror-on-agent-run">3.1 <code>MissingSecretError</code> on agent run<a class="headerlink" href="#31-missingsecreterror-on-agent-run" title="Permanent link">&para;</a></h4>
 <p>Provider keys, MCP credentials, and runtime settings are resolved through
 env-var references in project config; raw values are never stored.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/security/secrets.py#L39"><code>security/secrets.py</code></a></p>
+<code>security/secrets.py</code></p>
 <ul>
 <li>Confirm: <code>kneo config secrets --json</code> lists which references exist
   and whether each resolves. The endpoint
@@ -5604,7 +5580,7 @@ verification.</p>
 <h3 id="4-authentication-and-authorization">4. Authentication and authorization<a class="headerlink" href="#4-authentication-and-authorization" title="Permanent link">&para;</a></h3>
 <h4 id="41-401-unauthorized-a-valid-kneo-service-api-key-is-required">4.1 <code>401 Unauthorized — A valid Kneo service API key is required</code><a class="headerlink" href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required" title="Permanent link">&para;</a></h4>
 <p>The route requires auth and the request didn't carry a valid token.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L152"><code>service/auth.py</code></a></p>
+<code>service/auth.py</code></p>
 <ul>
 <li>Confirm: send <code>Authorization: Bearer &lt;key&gt;</code> or <code>X-Kneo-Api-Key: &lt;key&gt;</code>.</li>
 <li>Fix: use one of the configured keys. The CLI service client reads
@@ -5613,12 +5589,12 @@ verification.</p>
 </ul>
 <h4 id="42-403-forbidden-missing-required-scope-scope">4.2 <code>403 Forbidden — Missing required scope: &lt;scope&gt;</code><a class="headerlink" href="#42-403-forbidden-missing-required-scope-scope" title="Permanent link">&para;</a></h4>
 <p>The token authenticated but the principal does not hold the scope the route
-requires. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L140"><code>service/auth.py</code></a></p>
+requires. <code>service/auth.py</code></p>
 <ul>
 <li>Confirm: the scope in the error body tells you exactly what is missing.</li>
 <li>Fix: assign the principal a role that includes the scope, or add the
   scope explicitly in <code>KNEO_SERV_API_KEYS</code>. See the route ↔ scope matrix in
-  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md">production_readiness_review.md</a>.</li>
+  production_readiness_review.md.</li>
 <li>Common gotchas:</li>
 <li><code>POST /specs/run</code> requires <code>runs:write</code>, not <code>specs:read</code>.</li>
 <li>Reviewer cannot create runs or change policies.</li>
@@ -5628,11 +5604,11 @@ requires. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/s
 <p><code>/healthz</code>, <code>/livez</code>, and <code>/readyz</code> are intentionally unauthenticated for
 load-balancer probes. Everything else is gated by the auth dependency. This
 is by design; see
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</p>
+production_readiness_review.md § Route Scope Matrix.</p>
 <h3 id="5-run-lifecycle-problems">5. Run lifecycle problems<a class="headerlink" href="#5-run-lifecycle-problems" title="Permanent link">&para;</a></h3>
 <h4 id="51-async-runs-sit-in-queued-and-never-progress">5.1 Async runs sit in <code>queued</code> and never progress<a class="headerlink" href="#51-async-runs-sit-in-queued-and-never-progress" title="Permanent link">&para;</a></h4>
 <p>The platform worker is started by <code>create_default_platform_manager()</code> in
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L118"><code>service/factory.py</code></a>. If a custom
+<code>service/factory.py</code>. If a custom
 embedding skips <code>manager.start_worker()</code>, queued runs never drain.</p>
 <ul>
 <li>Confirm: <code>GET /runs?status=queued</code> shows queued items; <code>GET /readyz</code> shows
@@ -5664,7 +5640,7 @@ call blocks, the step blocks too.</p>
 </ul>
 <h4 id="54-409-conflict-idempotency_key_conflict">5.4 <code>409 Conflict — idempotency_key_conflict</code><a class="headerlink" href="#54-409-conflict-idempotency_key_conflict" title="Permanent link">&para;</a></h4>
 <p><code>Idempotency-Key</code> was reused with a different request body for the same
-scope. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/idempotency.py#L52"><code>service/idempotency.py</code></a></p>
+scope. <code>service/idempotency.py</code></p>
 <ul>
 <li>Fix: pick a new key for the new request body, or reuse the same body for
   the original key. Idempotency records hash the canonical JSON of the
@@ -5672,14 +5648,14 @@ scope. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/serv
 </ul>
 <h4 id="55-400-bad-request-invalid_idempotency_key">5.5 <code>400 Bad Request — invalid_idempotency_key</code><a class="headerlink" href="#55-400-bad-request-invalid_idempotency_key" title="Permanent link">&para;</a></h4>
 <p><code>Idempotency-Key</code> headers must be 1–256 characters after trimming.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/idempotency.py#L23"><code>service/idempotency.py</code></a></p>
+<code>service/idempotency.py</code></p>
 <ul>
 <li>Fix: shorten the key. UUIDs are sufficient.</li>
 </ul>
 <h3 id="6-spec-validation-and-compilation">6. Spec validation and compilation<a class="headerlink" href="#6-spec-validation-and-compilation" title="Permanent link">&para;</a></h3>
 <h4 id="61-speccompilationerror-with-diagnostics">6.1 <code>SpecCompilationError</code> with diagnostics<a class="headerlink" href="#61-speccompilationerror-with-diagnostics" title="Permanent link">&para;</a></h4>
 <p><code>SpecCompiler</code> raises this on either schema or semantic validation failure.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/spec/compiler.py#L57"><code>spec/compiler.py</code></a></p>
+<code>spec/compiler.py</code></p>
 <ul>
 <li>Confirm: <code>kneo spec validate &lt;path&gt;</code> prints the same diagnostics
   with location info.</li>
@@ -5691,7 +5667,7 @@ scope. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/serv
 </ul>
 <h4 id="62-valueerror-tool-name-has-no-implementation">6.2 <code>ValueError: Tool '&lt;name&gt;' has no implementation</code><a class="headerlink" href="#62-valueerror-tool-name-has-no-implementation" title="Permanent link">&para;</a></h4>
 <p>The spec references a tool name that is not registered with the
-<code>ToolRegistry</code>. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/spec/builder.py#L42"><code>spec/builder.py</code></a></p>
+<code>ToolRegistry</code>. <code>spec/builder.py</code></p>
 <ul>
 <li>Fix: register the tool (programmatically or via MCP import), or remove
   the reference. The default service registers example tools; toggle with
@@ -5699,7 +5675,7 @@ scope. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/serv
 </ul>
 <h4 id="63-inline-spec-rejected-with-size-error">6.3 Inline spec rejected with size error<a class="headerlink" href="#63-inline-spec-rejected-with-size-error" title="Permanent link">&para;</a></h4>
 <p>Inline specs and overrides are bounded.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/limits.py#L62"><code>service/limits.py</code></a></p>
+<code>service/limits.py</code></p>
 <ul>
 <li>Fix: tune the relevant limit (<code>KNEO_SERV_MAX_INLINE_SPEC_BYTES</code>,
   <code>KNEO_SERV_MAX_OVERRIDES_BYTES</code>, <code>KNEO_SERV_MAX_METADATA_BYTES</code>,
@@ -5744,7 +5720,7 @@ disabled tracing.</p>
 <h4 id="81-lockacquisitionerror-on-resume">8.1 <code>LockAcquisitionError</code> on resume<a class="headerlink" href="#81-lockacquisitionerror-on-resume" title="Permanent link">&para;</a></h4>
 <p>A <code>POST /human-tasks/{continuation_id}/resume</code> failed because another
 caller currently holds the resume lock for the same continuation.
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/platform/manager.py#L522"><code>platform/manager.py</code></a></p>
+<code>platform/manager.py</code></p>
 <ul>
 <li>Confirm: the error body identifies the lock name. The first caller is
   still in flight.</li>
@@ -5760,9 +5736,9 @@ returns 404.</p>
 </ul>
 <h3 id="9-release-and-supply-chain">9. Release and supply chain<a class="headerlink" href="#9-release-and-supply-chain" title="Permanent link">&para;</a></h3>
 <p>For release-flow issues (mypy, pip-audit, build, tag, publish), follow
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a> and
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/supply_chain_review.md">supply_chain_review.md</a>. The release workflow at
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/.github/workflows/release.yml"><code>.github/workflows/release.yml</code></a> emits the
+release_checklist.md and
+supply_chain_review.md. The release workflow at
+<code>.github/workflows/release.yml</code> emits the
 gate that failed in its job summary.</p>
 <h3 id="what-to-capture-before-opening-a-bug">What to capture before opening a bug<a class="headerlink" href="#what-to-capture-before-opening-a-bug" title="Permanent link">&para;</a></h3>
 <p>When a problem isn't covered above:</p>

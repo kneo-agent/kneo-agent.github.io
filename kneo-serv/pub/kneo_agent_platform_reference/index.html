@@ -196,18 +196,6 @@
       
     
     
-      <div class="md-header__source">
-        <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-      </div>
-    
   </nav>
   
 </header>
@@ -339,18 +327,6 @@
     </a>
     Kneo Agent Platform
   </label>
-  
-    <div class="md-nav__source">
-      <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
-  <div class="md-source__icon md-icon">
-    
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
-  </div>
-  <div class="md-source__repository">
-    kneo-agent/kneo-serv
-  </div>
-</a>
-    </div>
   
   <ul class="md-nav__list" data-md-scrollfix>
     
@@ -5269,7 +5245,7 @@ Each write records a <code>policy.changed</code> audit event.</p>
 <p>Common error codes: <code>unauthorized</code> (401), <code>forbidden</code> (403),
 <code>invalid_request</code> (400), <code>not_found</code> (404), <code>idempotency_key_conflict</code>
 (409), <code>payload_too_large</code> (413), <code>not_ready</code> (503). Errors map through
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/errors.py"><code>service/errors.py</code></a>.</p>
+<code>service/errors.py</code>.</p>
 <h3 id="pagination-filtering-and-sorting">Pagination, filtering, and sorting<a class="headerlink" href="#pagination-filtering-and-sorting" title="Permanent link">&para;</a></h3>
 <p>List-style endpoints return the original collection field plus pagination
 metadata:</p>
@@ -5698,7 +5674,7 @@ draft and publish. Use it to exercise the pause/resume API.</p>
 <a id="__codelineno-99-3" name="__codelineno-99-3" href="#__codelineno-99-3"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
 </code></pre></div>
 <p>The deeper human-task documentation is in
-<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md#85-human-in-the-loop-pauseresume"><code>design.md § 8.5</code></a> and
+<code>design.md § 8.5</code> and
 the <a href="#platform-service-api">HTTP API's <code>/human-tasks/...</code> endpoints</a>.</p>
 <h4 id="smoke_human_workflowyaml"><a href="../../examples/smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a><a class="headerlink" href="#smoke_human_workflowyaml" title="Permanent link">&para;</a></h4>
 <p>Lightweight human-in-the-loop spec that uses the <code>dummy</code> provider so it
@@ -5734,7 +5710,7 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
    the corresponding env-var reference under your project secrets.</li>
 <li>Replace the tools with real ones — either Python functions registered
    through <code>ToolRegistry</code> or MCP servers (see
-   <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md"><code>extending.md</code></a>).</li>
+   <code>extending.md</code>).</li>
 <li>Validate against your target environment:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-102-1" name="__codelineno-102-1" href="#__codelineno-102-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
