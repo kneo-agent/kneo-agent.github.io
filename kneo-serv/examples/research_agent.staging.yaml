@@ -1,0 +1,10 @@
+agent:
+  model:
+    name: gpt-4o
+    temperature: 0.2
+  strategy:
+    max_iterations: 8
+
+policy_defaults:
+  tracing:
+    enabled: true

@@ -1,0 +1,44 @@
+version: v1
+
+agent:
+  name: smoke-root
+  system_prompt: Root smoke-test agent.
+  model:
+    provider: dummy
+    name: smoke-model
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: sequential
+  name: smoke-human-workflow
+  steps:
+    - id: approve
+      kind: human
+      ref: smoke-reviewer
+    - id: respond
+      kind: agent
+      ref: smoke-responder
+
+components:
+  agents:
+    smoke-responder:
+      name: smoke-responder
+      system_prompt: Complete the deployment smoke request.
+      model:
+        provider: dummy
+        name: smoke-model
+      strategy:
+        type: simple
+      runtime_preferences:
+        preferred_mode: bridge
+        allowed_modes: [bridge]
+  humans:
+    smoke-reviewer:
+      description: Approve the deployment smoke request.
+      assignee: reviewer@example.com
+      timeout_seconds: 3600
+      on_timeout: escalate

@@ -1,0 +1,13 @@
+agent:
+  model:
+    name: gpt-4o
+    temperature: 0.1
+  strategy:
+    max_iterations: 12
+
+policy_defaults:
+  checkpointing:
+    enabled: true
+    mode: step
+  tracing:
+    enabled: true

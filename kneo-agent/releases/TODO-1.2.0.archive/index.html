@@ -1,0 +1,2051 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="kneo-agent — Python SDK for building agents">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-agent/releases/TODO-1.2.0.archive/">
+      
+      
+        <link rel="prev" href="../../examples/skills/weather/references/REFERENCE/">
+      
+      
+        <link rel="next" href="../v1.2.0/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Release Checklist — kneo-agent v1.2.0 - kneo-agent SDK</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#release-checklist-kneo-agent-v120" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="kneo-agent SDK" class="md-header__button md-logo" aria-label="kneo-agent SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kneo-agent SDK
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Release Checklist — kneo-agent v1.2.0
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kneo-agent/kneo" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  kneo-agent SDK
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/skills/weather/SKILL/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Releases
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/agent_middleware_guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="kneo-agent SDK" class="md-nav__button md-logo" aria-label="kneo-agent SDK" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kneo-agent SDK
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kneo-agent/kneo" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kneo-agent SDK
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_1" id="__nav_2_1_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weather
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Weather
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/weather/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weather Skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_1_1_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_1_2" id="__nav_2_1_1_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    References
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_1_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_1_1_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    References
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/weather/references/REFERENCE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Weather Skill Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Releases
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Releases
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Checklist — kneo-agent v1.2.0
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release Checklist — kneo-agent v1.2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-v111-already-gives-us-do-not-redo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What v1.1.1 already gives us (do not redo)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-decide-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Decide scope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Decide scope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tier-a-high-leverage-mostly-net-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier A — High-leverage, mostly net-new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-b-finish-whats-already-half-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier B — Finish what's already half-done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-c-small-lift-high-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier C — Small lift, high signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-d-audit-gaps-to-fold-in-cheaply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier D — Audit gaps to fold in cheaply
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-15-release-quality-test-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1.5 — Release-quality test gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-not-the-sdks-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope — not the SDK's job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-in-flight-cleanup-already-on-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — In-flight cleanup (already on disk)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-per-feature-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Per-feature work
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-release-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Release mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-post-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Post-release
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v1.2.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V1.2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/agent_middleware_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Middleware Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/agent_skills_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent Skills Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/api_stability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Stability and Deprecation Policy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/human_in_the_loop_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Human In The Loop Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/mcp_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/offline_install/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Offline / air-gapped install
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/self_hosted_observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Self-hosted observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/upgrading_to_1.2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrading to 1.2.0
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-v111-already-gives-us-do-not-redo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What v1.1.1 already gives us (do not redo)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-decide-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Decide scope
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Decide scope">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tier-a-high-leverage-mostly-net-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier A — High-leverage, mostly net-new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-b-finish-whats-already-half-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier B — Finish what's already half-done
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-c-small-lift-high-signal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier C — Small lift, high signal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tier-d-audit-gaps-to-fold-in-cheaply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier D — Audit gaps to fold in cheaply
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-15-release-quality-test-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1.5 — Release-quality test gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#out-of-scope-not-the-sdks-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Out of scope — not the SDK's job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-in-flight-cleanup-already-on-disk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — In-flight cleanup (already on disk)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-per-feature-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Per-feature work
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-release-mechanics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Release mechanics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-post-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Post-release
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="release-checklist-kneo-agent-v120">Release Checklist — kneo-agent v1.2.0<a class="headerlink" href="#release-checklist-kneo-agent-v120" title="Permanent link">&para;</a></h1>
+<p>Tracks the next minor release after v1.1.1 (tagged 2026-05-03).</p>
+<p>State at the time this file was written:
+- <code>pyproject.toml</code> version: <code>1.1.1</code>
+- Latest tag: <code>v1.1.1</code>
+- <code>CHANGELOG.md</code> <code>[Unreleased]</code>: empty
+- Uncommitted: <code>docs/README.md</code> rewrite + new <code>docs/README-dev.md</code>
+  (mirrors the top-level README split done in 1.1.1)</p>
+<p>A minor bump (1.1.1 → 1.2.0) requires at least one user-facing
+Added/Changed entry. If nothing in Phase 1 lands, this should ship as
+1.1.2 instead.</p>
+<blockquote>
+<p><strong>What kneo-agent is.</strong> A Python <em>library / SDK</em> — <code>pip install
+kneo-agent</code>, <code>import kneo_agent</code>. Users build their own application
+around it (a script, a worker, a FastAPI handler, a Lambda, a
+notebook). The SDK does not ship a daemon, an HTTP server, a CLI
+entry point, container images, deployment manifests, or an ops
+runtime. Anything in this checklist that sounds like "deploy
+kneo-agent" really means "make it easy for the user's application
+to integrate kneo-agent." Service-container concerns belong in a
+separate downstream product (see <em>Out of scope</em> below).</p>
+</blockquote>
+<p><strong>Target audience:</strong> small / medium enterprise users, open-source
+developers, on-premise / self-hosted deployments, and <strong>enterprise
+data-source / service integration via tools and MCP</strong>. Prioritization
+rubric for everything below:</p>
+<ul>
+<li><strong>SME wins:</strong> production reliability, cost control, observability,
+  drop-in defaults, predictable upgrades.</li>
+<li><strong>OSS-developer wins:</strong> clear extension points, low-friction
+  contribution flow, stable public surface, runnable recipes.</li>
+<li><strong>On-prem wins:</strong> works fully air-gapped (no required egress), local
+  / self-hosted LLM support, configurable provider endpoints
+  (<code>base_url</code>), self-hosted observability backends, <strong>plays cleanly
+  with whatever container / orchestration the user already has</strong>, no
+  telemetry phone-home, reproducible installs.</li>
+<li><strong>Enterprise integration wins:</strong> agents reach internal data sources
+  (SQL, object stores, file shares, search indices) and internal
+  services (REST/gRPC, queues, ticketing/CRM/ERP) via tools and MCP,
+  with credentials plumbed through a documented secret-loading pattern
+  rather than embedded in prompts or tool args.</li>
+<li>Deprioritize features that only pay off at large-enterprise scale
+  (SSO/RBAC/audit at the SDK layer), single-team niches, anything
+  that hard-codes SaaS-only assumptions, or anything that turns the
+  SDK into a service runtime.</li>
+</ul>
+<hr />
+<h2 id="what-v111-already-gives-us-do-not-redo">What v1.1.1 already gives us (do not redo)<a class="headerlink" href="#what-v111-already-gives-us-do-not-redo" title="Permanent link">&para;</a></h2>
+<p>Audit on 2026-05-04 confirmed these are already in the codebase. Phase 1
+focuses on <em>new</em> work; touch these only to document or extend.</p>
+<ul>
+<li><strong>Middleware framework.</strong> <code>AgentMiddleware</code> Protocol + four hooks
+  (<code>wrap_run</code>, <code>wrap_stream</code>, <code>wrap_model_call</code>, <code>wrap_tool_call</code>),
+  <code>BaseAgentMiddleware</code>, and composable dispatch in
+  <code>kneo_agent/core/middleware.py:82-206</code>. <code>OpenTelemetryMiddleware</code>
+  ships in <code>kneo_agent/observability/tracing.py:52-95</code>.</li>
+<li><strong><code>record_arguments</code> / <code>record_results</code> flags</strong> on
+  <code>OpenTelemetryMiddleware</code> (<code>tracing.py:84-85</code>) — partial redaction
+  story already exists; <code>RedactionMiddleware</code> should build on it,
+  not replace it.</li>
+<li><strong><code>base_url</code> / endpoint override path</strong> for OpenAI-compatible
+  servers via the <code>openai_client</code> parameter on <code>OpenAIAgentsImpl</code>
+  (<code>providers/openai_agents/impl.py:50</code>). LangChain wraps any
+  <code>BaseChatModel</code> so the same path works there. Capability is real;
+  the gap is documentation + first-class factory exposure.</li>
+<li><strong>No phone-home.</strong> Code audit found no analytics, update checks, or
+  metrics egress. Only <code>urllib.request.urlopen</code> use is in
+  <code>kneo_agent/mcp/client.py:23-25</code> for the MCP HTTP/SSE transports
+  (intentional, not telemetry). <code>[telemetry]</code> extra ships only
+  <code>opentelemetry-api</code>; the SDK does not impose an exporter.</li>
+<li><strong><code>RunResult.metadata["usage"]</code></strong> field exists
+  (<code>core/types.py:98</code>) and <code>OpenTelemetryMiddleware._set_usage_attributes()</code>
+  reads <code>input_tokens</code>/<code>output_tokens</code> (with <code>prompt_tokens</code>/
+  <code>completion_tokens</code> aliases) from it
+  (<code>tracing.py:219-234</code>). Shape is implicit. Other documented keys
+  in the API reference today: <code>metadata["stopped_by_max_iterations"]</code>
+  and <code>metadata["plan"]</code> (Plan-Act strategy). The new formal <code>usage</code>
+  spec should join those, not replace them.</li>
+<li><strong>MCP HTTP / SSE transports with custom headers</strong>
+  (<code>mcp/client.py:70-106</code>, <code>MCPServerConfig.http(headers=...)</code> /
+  <code>.sse(headers=...)</code>). Bearer/JWT auth already works; TLS / mTLS /
+  custom-CA still missing.</li>
+<li><strong>Issue + PR templates and Dependabot config</strong> are present:
+  <code>.github/ISSUE_TEMPLATE/{bug_report,feature_request}.yml</code>,
+  <code>.github/pull_request_template.md</code>, <code>.github/dependabot.yml</code>.</li>
+<li><strong>Python 3.13 in CI matrix</strong> (<code>.github/workflows/ci.yml:55</code>); only
+  the <code>pyproject.toml</code> classifier line is missing.</li>
+</ul>
+<hr />
+<h2 id="phase-1-decide-scope">Phase 1 — Decide scope<a class="headerlink" href="#phase-1-decide-scope" title="Permanent link">&para;</a></h2>
+<p>Pick which to commit to before starting implementation. Each item is
+tagged with primary audience win and current state from the audit
+(NEW / PARTIAL → finish / DOC-ONLY). Everything below is a <em>library</em>
+deliverable: Python API, importable extension point, runnable example,
+or doc.</p>
+<p><strong>Release blockers for v1.2.0</strong> — these <em>must</em> land or the release
+slips:</p>
+<ul>
+<li>First-class local-LLM API (Tier B <code>base_url=</code>).</li>
+<li>Standardized <code>RunResult.metadata["usage"]</code> schema (Tier B).</li>
+<li>Regenerated API reference at v1.2.0 (Phase 4).</li>
+<li>Public API compatibility snapshot test (Phase 1.5).</li>
+<li>Sensitive-data redaction regression tests (Phase 1.5), gated on
+  the credential-plumbing item landing.</li>
+</ul>
+<p>Anything else may slip to a later release if not already implemented
+and tested by the freeze date — keep the bar at "ship something
+useful, not everything in Tier A/B/C/D."</p>
+<p><strong>Per-feature design checkpoint — apply before writing code, not after.</strong>
+For every new public primitive in any Tier-A/B/C item, decide
+explicitly:
+1. Does it belong in top-level <code>kneo_agent.__all__</code>, in a subpackage
+   export only, or as <code>experimental</code> / internal?
+2. Document that decision in <code>docs/api_stability.md</code> (the new file
+   from Tier C) at the same time the code lands, not in a follow-up.
+3. The API reference section that owns the new primitive must be
+   updated in the same PR (Phase 4 has the regenerate step, but
+   per-PR signature drift is what makes regeneration painful).</p>
+<h3 id="tier-a-high-leverage-mostly-net-new">Tier A — High-leverage, mostly net-new<a class="headerlink" href="#tier-a-high-leverage-mostly-net-new" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Production-ready middleware bundle</strong> <em>(SME + on-prem)</em> — NEW.
+  <code>RetryMiddleware</code>, <code>RateLimitMiddleware</code>, <code>TokenBudgetMiddleware</code>,
+  <code>RedactionMiddleware</code>, all built on the existing
+  <code>AgentMiddleware</code> framework. The redaction one should compose with
+  the existing <code>record_arguments</code>/<code>record_results</code> flags on
+  <code>OpenTelemetryMiddleware</code> rather than duplicate them.
+  Acceptance criteria:</li>
+<li>Export from a stable public module (e.g.
+    <code>kneo_agent.middleware.*</code>) with documented import paths added to
+    <code>__all__</code>.</li>
+<li>Document ordering rules for static (constructor-time) vs per-run
+    (<code>RunConfig.middlewares</code>) middlewares; include an example showing
+    deterministic ordering when the same class is registered both
+    ways.</li>
+<li>Test composition: <code>RedactionMiddleware</code> paired with
+    <code>OpenTelemetryMiddleware(record_arguments=False, record_results=False)</code>
+    produces spans with no leaked args/results, asserted directly
+    from a <code>MemoryExporter</code>.</li>
+<li>Each middleware ships an <code>examples/cookbook/</code> snippet exercising
+    its primary use case.</li>
+<li>[ ] <strong>Enterprise data-source tool patterns</strong> *(enterprise integration</li>
+<li>on-prem)<em> — NEW. Runnable cookbook recipes for the common shapes
+  — these are </em>snippets the user pastes into their own application*,
+  not pre-built tool packages:</li>
+<li><strong>SQL</strong> (PostgreSQL / MySQL / SQL Server) — read-only query tool
+    with parameter binding, schema-introspection helper, and a
+    pagination-aware fetch.</li>
+<li><strong>Object store</strong> (MinIO / on-prem S3-compatible) — list / get /
+    put with <code>endpoint_url</code> override.</li>
+<li><strong>REST / HTTP service</strong> — typed request tool over <code>httpx</code>, with
+    a per-host auth header injector.</li>
+<li><strong>Search index</strong> (Elasticsearch / OpenSearch) — query tool.</li>
+<li><strong>File share</strong> — already covered by the MCP filesystem server
+    (example <code>12_mcp_stdio_filesystem.py</code>); cross-link from the
+    cookbook.
+  Goal is <em>patterns and recipes</em>, not a vendored client zoo — keep
+  third-party deps out of the core install.</li>
+<li>[ ] <strong>Credential / secret plumbing for tools + MCP</strong> <em>(enterprise
+  integration + on-prem)</em> — NEW. Small <code>SecretProvider</code> protocol (or
+  documented env-var + secret-file pattern) so credentials reach tool
+  handlers and MCP transports without appearing in prompts, tool args,
+  or trace spans. Pair with the new <code>RedactionMiddleware</code>.</li>
+<li>[ ] <strong>Workflow reliability primitives</strong> <em>(SME + on-prem)</em> — PARTIAL
+  → finish. Graph-shape orchestration already exists: the API
+  reference documents <code>WorkflowBuilder.add_edge(..., condition=...)</code>
+  and <code>WorkflowEdge.condition</code>, so conditional branching is in
+  v1.1.1 — it just isn't surfaced as a first-class pattern.</li>
+<li>Add a <strong>retry-on-failure workflow step / wrapper</strong> (the genuinely
+    missing piece) with backoff knobs.</li>
+<li><strong>Decide whether the existing <code>WorkflowBuilder</code> <em>is</em> the public
+    graph builder.</strong> If yes, document it as such (rename in docs,
+    cross-link from each <code>*Builder</code> page); do <strong>not</strong> introduce a
+    parallel <code>WorkflowGraphBuilder</code> that duplicates the API.</li>
+<li>Add cookbook + unit tests showing conditional branching via
+    <code>WorkflowEdge.condition</code>. Only introduce a new dedicated
+    "conditional step" type if it materially improves ergonomics
+    over <code>add_edge(..., condition=...)</code>; otherwise stick with
+    documentation + examples.</li>
+<li>[ ] <strong>Cookbook examples</strong> <em>(SME + OSS + on-prem + enterprise
+  integration)</em> — NEW directory, <code>examples/cookbook/</code>, with
+  <em>integration recipes</em> (small Python scripts users adapt into their
+  own application code): customer-support agent; RAG over an internal
+  SQL warehouse; document-extraction pipeline reading/writing to
+  MinIO; internal-API triage agent (REST tool + retry); worked
+  cost-cap example; fully-local stack against a user-run Ollama;
+  air-gapped pip install; end-to-end "enterprise inside the firewall"
+  walkthrough combining local LLM + internal MCP server + SQL tool +
+  object-store tool + secret provider. The smoke test in
+  <code>tests/integration/test_examples.py</code> should pick these up.</li>
+</ul>
+<h3 id="tier-b-finish-whats-already-half-done">Tier B — Finish what's already half-done<a class="headerlink" href="#tier-b-finish-whats-already-half-done" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>First-class local-LLM API + example</strong> <em>(on-prem)</em> — PARTIAL →
+  finish. Currently the API reference exposes <code>openai_client</code> (a
+  pre-built <code>AsyncOpenAI</code>) on <code>build_agent</code>, <code>build_sync_agent</code>,
+  <code>BridgeAgentFactory.for_openai</code>, and <code>NativeRuntimeFactory.for_openai</code>,
+  but <strong>no direct <code>base_url=</code> parameter</strong>. Surface <code>base_url=</code>
+  (or <code>endpoint=</code>) directly on each of those entry points so users
+  don't have to pre-construct the client. Add
+  <code>examples/cookbook/local_ollama.py</code> exercising it (assumes the
+  user is running Ollama themselves; the SDK does not start one).
+  Document the supported local servers (Ollama / vLLM / llama.cpp /
+  LocalAI) in README and a new <code>docs/local_llm_guide.md</code>. <strong>Update
+  the API reference</strong> entries for all four entry points to include
+  the new parameter.</li>
+<li>[ ] <strong>Standardized usage / cost metadata</strong> <em>(SME + on-prem)</em> —
+  PARTIAL → finish. The current API reference only describes
+  <code>RunResult.metadata</code> as "strategy-specific extras," so the
+  contract is implicit. Write a formal
+  <code>RunResult.metadata["usage"]</code> schema spec in <code>core/types.py</code>
+  docstring <strong>and</strong> as a new section in the API reference under
+  <code>RunResult</code>, with the matching OpenTelemetry attribute mapping
+  cross-referenced from the observability section. Then audit
+  every runtime — Bridge / Native / Adapter for OpenAI, LangChain,
+  Google ADK — to confirm they all populate the documented keys.
+  Add a unit test per runtime asserting the shape.</li>
+<li>[ ] <strong>MCP TLS / mTLS / custom-CA support</strong> *(enterprise integration</li>
+<li>on-prem)<em> — PARTIAL → finish. The current API reference
+  documents <code>MCPServerConfig.http()</code> / <code>.sse()</code> with <code>headers</code> and
+  <code>timeout</code> only — no TLS knobs. Extend both factories
+  (<code>mcp/client.py:70-106</code>) with <code>verify</code>, <code>ca_bundle</code>,
+  <code>client_cert</code>, <code>client_key</code> parameters. The current
+  <code>urllib.request.urlopen</code> path needs an <code>SSLContext</code>. </em><em>Update
+  the API reference MCP section</em>* to show the new signatures, plus
+  expand <code>docs/mcp_guide.md</code> with a corporate-TLS / mTLS recipe.</li>
+<li>[ ] <strong>Self-hosted observability walkthrough</strong> <em>(SME + on-prem)</em> —
+  PARTIAL → finish. New <code>docs/self_hosted_observability.md</code> showing
+  end-to-end wiring of the existing <code>[telemetry]</code> extra to a
+  user-run OTLP collector → (Jaeger / Grafana Tempo / SigNoz). The
+  SDK exports spans; the user runs the backend.</li>
+<li>[ ] <strong>OSS scaffolding gaps</strong> <em>(OSS)</em> — PARTIAL → finish. Add
+  <code>CODE_OF_CONDUCT.md</code> (Contributor Covenant 2.1), <code>SECURITY.md</code>
+  (private-disclosure email + supported-version table), and enable
+  GitHub Discussions; link both from README. Issue/PR templates and
+  Dependabot are already present — leave them alone.</li>
+</ul>
+<h3 id="tier-c-small-lift-high-signal">Tier C — Small lift, high signal<a class="headerlink" href="#tier-c-small-lift-high-signal" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Air-gapped install + no-phone-home doc</strong> <em>(on-prem)</em> —
+  DOC-ONLY. Code audit confirmed there is no egress; we just need to
+  say so. Add a "No phone-home" section to README and a new
+  <code>docs/offline_install.md</code> with the
+  <code>pip download --dest wheelhouse/ ...</code> →
+  <code>pip install --no-index --find-links wheelhouse/ ...</code> flow.</li>
+<li>[ ] <strong>MCP server catalog from config</strong> <em>(enterprise integration +
+  on-prem)</em> — NEW. Document the recipe for declaring a list of
+  <code>MCPServerConfig</code> entries from YAML/JSON in the user's own
+  application bootstrap (operators want to declare internal MCP
+  endpoints per environment without code changes); ship a tested
+  <code>examples/cookbook/</code> snippet exercising it. Recipe-only — no
+  first-party config-loader API in this release.</li>
+<li>[ ] <strong>Public API stability tier doc</strong> <em>(SME + OSS + on-prem)</em> —
+  DOC-ONLY. New <code>docs/api_stability.md</code> (or a section in
+  <code>CONTRIBUTING.md</code>) declaring: what is public surface (everything
+  in <code>kneo_agent.__all__</code>), the deprecation policy
+  (one minor of <code>DeprecationWarning</code> before removal), and what
+  counts as <code>experimental</code> (mark in docstring + CHANGELOG entry).</li>
+<li>[ ] <strong>Upgrade guide — <code>docs/upgrading_to_1.2.md</code></strong> <em>(SME + on-prem)</em>
+  — DOC-ONLY. Short "should I upgrade?" walkthrough covering: new
+  defaults, the local-LLM <code>base_url=</code> parameter, the formal
+  <code>RunResult.metadata["usage"]</code> shape, any middleware behavior
+  changes, MCP TLS knobs, and any deprecations. Even a mostly-additive
+  minor benefits from a one-page upgrade narrative — most readers
+  won't diff CHANGELOG entries.</li>
+<li>[ ] <strong>Python 3.13 classifier</strong> <em>(SME + OSS)</em> — TRIVIAL. Add
+  <code>Programming Language :: Python :: 3.13</code> to <code>pyproject.toml</code>
+  classifiers (line 19). CI already runs on 3.13.</li>
+</ul>
+<h3 id="tier-d-audit-gaps-to-fold-in-cheaply">Tier D — Audit gaps to fold in cheaply<a class="headerlink" href="#tier-d-audit-gaps-to-fold-in-cheaply" title="Permanent link">&para;</a></h3>
+<ul>
+<li>[ ] <strong>Streaming-support contract clarity</strong> <em>(SME + OSS)</em> — Bridge</li>
+<li>OpenAI Native + Google ADK Adapter all stream; LangChain Adapter
+  conditional on <code>astream</code>. Document each runtime's streaming status
+  and make <code>supports_streaming()</code> authoritative; pair with a unit
+  test that asserts <code>StreamingNotSupportedError</code> is raised explicitly
+  rather than silently falling back. Doc + small test, cheap.</li>
+<li>[ ] <strong>Sync API guidance — README/API-doc consistency</strong> <em>(SME + OSS)</em>
+  — DOC-ONLY. The API reference <em>already</em> documents that
+  <code>SyncAgent</code> uses <code>asyncio.run()</code> and raises <code>RuntimeError</code> inside
+  an already-running loop, calling out Jupyter and FastAPI-style
+  async contexts. README and <code>docs/README.md</code> don't yet repeat this.
+  Copy the existing API-reference warning verbatim into the
+  README quick-start and <code>docs/README.md</code>; verify all three
+  surfaces (README, docs/README, API reference) present the same
+  guidance after the sync.</li>
+</ul>
+<hr />
+<h2 id="phase-15-release-quality-test-gates">Phase 1.5 — Release-quality test gates<a class="headerlink" href="#phase-15-release-quality-test-gates" title="Permanent link">&para;</a></h2>
+<p>Contract tests and CI guards that protect v1.2.0 from accidental
+regressions. None of these are features; they're nets. Land them
+alongside the Phase 1 work, not as an afterthought.</p>
+<ul>
+<li>[ ] <strong>Public API compatibility snapshot test.</strong> Add
+  <code>tests/unit/test_public_api_snapshot.py</code> that snapshots
+  <code>kneo_agent.__all__</code> (and ideally each subpackage's <code>__all__</code>)
+  against a checked-in expected list. Failures force the author to
+  either (a) revert the unintentional change, or (b) update the
+  snapshot <strong>and</strong> add CHANGELOG + API-reference entries in the
+  same PR.</li>
+<li>[ ] <strong>Middleware ordering contract tests.</strong> Add unit tests
+  asserting the documented ordering: static-constructor middleware
+  runs first, per-run (<code>RunConfig.middlewares</code>) middleware appended
+  deeper. Cover short-circuiting (a middleware returning early
+  prevents inner ones from running), exception propagation (an inner
+  middleware raising is observable to outer wrappers), and the same
+  rules under <code>Agent.stream()</code> not just <code>Agent.run()</code>. Lock the
+  contract before the new middleware bundle (Tier A) lands.</li>
+<li>[ ] <strong>Sensitive-data redaction regression tests.</strong> Run a fixture
+  matrix of representative secrets — API keys, bearer tokens,
+  database connection strings (<code>postgres://...</code>), S3 access-key
+  pairs, JWT-shaped strings, MCP <code>Authorization</code> headers — through
+  an agent with <code>RedactionMiddleware</code> + <code>OpenTelemetryMiddleware</code> +
+  <code>SecretProvider</code>. Assert none of the secret values appear in:
+  middleware logs, OTel span attributes, exception messages, or
+  any serialized tool-call trace. Block the credential-plumbing
+  item from shipping until this passes.</li>
+<li>[ ] <strong>Minimal-core install (no extras) CI job.</strong> Add a CI matrix
+  cell that installs <code>kneo-agent</code> with <strong>no extras</strong> and runs a
+  smoke import asserting that <code>Agent</code>, <code>AgentBuilder</code>,
+  <code>ToolRegistry</code>, the workflow primitives, MCP types, and the
+  middleware-bundle classes import without pulling
+  <code>openai-agents</code> / <code>langchain</code> / <code>google-adk</code> / <code>opentelemetry-*</code>.
+  Belt-and-braces against accidental top-level imports of optional
+  deps.</li>
+<li>[ ] <strong>Deprecation-warning behavior tests.</strong> For every name marked
+  deprecated under the new stability policy (Tier C), add a unit
+  test asserting that (a) using it emits <code>DeprecationWarning</code>, and
+  (b) it still produces the documented runtime behavior in v1.2.0
+  (one-minor grace period). Cross-link the deprecation in
+  <code>CHANGELOG.md</code> and <code>docs/api_stability.md</code>.</li>
+</ul>
+<hr />
+<h2 id="out-of-scope-not-the-sdks-job">Out of scope — not the SDK's job<a class="headerlink" href="#out-of-scope-not-the-sdks-job" title="Permanent link">&para;</a></h2>
+<p>kneo-agent is a Python library. The items below are valid concerns,
+but they belong to whatever process / container / orchestrator the
+user wraps the SDK in — i.e., a separate downstream product (e.g. a
+<code>kneo-agent-server</code> or an ops-tooling project). Documented here so
+future scope reviews don't relitigate them.</p>
+<ul>
+<li><strong>Shipping a Dockerfile / container image / deployment manifests
+  for "the SDK".</strong> The SDK doesn't run; it's imported. Containers,
+  Helm charts, K8s YAML, systemd units, and <code>docker-compose.yml</code>
+  files for a deployed service all live in the user's application
+  repo (or a separate deployment product). The cookbook may show a
+  <em>user-side</em> compose snippet that runs Ollama + an OTLP collector
+  for a local dev loop, but that's user infrastructure, not an SDK
+  artifact.</li>
+<li><strong>An ops CLI or daemon entry point.</strong> <code>[project.scripts]</code> was
+  intentionally removed in 1.1.1 (the old <code>kneo-test</code> / <code>python -m
+  kneo_agent</code> smoke runner). Re-introducing a <code>kneo-agent serve</code>
+  command — or any long-running entry point — is out of scope.</li>
+<li><strong>Declarative whole-agent config from a file</strong> (YAML/TOML for the
+  full <code>provider / model / tools / middlewares / skills / MCP
+  servers</code> graph). Belongs in a deployment / orchestration product.
+  The MCP-catalog cookbook recipe in Tier C is the only declarative
+  slice scoped into the SDK; everything else stays Python-API.</li>
+<li><strong>HTTP service wrapper, readiness / liveness endpoints, K8s
+  probes.</strong> Building a FastAPI / gRPC service around an <code>Agent</code> is
+  application code. The SDK does not provide <code>/health</code>, <code>/ready</code>, or
+  any HTTP surface, and 1.2.0 will not change that.</li>
+<li><strong>SSO / RBAC / multi-tenant audit at the SDK layer.</strong> Belongs in
+  the surrounding deployment layer.</li>
+<li><strong>Process-level concerns</strong> — log shipping, secret-store integration
+  with Vault / SSM / KMS as a service, queue workers, autoscalers.
+  The SDK exposes hooks (middleware, <code>SecretProvider</code>) that an
+  application can use to plug into these; it doesn't implement them.</li>
+</ul>
+<h2 id="phase-2-in-flight-cleanup-already-on-disk">Phase 2 — In-flight cleanup (already on disk)<a class="headerlink" href="#phase-2-in-flight-cleanup-already-on-disk" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Decide: ship the <code>docs/README.md</code> split as a v1.1.2 patch, or fold
+  into 1.2.0?</li>
+<li>[ ] Commit the <code>docs/README.md</code> rewrite + new <code>docs/README-dev.md</code>.</li>
+</ul>
+<h2 id="phase-3-per-feature-work">Phase 3 — Per-feature work<a class="headerlink" href="#phase-3-per-feature-work" title="Permanent link">&para;</a></h2>
+<p>For every scope item picked in Phase 1:</p>
+<ul>
+<li>[ ] Implement under <code>kneo_agent/...</code> with <code>mypy --strict</code> clean.</li>
+<li>[ ] Tests in <code>tests/unit/</code> (and <code>tests/integration/</code> if it crosses a
+  boundary). Aim for 100% on new code; global gate is 85%.</li>
+<li>[ ] Runnable example in <code>examples/NN_*.py</code> or <code>examples/cookbook/</code>
+  if it's a user-facing primitive — the smoke test in
+  <code>tests/integration/test_examples.py</code> will execute it (extend the
+  smoke runner to walk <code>cookbook/</code> if you add the directory).</li>
+<li>[ ] Update public exports + <code>__all__</code> in <code>kneo_agent/__init__.py</code>,
+  <em>and</em> record the export-tier decision (top-level public /
+  subpackage-only / experimental) in <code>docs/api_stability.md</code>.</li>
+<li>[ ] Update the relevant section of
+  <code>docs/kneo_agent_api_reference.md</code> so signatures, parameters, and
+  examples in the manual stay in sync with the code in the same PR
+  (the Phase 4 regeneration is then a no-op refresh, not a content
+  rewrite).</li>
+<li>[ ] Add an entry under <code>[Unreleased]</code> (Added / Changed / Fixed /
+  Removed) in <code>CHANGELOG.md</code>.</li>
+<li>[ ] If a new optional dep: add <code>[extra]</code> group in <code>pyproject.toml</code>,
+  update <code>[all]</code>, add a CI matrix combo in
+  <code>.github/workflows/ci.yml</code>, document the pin-floor reason in
+  CHANGELOG, expose a flag in <code>install.sh</code>.</li>
+</ul>
+<h2 id="phase-4-release-mechanics">Phase 4 — Release mechanics<a class="headerlink" href="#phase-4-release-mechanics" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Move <code>[Unreleased]</code> → <code>## [1.2.0] - YYYY-MM-DD</code> in <code>CHANGELOG.md</code>.</li>
+<li>[ ] Update the diff-link footer: <code>v1.1.1...v1.2.0</code>,
+  <code>[Unreleased]: ...compare/v1.2.0...HEAD</code>.</li>
+<li>[ ] Bump <code>version = "1.1.1"</code> → <code>"1.2.0"</code> in <code>pyproject.toml</code>.</li>
+<li>[ ] Update banner <code>Kneo Agent v1.1.1</code> → <code>v1.2.0</code> in <code>install.sh</code>.</li>
+<li>[ ] Update verify-import comment <code># → 1.1.1</code> → <code># → 1.2.0</code> in
+  <code>README.md</code> and <code>docs/README.md</code> (after Phase 2).</li>
+<li>[ ] <strong>Regenerate the API reference manual</strong> for v1.2.0
+  (<code>docs/kneo_agent_api_reference.{md,html,pdf}</code> via the existing
+  <code>docs/render_*.py</code> / <code>docs/render_pdf_with_header_footer.mjs</code>
+  toolchain). Update the cover, intro, footer, and Python-version
+  banner from <code>v1.1.1</code> / "Python 3.12+" to <code>v1.2.0</code> / current floor.
+  In the rendered HTML the version string currently appears at
+  ~lines 783 (header), 907 (cover card), 1041 (intro badge), and
+  2546 (footer); regenerate from the Markdown source so all four
+  update together. Verify every new or changed public primitive
+  from Tier A/B/C is reflected (new middleware classes, <code>base_url=</code>
+  parameters, formal <code>RunResult.metadata["usage"]</code> schema, MCP TLS
+  knobs, workflow retry step, <code>SecretProvider</code>, etc.). The manual
+  is advertised as <em>the</em> complete public-surface reference, so its
+  accuracy is part of the release gate.</li>
+<li>[ ] <strong>Doc / example drift gate.</strong> Run a docs-and-example link
+  audit: every <code>examples/...</code> path mentioned in <code>README.md</code>,
+  <code>docs/README.md</code>, the per-guide docs, and the regenerated API
+  reference must (a) exist on disk and (b) either be exercised by
+  <code>tests/integration/test_examples.py</code> or be explicitly skipped
+  with a documented reason (the existing pattern for
+  examples 12 and 13 — external resources required). Fold the audit
+  into a one-shot script under <code>tests/</code> so it stays useful past
+  this release.</li>
+<li>[ ] Local gate:
+  <code>ruff check kneo_agent/ tests/ &amp;&amp; mypy kneo_agent/ &amp;&amp; pytest -q tests --cov=kneo_agent --cov-fail-under=85</code></li>
+<li>[ ] Local build + render check:
+  <code>python -m build &amp;&amp; twine check dist/*</code> (catches broken README
+  rendering before tag push).</li>
+<li>[ ] Commit, push to <code>main</code>.</li>
+<li>[ ] TestPyPI dry-run: GitHub → Actions → Release → workflow_dispatch.
+  Install from test.pypi in a clean venv; assert
+  <code>kneo_agent.__version__ == "1.2.0"</code>.</li>
+<li>[ ] <code>git tag v1.2.0 &amp;&amp; git push --tags</code> — Release workflow publishes
+  to PyPI on tag push.</li>
+<li>[ ] Approve the <code>pypi</code> environment in Actions if required-reviewers
+  is enabled.</li>
+</ul>
+<h2 id="phase-5-post-release">Phase 5 — Post-release<a class="headerlink" href="#phase-5-post-release" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[ ] Verify <a href="https://pypi.org/project/kneo-agent/1.2.0/">https://pypi.org/project/kneo-agent/1.2.0/</a> is live and the
+  README renders correctly.</li>
+<li>[ ] <code>pip install kneo-agent==1.2.0</code> in a fresh venv; verify import
+  and <code>__version__</code>.</li>
+<li>[ ] Confirm GitHub Release was auto-created with sdist + wheel
+  attached.</li>
+<li>[ ] Re-open an empty <code>[Unreleased]</code> section at the top of
+  <code>CHANGELOG.md</code> (per <code>CONTRIBUTING.md</code>).</li>
+<li>[ ] Update <code>TODO-PyPI.md</code> header <code>(this is v1.1.1)</code> → <code>(this is
+  v1.2.0)</code> and the example tag in step 6.</li>
+<li>[ ] Watch the Monday <code>Latest provider versions</code> cron — first run
+  after the bump is a good upstream-break canary.</li>
+<li>[ ] Post a release note in GitHub Discussions / Release body
+  highlighting cost-control + reliability + on-prem + enterprise-
+  integration deltas. SMEs scan for "should I upgrade?" signals;
+  on-prem operators scan for air-gap / local-LLM compatibility;
+  integrators scan for the SQL / object-store / REST / internal-MCP
+  recipes; OSS contributors scan for "what's new to hack on?".</li>
+<li>[ ] Smoke-test the air-gapped install path on a host with no
+  outbound internet (<code>pip download</code> on a connected box, rsync the
+  wheelhouse, <code>pip install --no-index --find-links</code> on the
+  air-gapped one).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3402 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="kneo-agent Platform — service and control plane for the kneo-agent SDK">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/pub/kneo_agent_platform_tutorial/">
+      
+      
+        <link rel="prev" href="../kneo_agent_platform_reference/">
+      
+      
+        <link rel="next" href="../release_notes_0.1.0/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Kneo Agent Platform Tutorial - kneo-agent Platform</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kneo-agent-platform-tutorial" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="kneo-agent Platform" class="md-header__button md-logo" aria-label="kneo-agent Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kneo-agent Platform
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kneo Agent Platform Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo-serv
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  kneo-agent Platform
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../kneo_agent_platform_operation_guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/backup_and_recovery/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="kneo-agent Platform" class="md-nav__button md-logo" aria-label="kneo-agent Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kneo-agent Platform
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo-serv
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kneo-agent Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kneo_agent_platform_operation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Operation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kneo_agent_platform_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Tutorial
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quickstart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate-and-compile-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Validate and compile a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-try-a-human-in-the-loop-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Try a human-in-the-loop workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-no-real-provider-the-dummy-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. No real provider: the dummy path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-run-as-a-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Run as a service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-use-a-profile-for-repeated-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use a profile for repeated calls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-writing-a-custom-tool-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial: writing a custom tool end-to-end
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial: writing a custom tool end-to-end">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-were-building" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we're building
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-write-the-python-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Write the Python function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-register-the-tool-with-toolregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Register the tool with ToolRegistry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-reference-the-tool-from-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · Reference the tool from a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-run-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Run the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-inspect-the-call-in-trace-and-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Inspect the call in trace and audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lock-down-the-tool-with-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Lock down the tool with policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ship-the-tool-to-the-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Ship the tool to the service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-deploying-with-postgresql-from-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial: deploying with PostgreSQL from zero
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial: deploying with PostgreSQL from zero">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-clone-and-prepare-the-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Clone and prepare the env file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate-the-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Validate the env file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-the-compose-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · Start the Compose stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Verify readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-run-the-deployment-smoke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Run the deployment smoke
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-submit-a-real-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Submit a real run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-verify-persistence-survives-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Verify persistence survives restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-capacity-tuning-knobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 · Capacity tuning knobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-backup-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 · Backup the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-tear-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Tear down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#human-in-the-loop-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-in-the-loop walkthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Human-in-the-loop walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-human-in-the-loop-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "human-in-the-loop" means here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-declare-a-human-step-in-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Declare a human step in a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-run-the-workflow-until-pause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Run the workflow until pause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-list-and-inspect-pending-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · List and inspect pending tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-resume-with-a-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Resume with a decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-idempotent-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Idempotent resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-process-safe-locking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Process-safe locking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Audit trail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-recovery-after-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 · Recovery after restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-timeouts-and-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 · Timeouts and escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release_notes_0.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform 0.1.0 release notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release_notes_0.1.1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform 0.1.1 release notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/backup_and_recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup and recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/cli_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Serv CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/deployment_smoke/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment smoke test
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/human_in_the_loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Human-in-the-loop walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/incident_response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Incident response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/project_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/security_hardening/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security hardening
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/service_api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform service API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/tls_and_proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TLS and reverse proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/tutorial_custom_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: writing a custom tool end-to-end
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/tutorial_postgres_deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: deploying with PostgreSQL from zero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quickstart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate-and-compile-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Validate and compile a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-run-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Run locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-try-a-human-in-the-loop-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Try a human-in-the-loop workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-no-real-provider-the-dummy-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. No real provider: the dummy path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-run-as-a-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Run as a service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-use-a-profile-for-repeated-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Use a profile for repeated calls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-writing-a-custom-tool-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial: writing a custom tool end-to-end
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial: writing a custom tool end-to-end">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-were-building" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we're building
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-write-the-python-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Write the Python function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-register-the-tool-with-toolregistry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Register the tool with ToolRegistry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-reference-the-tool-from-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · Reference the tool from a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-run-the-agent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Run the agent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-inspect-the-call-in-trace-and-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Inspect the call in trace and audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lock-down-the-tool-with-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Lock down the tool with policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ship-the-tool-to-the-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Ship the tool to the service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common pitfalls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-deploying-with-postgresql-from-zero" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial: deploying with PostgreSQL from zero
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial: deploying with PostgreSQL from zero">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-clone-and-prepare-the-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Clone and prepare the env file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-validate-the-env-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Validate the env file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-start-the-compose-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · Start the Compose stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-verify-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Verify readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-run-the-deployment-smoke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Run the deployment smoke
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-submit-a-real-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Submit a real run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-verify-persistence-survives-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Verify persistence survives restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-capacity-tuning-knobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 · Capacity tuning knobs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-backup-the-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 · Backup the database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-tear-down" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10 · Tear down
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#human-in-the-loop-walkthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-in-the-loop walkthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Human-in-the-loop walkthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-human-in-the-loop-means-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "human-in-the-loop" means here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-declare-a-human-step-in-a-spec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1 · Declare a human step in a spec
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-run-the-workflow-until-pause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2 · Run the workflow until pause
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-list-and-inspect-pending-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3 · List and inspect pending tasks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-resume-with-a-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4 · Resume with a decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-idempotent-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5 · Idempotent resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-process-safe-locking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6 · Process-safe locking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7 · Audit trail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-recovery-after-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8 · Recovery after restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-timeouts-and-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9 · Timeouts and escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common failure modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kneo-agent-platform-tutorial">Kneo Agent Platform Tutorial<a class="headerlink" href="#kneo-agent-platform-tutorial" title="Permanent link">&para;</a></h1>
+<p>A combined reading path from quickstart through the custom-tool tutorial, the PostgreSQL deployment tutorial, and the human-in-the-loop walkthrough. The individual files under <a href="../user/"><code>docs/user/</code></a> remain the authoritative single-page versions and are kept in sync by hand; this combined document is generated by <code>docs/script/generate_combined_docs.py</code>.</p>
+<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#quickstart">Quickstart</a></li>
+<li><a href="#tutorial-writing-a-custom-tool-end-to-end">Tutorial: writing a custom tool end-to-end</a></li>
+<li><a href="#tutorial-deploying-with-postgresql-from-zero">Tutorial: deploying with PostgreSQL from zero</a></li>
+<li><a href="#human-in-the-loop-walkthrough">Human-in-the-loop walkthrough</a></li>
+</ul>
+<h2 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/quickstart/"><code>docs/user/quickstart.md</code></a></em></p>
+<p>A guided walkthrough that takes you from a fresh checkout of Kneo Agent
+Platform (<code>kneo-serv</code>) to a running agent — locally and through the
+service — in about 15 minutes. By the end you'll have validated a spec, run
+an agent, exercised a human-in-the-loop pause, and called the same workflow
+over HTTP.</p>
+<p>This expands on the README quickstart; pick either entry point.</p>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Python 3.12+ (<code>python --version</code>).</li>
+<li>An OpenAI-compatible API key for the demo spec (<code>OPENAI_API_KEY</code>). Other
+  providers work, but the example uses OpenAI.</li>
+<li>Optional: Docker, if you want to follow the service path with PostgreSQL.</li>
+</ul>
+<h3 id="1-install">1. Install<a class="headerlink" href="#1-install" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:kneo-agent/kneo-serv.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>kneo-serv
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<p>Verify the CLI is on your <code>PATH</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kneo<span class="w"> </span>--help
+</code></pre></div>
+<p>If you don't have an OpenAI key handy, swap to the dummy provider used by
+the smoke test (see <a href="#5-no-real-provider-the-dummy-path">§ 5</a> below).</p>
+<h3 id="2-validate-and-compile-a-spec">2. Validate and compile a spec<a class="headerlink" href="#2-validate-and-compile-a-spec" title="Permanent link">&para;</a></h3>
+<p>The repo ships a runnable research-agent spec.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/research_agent.yaml
+</code></pre></div>
+<p><code>validate</code> runs schema + semantic checks and prints diagnostics; <code>compile</code>
+goes further and constructs the agent and workflow objects without
+running them. Both should exit 0.</p>
+<p>If validation fails, the diagnostic message includes a path into the spec
+(<code>agent.tools[0]</code>, etc.) and a short reason. The most common causes are
+listed in <a href="../../user/troubleshooting/#6-spec-validation-and-compilation">troubleshooting.md § 6</a>.</p>
+<h3 id="3-run-locally">3. Run locally<a class="headerlink" href="#3-run-locally" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;Summarize Nvidia&#39;s AI strategy in three bullet points&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--target<span class="w"> </span>workflow
+</code></pre></div>
+<p>Local runs persist state at <code>.kneo/kneo_runs.sqlite</code> and continuations
+under <code>.kneo/continuations</code>. Inspect them:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kneo<span class="w"> </span>runs<span class="w"> </span>get<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kneo<span class="w"> </span>runs<span class="w"> </span>trace<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>kneo<span class="w"> </span>runs<span class="w"> </span>checkpoints<span class="w"> </span>&lt;run_id&gt;
+</code></pre></div>
+<p>The run output lands in <code>RunResult.output_text</code>; the CLI also prints it on
+stdout by default. Use <code>--json</code> to get the full structured response.</p>
+<h3 id="4-try-a-human-in-the-loop-workflow">4. Try a human-in-the-loop workflow<a class="headerlink" href="#4-try-a-human-in-the-loop-workflow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+</code></pre></div>
+<p>The JSON response includes a <code>continuation_id</code> and a <code>request_id</code>. Resume
+with an approval:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
+</code></pre></div>
+<p>For a deeper end-to-end walkthrough, see
+<a href="#human-in-the-loop-walkthrough">human_in_the_loop.md</a>.</p>
+<h3 id="5-no-real-provider-the-dummy-path">5. No real provider: the dummy path<a class="headerlink" href="#5-no-real-provider-the-dummy-path" title="Permanent link">&para;</a></h3>
+<p>The smoke spec uses the in-process <code>dummy</code> provider so it runs without real
+credentials.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;smoke&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+</code></pre></div>
+<p>This is the same flow the deployment smoke exercises; see
+<a href="../../user/deployment_smoke/"><code>deployment_smoke.md</code></a>.</p>
+<h3 id="6-run-as-a-service">6. Run as a service<a class="headerlink" href="#6-run-as-a-service" title="Permanent link">&para;</a></h3>
+<p>In one terminal, start the API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:operator-token:operator&#39;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>kneo<span class="w"> </span>service<span class="w"> </span>serve<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</code></pre></div>
+<p>In another, hit the API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEY</span><span class="o">=</span>operator-token
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/livez
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p>Submit a run through the CLI's service mode:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+</code></pre></div>
+<p>Or directly with curl:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s1">    &quot;input&quot;: &quot;hello&quot;,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;spec_path&quot;: &quot;examples/smoke_human_workflow.yaml&quot;,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;target&quot;: &quot;workflow&quot;</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>For the full HTTP contract, see <a href="../../user/service_api/">service_api.md</a>. For
+deployment topology (Docker, Compose, PostgreSQL), see
+<a href="../../user/deployment/">deployment.md</a>.</p>
+<h3 id="7-use-a-profile-for-repeated-calls">7. Use a profile for repeated calls<a class="headerlink" href="#7-use-a-profile-for-repeated-calls" title="Permanent link">&para;</a></h3>
+<p>CLI profiles save <code>--service-url</code> and <code>--api-key</code> so you don't type them on
+every command.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--api-key<span class="w"> </span>operator-token
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span>use<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>kneo<span class="w"> </span>human<span class="w"> </span>list<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
+</code></pre></div>
+<p>Profiles live at <code>~/.kneo_serv/profiles.json</code> (or
+<code>KNEO_SERV_PROFILES_PATH</code>) with owner-only file permissions. Stored
+tokens are never printed by the CLI.</p>
+<h3 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>You want to…</th>
+<th>Go to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Write your own spec</td>
+<td><a href="../../user/examples/">examples.md</a>, <a href="../../user/project_config/">project_config.md</a></td>
+</tr>
+<tr>
+<td>See every CLI subcommand and flag</td>
+<td><a href="../../user/cli_reference/">cli_reference.md</a></td>
+</tr>
+<tr>
+<td>Read the full HTTP contract</td>
+<td><a href="../../user/service_api/">service_api.md</a></td>
+</tr>
+<tr>
+<td>Deploy with Docker / Compose / PostgreSQL</td>
+<td><a href="../../user/deployment/">deployment.md</a></td>
+</tr>
+<tr>
+<td>Tune env vars</td>
+<td><a href="../../user/environment/">environment.md</a></td>
+</tr>
+<tr>
+<td>Diagnose a failure</td>
+<td><a href="../../user/troubleshooting/">troubleshooting.md</a></td>
+</tr>
+<tr>
+<td>Add a custom tool, runtime, or store</td>
+<td><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md">extending.md</a></td>
+</tr>
+<tr>
+<td>Understand the architecture</td>
+<td><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md">design.md</a></td>
+</tr>
+<tr>
+<td>Look up jargon</td>
+<td><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/glossary.md">glossary.md</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="tutorial-writing-a-custom-tool-end-to-end">Tutorial: writing a custom tool end-to-end<a class="headerlink" href="#tutorial-writing-a-custom-tool-end-to-end" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/tutorial_custom_tool/"><code>docs/user/tutorial_custom_tool.md</code></a></em></p>
+<p>Build a simple custom tool, register it with <code>kneo-serv</code>, expose it in a YAML
+spec, run an agent that calls it, and verify how the call shows up in audit
+and trace events.</p>
+<p>This tutorial walks the path from "I have a Python function" to "an agent
+uses it in production" so you can see every layer the call passes through.</p>
+<p>For the recipe-style summary, see
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#1-custom-tool"><code>extending.md § 1</code></a>. For the public-API
+surface, see
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/implementation_map.md#tools-toolmcp-registry"><code>implementation_map.md § tools/</code></a>.</p>
+<h3 id="what-were-building">What we're building<a class="headerlink" href="#what-were-building" title="Permanent link">&para;</a></h3>
+<p>A <code>lookup_user</code> tool that takes a user id and returns the user's
+email. We'll start with a function, register it as a tool, and run a
+small agent that uses it.</p>
+<h3 id="1-write-the-python-function">1 · Write the Python function<a class="headerlink" href="#1-write-the-python-function" title="Permanent link">&para;</a></h3>
+<p>Create <code>examples/my_tools.py</code> (or anywhere on the import path):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># examples/my_tools.py</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">USERS</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="s2">&quot;u-001&quot;</span><span class="p">:</span> <span class="s2">&quot;alice@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="s2">&quot;u-002&quot;</span><span class="p">:</span> <span class="s2">&quot;bob@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="s2">&quot;u-003&quot;</span><span class="p">:</span> <span class="s2">&quot;carol@example.com&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="p">}</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">lookup_user</span><span class="p">(</span><span class="n">args</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the email for a user id, or &#39;unknown&#39; if not present.&quot;&quot;&quot;</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="n">user_id</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_id&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_id</span><span class="p">:</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>        <span class="k">return</span> <span class="s2">&quot;unknown: user_id is required&quot;</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="k">return</span> <span class="n">USERS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;unknown: </span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Two things to notice:</p>
+<ul>
+<li>The handler signature is <code>Callable[[dict[str, Any]], str]</code>. Args
+  arrive as a dict; the return value must be a string. The framework
+  wraps it as a <code>ToolResult</code>.</li>
+<li>The function should be deterministic and side-effect-free where
+  possible. If it does I/O, plan for retries and timeouts (see
+  <a href="../../user/environment/#runtime-reliability"><code>environment.md</code> § Runtime Reliability</a>).</li>
+</ul>
+<h3 id="2-register-the-tool-with-toolregistry">2 · Register the tool with <code>ToolRegistry</code><a class="headerlink" href="#2-register-the-tool-with-toolregistry" title="Permanent link">&para;</a></h3>
+<p>Tools live in a <code>ToolRegistry</code>. The default service registry is built
+in <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L111"><code>service/factory.py</code></a>; to
+add a custom tool you need a registry that includes it. The cleanest
+approach is to construct a custom registry and pass it into the
+platform manager.</p>
+<p>Create <code>examples/my_factory.py</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># examples/my_factory.py</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.platform</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlatformManager</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.spec</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpecCompiler</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.service.factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">create_runtime_registry</span><span class="p">,</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">create_tool_registry</span><span class="p">,</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="n">create_persistence_stores</span><span class="p">,</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">)</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToolDefinition</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="kn">from</span><span class="w"> </span><span class="nn">examples.my_tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lookup_user</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="k">def</span><span class="w"> </span><span class="nf">build_platform</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PlatformManager</span><span class="p">:</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>    <span class="n">runtime_registry</span> <span class="o">=</span> <span class="n">create_runtime_registry</span><span class="p">()</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    <span class="n">tool_registry</span> <span class="o">=</span> <span class="n">create_tool_registry</span><span class="p">(</span><span class="n">include_examples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    <span class="n">tool_registry</span><span class="o">.</span><span class="n">register</span><span class="p">(</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>        <span class="n">ToolDefinition</span><span class="p">(</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;lookup_user&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Return the email for a user id.&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>            <span class="n">parameters</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">}},</span>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>                <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;user_id&quot;</span><span class="p">],</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>            <span class="p">},</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>        <span class="p">),</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>        <span class="n">lookup_user</span><span class="p">,</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>    <span class="p">)</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>    <span class="n">compiler</span> <span class="o">=</span> <span class="n">SpecCompiler</span><span class="p">(</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a>        <span class="n">runtime_registry</span><span class="o">=</span><span class="n">runtime_registry</span><span class="p">,</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a>        <span class="n">tool_registry</span><span class="o">=</span><span class="n">tool_registry</span><span class="p">,</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a>    <span class="p">)</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a>    <span class="n">run_state</span><span class="p">,</span> <span class="n">continuation</span> <span class="o">=</span> <span class="n">create_persistence_stores</span><span class="p">()</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a>    <span class="n">manager</span> <span class="o">=</span> <span class="n">PlatformManager</span><span class="p">(</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a>        <span class="n">compiler</span><span class="o">=</span><span class="n">compiler</span><span class="p">,</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a>        <span class="n">run_state_store</span><span class="o">=</span><span class="n">run_state</span><span class="p">,</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a>        <span class="n">continuation_store</span><span class="o">=</span><span class="n">continuation</span><span class="p">,</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a>    <span class="p">)</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a>    <span class="n">manager</span><span class="o">.</span><span class="n">start_worker</span><span class="p">()</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a>    <span class="k">return</span> <span class="n">manager</span>
+</code></pre></div>
+<p>The <code>parameters</code> schema is JSON Schema. The agent's tool-call planner
+sees this — be explicit about types, required fields, and enums. The
+guarded tool registry applies any policy from the spec on top of this
+definition, so you don't need to enforce auth here.</p>
+<h3 id="3-reference-the-tool-from-a-spec">3 · Reference the tool from a spec<a class="headerlink" href="#3-reference-the-tool-from-a-spec" title="Permanent link">&para;</a></h3>
+<p>Create <code>examples/lookup_agent.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nt">agent</span><span class="p">:</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory-agent</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">system_prompt</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="no">You answer questions by looking up users with the lookup_user tool.</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="no">Return concise, factual answers.</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpt-4o-mini</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">react</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="nt">max_iterations</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bridge</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">    </span><span class="nt">allowed_modes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">bridge</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span><span class="nt">tools</span><span class="p">:</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">lookup_user</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="nt">workflow</span><span class="p">:</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sequential</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lookup-pipeline</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answer</span>
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">agent</span>
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a><span class="w">      </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">directory-agent</span>
+</code></pre></div>
+<p>The <code>tools.include</code> list names tools the agent is allowed to call.
+Names must match what we registered in step 2. Validate the spec:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/lookup_agent.yaml
+</code></pre></div>
+<p>If you see <code>E_UNKNOWN_TOOL</code>, the spec is referencing a name that isn't
+in the registry. Re-check step 2 — the registry must include
+<code>lookup_user</code> <em>before</em> <code>SpecCompiler</code> runs.</p>
+<h3 id="4-run-the-agent">4 · Run the agent<a class="headerlink" href="#4-run-the-agent" title="Permanent link">&para;</a></h3>
+<p>When using a custom factory, drive the agent through Python rather
+than the bare <code>kneo run</code> command — the CLI's default platform
+manager does not include your custom tool.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># examples/run_lookup.py</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">examples.my_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_platform</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">manager</span> <span class="o">=</span> <span class="n">build_platform</span><span class="p">()</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">run_from_spec</span><span class="p">(</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>        <span class="n">input_text</span><span class="o">=</span><span class="s2">&quot;What&#39;s the email for u-002?&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="n">spec_path</span><span class="o">=</span><span class="s2">&quot;examples/lookup_agent.yaml&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;workflow&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    <span class="p">)</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>    <span class="n">main</span><span class="p">()</span>
+</code></pre></div>
+<p>Run it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>python<span class="w"> </span>-m<span class="w"> </span>examples.run_lookup
+</code></pre></div>
+<p>Expected output (model wording will vary):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>The email for u-002 is bob@example.com.
+</code></pre></div>
+<p>If the agent didn't call the tool, increase <code>max_iterations</code> or refine
+the system prompt to instruct tool use.</p>
+<h3 id="5-inspect-the-call-in-trace-and-audit">5 · Inspect the call in trace and audit<a class="headerlink" href="#5-inspect-the-call-in-trace-and-audit" title="Permanent link">&para;</a></h3>
+<p>The tool call shows up in the run trace. After the script exits, peek
+at the latest run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>kneo<span class="w"> </span>runs<span class="w"> </span>trace<span class="w"> </span><span class="k">$(</span>kneo<span class="w"> </span>runs<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.runs[0].run_id&#39;</span><span class="k">)</span>
+</code></pre></div>
+<p>Look for <code>tool_call_started</code> and <code>tool_call_completed</code> events with
+<code>tool_name: "lookup_user"</code>. Tool arguments and results are <em>not</em> in
+the trace by default — they're redacted at write time. To capture
+them in OpenTelemetry spans for a specific deployment, opt in with
+<code>KNEO_SERV_OTEL_RECORD_ARGUMENTS=true</code> and
+<code>KNEO_SERV_OTEL_RECORD_RESULTS=true</code> (only after a data-classification
+review; see <a href="../../user/environment/#observability"><code>environment.md</code> § Observability</a>).</p>
+<p>The audit log records the run (not individual tool calls) at
+<code>run.created</code> / <code>run.cancelled</code> / <code>run.continued</code>. Tool arguments are
+not persisted in audit events under any flag — see
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#audit-payload-review">production_readiness_review.md § Audit Payload Review</a>.</p>
+<h3 id="6-lock-down-the-tool-with-policy">6 · Lock down the tool with policy<a class="headerlink" href="#6-lock-down-the-tool-with-policy" title="Permanent link">&para;</a></h3>
+<p>For production, restrict what the agent can do with your tool. Add to
+the spec under <code>agent</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nt">agent</span><span class="p">:</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="c1"># ... existing fields ...</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">policies</span><span class="p">:</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="nt">tool</span><span class="p">:</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">      </span><span class="nt">allow</span><span class="p">:</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lookup_user</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">      </span><span class="nt">deny</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">      </span><span class="nt">network</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">      </span><span class="nt">filesystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">      </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+</code></pre></div>
+<p>The guarded registry blocks every tool not in <code>allow</code>, and
+diagnostics check that registered tools don't claim capabilities
+(network, filesystem, shell) inconsistent with the policy.</p>
+<p>Validate and re-run; the policy is enforced at call time. A blocked
+call surfaces as a <code>tool_policy_denied</code> trace event and never reaches
+your handler.</p>
+<h3 id="7-ship-the-tool-to-the-service">7 · Ship the tool to the service<a class="headerlink" href="#7-ship-the-tool-to-the-service" title="Permanent link">&para;</a></h3>
+<p>Two patterns:</p>
+<ul>
+<li>
+<p><strong>In-process custom factory.</strong> Replace <code>service.factory</code> with your
+  own <code>create_default_platform_manager()</code> that registers the tool. Run
+  <code>kneo service serve</code> from a deployment that imports your
+  factory. This is the common shape; the Docker image is a thin
+  wrapper around <code>service.app:create_app(configure_default_manager=True)</code>,
+  and you can override the manager in your own entrypoint.</p>
+</li>
+<li>
+<p><strong>Custom server.</strong> Construct the FastAPI app yourself with
+  <code>create_app(configure_default_manager=False)</code> and call
+  <code>kneo_serv.service.dependencies.set_platform_manager(your_manager)</code>
+  before serving. Useful when you want to register multiple tools, or
+  combine custom auth + custom tools.</p>
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># examples/serve_lookup.py</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.service.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.service.dependencies</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_platform_manager</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">examples.my_factory</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_platform</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>    <span class="n">set_platform_manager</span><span class="p">(</span><span class="n">build_platform</span><span class="p">())</span>
+<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>    <span class="n">uvicorn</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">create_app</span><span class="p">(),</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8000</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>python<span class="w"> </span>-m<span class="w"> </span>examples.serve_lookup
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/livez
+</code></pre></div>
+<p>Now the same <code>lookup_user</code> tool is reachable from any spec that
+references it, including service-backed CLI calls and HTTP <code>POST /v1/runs</code>.</p>
+<h3 id="common-pitfalls">Common pitfalls<a class="headerlink" href="#common-pitfalls" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>E_UNKNOWN_TOOL</code> on <code>kneo spec validate</code></td>
+<td>Custom tool isn't in the registry the CLI is using; use the Python entrypoint from § 4.</td>
+</tr>
+<tr>
+<td><code>ValueError: Tool 'X' has no implementation</code></td>
+<td><code>ToolDefinition.name</code> doesn't match the spec's <code>tools.include</code> entry.</td>
+</tr>
+<tr>
+<td>Agent never calls the tool</td>
+<td>System prompt doesn't mention it, or <code>max_iterations</code> is too low.</td>
+</tr>
+<tr>
+<td>Tool calls succeed but content is missing in trace</td>
+<td>Expected — tool args/results are redacted by default.</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code> when calling through service</td>
+<td>API key is missing the <code>runs:write</code> scope; see <a href="../../user/troubleshooting/#42-403-forbidden-missing-required-scope-scope">troubleshooting.md § 4.2</a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h3>
+<ul>
+<li>More examples and orchestration patterns: <a href="../../user/examples/"><code>examples.md</code></a>.</li>
+<li>Custom MCP servers (similar pattern, externally hosted tools):
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#2-custom-mcp-server"><code>extending.md</code> § 2</a>.</li>
+<li>Custom middleware around tool calls (rate-limiting, logging):
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/extending.md#3-custom-middleware"><code>extending.md</code> § 3</a>.</li>
+</ul>
+<h2 id="tutorial-deploying-with-postgresql-from-zero">Tutorial: deploying with PostgreSQL from zero<a class="headerlink" href="#tutorial-deploying-with-postgresql-from-zero" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/tutorial_postgres_deployment/"><code>docs/user/tutorial_postgres_deployment.md</code></a></em></p>
+<p>End-to-end deployment of <code>kneo-serv</code> against PostgreSQL using the bundled
+Docker Compose stack: rendering env files, starting the service, verifying
+readiness, and running smoke tests. Budget about 30 minutes from a fresh
+checkout to a running deployment.</p>
+<p>For the reference on deployment shapes and persistence selection, see
+<a href="../../user/deployment/"><code>deployment.md</code></a>. For environment-variable semantics, see
+<a href="../../user/environment/"><code>environment.md</code></a>.</p>
+<h3 id="prerequisites_1">Prerequisites<a class="headerlink" href="#prerequisites_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Docker 24+ and <code>docker compose</code>.</li>
+<li><code>git</code>, <code>curl</code>, <code>jq</code>, and a shell that supports <code>$()</code> substitution.</li>
+<li><code>python3</code> ≥ 3.12 for running the deployment-smoke script.</li>
+<li>Network access to pull the <code>postgres:16</code> and Python base images.</li>
+</ul>
+<p>This tutorial uses 127.0.0.1; for a real deployment, substitute your
+host or load-balancer URL throughout.</p>
+<h3 id="1-clone-and-prepare-the-env-file">1 · Clone and prepare the env file<a class="headerlink" href="#1-clone-and-prepare-the-env-file" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:kneo-agent/kneo-serv.git
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nb">cd</span><span class="w"> </span>kneo-serv
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>deploy/production.env
+</code></pre></div>
+<p><code>deploy/production.env</code> is gitignored — it'll hold your real secrets.
+Edit it now and replace every <code>replace-…</code> placeholder. The minimum
+set you must change before binding to a network:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a># deploy/production.env
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a># Auth — replace each token with a high-entropy value.
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>KNEO_SERV_AUTH_ENABLED=true
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>KNEO_SERV_API_KEYS=operator:OP_TOKEN:operator;reviewer:REV_TOKEN:reviewer;viewer:VIEW_TOKEN:viewer
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>KNEO_SERV_ADMIN_API_KEY=ADMIN_TOKEN
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>KNEO_SERV_SPEC_SIGNING_KEY=SPEC_SIGNING_HMAC_KEY
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a># PostgreSQL — match the password to the one you&#39;ll set below.
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>POSTGRES_DB=kneo_serv
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>POSTGRES_USER=kneo_serv
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>POSTGRES_PASSWORD=DB_PASSWORD
+</code></pre></div>
+<p>Generate strong tokens:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># 32-byte hex tokens</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="k">for</span><span class="w"> </span>name<span class="w"> </span><span class="k">in</span><span class="w"> </span>OP_TOKEN<span class="w"> </span>REV_TOKEN<span class="w"> </span>VIEW_TOKEN<span class="w"> </span>ADMIN_TOKEN<span class="w"> </span>SPEC_SIGNING_HMAC_KEY<span class="w"> </span>DB_PASSWORD<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s=%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$name</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="k">done</span>
+</code></pre></div>
+<p>Paste the generated values into <code>deploy/production.env</code>. Do not commit
+this file.</p>
+<h3 id="2-validate-the-env-file">2 · Validate the env file<a class="headerlink" href="#2-validate-the-env-file" title="Permanent link">&para;</a></h3>
+<p>There's a validator that catches common mistakes (placeholder tokens,
+incomplete scoped roles, missing DSN, telemetry payload capture left
+on by accident):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>python<span class="w"> </span>scripts/validate_staging_env.py<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env
+</code></pre></div>
+<p>Address any errors before continuing. Common findings:</p>
+<ul>
+<li><code>replace-…</code> strings still present.</li>
+<li>Scoped role list missing <code>operator</code>, <code>reviewer</code>, or <code>viewer</code>.</li>
+<li><code>KNEO_SERV_OTEL_RECORD_ARGUMENTS=true</code> without an explicit
+  data-classification override.</li>
+</ul>
+<h3 id="3-start-the-compose-stack">3 · Start the Compose stack<a class="headerlink" href="#3-start-the-compose-stack" title="Permanent link">&para;</a></h3>
+<p>The stack runs the API plus PostgreSQL with a persistent volume.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+</code></pre></div>
+<p><code>--build</code> rebuilds the API image so any local edits land. <code>-d</code> runs
+detached. To watch logs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>api
+</code></pre></div>
+<p>You should see the API come up after PostgreSQL passes its
+healthcheck (about 10–20 seconds on a cold start). The API logs
+include a line per migration applied at first startup.</p>
+<h3 id="4-verify-readiness">4 · Verify readiness<a class="headerlink" href="#4-verify-readiness" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">BASE</span><span class="o">=</span>http://127.0.0.1:8000
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/livez&quot;</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/readyz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p><code>/livez</code> returns <code>{"ok": true, "metadata": {}}</code> as soon as the process
+accepts connections. <code>/readyz</code> returns 200 only after every dependency
+check passes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="p">{</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="w">    </span><span class="nt">&quot;ready&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="w">    </span><span class="nt">&quot;manager&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PlatformManager&quot;</span><span class="p">,</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="w">    </span><span class="nt">&quot;checks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="w">      </span><span class="nt">&quot;run_state_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_state_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="w">      </span><span class="nt">&quot;continuation_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;continuation_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="w">      </span><span class="nt">&quot;queue&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;queue&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="w">      </span><span class="nt">&quot;runtime_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;runtime_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;adapter&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;native&quot;</span><span class="p">]},</span>
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="w">      </span><span class="nt">&quot;tool_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tool_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;compress_history&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;publish_report&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;web_search&quot;</span><span class="p">]},</span>
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="w">      </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;providers&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="w">      </span><span class="nt">&quot;mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a><span class="p">}</span>
+</code></pre></div>
+<p>If you get a 503, the body identifies which check failed; see
+<a href="../../user/troubleshooting/#12-readyz-returns-503">troubleshooting.md § 1.2</a>.</p>
+<h3 id="5-run-the-deployment-smoke">5 · Run the deployment smoke<a class="headerlink" href="#5-run-the-deployment-smoke" title="Permanent link">&para;</a></h3>
+<p>The smoke script exercises the full path: auth, spec validation, run
+creation, human resume, audit listing, credential inventory, and
+policy update.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OP_TOKEN</span><span class="o">=</span>&lt;your-operator-token&gt;
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">REV_TOKEN</span><span class="o">=</span>&lt;your-reviewer-token&gt;
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIEW_TOKEN</span><span class="o">=</span>&lt;your-viewer-token&gt;
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="w">  </span>--base-url<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="w">  </span>--operator-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="w">  </span>--reviewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="w">  </span>--viewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VIEW_TOKEN</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>A clean run prints each step with a <code>PASS</code> and exits 0. If any step
+fails, the script identifies the failing endpoint and HTTP status.
+See <a href="../../user/deployment_smoke/"><code>deployment_smoke.md</code></a> for the full step list
+and what each step verifies.</p>
+<h3 id="6-submit-a-real-run">6 · Submit a real run<a class="headerlink" href="#6-submit-a-real-run" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/runs&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="s1">    &quot;input&quot;: &quot;smoke&quot;,</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="s1">    &quot;spec_path&quot;: &quot;examples/smoke_human_workflow.yaml&quot;,</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="s1">    &quot;target&quot;: &quot;workflow&quot;</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p>This spec uses the in-process <code>dummy</code> provider so it runs without
+provider credentials. You should see a <code>paused</code> response with a
+<code>continuation_id</code> (the workflow has a human step). Resume it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/human-tasks/cont_…/resume&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;request_id&quot;: &quot;req_…&quot;, &quot;decision&quot;: &quot;approved&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p>For the full HITL flow, see <a href="#human-in-the-loop-walkthrough">human_in_the_loop.md</a>.</p>
+<h3 id="7-verify-persistence-survives-restart">7 · Verify persistence survives restart<a class="headerlink" href="#7-verify-persistence-survives-restart" title="Permanent link">&para;</a></h3>
+<p>Confirm PostgreSQL volume persistence:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>restart<span class="w"> </span>api
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>sleep<span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/runs?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runs[].run_id&#39;</span>
+</code></pre></div>
+<p>You should see the run id from step 6 in the list, even after the API
+container restarts. The data lives in the <code>postgres-data</code> named
+volume, not the container layer.</p>
+<h3 id="8-capacity-tuning-knobs">8 · Capacity tuning knobs<a class="headerlink" href="#8-capacity-tuning-knobs" title="Permanent link">&para;</a></h3>
+<p>For a real production deployment, revisit these env vars in
+<code>deploy/production.env</code> after you have load profile data:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Tune when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code></td>
+<td>120</td>
+<td>Provider tail latency exceeds default.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_PROVIDER_RETRIES</code></td>
+<td>2</td>
+<td>Provider has documented transient error rate.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_MAX_BODY_BYTES</code></td>
+<td>1 MiB</td>
+<td>You receive larger inline specs or override payloads.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_MAX_INPUT_CHARS</code></td>
+<td>20000</td>
+<td>Run inputs are larger than the default.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_RUNS_DAYS</code></td>
+<td>unset</td>
+<td>Storage growth requires capping run history.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_CHECKPOINT_COMPRESS_BYTES</code></td>
+<td>64 KiB</td>
+<td>Many large checkpoints; reduce to compress more.</td>
+</tr>
+</tbody>
+</table>
+<p>Full list and semantics: <a href="../../user/environment/">environment.md</a>.</p>
+<h3 id="9-backup-the-database">9 · Backup the database<a class="headerlink" href="#9-backup-the-database" title="Permanent link">&para;</a></h3>
+<p>A seeded backup/restore drill is part of the release checklist. The
+shape for production:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># Backup</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;kneo_serv-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">.sql.gz&quot;</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="c1"># Restore (DESTRUCTIVE — wipes current data)</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>The full drill — including verifying that runs, checkpoints, audit
+events, and policy metadata survive a restore — is in
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a>.</p>
+<h3 id="10-tear-down">10 · Tear down<a class="headerlink" href="#10-tear-down" title="Permanent link">&para;</a></h3>
+<p>To stop the stack but keep data:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down
+</code></pre></div>
+<p>To stop the stack <em>and</em> delete the PostgreSQL volume (destroys runs,
+checkpoints, audit events, continuations):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down<span class="w"> </span>--volumes
+</code></pre></div>
+<p>Use the volume-deleting form for clean re-tests; never run it against
+a production deployment without a verified backup.</p>
+<h3 id="common-failure-modes">Common failure modes<a class="headerlink" href="#common-failure-modes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>See</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API container restarts with <code>KNEO service auth is enabled but no API keys are configured</code></td>
+<td><a href="../../user/troubleshooting/#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured">troubleshooting.md § 1.1</a></td>
+</tr>
+<tr>
+<td><code>/readyz</code> 503 with <code>run_state_store</code> not ok</td>
+<td><a href="../../user/troubleshooting/#22-psycopgoperationalerror-on-startup-or-first-request">troubleshooting.md § 2.2</a></td>
+</tr>
+<tr>
+<td>Service writes to SQLite even with DSN set</td>
+<td><a href="../../user/troubleshooting/#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite">troubleshooting.md § 2.1</a></td>
+</tr>
+<tr>
+<td>Smoke script fails on policy write</td>
+<td>API key probably missing <code>policies:write</code>; see <a href="../../user/troubleshooting/#42-403-forbidden-missing-required-scope-scope">troubleshooting.md § 4.2</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="where-to-go-next_1">Where to go next<a class="headerlink" href="#where-to-go-next_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/staging_release_runbook.md">staging_release_runbook.md</a> —
+  promotion path beyond a single host.</li>
+<li><a href="../../user/deployment/">deployment.md</a> — reference for deployment shapes,
+  including running without Compose.</li>
+<li><a href="../../user/environment/">environment.md</a> — every env var.</li>
+<li><a href="#tutorial-writing-a-custom-tool-end-to-end">tutorial_custom_tool.md</a> — extend this
+  deployment with custom tools.</li>
+</ul>
+<h2 id="human-in-the-loop-walkthrough">Human-in-the-loop walkthrough<a class="headerlink" href="#human-in-the-loop-walkthrough" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/human_in_the_loop/"><code>docs/user/human_in_the_loop.md</code></a></em></p>
+<p>An end-to-end guide to pause/resume workflows: declaring a human step in
+YAML, capturing the pause as a continuation, listing pending tasks, and
+resuming with a decision.</p>
+<p>The architectural rationale lives in
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md#85-human-in-the-loop-pauseresume">design.md § 8.5</a>; this
+page is the operational walkthrough.</p>
+<h3 id="what-human-in-the-loop-means-here">What "human-in-the-loop" means here<a class="headerlink" href="#what-human-in-the-loop-means-here" title="Permanent link">&para;</a></h3>
+<p>A workflow can include steps that block on a human decision. When the
+runtime reaches such a step it raises <code>HumanInterventionRequired</code>, which
+the platform catches, serializes into a <code>WorkflowContinuation</code>, and
+exposes to operators. The run goes from <code>running</code> to <code>paused</code>. A
+subsequent resume call provides the decision and the workflow continues
+from where it stopped, using the persisted replay context.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    autonumber
+    participant Caller
+    participant Service
+    participant Workflow as Workflow runtime
+    participant Cont as ContinuationStore
+    participant Reviewer
+
+    Caller-&gt;&gt;Service: POST /runs
+    Service-&gt;&gt;Workflow: execute
+    Workflow--&gt;&gt;Service: HumanInterventionRequired&lt;br/&gt;(continuation_id, request_id)
+    Service-&gt;&gt;Cont: save continuation + checkpoint
+    Service--&gt;&gt;Caller: 202 with continuation_id
+
+    Reviewer-&gt;&gt;Service: GET /human-tasks
+    Service--&gt;&gt;Reviewer: list (continuation, request, prompt, deadline)
+
+    Reviewer-&gt;&gt;Service: POST /human-tasks/{id}/resume&lt;br/&gt;(approve|reject + content)
+    Service-&gt;&gt;Cont: lock + load continuation
+    Service-&gt;&gt;Workflow: resume with decision
+    Workflow--&gt;&gt;Service: RunResult
+    Service--&gt;&gt;Reviewer: 200 result</code></pre>
+<h3 id="1-declare-a-human-step-in-a-spec">1 · Declare a human step in a spec<a class="headerlink" href="#1-declare-a-human-step-in-a-spec" title="Permanent link">&para;</a></h3>
+<p><a href="../../examples/human_approval_workflow.yaml"><code>examples/human_approval_workflow.yaml</code></a>
+is the reference example. The relevant pieces:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nt">workflow</span><span class="p">:</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sequential</span>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="w">  </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">draft</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">function</span>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="w">      </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">draft_report</span>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">approve</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">human</span><span class="w">            </span><span class="c1"># the pause point</span>
+<a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="w">      </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">approval-reviewer</span>
+<a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publish</span>
+<a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a><span class="w">      </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">function</span>
+<a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a><span class="w">      </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">publish_report</span>
+<a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>
+<a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a><span class="nt">components</span><span class="p">:</span>
+<a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a><span class="w">  </span><span class="nt">humans</span><span class="p">:</span>
+<a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a><span class="w">    </span><span class="nt">approval-reviewer</span><span class="p">:</span>
+<a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a><span class="w">      </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Please approve or edit the draft report.</span>
+<a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a><span class="w">      </span><span class="nt">assignee</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reviewer@example.com</span>
+<a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a><span class="w">      </span><span class="nt">timeout_seconds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">86400</span>
+<a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a><span class="w">      </span><span class="nt">on_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">escalate</span>
+</code></pre></div>
+<p>A <code>human</code> step references an entry under <code>components.humans</code>, which
+provides the prompt, the assignee, and the timeout policy. The assignee
+is metadata for the operator UI; the platform doesn't dispatch
+notifications itself — wire that up at your routing layer.</p>
+<h3 id="2-run-the-workflow-until-pause">2 · Run the workflow until pause<a class="headerlink" href="#2-run-the-workflow-until-pause" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+</code></pre></div>
+<p>When the workflow pauses on a human step, the response includes the run id,
+status, the <code>continuation_id</code> to resume against, and the pending request
+nested in <code>metadata.pending_human_request</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="p">{</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_2026-05-10T12:34:56_…&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paused&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="w">    </span><span class="nt">&quot;pending_human_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="w">      </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="w">      </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve the draft?&quot;</span>
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a><span class="p">}</span>
+</code></pre></div>
+<p>If you'd rather drive the API directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="s1">    &quot;input&quot;: &quot;draft the launch announcement&quot;,</span>
+<a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="s1">    &quot;spec_path&quot;: &quot;examples/human_approval_workflow.yaml&quot;,</span>
+<a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="s1">    &quot;target&quot;: &quot;workflow&quot;</span>
+<a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p>The response carries the same <code>continuation_id</code> and <code>request_id</code> fields.</p>
+<h3 id="3-list-and-inspect-pending-tasks">3 · List and inspect pending tasks<a class="headerlink" href="#3-list-and-inspect-pending-tasks" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>list<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>kneo<span class="w"> </span>human<span class="w"> </span>get<span class="w"> </span>&lt;continuation_id&gt;
+</code></pre></div>
+<p>Or via the API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/human-tasks?run_id=&lt;run_id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a>
+<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/human-tasks/&lt;continuation_id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p>Listing requires the <code>human:read</code> scope; resuming requires
+<code>human:write</code>. See
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</p>
+<h3 id="4-resume-with-a-decision">4 · Resume with a decision<a class="headerlink" href="#4-resume-with-a-decision" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="w">  </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">  </span>--approve
+</code></pre></div>
+<p>Or with structured content over HTTP:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/human-tasks/&lt;continuation_id&gt;/resume&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="s1">    &quot;request_id&quot;: &quot;&lt;request_id&gt;&quot;,</span>
+<a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="s1">    &quot;decision&quot;: &quot;approved&quot;,</span>
+<a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="s1">    &quot;content&quot;: &quot;Looks good. Ship it.&quot;</span>
+<a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<p><code>decision</code> must be one of <code>approved</code>, <code>rejected</code>, <code>edited</code>, <code>selected</code>, or
+<code>provided</code> (past-tense — the CLI's <code>--approve</code>, <code>--reject</code>, <code>--edit</code>,
+<code>--select</code>, and <code>--provide</code> flags map to these). <code>selected</code> pairs with a
+<code>selected_option</code>; <code>edited</code> and <code>provided</code> pair with edited/provided
+<code>content</code>. Which decisions a step accepts depends on its component
+definition; the full schema is in
+<a href="../../user/service_api/#resume-a-human-task">service_api.md</a>.</p>
+<h3 id="5-idempotent-resume">5 · Idempotent resume<a class="headerlink" href="#5-idempotent-resume" title="Permanent link">&para;</a></h3>
+<p><code>POST /human-tasks/{id}/resume</code> accepts an <code>Idempotency-Key</code> header. If
+you send the same key with the same body, the platform replays the
+original response instead of re-executing the resume. Mismatched bodies
+return <code>409 idempotency_key_conflict</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/human-tasks/&lt;continuation_id&gt;/resume&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Idempotency-Key: </span><span class="k">$(</span>uuidgen<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;...&#39;</span>
+</code></pre></div>
+<p>In the CLI, <code>KNEO_SERV_IDEMPOTENCY_KEY</code> provides the header.</p>
+<h3 id="6-process-safe-locking">6 · Process-safe locking<a class="headerlink" href="#6-process-safe-locking" title="Permanent link">&para;</a></h3>
+<p>The platform acquires a per-continuation lock before executing a resume.
+Two callers hitting <code>resume</code> on the same continuation see one succeed and
+the other receive <code>LockAcquisitionError</code>. This guarantees the same human
+task cannot be acted on twice.</p>
+<p>If you see this error, wait for the in-flight resume to finish; do not
+retry blindly. See
+<a href="../../user/troubleshooting/#81-lockacquisitionerror-on-resume">troubleshooting.md § 8.1</a>.</p>
+<h3 id="7-audit-trail">7 · Audit trail<a class="headerlink" href="#7-audit-trail" title="Permanent link">&para;</a></h3>
+<p>Every human decision records an audit event:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/audit-events?event_type=human.decision&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+</code></pre></div>
+<p>The payload records <code>request_id</code>, decision, selected option, result
+status, and <em>whether</em> content was present — never the content itself.
+See the audit policy in
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#audit-payload-review">production_readiness_review.md § Audit Payload Review</a>.</p>
+<h3 id="8-recovery-after-restart">8 · Recovery after restart<a class="headerlink" href="#8-recovery-after-restart" title="Permanent link">&para;</a></h3>
+<p><code>WorkflowContinuation</code> is persisted in <code>ContinuationStore</code>. If the
+service restarts mid-run, the paused continuation survives. After
+restart:</p>
+<ul>
+<li>Listing <code>/human-tasks</code> returns the same continuation.</li>
+<li>Resume picks up from the persisted replay context — the workflow does
+  not retry completed steps.</li>
+</ul>
+<p>If a non-human workflow is interrupted (e.g., a worker crash), the same
+mechanism enables continuation. Check <code>/runs/{id}/recovery</code> to see
+whether continuation is available, then call <code>/runs/{id}/continue</code>.</p>
+<h3 id="9-timeouts-and-escalation">9 · Timeouts and escalation<a class="headerlink" href="#9-timeouts-and-escalation" title="Permanent link">&para;</a></h3>
+<p><code>components.humans.&lt;id&gt;.timeout_seconds</code> and <code>on_timeout</code> declare the
+policy. The platform records the deadline on the continuation; whether a
+ticket is auto-escalated to a different reviewer is up to your routing
+layer plus the <code>on_timeout: escalate</code> hint that the spec compiler
+preserves on the continuation metadata.</p>
+<p>The platform does not currently auto-cancel paused runs at the deadline;
+operators are expected to act on <code>human-tasks</code> listings before timeout.
+The "expired" state is an explicit <code>0.2.x</code> follow-up.</p>
+<h3 id="common-failure-modes_1">Common failure modes<a class="headerlink" href="#common-failure-modes_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>See</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LockAcquisitionError</code> on resume</td>
+<td><a href="../../user/troubleshooting/#81-lockacquisitionerror-on-resume">troubleshooting.md § 8.1</a></td>
+</tr>
+<tr>
+<td>404 on continuation_id</td>
+<td><a href="../../user/troubleshooting/#82-continuation-expired-or-missing">troubleshooting.md § 8.2</a></td>
+</tr>
+<tr>
+<td><code>409 idempotency_key_conflict</code></td>
+<td><a href="../../user/troubleshooting/#54-409-conflict-idempotency_key_conflict">troubleshooting.md § 5.4</a></td>
+</tr>
+<tr>
+<td><code>403 Missing required scope: human:write</code></td>
+<td><a href="../../user/troubleshooting/#42-403-forbidden-missing-required-scope-scope">troubleshooting.md § 4.2</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="../../user/examples/">examples.md</a> — the full set of runnable specs.</li>
+<li><a href="../../user/service_api/">service_api.md</a> — <code>/human-tasks</code> route shapes.</li>
+<li><a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/dev/design.md#85-human-in-the-loop-pauseresume">design.md § 4.3</a> — design rationale.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

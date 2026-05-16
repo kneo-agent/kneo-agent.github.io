@@ -1,0 +1,81 @@
+version: v1
+
+agent:
+  name: research-copilot
+  system_prompt: |
+    You are an enterprise research assistant.
+  model:
+    provider: openai
+    name: gpt-4o
+  strategy:
+    type: plan-act
+    max_iterations: 8
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  tools:
+    include: [web_search, webpage_reader]
+
+workflow:
+  type: sequential
+  name: research-pipeline
+  steps:
+    - id: retrieve
+      kind: agent
+      ref: retriever
+    - id: compress_context
+      kind: function
+      ref: compress_history
+    - id: analyze
+      kind: agent
+      ref: analyst
+
+components:
+  agents:
+    retriever:
+      name: retriever
+      system_prompt: Retrieve relevant information.
+      model:
+        provider: openai
+        name: gpt-4o-mini
+      strategy:
+        type: react
+      runtime_preferences:
+        preferred_mode: bridge
+        allowed_modes: [bridge]
+      tools:
+        include: [web_search, webpage_reader]
+    analyst:
+      name: analyst
+      system_prompt: Analyze retrieved information.
+      model:
+        provider: openai
+        name: gpt-4o
+      strategy:
+        type: simple
+      runtime_preferences:
+        preferred_mode: bridge
+        allowed_modes: [bridge]
+  functions:
+    compress_history:
+      implementation: examples.app_functions.compress_history
+
+tools:
+  web_search:
+    description: Search the web.
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+      required: [query]
+    implementation: examples.app_functions.web_search
+  webpage_reader:
+    description: Read webpage content.
+    parameters:
+      type: object
+      properties:
+        url:
+          type: string
+      required: [url]
+    implementation: examples.app_functions.webpage_reader

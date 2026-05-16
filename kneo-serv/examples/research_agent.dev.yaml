@@ -1,0 +1,9 @@
+agent:
+  model:
+    name: gpt-4o-mini
+  strategy:
+    max_iterations: 4
+
+policy_defaults:
+  tracing:
+    enabled: true

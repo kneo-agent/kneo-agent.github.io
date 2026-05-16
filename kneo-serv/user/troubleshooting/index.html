@@ -1,0 +1,2607 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="kneo-agent Platform — service and control plane for the kneo-agent SDK">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/troubleshooting/">
+      
+      
+        <link rel="prev" href="../tls_and_proxy/">
+      
+      
+        <link rel="next" href="../tutorial_custom_tool/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Troubleshooting - kneo-agent Platform</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#troubleshooting" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="kneo-agent Platform" class="md-header__button md-logo" aria-label="kneo-agent Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            kneo-agent Platform
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Troubleshooting
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo-serv
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  kneo-agent Platform
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pub/kneo_agent_platform_operation_guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../backup_and_recovery/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="kneo-agent Platform" class="md-nav__button md-logo" aria-label="kneo-agent Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    kneo-agent Platform
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kneo-agent/kneo-serv" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    kneo-agent/kneo-serv
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kneo-agent Platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pub/kneo_agent_platform_operation_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Operation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pub/kneo_agent_platform_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pub/kneo_agent_platform_tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform Tutorial
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform 0.1.0 release notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Platform 0.1.1 release notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backup_and_recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup and recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli_reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Serv CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment_smoke/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment smoke test
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../human_in_the_loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Human-in-the-loop walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../incident_response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Incident response
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security_hardening/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security hardening
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../service_api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform service API
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tls_and_proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TLS and reverse proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-service-wont-start-or-wont-accept-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Service won't start or won't accept traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Service won&#39;t start or won&#39;t accept traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 RuntimeError: KNEO service auth is enabled but no API keys are configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-readyz-returns-503" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 /readyz returns 503
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-runtimeerror-platformmanager-has-not-been-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 RuntimeError: PlatformManager has not been configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-runtimeerror-invalid-kneo_serv_api_keys-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 RuntimeError: Invalid KNEO_SERV_API_KEYS entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-persistence-and-store-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Persistence and store failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Persistence and store failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 PostgreSQL DSN configured but service falls back to SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-psycopgoperationalerror-on-startup-or-first-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 psycopg.OperationalError on startup or first request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sqlite-database-is-locked-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SQLite database is locked errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-schema-migration-appears-to-have-run-but-old-data-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Schema migration appears to have run but old data is missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-backuprestore-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Backup/restore mismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-secrets-credentials-and-provider-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Secrets, credentials, and provider integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Secrets, credentials, and provider integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-missingsecreterror-on-agent-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 MissingSecretError on agent run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-get-readyz-reports-missing-providermcp-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 GET /readyz reports missing provider/MCP secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-kneo-spec-bundle-verify-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 kneo spec bundle verify fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-authentication-and-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Authentication and authorization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Authentication and authorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 401 Unauthorized — A valid Kneo service API key is required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-403-forbidden-missing-required-scope-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 403 Forbidden — Missing required scope: &lt;scope&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-health-endpoints-work-all-other-routes-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Health endpoints work, all other routes 401
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-run-lifecycle-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Run lifecycle problems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Run lifecycle problems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-async-runs-sit-in-queued-and-never-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Async runs sit in queued and never progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Cancelled run still finishes as succeeded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-run-hangs-at-a-workflow-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Run hangs at a workflow step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-409-conflict-idempotency_key_conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 409 Conflict — idempotency_key_conflict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-400-bad-request-invalid_idempotency_key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 400 Bad Request — invalid_idempotency_key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-spec-validation-and-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Spec validation and compilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Spec validation and compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-speccompilationerror-with-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 SpecCompilationError with diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-valueerror-tool-name-has-no-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 ValueError: Tool '&lt;name&gt;' has no implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-inline-spec-rejected-with-size-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Inline spec rejected with size error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-structured-logs-missing-request_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Structured logs missing request_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-opentelemetry-not-exporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 OpenTelemetry not exporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-trace-events-missing-for-a-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Trace events missing for a run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-human-in-the-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Human-in-the-loop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Human-in-the-loop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-lockacquisitionerror-on-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 LockAcquisitionError on resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-continuation-expired-or-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Continuation expired or missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-release-and-supply-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Release and supply chain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-capture-before-opening-a-bug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to capture before opening a bug
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_custom_tool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: writing a custom tool end-to-end
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_postgres_deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial: deploying with PostgreSQL from zero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-service-wont-start-or-wont-accept-traffic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Service won't start or won't accept traffic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Service won&#39;t start or won&#39;t accept traffic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 RuntimeError: KNEO service auth is enabled but no API keys are configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-readyz-returns-503" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 /readyz returns 503
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-runtimeerror-platformmanager-has-not-been-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 RuntimeError: PlatformManager has not been configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-runtimeerror-invalid-kneo_serv_api_keys-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 RuntimeError: Invalid KNEO_SERV_API_KEYS entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-persistence-and-store-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Persistence and store failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Persistence and store failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 PostgreSQL DSN configured but service falls back to SQLite
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-psycopgoperationalerror-on-startup-or-first-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 psycopg.OperationalError on startup or first request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-sqlite-database-is-locked-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 SQLite database is locked errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-schema-migration-appears-to-have-run-but-old-data-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Schema migration appears to have run but old data is missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-backuprestore-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Backup/restore mismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-secrets-credentials-and-provider-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Secrets, credentials, and provider integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Secrets, credentials, and provider integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-missingsecreterror-on-agent-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 MissingSecretError on agent run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-get-readyz-reports-missing-providermcp-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 GET /readyz reports missing provider/MCP secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-kneo-spec-bundle-verify-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 kneo spec bundle verify fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-authentication-and-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Authentication and authorization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Authentication and authorization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 401 Unauthorized — A valid Kneo service API key is required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-403-forbidden-missing-required-scope-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 403 Forbidden — Missing required scope: &lt;scope&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-health-endpoints-work-all-other-routes-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Health endpoints work, all other routes 401
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-run-lifecycle-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Run lifecycle problems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Run lifecycle problems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-async-runs-sit-in-queued-and-never-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Async runs sit in queued and never progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Cancelled run still finishes as succeeded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-run-hangs-at-a-workflow-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Run hangs at a workflow step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-409-conflict-idempotency_key_conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 409 Conflict — idempotency_key_conflict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-400-bad-request-invalid_idempotency_key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 400 Bad Request — invalid_idempotency_key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-spec-validation-and-compilation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Spec validation and compilation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Spec validation and compilation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-speccompilationerror-with-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 SpecCompilationError with diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-valueerror-tool-name-has-no-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 ValueError: Tool '&lt;name&gt;' has no implementation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-inline-spec-rejected-with-size-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Inline spec rejected with size error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-structured-logs-missing-request_id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Structured logs missing request_id
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-opentelemetry-not-exporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 OpenTelemetry not exporting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-trace-events-missing-for-a-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 Trace events missing for a run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-human-in-the-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Human-in-the-loop
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Human-in-the-loop">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-lockacquisitionerror-on-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 LockAcquisitionError on resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-continuation-expired-or-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Continuation expired or missing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-release-and-supply-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Release and supply chain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-capture-before-opening-a-bug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to capture before opening a bug
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h1>
+<p>An operator-facing runbook indexed by symptom. Each entry lists the symptom,
+how to confirm the root cause, and the fix; cross-references point at the
+authoritative configuration doc when one exists.</p>
+<p>If you are responding to a live incident and don't yet have a symptom,
+start at <a href="../incident_response/"><code>incident_response.md</code></a> — it walks
+<code>/healthz</code> → <code>/readyz</code> → the right section here. This page is the
+symptom-indexed deep dive.</p>
+<p>When you're not sure where to start, check <code>GET /readyz</code>
+(<a href="#12-readyz-returns-503">§ 1.2</a>) — it exposes the per-dependency status the
+service uses internally, and most "service is unhealthy" tickets resolve to
+one of its check entries.</p>
+<h2 id="1-service-wont-start-or-wont-accept-traffic">1. Service won't start or won't accept traffic<a class="headerlink" href="#1-service-wont-start-or-wont-accept-traffic" title="Permanent link">&para;</a></h2>
+<h3 id="11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured">1.1 <code>RuntimeError: KNEO service auth is enabled but no API keys are configured</code><a class="headerlink" href="#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured" title="Permanent link">&para;</a></h3>
+<p>The service refuses to start when auth is enabled without keys.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L109"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: check the startup log for the message above.</li>
+<li>Fix: set <code>KNEO_SERV_API_KEYS</code> (entries are
+  <code>name:key:role_or_scope[,role_or_scope]</code>, semicolon-separated) and/or
+  <code>KNEO_SERV_ADMIN_API_KEY</code>. To run without auth, set
+  <code>KNEO_SERV_AUTH_ENABLED=false</code> (only for local dev).</li>
+<li>Reference: <a href="../environment/#service-auth">environment.md § Service Auth</a>,
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md">production_readiness_review.md § Role Boundary Review</a>.</li>
+</ul>
+<h3 id="12-readyz-returns-503">1.2 <code>/readyz</code> returns 503<a class="headerlink" href="#12-readyz-returns-503" title="Permanent link">&para;</a></h3>
+<p><code>GET /readyz</code> returns
+<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code> when any dependency
+check fails. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/routes_health.py#L53"><code>service/routes_health.py</code></a></p>
+<ul>
+<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq</code>. Each per-dependency
+  entry has <code>ok: false</code> plus <code>error</code> and <code>message</code> for failed checks.</li>
+<li>Fix: the per-check failure matrix (which check maps to which recovery
+  action) lives in
+  <a href="../incident_response/#readyz-failure-matrix"><code>incident_response.md § /readyz failure matrix</code></a>.
+  In summary: store failures are covered by §2; provider/MCP secret
+  failures by §3.</li>
+</ul>
+<h3 id="13-runtimeerror-platformmanager-has-not-been-configured">1.3 <code>RuntimeError: PlatformManager has not been configured</code><a class="headerlink" href="#13-runtimeerror-platformmanager-has-not-been-configured" title="Permanent link">&para;</a></h3>
+<p>The default <code>app</code> factory configures the platform manager automatically. This
+error appears when you pass <code>configure_default_manager=False</code> to
+<code>create_app()</code> and never call <code>set_platform_manager()</code> before serving.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/dependencies.py#L26"><code>service/dependencies.py</code></a></p>
+<ul>
+<li>Fix: either drop the override, or call
+  <code>kneo_serv.service.dependencies.set_platform_manager(...)</code> before the first
+  request.</li>
+</ul>
+<h3 id="14-runtimeerror-invalid-kneo_serv_api_keys-entry">1.4 <code>RuntimeError: Invalid KNEO_SERV_API_KEYS entry</code><a class="headerlink" href="#14-runtimeerror-invalid-kneo_serv_api_keys-entry" title="Permanent link">&para;</a></h3>
+<p>The format is <code>name:key:role_or_scope[,role_or_scope]</code> per entry, separated
+by semicolons. Whitespace inside entries is trimmed; missing colons trigger
+this error. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L169"><code>service/auth.py</code></a></p>
+<ul>
+<li>Fix: re-render <code>KNEO_SERV_API_KEYS</code>. Examples:</li>
+<li><code>operator:OP_TOKEN:operator;reviewer:REV_TOKEN:reviewer</code></li>
+<li><code>svc:SVC_TOKEN:runs:write,human:read,human:write</code></li>
+<li>Reference: <a href="../environment/#service-auth">environment.md § Service Auth</a>,
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</li>
+</ul>
+<h2 id="2-persistence-and-store-failures">2. Persistence and store failures<a class="headerlink" href="#2-persistence-and-store-failures" title="Permanent link">&para;</a></h2>
+<h3 id="21-postgresql-dsn-configured-but-service-falls-back-to-sqlite">2.1 PostgreSQL DSN configured but service falls back to SQLite<a class="headerlink" href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite" title="Permanent link">&para;</a></h3>
+<p>The service uses PostgreSQL only when <code>KNEO_SERV_DATABASE_URL</code> is set <strong>and</strong>
+the <code>[postgres]</code> or <code>[deploy]</code> extra is installed. See
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L140"><code>service/factory.py</code></a>.</p>
+<ul>
+<li>Confirm: in a dev shell, <code>python -c "import psycopg; print(psycopg.__version__)"</code>.</li>
+<li>Fix: install <code>kneo-serv[deploy]</code> (Docker image already does this), or
+  <code>kneo-serv[postgres]</code> if you don't need telemetry.</li>
+</ul>
+<h3 id="22-psycopgoperationalerror-on-startup-or-first-request">2.2 <code>psycopg.OperationalError</code> on startup or first request<a class="headerlink" href="#22-psycopgoperationalerror-on-startup-or-first-request" title="Permanent link">&para;</a></h3>
+<p>The DSN can't connect. Common causes: wrong host, missing TLS, wrong
+credentials, database not yet created.</p>
+<ul>
+<li>Confirm: <code>psql "$KNEO_SERV_DATABASE_URL" -c '\dt'</code> from the same network
+  context as the service.</li>
+<li>Fix: correct the DSN, ensure the database exists, and confirm the user has
+  privileges. <code>KNEO_SERV_DATABASE_URL</code> must be a libpq-style URL.</li>
+</ul>
+<h3 id="23-sqlite-database-is-locked-errors">2.3 SQLite <code>database is locked</code> errors<a class="headerlink" href="#23-sqlite-database-is-locked-errors" title="Permanent link">&para;</a></h3>
+<p>Concurrent writes to a single SQLite file can collide. The default service
+worker is single-threaded per process; this typically appears when running
+multiple service processes against the same SQLite file.</p>
+<ul>
+<li>Fix: switch to PostgreSQL (set <code>KNEO_SERV_DATABASE_URL</code>). Multi-process
+  SQLite is not a supported deployment topology.</li>
+</ul>
+<h3 id="24-schema-migration-appears-to-have-run-but-old-data-is-missing">2.4 Schema migration appears to have run but old data is missing<a class="headerlink" href="#24-schema-migration-appears-to-have-run-but-old-data-is-missing" title="Permanent link">&para;</a></h3>
+<p>Migrations are idempotent and version-tracked per store; they don't drop
+data. If rows look missing after an upgrade, check whether you actually
+upgraded the same database the service is reading.</p>
+<ul>
+<li>Confirm: compare <code>KNEO_SERV_DATABASE_URL</code> (or SQLite path) between the
+  upgrade context and the running service. A stale state file at
+  <code>.kneo/kneo_runs.sqlite</code> is a common cause.</li>
+</ul>
+<h3 id="25-backuprestore-mismatch">2.5 Backup/restore mismatch<a class="headerlink" href="#25-backuprestore-mismatch" title="Permanent link">&para;</a></h3>
+<p><code>kneo_serv.maintenance.backup_sqlite_database()</code> produces a file copy that
+restore expects to find on the same SQLite version line. Restoring across
+incompatible SQLite versions can fail.</p>
+<ul>
+<li>Fix: align <code>sqlite3</code> versions, or migrate to PostgreSQL where backup goes
+  through <code>pg_dump</code> / <code>pg_restore</code>. See
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/staging_release_runbook.md">staging_release_runbook.md</a> and
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a> for the seeded recovery drill.</li>
+</ul>
+<h2 id="3-secrets-credentials-and-provider-integration">3. Secrets, credentials, and provider integration<a class="headerlink" href="#3-secrets-credentials-and-provider-integration" title="Permanent link">&para;</a></h2>
+<h3 id="31-missingsecreterror-on-agent-run">3.1 <code>MissingSecretError</code> on agent run<a class="headerlink" href="#31-missingsecreterror-on-agent-run" title="Permanent link">&para;</a></h3>
+<p>Provider keys, MCP credentials, and runtime settings are resolved through
+env-var references in project config; raw values are never stored.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/security/secrets.py#L39"><code>security/secrets.py</code></a></p>
+<ul>
+<li>Confirm: <code>kneo config secrets --json</code> lists which references exist
+  and whether each resolves. The endpoint
+  <code>GET /security/credentials</code> exposes the same view (requires
+  <code>credentials:read</code>).</li>
+<li>Fix: export the env var named in the error. Set
+  <code>KNEO_SERV_REQUIRE_PROVIDER_SECRETS=true</code> to fail fast at startup
+  instead of at first run.</li>
+</ul>
+<h3 id="32-get-readyz-reports-missing-providermcp-secrets">3.2 <code>GET /readyz</code> reports missing provider/MCP secrets<a class="headerlink" href="#32-get-readyz-reports-missing-providermcp-secrets" title="Permanent link">&para;</a></h3>
+<p>Readiness reports the secrets named in <code>KNEO_SERV_HEALTH_PROVIDERS</code> and
+<code>KNEO_SERV_HEALTH_MCP_SECRETS</code>. These are operator-curated allowlists, so
+expect 503 if you list a secret that isn't actually exported.</p>
+<ul>
+<li>Fix: trim the list to secrets you actually use, or export the missing one.</li>
+</ul>
+<h3 id="33-kneo-spec-bundle-verify-fails">3.3 <code>kneo spec bundle verify</code> fails<a class="headerlink" href="#33-kneo-spec-bundle-verify-fails" title="Permanent link">&para;</a></h3>
+<p>Bundle verification requires <code>KNEO_SERV_SPEC_SIGNING_KEY</code> to match the key
+used to sign. Bundles signed with a different key (or unsigned) fail
+verification.</p>
+<ul>
+<li>Fix: rotate the signing key consistently across signing and verifying
+  hosts. The key is HMAC-only; do not commit it.</li>
+</ul>
+<h2 id="4-authentication-and-authorization">4. Authentication and authorization<a class="headerlink" href="#4-authentication-and-authorization" title="Permanent link">&para;</a></h2>
+<h3 id="41-401-unauthorized-a-valid-kneo-service-api-key-is-required">4.1 <code>401 Unauthorized — A valid Kneo service API key is required</code><a class="headerlink" href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required" title="Permanent link">&para;</a></h3>
+<p>The route requires auth and the request didn't carry a valid token.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L152"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: send <code>Authorization: Bearer &lt;key&gt;</code> or <code>X-Kneo-Api-Key: &lt;key&gt;</code>.</li>
+<li>Fix: use one of the configured keys. The CLI service client reads
+  <code>KNEO_SERV_API_KEY</code>. For multi-environment workflows use CLI profiles
+  (<code>kneo config profile use ...</code>).</li>
+</ul>
+<h3 id="42-403-forbidden-missing-required-scope-scope">4.2 <code>403 Forbidden — Missing required scope: &lt;scope&gt;</code><a class="headerlink" href="#42-403-forbidden-missing-required-scope-scope" title="Permanent link">&para;</a></h3>
+<p>The token authenticated but the principal does not hold the scope the route
+requires. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/auth.py#L140"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: the scope in the error body tells you exactly what is missing.</li>
+<li>Fix: assign the principal a role that includes the scope, or add the
+  scope explicitly in <code>KNEO_SERV_API_KEYS</code>. See the route ↔ scope matrix in
+  <a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md">production_readiness_review.md</a>.</li>
+<li>Common gotchas:</li>
+<li><code>POST /specs/run</code> requires <code>runs:write</code>, not <code>specs:read</code>.</li>
+<li>Reviewer cannot create runs or change policies.</li>
+<li>Service role cannot mutate environment policies (only operator/admin).</li>
+</ul>
+<h3 id="43-health-endpoints-work-all-other-routes-401">4.3 Health endpoints work, all other routes 401<a class="headerlink" href="#43-health-endpoints-work-all-other-routes-401" title="Permanent link">&para;</a></h3>
+<p><code>/healthz</code>, <code>/livez</code>, and <code>/readyz</code> are intentionally unauthenticated for
+load-balancer probes. Everything else is gated by the auth dependency. This
+is by design; see
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</p>
+<h2 id="5-run-lifecycle-problems">5. Run lifecycle problems<a class="headerlink" href="#5-run-lifecycle-problems" title="Permanent link">&para;</a></h2>
+<h3 id="51-async-runs-sit-in-queued-and-never-progress">5.1 Async runs sit in <code>queued</code> and never progress<a class="headerlink" href="#51-async-runs-sit-in-queued-and-never-progress" title="Permanent link">&para;</a></h3>
+<p>The platform worker is started by <code>create_default_platform_manager()</code> in
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/factory.py#L118"><code>service/factory.py</code></a>. If a custom
+embedding skips <code>manager.start_worker()</code>, queued runs never drain.</p>
+<ul>
+<li>Confirm: <code>GET /runs?status=queued</code> shows queued items; <code>GET /readyz</code> shows
+  the queue dependency as ok; the service log has no "worker" lines.</li>
+<li>Fix: ensure <code>start_worker()</code> is called in the host process after
+  constructing <code>PlatformManager</code> directly, or use the default factory.</li>
+</ul>
+<h3 id="52-cancelled-run-still-finishes-as-succeeded">5.2 Cancelled run still finishes as <code>succeeded</code><a class="headerlink" href="#52-cancelled-run-still-finishes-as-succeeded" title="Permanent link">&para;</a></h3>
+<p>Cancellation is cooperative through <code>CancellationToken</code> and propagates only
+at unit-of-work boundaries. A step that completes between the cancel
+request and the next checkpoint will record its result, but <code>RunState</code>
+remains <code>cancelled</code> — the platform does not overwrite cancelled status with
+completed results.</p>
+<ul>
+<li>Confirm: <code>GET /runs/{run_id}</code> should still report <code>status: cancelled</code>
+  even if the last checkpoint shows completion of a step.</li>
+<li>If <code>status</code> shows <code>succeeded</code> after a cancel, file an issue with the run
+  id, the checkpoint timeline (<code>/runs/{run_id}/checkpoints</code>), and the trace
+  (<code>/runs/{run_id}/trace</code>).</li>
+</ul>
+<h3 id="53-run-hangs-at-a-workflow-step">5.3 Run hangs at a workflow step<a class="headerlink" href="#53-run-hangs-at-a-workflow-step" title="Permanent link">&para;</a></h3>
+<p>Workflow steps support <code>on_error: retry</code>, <code>max_retries</code>, and
+<code>timeout_seconds</code>. If a step has no timeout and the underlying provider/MCP
+call blocks, the step blocks too.</p>
+<ul>
+<li>Fix: set step-level timeouts, or set the global defaults
+  <code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code> /
+  <code>KNEO_SERV_MCP_TIMEOUT_SECONDS</code>.</li>
+</ul>
+<h3 id="54-409-conflict-idempotency_key_conflict">5.4 <code>409 Conflict — idempotency_key_conflict</code><a class="headerlink" href="#54-409-conflict-idempotency_key_conflict" title="Permanent link">&para;</a></h3>
+<p><code>Idempotency-Key</code> was reused with a different request body for the same
+scope. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/idempotency.py#L52"><code>service/idempotency.py</code></a></p>
+<ul>
+<li>Fix: pick a new key for the new request body, or reuse the same body for
+  the original key. Idempotency records hash the canonical JSON of the
+  request payload and replay the original response on match.</li>
+</ul>
+<h3 id="55-400-bad-request-invalid_idempotency_key">5.5 <code>400 Bad Request — invalid_idempotency_key</code><a class="headerlink" href="#55-400-bad-request-invalid_idempotency_key" title="Permanent link">&para;</a></h3>
+<p><code>Idempotency-Key</code> headers must be 1–256 characters after trimming.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/idempotency.py#L23"><code>service/idempotency.py</code></a></p>
+<ul>
+<li>Fix: shorten the key. UUIDs are sufficient.</li>
+</ul>
+<h2 id="6-spec-validation-and-compilation">6. Spec validation and compilation<a class="headerlink" href="#6-spec-validation-and-compilation" title="Permanent link">&para;</a></h2>
+<h3 id="61-speccompilationerror-with-diagnostics">6.1 <code>SpecCompilationError</code> with diagnostics<a class="headerlink" href="#61-speccompilationerror-with-diagnostics" title="Permanent link">&para;</a></h3>
+<p><code>SpecCompiler</code> raises this on either schema or semantic validation failure.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/spec/compiler.py#L57"><code>spec/compiler.py</code></a></p>
+<ul>
+<li>Confirm: <code>kneo spec validate &lt;path&gt;</code> prints the same diagnostics
+  with location info.</li>
+<li>Fix: address each diagnostic. Common causes:</li>
+<li>Missing/extra fields in <code>version: v1</code> shape.</li>
+<li>References to undefined components/tools.</li>
+<li>Memory/guardrail policy mis-shape.</li>
+<li>Migrate older specs with <code>kneo spec migrate &lt;path&gt; --output &lt;new&gt;</code>.</li>
+</ul>
+<h3 id="62-valueerror-tool-name-has-no-implementation">6.2 <code>ValueError: Tool '&lt;name&gt;' has no implementation</code><a class="headerlink" href="#62-valueerror-tool-name-has-no-implementation" title="Permanent link">&para;</a></h3>
+<p>The spec references a tool name that is not registered with the
+<code>ToolRegistry</code>. <a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/spec/builder.py#L42"><code>spec/builder.py</code></a></p>
+<ul>
+<li>Fix: register the tool (programmatically or via MCP import), or remove
+  the reference. The default service registers example tools; toggle with
+  <code>include_example_tools</code> when constructing <code>PlatformManager</code> directly.</li>
+</ul>
+<h3 id="63-inline-spec-rejected-with-size-error">6.3 Inline spec rejected with size error<a class="headerlink" href="#63-inline-spec-rejected-with-size-error" title="Permanent link">&para;</a></h3>
+<p>Inline specs and overrides are bounded.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/service/limits.py#L62"><code>service/limits.py</code></a></p>
+<ul>
+<li>Fix: tune the relevant limit (<code>KNEO_SERV_MAX_INLINE_SPEC_BYTES</code>,
+  <code>KNEO_SERV_MAX_OVERRIDES_BYTES</code>, <code>KNEO_SERV_MAX_METADATA_BYTES</code>,
+  <code>KNEO_SERV_MAX_BODY_BYTES</code>) or move the spec to a path on disk. Limits
+  exist to keep the service from deserializing arbitrarily large payloads.</li>
+</ul>
+<h2 id="7-observability">7. Observability<a class="headerlink" href="#7-observability" title="Permanent link">&para;</a></h2>
+<h3 id="71-structured-logs-missing-request_id">7.1 Structured logs missing <code>request_id</code><a class="headerlink" href="#71-structured-logs-missing-request_id" title="Permanent link">&para;</a></h3>
+<p>The structured logging middleware always populates <code>request_id</code>; missing
+fields usually mean the log was emitted before <code>RequestLoggingMiddleware</code>
+attached, or you're reading raw uvicorn access logs instead of the service
+logger.</p>
+<ul>
+<li>Fix: filter by logger name <code>kneo_serv</code> or by JSON log format. Clients
+  can supply <code>X-Request-ID</code> to override the generated id; the service
+  echoes it on the response.</li>
+</ul>
+<h3 id="72-opentelemetry-not-exporting">7.2 OpenTelemetry not exporting<a class="headerlink" href="#72-opentelemetry-not-exporting" title="Permanent link">&para;</a></h3>
+<p>The SDK <code>OpenTelemetryMiddleware</code> only attaches when both
+<code>KNEO_SERV_OTEL_ENABLED=true</code> and the <code>[telemetry]</code> extra is installed.</p>
+<ul>
+<li>Fix: install <code>kneo-serv[deploy]</code> (Docker image) or <code>kneo-serv[telemetry]</code>,
+  set <code>KNEO_SERV_OTEL_ENABLED=true</code>, and ensure standard OTel exporter env
+  vars (<code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, etc.) are set.</li>
+<li>Tool arguments and results are <strong>not</strong> captured by default. Enable with
+  <code>KNEO_SERV_OTEL_RECORD_ARGUMENTS=true</code> and/or
+  <code>KNEO_SERV_OTEL_RECORD_RESULTS=true</code> only after you've confirmed the
+  data classification allows payload capture.</li>
+</ul>
+<h3 id="73-trace-events-missing-for-a-run">7.3 Trace events missing for a run<a class="headerlink" href="#73-trace-events-missing-for-a-run" title="Permanent link">&para;</a></h3>
+<p>Service-side trace events live in run metadata and at
+<code>/runs/{run_id}/trace</code>. They are emitted by <code>TracingMiddleware</code> and the
+in-process <code>Tracer</code>, independent of OTel. Missing events most often mean
+the run was never executed (e.g. queued and abandoned) or the spec
+disabled tracing.</p>
+<ul>
+<li>Fix: confirm the run reached <code>running</code>/<code>succeeded</code>. If the workflow
+  middleware list omits <code>TracingMiddleware</code>, restore it (the default chain
+  includes it).</li>
+</ul>
+<h2 id="8-human-in-the-loop">8. Human-in-the-loop<a class="headerlink" href="#8-human-in-the-loop" title="Permanent link">&para;</a></h2>
+<h3 id="81-lockacquisitionerror-on-resume">8.1 <code>LockAcquisitionError</code> on resume<a class="headerlink" href="#81-lockacquisitionerror-on-resume" title="Permanent link">&para;</a></h3>
+<p>A <code>POST /human-tasks/{continuation_id}/resume</code> failed because another
+caller currently holds the resume lock for the same continuation.
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/kneo_serv/platform/manager.py#L522"><code>platform/manager.py</code></a></p>
+<ul>
+<li>Confirm: the error body identifies the lock name. The first caller is
+  still in flight.</li>
+<li>Fix: wait for the in-flight resume to complete; do not retry blindly.
+  Use idempotency keys on resume to make retries safe.</li>
+</ul>
+<h3 id="82-continuation-expired-or-missing">8.2 Continuation expired or missing<a class="headerlink" href="#82-continuation-expired-or-missing" title="Permanent link">&para;</a></h3>
+<p>If the continuation store was rotated (e.g. <code>.kneo/continuations</code>
+recreated, or PostgreSQL row deleted), <code>/human-tasks/{continuation_id}</code>
+returns 404.</p>
+<ul>
+<li>Fix: the run cannot be resumed. Start a new run.</li>
+</ul>
+<h2 id="9-release-and-supply-chain">9. Release and supply chain<a class="headerlink" href="#9-release-and-supply-chain" title="Permanent link">&para;</a></h2>
+<p>For release-flow issues (mypy, pip-audit, build, tag, publish), follow
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/release_checklist.md">release_checklist.md</a> and
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/docs/plan/supply_chain_review.md">supply_chain_review.md</a>. The release workflow at
+<a href="https://github.com/kneo-agent/kneo-serv/blob/main/.github/workflows/release.yml"><code>.github/workflows/release.yml</code></a> emits the
+gate that failed in its job summary.</p>
+<h2 id="what-to-capture-before-opening-a-bug">What to capture before opening a bug<a class="headerlink" href="#what-to-capture-before-opening-a-bug" title="Permanent link">&para;</a></h2>
+<p>When a problem isn't covered above:</p>
+<ul>
+<li>Service version and commit (<code>pip show kneo-serv</code>, plus the git commit if
+  installed from source).</li>
+<li>Environment context (<code>uname -a</code>, Python version, Postgres version if
+  used).</li>
+<li>The <code>request_id</code> and <code>run_id</code> from logs.</li>
+<li><code>GET /readyz</code> body.</li>
+<li>For run problems: <code>GET /runs/{run_id}</code>, <code>GET /runs/{run_id}/trace</code>, and
+  <code>GET /runs/{run_id}/checkpoints</code> (redacted output is fine to share).</li>
+<li>For spec problems: the output of <code>kneo spec validate &lt;path&gt; --json</code>.</li>
+</ul>
+<p>Audit events are accessible at <code>GET /audit-events</code> and frequently contain
+the operator action that preceded a fault.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

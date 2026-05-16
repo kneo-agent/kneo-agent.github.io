@@ -1,0 +1,22 @@
+sequenceDiagram
+    autonumber
+    participant Caller
+    participant Service
+    participant Workflow as Workflow runtime
+    participant Cont as ContinuationStore
+    participant Reviewer
+
+    Caller->>Service: POST /runs
+    Service->>Workflow: execute
+    Workflow-->>Service: HumanInterventionRequired<br/>(continuation_id, request_id)
+    Service->>Cont: save continuation + checkpoint
+    Service-->>Caller: 202 with continuation_id
+
+    Reviewer->>Service: GET /human-tasks
+    Service-->>Reviewer: list (continuation, request, prompt, deadline)
+
+    Reviewer->>Service: POST /human-tasks/{id}/resume<br/>(approve|reject + content)
+    Service->>Cont: lock + load continuation
+    Service->>Workflow: resume with decision
+    Workflow-->>Service: RunResult
+    Service-->>Reviewer: 200 result

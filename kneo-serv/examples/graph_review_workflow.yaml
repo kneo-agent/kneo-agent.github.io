@@ -1,0 +1,71 @@
+version: v1
+
+agent:
+  name: graph-root
+  system_prompt: Root agent for graph workflow.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: graph
+  name: research-review-graph
+  start: retrieve
+  max_steps: 10
+  nodes:
+    retrieve: {id: retrieve, kind: agent, ref: retriever}
+    analyze: {id: analyze, kind: agent, ref: analyst}
+    review: {id: review, kind: agent, ref: safety-reviewer}
+    revise: {id: revise, kind: agent, ref: reviser}
+    finalize: {id: finalize, kind: agent, ref: finalizer}
+  edges:
+    - from: retrieve
+      to: analyze
+    - from: analyze
+      to: review
+    - from: review
+      to: revise
+      condition: {type: output_contains, value: REVISION_REQUIRED}
+    - from: review
+      to: finalize
+      condition: {type: output_contains, value: APPROVED}
+    - from: revise
+      to: finalize
+
+components:
+  agents:
+    retriever:
+      name: retriever
+      system_prompt: Retrieve information.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    analyst:
+      name: analyst
+      system_prompt: Analyze information.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    safety-reviewer:
+      name: safety-reviewer
+      system_prompt: Return APPROVED or REVISION_REQUIRED.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    reviser:
+      name: reviser
+      system_prompt: Revise draft.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    finalizer:
+      name: finalizer
+      system_prompt: Finalize report.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}

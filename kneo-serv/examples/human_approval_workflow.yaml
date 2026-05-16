@@ -1,0 +1,40 @@
+version: v1
+
+agent:
+  name: approval-root
+  system_prompt: Root approval agent.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: sequential
+  name: approval-workflow
+  steps:
+    - id: draft
+      kind: function
+      ref: draft_report
+    - id: approve
+      kind: human
+      ref: approval-reviewer
+    - id: publish
+      kind: function
+      ref: publish_report
+
+components:
+  functions:
+    draft_report:
+      implementation: examples.human_functions.draft_report
+    publish_report:
+      implementation: examples.human_functions.publish_report
+  humans:
+    approval-reviewer:
+      description: Please approve or edit the draft report.
+      assignee: reviewer@example.com
+      timeout_seconds: 86400
+      on_timeout: escalate

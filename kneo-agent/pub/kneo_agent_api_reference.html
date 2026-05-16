@@ -1,0 +1,2664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kneo Agent — API Reference Manual</title>
+<style>
+/* ── Reset & base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0d1117;
+  color: #c9d1d9;
+  line-height: 1.7;
+  display: flex;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+#sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 260px; overflow-y: auto;
+  background: #161b22;
+  border-right: 1px solid #21262d;
+  padding: 0 0 2rem;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #30363d transparent;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+.sidebar-header {
+  padding: 1.25rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #21262d;
+  position: sticky; top: 0;
+  background: #161b22;
+  z-index: 1;
+}
+.sidebar-header .product-name {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #58a6ff;
+}
+.sidebar-header h1 {
+  font-size: 1rem; font-weight: 700; color: #f0f6fc;
+  margin-top: 0.1rem;
+}
+.sidebar-header .version {
+  font-size: 0.72rem; color: #8b949e; margin-top: 0.2rem;
+}
+
+.nav-section { padding: 0.6rem 0; border-bottom: 1px solid #21262d; }
+.nav-section-label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #8b949e;
+  padding: 0.4rem 1.25rem 0.25rem;
+}
+.nav-section a {
+  display: block; padding: 0.28rem 1.25rem 0.28rem 1.6rem;
+  color: #8b949e; text-decoration: none;
+  font-size: 0.82rem; border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.nav-section a:hover { color: #f0f6fc; background: #21262d; border-left-color: #30363d; }
+.nav-section a.active { color: #58a6ff; border-left-color: #58a6ff; background: #1f2937; }
+.nav-section a.sub { padding-left: 2.1rem; font-size: 0.78rem; }
+
+/* ── Main content ───────────────────────────────────────────── */
+#main {
+  margin-left: 260px;
+  min-height: 100vh;
+  max-width: 960px;
+  padding: 2.5rem 3rem 4rem;
+  flex: 1;
+}
+
+/* ── Page header ────────────────────────────────────────────── */
+.page-header {
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.page-header .kicker {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #58a6ff; margin-bottom: 0.4rem;
+}
+.page-header h1 {
+  font-size: 2.4rem; font-weight: 800; color: #f0f6fc;
+  letter-spacing: -0.02em; line-height: 1.15;
+}
+.page-header .subtitle {
+  color: #8b949e; font-size: 1.05rem; margin-top: 0.5rem;
+  max-width: 600px;
+}
+.badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+.badge {
+  font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem;
+  border-radius: 99px; border: 1px solid;
+}
+.badge-blue { color: #58a6ff; border-color: #1f3a5f; background: #0d2137; }
+.badge-green { color: #3fb950; border-color: #1a3a1f; background: #0d2311; }
+.badge-purple { color: #bc8cff; border-color: #2d1f4e; background: #160d2e; }
+
+/* ── Section headings ───────────────────────────────────────── */
+.section { margin-bottom: 4rem; }
+.section > h2 {
+  font-size: 1.5rem; font-weight: 700; color: #f0f6fc;
+  padding-bottom: 0.5rem; border-bottom: 1px solid #21262d;
+  margin-bottom: 1.5rem; letter-spacing: -0.01em;
+}
+h3.api-class {
+  font-size: 1.15rem; font-weight: 700; color: #f0f6fc;
+  margin: 2rem 0 0.5rem;
+}
+h3.api-class .tag {
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 0.15rem 0.45rem;
+  border-radius: 4px; vertical-align: middle; margin-left: 0.5rem;
+}
+.tag-class { background: #1f3a5f; color: #58a6ff; }
+.tag-dataclass { background: #1a3a1f; color: #3fb950; }
+.tag-protocol { background: #2d1f4e; color: #bc8cff; }
+.tag-function { background: #2d1f16; color: #ffa657; }
+.tag-exception { background: #3a1f1f; color: #f85149; }
+
+h4.api-method {
+  font-size: 0.92rem; font-weight: 600; color: #e6edf3;
+  margin: 1.2rem 0 0.3rem; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  background: #161b22; border: 1px solid #21262d; border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+}
+h4.api-method .ret { color: #8b949e; font-weight: 400; }
+h4.api-method .kw { color: #ff7b72; }
+h4.api-method .fn { color: #d2a8ff; }
+h4.api-method .param { color: #ffa657; }
+h4.api-method .typ { color: #79c0ff; }
+
+/* ── Prose ──────────────────────────────────────────────────── */
+p { margin-bottom: 0.85rem; color: #c9d1d9; }
+.desc { color: #8b949e; font-size: 0.88rem; margin: 0.2rem 0 0.8rem; }
+.note {
+  background: #1c2128; border-left: 3px solid #58a6ff; border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.88rem; color: #8b949e;
+}
+.note strong { color: #58a6ff; }
+.warn {
+  background: #2d1f0e; border-left: 3px solid #ffa657; border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.88rem; color: #c9d1d9;
+}
+.warn strong { color: #ffa657; }
+
+/* ── Parameters table ───────────────────────────────────────── */
+.param-table { width: 100%; border-collapse: collapse; margin: 0.6rem 0 1.2rem; font-size: 0.86rem; }
+.param-table th {
+  text-align: left; padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid #21262d; color: #8b949e;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600;
+}
+.param-table td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #161b22; vertical-align: top; }
+.param-table tr:last-child td { border-bottom: none; }
+.param-table code { font-size: 0.82rem; }
+.param-name { color: #ffa657; font-family: monospace; white-space: nowrap; }
+.param-type { color: #79c0ff; font-family: monospace; }
+.param-default { color: #3fb950; font-family: monospace; }
+.param-desc { color: #8b949e; }
+
+/* ── Code blocks ────────────────────────────────────────────── */
+pre {
+  background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+  padding: 1.1rem 1.25rem; overflow-x: auto;
+  margin: 0.8rem 0 1.4rem; position: relative;
+}
+pre code {
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.83rem; line-height: 1.65; color: #c9d1d9;
+}
+code {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85em; background: #21262d; color: #e6edf3;
+  border-radius: 4px; padding: 0.1em 0.35em;
+}
+pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
+
+/* Syntax highlight colours */
+.kw  { color: #ff7b72; }   /* keywords: async def class import from return etc */
+.fn  { color: #d2a8ff; }   /* function names */
+.st  { color: #a5d6ff; }   /* strings */
+.cm  { color: #8b949e; font-style: italic; } /* comments */
+.nm  { color: #ffa657; }   /* numbers / special names */
+.tp  { color: #79c0ff; }   /* types */
+.op  { color: #ff7b72; }   /* operators */
+.at  { color: #e6edf3; }   /* self, cls, plain text */
+.dc  { color: #3fb950; }   /* decorators */
+
+/* ── Returns / raises ───────────────────────────────────────── */
+.returns-label, .raises-label {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin: 0.7rem 0 0.25rem;
+}
+.returns-label { color: #3fb950; }
+.raises-label  { color: #f85149; }
+
+/* ── Pattern cards ──────────────────────────────────────────── */
+.pattern-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0 1.5rem; }
+.pattern-card {
+  background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.1rem 1.25rem;
+}
+.pattern-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+.pattern-card p { font-size: 0.83rem; color: #8b949e; margin: 0; }
+.card-bridge h4 { color: #58a6ff; }
+.card-adapter h4 { color: #3fb950; }
+
+/* ── Exception tree ─────────────────────────────────────────── */
+.exc-tree { font-family: monospace; font-size: 0.85rem; line-height: 1.8; color: #c9d1d9;
+  background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem 1.25rem; }
+.exc-tree .exc-base { color: #f85149; font-weight: 600; }
+.exc-tree .exc-child { color: #ffa657; }
+.exc-tree .exc-sub { color: #e6edf3; }
+
+/* ── Comparison table ───────────────────────────────────────── */
+.cmp-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.86rem; }
+.cmp-table th {
+  padding: 0.5rem 0.9rem; border-bottom: 2px solid #21262d; text-align: left;
+  font-size: 0.8rem; font-weight: 700; color: #f0f6fc; background: #1c2128;
+}
+.cmp-table td { padding: 0.5rem 0.9rem; border-bottom: 1px solid #21262d; color: #c9d1d9; vertical-align: top; }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr:hover td { background: #1c2128; }
+.cmp-table .col-dim { color: #58a6ff; font-weight: 600; }
+
+/* ── Quick-ref chips ────────────────────────────────────────── */
+.chip-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0 1rem; }
+.chip {
+  font-size: 0.76rem; font-weight: 600; padding: 0.22rem 0.6rem;
+  border-radius: 99px; background: #21262d; color: #8b949e;
+  border: 1px solid #30363d; font-family: monospace;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.page-footer {
+  margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #21262d;
+  font-size: 0.8rem; color: #8b949e;
+}
+
+/* ── Front matter ──────────────────────────────────────────── */
+.front-cover,
+.front-toc {
+  border: 1px solid #21262d;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+  padding: 2.5rem 2.5rem 2.75rem;
+  margin-bottom: 2rem;
+}
+
+.front-cover {
+  min-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cover-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #58a6ff;
+  margin-bottom: 0.8rem;
+}
+
+.cover-title {
+  font-size: 3.15rem;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: #f0f6fc;
+  max-width: 9ch;
+  margin-bottom: 0.7rem;
+}
+
+.cover-subtitle-heading {
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #c9d1d9;
+  margin-bottom: 1rem;
+}
+
+.cover-subtitle {
+  font-size: 1.08rem;
+  color: #8b949e;
+  max-width: 38rem;
+}
+
+.cover-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.2rem;
+}
+
+.cover-card {
+  border: 1px solid #21262d;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem 1.1rem;
+}
+
+.cover-card-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b949e;
+  margin-bottom: 0.3rem;
+}
+
+.cover-card-value {
+  font-size: 1rem;
+  color: #f0f6fc;
+  font-weight: 600;
+}
+
+.cover-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  padding-top: 2rem;
+}
+
+.cover-footer-note {
+  max-width: 28rem;
+  color: #8b949e;
+  font-size: 0.92rem;
+}
+
+.front-toc-title {
+  font-size: 2rem;
+  color: #f0f6fc;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.front-toc-intro {
+  color: #8b949e;
+  margin-bottom: 1.4rem;
+  max-width: 44rem;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+}
+
+.toc-group {
+  break-inside: avoid;
+}
+
+.toc-group h3 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #58a6ff;
+  margin-bottom: 0.55rem;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-list li {
+  margin: 0 0 0.38rem;
+}
+
+.toc-list a {
+  color: #c9d1d9;
+  text-decoration: none;
+}
+
+.toc-list a:hover {
+  color: #f0f6fc;
+}
+
+.toc-sub {
+  padding-left: 1rem;
+  font-size: 0.94em;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 1.5rem 1rem; }
+  .pattern-grid { grid-template-columns: 1fr; }
+  .cover-meta,
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+  .cover-title {
+    font-size: 2.35rem;
+  }
+  .cover-subtitle-heading {
+    font-size: 1.65rem;
+  }
+  .cover-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── Print / PDF ────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.6in;
+  }
+
+  html {
+    /* Base print font size — every other rule below is in `rem`, so
+       changing this single value rescales the entire PDF. 18px is too
+       generous for an API reference; 14px keeps tables and code blocks
+       readable while fitting more content per page. */
+    font-size: 14px !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body {
+    display: block;
+    line-height: 1.75;
+  }
+
+  #sidebar {
+    display: none !important;
+  }
+
+  #main {
+    margin-left: 0 !important;
+    max-width: none;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .front-cover,
+  .front-toc {
+    background: #ffffff !important;
+    border-color: #d0d7de !important;
+    box-shadow: none !important;
+  }
+
+  .front-cover {
+    min-height: calc(100vh - 1.2in);
+    page-break-after: always;
+    break-after: page;
+    margin-bottom: 0;
+  }
+
+  .front-toc {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page-header {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  .page-header h1 {
+    font-size: 2.65rem !important;
+  }
+
+  .front-toc-title {
+    font-size: 2.2rem !important;
+  }
+
+  .cover-title {
+    font-size: 3.4rem !important;
+    color: #111111 !important;
+  }
+
+  .cover-subtitle-heading {
+    font-size: 2rem !important;
+    color: #111111 !important;
+  }
+
+  .cover-subtitle,
+  .cover-footer-note,
+  .front-toc-intro,
+  .cover-card-label {
+    color: #4b5563 !important;
+  }
+
+  .cover-eyebrow,
+  .toc-group h3 {
+    color: #0b57d0 !important;
+  }
+
+  .cover-card {
+    background: #ffffff !important;
+    border-color: #d0d7de !important;
+  }
+
+  .cover-card-value,
+  .front-toc-title,
+  .toc-list a {
+    color: #111111 !important;
+  }
+
+  .page-header .subtitle {
+    font-size: 1.2rem !important;
+  }
+
+  .section > h2 {
+    font-size: 1.7rem !important;
+  }
+
+  h3.api-class {
+    font-size: 1.3rem !important;
+  }
+
+  h4.api-method {
+    font-size: 1.02rem !important;
+    padding: 0.55rem 0.85rem;
+  }
+
+  p,
+  li,
+  .desc,
+  .note,
+  .warn,
+  .page-footer,
+  .pattern-card p {
+    font-size: 1rem !important;
+  }
+
+  .param-table,
+  .cmp-table,
+  .exc-tree {
+    font-size: 0.98rem !important;
+  }
+
+  .param-table th,
+  .cmp-table th,
+  .returns-label,
+  .raises-label {
+    font-size: 0.82rem !important;
+  }
+
+  pre code,
+  .param-table code,
+  code,
+  .chip,
+  .param-name,
+  .param-type,
+  .param-default {
+    font-size: 0.95rem !important;
+  }
+
+  pre {
+    padding: 1.2rem 1.3rem;
+    /* In screen mode pre uses overflow-x: auto which scrolls; for PDF
+       there's no "scroll", so long code lines must wrap inside the
+       block instead of being clipped at the page edge. */
+    white-space: pre-wrap !important;
+    overflow-x: visible !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  pre code {
+    white-space: pre-wrap !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* Long type signatures and parameter names should wrap in tables
+     rather than push beyond the page width. */
+  .param-name,
+  .param-type,
+  .param-default {
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  /* Tables auto-size to the available width and don't extend past the
+     printable margin even when a column carries an unusually long
+     code span. */
+  .param-table,
+  .cmp-table {
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .param-table td,
+  .cmp-table td {
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .page-header,
+  .section > h2,
+  .page-footer,
+  .param-table th,
+  .param-table td,
+  .cmp-table th,
+  .cmp-table td,
+  .nav-section,
+  .sidebar-header {
+    border-color: #d0d7de !important;
+  }
+
+  .page-header h1,
+  .section > h2,
+  h3.api-class,
+  h4.api-method,
+  p,
+  .desc,
+  .param-desc,
+  .cmp-table td,
+  .page-footer,
+  .exc-tree,
+  .pattern-card p {
+    color: #111111 !important;
+  }
+
+  .page-header .subtitle,
+  .sidebar-header .version,
+  .nav-section-label,
+  .param-table th,
+  h4.api-method .ret,
+  .desc,
+  .cm {
+    color: #4b5563 !important;
+  }
+
+  .page-header .kicker,
+  .sidebar-header .product-name,
+  .note strong,
+  .cmp-table .col-dim {
+    color: #0b57d0 !important;
+  }
+
+  .badge,
+  .tag-class,
+  .tag-dataclass,
+  .tag-protocol,
+  .tag-function,
+  .tag-exception,
+  h4.api-method,
+  .note,
+  .warn,
+  .pattern-card,
+  .exc-tree,
+  pre,
+  code,
+  .cmp-table th,
+  .chip {
+    background: #ffffff !important;
+  }
+
+  .note,
+  .warn,
+  .pattern-card,
+  .exc-tree,
+  pre,
+  h4.api-method,
+  .chip,
+  code,
+  .cmp-table th {
+    border-color: #d0d7de !important;
+  }
+
+  .note {
+    color: #1f2937 !important;
+    border-left-color: #0b57d0 !important;
+  }
+
+  .warn {
+    color: #1f2937 !important;
+    border-left-color: #b45309 !important;
+  }
+
+  .warn strong,
+  .returns-label {
+    color: #166534 !important;
+  }
+
+  .raises-label,
+  .exc-tree .exc-base {
+    color: #b42318 !important;
+  }
+
+  .exc-tree .exc-child,
+  .param-name,
+  h4.api-method .param,
+  .nm {
+    color: #9a3412 !important;
+  }
+
+  .param-type,
+  h4.api-method .typ,
+  .tp,
+  .st {
+    color: #1d4ed8 !important;
+  }
+
+  .param-default,
+  .dc,
+  .card-adapter h4 {
+    color: #166534 !important;
+  }
+
+  h4.api-method .kw,
+  .kw,
+  .op,
+  .tag-exception {
+    color: #b42318 !important;
+  }
+
+  h4.api-method .fn,
+  .fn,
+  .tag-protocol {
+    color: #6d28d9 !important;
+  }
+
+  .tag-class,
+  .card-bridge h4 {
+    color: #0b57d0 !important;
+  }
+
+  .tag-dataclass {
+    color: #166534 !important;
+  }
+
+  .tag-function {
+    color: #9a3412 !important;
+  }
+
+  .tag-class,
+  .tag-dataclass,
+  .tag-protocol,
+  .tag-function,
+  .tag-exception,
+  .badge-blue,
+  .badge-green,
+  .badge-purple {
+    border-color: currentColor !important;
+  }
+
+  pre code,
+  code,
+  .at,
+  .exc-tree .exc-sub {
+    color: #111111 !important;
+  }
+
+  a,
+  a:visited {
+    color: #0b57d0 !important;
+  }
+
+  .cmp-table tr:hover td {
+    background: transparent !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ═══════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="product-name">Kneo Agent</div>
+    <h1>API Reference</h1>
+    <div class="version">v1.2.0 · Python 3.12+</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Overview</div>
+    <a href="#whats-new-1-2-0">What's new in v1.2.0</a>
+    <a href="#overview">Introduction</a>
+    <a href="#patterns">Design Patterns</a>
+    <a href="#quickstart">Quick Start</a>
+    <a class="sub" href="#build-sync-agent-shortcut">· build_sync_agent (blocking)</a>
+    <a class="sub" href="#build-agent-shortcut">· build_agent (async)</a>
+    <a class="sub" href="#sync-agent">· SyncAgent</a>
+    <a class="sub" href="#explicit-quickstart">· Explicit builder</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.core</div>
+    <a href="#agent">Agent</a>
+    <a class="sub" href="#agent-run">· run()</a>
+    <a class="sub" href="#agent-stream">· stream()</a>
+    <a class="sub" href="#agent-chat">· chat()</a>
+    <a class="sub" href="#agent-history">· history methods</a>
+    <a class="sub" href="#agent-as-tool">· as_tool()</a>
+    <a href="#agentbuilder">AgentBuilder</a>
+    <a href="#middleware-api">Middleware APIs</a>
+    <a class="sub" href="#base-agent-middleware">· BaseAgentMiddleware</a>
+    <a class="sub" href="#middleware-contexts">· Contexts</a>
+    <a href="#observability-api">Observability</a>
+    <a class="sub" href="#opentelemetry-middleware">· OpenTelemetryMiddleware</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.workflows</div>
+    <a href="#workflow-graph">Workflow</a>
+    <a class="sub" href="#workflow-edge">· WorkflowEdge</a>
+    <a class="sub" href="#workflow-component">· WorkflowComponent</a>
+    <a href="#orchestration-family">Built-In Orchestration Runtimes</a>
+    <a class="sub" href="#sequential-workflow">· SequentialWorkflow</a>
+    <a class="sub" href="#concurrent-workflow">· ConcurrentWorkflow</a>
+    <a class="sub" href="#handoff-workflow">· HandoffWorkflow</a>
+    <a class="sub" href="#groupchat-workflow">· GroupChatWorkflow</a>
+    <a class="sub" href="#function-step">· FunctionStep</a>
+    <a class="sub" href="#human-step">· HumanInTheLoopStep</a>
+    <a class="sub" href="#workflow-builder">· WorkflowBuilder</a>
+    <a class="sub" href="#orchestration-builders">· Orchestration Builders</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Core Data Classes</div>
+    <a href="#agentconfig">AgentConfig</a>
+    <a href="#runconfig">RunConfig</a>
+    <a href="#runresult">RunResult</a>
+    <a href="#streamchunk">StreamChunk</a>
+    <a href="#message">Message</a>
+    <a href="#tool-types">Tool Types</a>
+    <a href="#agentruntime">AgentRuntime</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.patterns</div>
+    <a href="#bridge-factory">BridgeAgentFactory</a>
+    <a href="#native-factory">NativeRuntimeFactory</a>
+    <a href="#adapter-factory">AdapterAgentFactory</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.runtime</div>
+    <a href="#executors">Bridge Executors</a>
+    <a class="sub" href="#simple-executor">· SimpleAgentExecutor</a>
+    <a class="sub" href="#react-executor">· ReActAgentExecutor</a>
+    <a class="sub" href="#planact-executor">· PlanActAgentExecutor</a>
+    <a href="#adapters">Platform Adapters</a>
+    <a class="sub" href="#adk-adapter">· GoogleADKAdapter</a>
+    <a class="sub" href="#oai-adapter">· OpenAIAgentsAdapter</a>
+    <a class="sub" href="#lc-adapter">· LangChainAdapter</a>
+    <a href="#runtimeimpl">RuntimeImpl Protocol</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.providers</div>
+    <a href="#google-adk-impl">Providers</a>
+    <a class="sub" href="#google-adk-impl">· GoogleADKImpl</a>
+    <a class="sub" href="#openai-impl">· OpenAIAgentsImpl</a>
+    <a class="sub" href="#langchain-impl">· LangChainImpl</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">kneo_agent.utils</div>
+    <a href="#skills-api">Skill APIs</a>
+    <a class="sub" href="#skill-class">· Skill</a>
+    <a class="sub" href="#skill-discovery">· Discovery Helpers</a>
+    <a href="#tool-registry">ToolRegistry</a>
+    <a href="#mcp-api">MCP</a>
+    <a href="#messages-utils">Messages Utilities</a>
+    <a href="#logging-utils">Logging Utilities</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Reference</div>
+    <a href="#exceptions">Exceptions</a>
+    <a href="#custom-provider">Custom Provider</a>
+    <a href="#streaming-guide">Streaming Guide</a>
+    <a href="#bridge-vs-adapter">Bridge vs Adapter</a>
+    <a href="#guides">Guides</a>
+    <a class="sub" href="#guide-middleware">· Agent Middleware</a>
+    <a class="sub" href="#guide-agent-skills">· Agent Skills</a>
+    <a class="sub" href="#guide-mcp">· MCP</a>
+    <a class="sub" href="#guide-human-loop">· Human In The Loop</a>
+  </div>
+</nav>
+
+<!-- ══ MAIN CONTENT ══════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ── Front matter ───────────────────────────────────────── -->
+<section class="front-cover" id="cover">
+  <div>
+    <div class="cover-eyebrow">Kneo Agent SDK</div>
+    <h1 class="cover-title">KNEO AGENT SDK</h1>
+    <p class="cover-subtitle-heading">API Reference Manual</p>
+    <p class="cover-subtitle">Complete reference for the public Kneo Agent SDK surface, including runtimes, workflows, providers, middleware, utilities, and embedded practical guides.</p>
+
+    <div class="cover-meta">
+      <div class="cover-card">
+        <div class="cover-card-label">Version</div>
+        <div class="cover-card-value">v1.2.0</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card-label">Runtime</div>
+        <div class="cover-card-value">Python 3.12+</div>
+      </div>
+      <div class="cover-card">
+        <div class="cover-card-label">License</div>
+        <div class="cover-card-value">MIT</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <p class="cover-footer-note">Prepared as a printable reference edition with API details, usage guidance, and architecture-facing concepts consolidated into one manual.</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">asyncio</span>
+      <span class="badge badge-green">fully typed</span>
+      <span class="badge badge-purple">agents + workflows</span>
+    </div>
+  </div>
+</section>
+
+<section class="front-toc" id="table-of-contents">
+  <h2 class="front-toc-title">Table of Contents</h2>
+  <p class="front-toc-intro">Use this section as the printable navigation guide for the manual. The linked entries mirror the document structure that follows after the introduction.</p>
+
+  <div class="toc-grid">
+    <div class="toc-group">
+      <h3>Overview</h3>
+      <ul class="toc-list">
+        <li><a href="#overview">Introduction</a></li>
+        <li><a href="#patterns">Design Patterns</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Core API</h3>
+      <ul class="toc-list">
+        <li><a href="#agent">Agent</a></li>
+        <li class="toc-sub"><a href="#agent-run">run()</a></li>
+        <li class="toc-sub"><a href="#agent-stream">stream()</a></li>
+        <li class="toc-sub"><a href="#agent-chat">chat()</a></li>
+        <li class="toc-sub"><a href="#agent-history">history methods</a></li>
+        <li class="toc-sub"><a href="#agent-as-tool">as_tool()</a></li>
+        <li><a href="#agentbuilder">AgentBuilder</a></li>
+        <li><a href="#middleware-api">Middleware APIs</a></li>
+        <li><a href="#observability-api">Observability</a></li>
+        <li class="toc-sub"><a href="#opentelemetry-middleware">OpenTelemetryMiddleware</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Workflows</h3>
+      <ul class="toc-list">
+        <li><a href="#workflow-graph">Workflow</a></li>
+        <li class="toc-sub"><a href="#workflow-edge">WorkflowEdge</a></li>
+        <li class="toc-sub"><a href="#workflow-component">WorkflowComponent</a></li>
+        <li><a href="#orchestration-family">Built-In Orchestration Runtimes</a></li>
+        <li class="toc-sub"><a href="#sequential-workflow">SequentialWorkflow</a></li>
+        <li class="toc-sub"><a href="#concurrent-workflow">ConcurrentWorkflow</a></li>
+        <li class="toc-sub"><a href="#handoff-workflow">HandoffWorkflow</a></li>
+        <li class="toc-sub"><a href="#groupchat-workflow">GroupChatWorkflow</a></li>
+        <li class="toc-sub"><a href="#workflow-builder">WorkflowBuilder</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Data Types</h3>
+      <ul class="toc-list">
+        <li><a href="#agentconfig">AgentConfig</a></li>
+        <li><a href="#runconfig">RunConfig</a></li>
+        <li><a href="#runresult">RunResult</a></li>
+        <li><a href="#streamchunk">StreamChunk</a></li>
+        <li><a href="#message">Message</a></li>
+        <li><a href="#tool-types">Tool Types</a></li>
+        <li><a href="#agentruntime">AgentRuntime</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Patterns And Runtime</h3>
+      <ul class="toc-list">
+        <li><a href="#bridge-factory">BridgeAgentFactory</a></li>
+        <li><a href="#native-factory">NativeRuntimeFactory</a></li>
+        <li><a href="#adapter-factory">AdapterAgentFactory</a></li>
+        <li><a href="#executors">Bridge Executors</a></li>
+        <li><a href="#adapters">Platform Adapters</a></li>
+        <li><a href="#runtimeimpl">RuntimeImpl Protocol</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Providers And Utilities</h3>
+      <ul class="toc-list">
+        <li><a href="#google-adk-impl">Providers</a></li>
+        <li><a href="#skills-api">Skill APIs</a></li>
+        <li><a href="#tool-registry">ToolRegistry</a></li>
+        <li><a href="#mcp-api">MCP</a></li>
+        <li><a href="#messages-utils">Messages Utilities</a></li>
+        <li><a href="#logging-utils">Logging Utilities</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Reference</h3>
+      <ul class="toc-list">
+        <li><a href="#exceptions">Exceptions</a></li>
+        <li><a href="#custom-provider">Custom Provider</a></li>
+        <li><a href="#streaming-guide">Streaming Guide</a></li>
+        <li><a href="#bridge-vs-adapter">Bridge vs Adapter</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Guides</h3>
+      <ul class="toc-list">
+        <li><a href="#guides">Guides Overview</a></li>
+        <li class="toc-sub"><a href="#guide-middleware">Agent Middleware</a></li>
+        <li class="toc-sub"><a href="#guide-agent-skills">Agent Skills</a></li>
+        <li class="toc-sub"><a href="#guide-mcp">MCP</a></li>
+        <li class="toc-sub"><a href="#guide-human-loop">Human In The Loop</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ── Page header ────────────────────────────────────────── -->
+<div class="page-header">
+  <div class="kicker">Kneo Agent SDK</div>
+  <h1>API Reference Manual</h1>
+  <p class="subtitle">Complete reference for all public classes, methods, protocols, and utilities.</p>
+  <div class="badge-row">
+    <span class="badge badge-blue">v1.2.0</span>
+    <span class="badge badge-green">Python 3.12+</span>
+    <span class="badge badge-purple">MIT License</span>
+    <span class="badge badge-blue">asyncio</span>
+    <span class="badge badge-green">fully typed</span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     v1.2.0 RELEASE CALLOUT
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="whats-new-1-2-0">
+  <h2>What's new in v1.2.0</h2>
+  <p>Released <strong>2026-05-07</strong>. Fully backwards-compatible
+  with 1.1.x — every public name from 1.1.x still works the same way.
+  This callout is a quick index to the new public surface; the
+  authoritative spec for each item lives in its dedicated section
+  below.</p>
+
+  <h3 class="api-class">New public surface <span class="tag tag-class">added</span></h3>
+  <ul>
+    <li><strong>Local-LLM support.</strong> New <code>base_url=</code>
+    and <code>api_key=</code> keyword arguments on
+    <code>OpenAIAgentsImpl</code>,
+    <code>NativeRuntimeFactory.for_openai</code>,
+    <code>BridgeAgentFactory.for_openai</code>,
+    <code>kneo_agent.simple.build_agent</code>, and
+    <code>build_sync_agent</code>. Point at any OpenAI-compatible
+    HTTP endpoint (Ollama, vLLM, llama.cpp, LocalAI) to run on-prem.</li>
+    <li><strong>Middleware bundle</strong> — new
+    <code>kneo_agent.middleware</code> subpackage with
+    <code>RetryMiddleware</code>, <code>RateLimitMiddleware</code>,
+    <code>TokenBudgetMiddleware</code> (+
+    <code>TokenBudgetExceeded</code>),
+    <code>RedactionMiddleware</code> (+ <code>COMMON_PATTERNS</code>).
+    Built on the existing <code>AgentMiddleware</code> framework;
+    framework types re-exported from the same module.</li>
+    <li><strong>Secret plumbing</strong> — new
+    <code>SecretProvider</code> Protocol in
+    <code>kneo_agent.utils</code>, plus three reference
+    implementations: <code>EnvSecretProvider</code>,
+    <code>FileSecretProvider</code>,
+    <code>MappingSecretProvider</code>. Pair with
+    <code>SecretNotFound</code>.</li>
+    <li><strong>Workflow retry</strong> — new
+    <code>kneo_agent.workflows.RetryStep</code> wraps any
+    <code>WorkflowComponent</code> with retry-on-failure semantics,
+    mirroring the middleware-side knobs.</li>
+    <li><strong>MCP TLS / mTLS</strong> — new <code>verify=</code>,
+    <code>ca_bundle=</code>, <code>client_cert=</code>,
+    <code>client_key=</code> parameters on
+    <code>MCPServerConfig.http()</code> and
+    <code>MCPServerConfig.sse()</code>. New
+    <code>MCPServerConfig.build_ssl_context()</code> method.</li>
+    <li><strong>Formal <code>RunResult.metadata["usage"]</code>
+    schema</strong> — keys <code>input_tokens</code>,
+    <code>output_tokens</code>, <code>total_tokens</code> (with
+    <code>prompt_tokens</code> / <code>completion_tokens</code>
+    accepted as aliases). Populated automatically by the OpenAI
+    Agents native runtime; spec on <code>RunResult</code>.</li>
+    <li><strong>Python 3.13</strong> classifier added; CI matrix
+    already exercised 3.13 in 1.1.x.</li>
+  </ul>
+
+  <h3 class="api-class">New documentation <span class="tag tag-class">guides</span></h3>
+  <ul>
+    <li><code>docs/user/api_stability.md</code> — public-surface
+    definition and deprecation policy.</li>
+    <li><code>docs/user/upgrading_to_1.2.md</code> — practical
+    "should I upgrade?" walkthrough with code examples for each
+    user-visible change.</li>
+    <li><code>docs/user/self_hosted_observability.md</code> —
+    end-to-end recipes wiring <code>OpenTelemetryMiddleware</code> to
+    a user-run OTLP collector / Jaeger / Grafana Tempo / SigNoz.</li>
+    <li><code>docs/user/offline_install.md</code> — air-gapped install
+    via <code>pip download</code> +
+    <code>--no-index --find-links</code>; documented no-phone-home
+    audit.</li>
+  </ul>
+
+  <h3 class="api-class">New cookbook recipes <span class="tag tag-class">examples</span></h3>
+  <ul>
+    <li><code>examples/cookbook/local_ollama.py</code></li>
+    <li><code>examples/cookbook/workflow_branching_and_retry.py</code></li>
+    <li><code>examples/cookbook/mcp_server_catalog.py</code></li>
+    <li><code>examples/cookbook/sql_query_tool.py</code></li>
+    <li><code>examples/cookbook/rest_api_tool.py</code></li>
+    <li><code>examples/cookbook/object_store_tool.py</code></li>
+    <li><code>examples/cookbook/search_index_tool.py</code></li>
+  </ul>
+
+  <p class="note"><strong>Population status for
+  <code>RunResult.metadata["usage"]</code>:</strong> the OpenAI
+  Agents native runtime populates the documented keys today.
+  LangChain, Google ADK, and Bridge runtimes do not yet populate
+  them; apps that need usage on those paths can populate via custom
+  middleware. Per-runtime rollout is tracked for a follow-up
+  release.</p>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     OVERVIEW
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="overview">
+  <h2>Introduction</h2>
+  <p>Kneo Agent is a framework-agnostic Python Agent SDK that lets you build LLM-powered agents and composite workflows running on Google ADK, OpenAI Agents SDK, or LangChain using four runtime categories: <strong>Bridge</strong>, <strong>Native</strong>, <strong>Adapter</strong>, and <strong>Workflow</strong>.</p>
+  <p>The entire public API is exported from the top-level <code>kneo_agent</code> package. Most application code only needs three imports:</p>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">AgentBuilder</span>, <span class="tp">RunConfig</span>, <span class="tp">ToolDefinition</span>
+<span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">NativeRuntimeFactory</span>
+<span class="kw">from</span> kneo_agent.utils <span class="kw">import</span> <span class="tp">ToolRegistry</span></code></pre>
+
+  <div id="patterns"></div>
+  <h3 class="api-class">Design Patterns <span class="tag tag-class">concept</span></h3>
+  <div class="pattern-grid">
+    <div class="pattern-card card-bridge">
+      <h4>Bridge Pattern</h4>
+      <p>Decouples the agentic loop <em>strategy</em> (Simple, ReAct, Plan-Act) from the platform <em>implementation</em> (Google ADK, OpenAI, LangChain). Both sides vary independently. Use when designing from scratch.</p>
+    </div>
+    <div class="pattern-card card-adapter">
+      <h4>Adapter Pattern</h4>
+      <p>Wraps an existing, fixed-interface platform object and translates its API to <code>AgentRuntime</code>. The platform owns its own loop. Use when integrating an existing agent executor.</p>
+    </div>
+    <div class="pattern-card card-bridge">
+      <h4>Native Runtime</h4>
+      <p>Hands loop ownership to the platform SDK/runtime itself while still exposing <code>AgentRuntime</code>. Use for platform-owned runtimes such as the OpenAI Agents SDK and native Google ADK execution.</p>
+    </div>
+    <div class="pattern-card card-adapter">
+      <h4>Workflow Runtime</h4>
+      <p>Composes agents, nested workflows, and custom function steps using the composite pattern. A workflow itself implements <code>AgentRuntime</code>, so it can be used as an agent runtime directly or wrapped with <code>workflow.as_agent()</code>.</p>
+    </div>
+  </div>
+
+  <div id="quickstart"></div>
+  <h3 class="api-class">Quick Start</h3>
+  <p class="desc">Two convenience builders cover the common cases. <code>build_sync_agent</code> is the friction-free starting point — a blocking wrapper that hides <code>asyncio</code> entirely, ideal for scripts and prototypes. <code>build_agent</code> is the async equivalent for code already inside an event loop; it accepts the same parameters and returns a regular <code>Agent</code> you <code>await</code>. The parameter table below applies to both.</p>
+
+  <div id="build-sync-agent-shortcut"></div>
+  <h4 class="api-method"><span class="fn">build_sync_agent</span>(<span class="param">provider</span>: <span class="typ">"openai" | "langchain" | "google-adk"</span>, <span class="param">**kwargs</span>) <span class="ret">→ SyncAgent</span></h4>
+  <p class="desc">Blocking one-liner from <code>kneo_agent.simple</code>, re-exported as <code>kneo_agent.build_sync_agent</code>. Picks a runtime factory based on <code>provider</code>, applies sensible defaults, attaches optional tools and middlewares, and returns a <a href="#sync-agent"><code>SyncAgent</code></a> whose <code>run</code>, <code>chat</code>, and <code>stream</code> methods block until the underlying coroutine completes — no <code>asyncio</code> at the call site.</p>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="fn">build_sync_agent</span>
+
+agent = <span class="fn">build_sync_agent</span>(
+    <span class="st">"openai"</span>,
+    model=<span class="st">"gpt-4o-mini"</span>,
+    system_prompt=<span class="st">"You are a helpful assistant."</span>,
+)
+
+print(agent.chat(<span class="st">"What is 2 + 2?"</span>))    <span class="cm"># blocks, returns str</span></code></pre>
+  <div class="note"><strong>Heads up:</strong> Each call spins up a fresh event loop via <code>asyncio.run</code>. <code>SyncAgent</code> raises <code>RuntimeError</code> if invoked from inside an already-running event loop (Jupyter, FastAPI handlers, other async code) rather than silently deadlocking; reach for the async <code>build_agent</code> instead in those contexts.</div>
+
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">provider</td><td class="param-type">"openai" | "langchain" | "google-adk" | None</td><td class="param-desc">Provider shortcut. Mutually exclusive with <code>runtime</code>.</td></tr>
+    <tr><td class="param-name">runtime</td><td class="param-type">AgentRuntime | None</td><td class="param-desc">Pre-built runtime. Use this when you already have a custom runtime, a workflow, or a third-party adapter.</td></tr>
+    <tr><td class="param-name">model</td><td class="param-type">str</td><td class="param-desc">OpenAI model id. Default <code>"gpt-4o-mini"</code>.</td></tr>
+    <tr><td class="param-name">openai_client</td><td class="param-type">Any | None</td><td class="param-desc">Optional <code>openai.AsyncOpenAI</code> client.</td></tr>
+    <tr><td class="param-name">chat_model</td><td class="param-type">Any</td><td class="param-desc">Required for <code>"langchain"</code>: any <code>langchain_core.language_models.BaseChatModel</code>.</td></tr>
+    <tr><td class="param-name">adk_runner</td><td class="param-type">Any</td><td class="param-desc">Required for <code>"google-adk"</code>: an ADK runner with <code>run_async</code>.</td></tr>
+    <tr><td class="param-name">adk_app_name / adk_user_id / adk_session_id</td><td class="param-type">str</td><td class="param-desc">ADK identifiers. All default to <code>"default"</code>.</td></tr>
+    <tr><td class="param-name">name / description / system_prompt</td><td class="param-type">str / str / str | None</td><td class="param-desc">Agent metadata.</td></tr>
+    <tr><td class="param-name">tools</td><td class="param-type">ToolRegistry | None</td><td class="param-desc">Tool registry to attach. For LangChain Bridge runtimes the registry's handlers are also wired into the runtime for dispatch.</td></tr>
+    <tr><td class="param-name">middlewares</td><td class="param-type">list[AgentMiddleware] | None</td><td class="param-desc">Middlewares to attach (e.g. <code>OpenTelemetryMiddleware()</code>).</td></tr>
+    <tr><td class="param-name">strategy</td><td class="param-type">"simple" | "react" | "plan-act"</td><td class="param-desc">Bridge agent loop strategy. Default <code>"react"</code>.</td></tr>
+  </table>
+
+  <div id="build-agent-shortcut"></div>
+  <h4 class="api-method"><span class="fn">build_agent</span>(<span class="param">*args</span>, <span class="param">**kwargs</span>) <span class="ret">→ Agent</span></h4>
+  <p class="desc">Async variant of <code>build_sync_agent</code>. Accepts the same parameters (see the table above) but returns a regular async <code>Agent</code> directly, with no <code>SyncAgent</code> wrapper. Use this when you are already writing async code — e.g. inside a Jupyter cell, a FastAPI handler, or another <code>asyncio</code> task.</p>
+<pre><code><span class="kw">import</span> asyncio
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="fn">build_agent</span>
+
+agent = <span class="fn">build_agent</span>(
+    <span class="st">"openai"</span>,
+    model=<span class="st">"gpt-4o-mini"</span>,
+    system_prompt=<span class="st">"You are a helpful assistant."</span>,
+)
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    print(<span class="kw">await</span> agent.chat(<span class="st">"What is 2 + 2?"</span>))
+
+asyncio.run(<span class="fn">main</span>())</code></pre>
+
+  <div id="sync-agent"></div>
+  <h4 class="api-class">class SyncAgent <span class="tag tag-class">wrapper</span></h4>
+  <p class="desc">Composition wrapper returned by <code>build_sync_agent</code>. Properties (<code>config</code>, <code>agent_name</code>, <code>runtime_name</code>, <code>history</code>) and history-management methods (<code>clear_history</code>, <code>inject_history</code>) pass through unchanged. The async surface (<code>run</code>, <code>chat</code>, <code>stream</code>) is replaced with blocking equivalents; <code>stream</code> returns the full list of chunks rather than yielding incrementally.</p>
+
+  <div id="explicit-quickstart"></div>
+  <h4 class="api-class">Explicit builder</h4>
+  <p class="desc">Use the explicit chain when you need behavior <code>build_agent</code> does not expose: workflow composition, custom <code>RuntimeImpl</code> implementations, fine-grained per-step skill loading, etc.</p>
+<pre><code><span class="kw">import</span> asyncio
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">AgentBuilder</span>, <span class="tp">ToolDefinition</span>
+<span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">NativeRuntimeFactory</span>
+<span class="kw">from</span> kneo_agent.workflows <span class="kw">import</span> <span class="tp">WorkflowBuilder</span>
+<span class="kw">from</span> kneo_agent.utils <span class="kw">import</span> <span class="tp">ToolRegistry</span>
+
+<span class="cm"># 1. Define tools</span>
+registry = <span class="tp">ToolRegistry</span>()
+
+<span class="dc">@registry.tool</span>(
+    name=<span class="st">"get_weather"</span>,
+    description=<span class="st">"Get current weather for a city."</span>,
+    parameters={<span class="st">"type"</span>: <span class="st">"object"</span>, <span class="st">"properties"</span>: {<span class="st">"city"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>}}, <span class="st">"required"</span>: [<span class="st">"city"</span>]},
+)
+<span class="kw">def</span> <span class="fn">get_weather</span>(args: dict) -> str:
+    <span class="kw">return</span> <span class="st">f"22 °C and sunny in {args['city']}"</span>
+
+<span class="cm"># 2. Create a platform-owned runtime</span>
+runtime = <span class="tp">NativeRuntimeFactory</span>.for_openai(model=<span class="st">"gpt-4o"</span>, strategy=<span class="st">"react"</span>)
+
+<span class="cm"># 3. Build the agent</span>
+agent = (
+    <span class="tp">AgentBuilder</span>()
+    .with_name(<span class="st">"Weather Assistant"</span>)
+    .with_system_prompt(<span class="st">"You are a helpful weather assistant."</span>)
+    .with_tools(registry.definitions)
+    .use_runtime(runtime)
+    .build()
+)
+
+<span class="cm"># 4. Run</span>
+<span class="kw">async def</span> <span class="fn">main</span>():
+    result = <span class="kw">await</span> agent.run(<span class="st">"What is the weather in Tokyo?"</span>)
+    print(result.final_message)
+
+asyncio.run(<span class="fn">main</span>())</code></pre>
+
+  <div class="note"><strong>Workflow note:</strong> Workflows are first-class runtimes. You can compose multiple agents into a <code>SequentialWorkflow</code> and expose that workflow as a normal <code>Agent</code> with <code>workflow.as_agent(...)</code>.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     AGENT
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="agent">
+  <h2>Agent</h2>
+  <p>The central class of the SDK. Stateful, framework-agnostic, and built via <a href="#agentbuilder"><code>AgentBuilder</code></a>. Never instantiated directly.</p>
+
+  <h3 class="api-class">class Agent <span class="tag tag-class">class</span></h3>
+  <p class="desc">A stateful conversational agent. Holds conversation history and delegates all LLM work to an injected <code>AgentRuntime</code>.</p>
+
+  <p><strong>Properties</strong></p>
+  <table class="param-table">
+    <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">agent_name</td><td class="param-type">str</td><td class="param-desc">Alias for <code>config.name</code>.</td></tr>
+    <tr><td class="param-name">runtime_name</td><td class="param-type">str</td><td class="param-desc">The <code>name</code> of the injected runtime (e.g. <code>"react@openai-agents"</code>, <code>"react@langchain"</code>, or <code>"google-adk-native"</code>).</td></tr>
+    <tr><td class="param-name">config</td><td class="param-type">AgentConfig</td><td class="param-desc">Static agent configuration (read-only).</td></tr>
+    <tr><td class="param-name">history</td><td class="param-type">list[Message]</td><td class="param-desc">Shallow copy of the current conversation. Safe to read; cannot be mutated.</td></tr>
+  </table>
+
+  <!-- run() -->
+  <div id="agent-run"></div>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">run</span>(<span class="param">user_message</span>: <span class="typ">str</span>, *, <span class="param">run_config</span>: <span class="typ">RunConfig | None</span> = <span class="nm">None</span>, **<span class="param">extra</span>) <span class="ret">→ RunResult</span></h4>
+  <p>Send a user message and execute a full agent run. Appends both the user turn and the final assistant reply to <code>history</code>.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">user_message</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">The text sent as the user turn.</td></tr>
+    <tr><td class="param-name">run_config</td><td class="param-type">RunConfig | None</td><td class="param-default">None</td><td class="param-desc">Per-call overrides merged on top of the agent's defaults.</td></tr>
+    <tr><td class="param-name">**extra</td><td class="param-type">Any</td><td class="param-default">—</td><td class="param-desc">Forwarded into <code>RunConfig.extra</code>.</td></tr>
+  </table>
+  <div class="returns-label">Returns</div>
+  <p class="desc"><code>RunResult</code> — full run output including <code>final_message</code>, <code>iterations</code>, tool calls, and timing.</p>
+<pre><code><span class="cm"># Simple run</span>
+result = <span class="kw">await</span> agent.run(<span class="st">"Who invented Python?"</span>)
+print(result.final_message)
+print(<span class="st">f"Took {result.duration_ms:.0f} ms, {result.iterations} iteration(s)"</span>)
+
+<span class="cm"># With per-call temperature override</span>
+result = <span class="kw">await</span> agent.run(
+    <span class="st">"Write a haiku about Python."</span>,
+    run_config=<span class="tp">RunConfig</span>(temperature=<span class="nm">0.9</span>),
+)</code></pre>
+
+  <!-- stream() -->
+  <div id="agent-stream"></div>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">stream</span>(<span class="param">user_message</span>: <span class="typ">str</span>, *, <span class="param">run_config</span>: <span class="typ">RunConfig | None</span> = <span class="nm">None</span>) <span class="ret">→ AsyncGenerator[StreamChunk, None]</span></h4>
+  <p>Stream the agent response. Returns an async generator of <a href="#streamchunk"><code>StreamChunk</code></a> objects. The final chunk always has <code>type == "done"</code>.</p>
+  <div class="raises-label">Raises</div>
+  <p class="desc"><code>StreamingNotSupportedError</code> if the runtime does not support streaming.</p>
+<pre><code><span class="kw">async for</span> chunk <span class="kw">in await</span> agent.stream(<span class="st">"Explain async/await."</span>):
+    <span class="kw">match</span> chunk.type:
+        <span class="kw">case</span> <span class="st">"text"</span>:
+            print(chunk.content, end=<span class="st">""</span>, flush=<span class="nm">True</span>)
+        <span class="kw">case</span> <span class="st">"tool_call"</span>:
+            print(<span class="st">f"\n→ calling {chunk.tool_call.name}"</span>)
+        <span class="kw">case</span> <span class="st">"tool_result"</span>:
+            print(<span class="st">f"\n← {chunk.tool_result.name}: {chunk.tool_result.result}"</span>)
+        <span class="kw">case</span> <span class="st">"done"</span>:
+            print()  <span class="cm"># newline after stream</span></code></pre>
+
+  <!-- chat() -->
+  <div id="agent-chat"></div>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">chat</span>(<span class="param">user_message</span>: <span class="typ">str</span>, **<span class="param">kwargs</span>) <span class="ret">→ str</span></h4>
+  <p>Convenience wrapper around <code>run()</code>. Returns only the final text string. All keyword arguments are forwarded to <code>run()</code>.</p>
+<pre><code>reply = <span class="kw">await</span> agent.chat(<span class="st">"What is 2 + 2?"</span>)
+<span class="cm"># → "4"</span></code></pre>
+
+  <!-- history methods -->
+  <div id="agent-history"></div>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">clear_history</span>() <span class="ret">→ None</span></h4>
+  <p>Reset the conversation to a clean slate. Subsequent runs start with no prior context.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">inject_history</span>(<span class="param">messages</span>: <span class="typ">list[Message]</span>) <span class="ret">→ None</span></h4>
+  <p>Seed the conversation with pre-existing messages, e.g. loaded from a database. Replaces any current history.</p>
+<pre><code><span class="cm"># Restore a conversation from storage</span>
+saved = load_conversation_from_db(session_id)
+agent.inject_history(saved)
+
+<span class="cm"># Continue the conversation</span>
+reply = <span class="kw">await</span> agent.chat(<span class="st">"Where were we?"</span>)</code></pre>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">add_tool</span>(<span class="param">tool</span>: <span class="typ">ToolDefinition</span>) <span class="ret">→ None</span></h4>
+  <p>Dynamically register a tool after the agent has been built. The tool is added to <code>config.tools</code> and included in all subsequent runs.</p>
+
+  <div id="agent-as-tool"></div>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">as_tool</span>(* , <span class="param">name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">description</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">parameters</span>: <span class="typ">dict | None</span> = <span class="nm">None</span>, <span class="param">arg_name</span>: <span class="typ">str</span> = <span class="st">"input"</span>, <span class="param">run_config</span>: <span class="typ">RunConfig | None</span> = <span class="nm">None</span>, <span class="param">skills</span>: <span class="typ">list[Skill] | None</span> = <span class="nm">None</span>, <span class="param">include_history</span>: <span class="typ">bool</span> = <span class="nm">False</span>) <span class="ret">→ AgentTool</span></h4>
+  <p>Expose the agent as a first-class tool without mutating the wrapped agent's history. By default the generated tool accepts a single string argument and runs against an isolated message list.</p>
+  <div class="note"><strong>Agent tool note:</strong> Set <code>include_history=True</code> when the delegated tool call should be seeded with the wrapped agent's current conversation history.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     AGENTBUILDER
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="agentbuilder">
+  <h2>AgentBuilder</h2>
+  <h3 class="api-class">class AgentBuilder <span class="tag tag-class">builder</span></h3>
+  <p class="desc">Fluent builder for <code>Agent</code> instances. Every method returns <code>self</code> for chaining. Call <code>.build()</code> last.</p>
+
+  <div class="note"><strong>Note:</strong> You must call one of <code>use_bridge()</code>, <code>use_adapter()</code>, or <code>use_runtime()</code> before <code>build()</code>, or a <code>RuntimeNotConfiguredError</code> is raised.</div>
+
+  <p><strong>Identity methods</strong></p>
+  <table class="param-table">
+    <tr><th>Method</th><th>Parameter</th><th>Description</th></tr>
+    <tr><td class="param-name">.with_name(name)</td><td class="param-type">str</td><td class="param-desc">Set the agent's display name. Default: <code>"unnamed-agent"</code>.</td></tr>
+    <tr><td class="param-name">.with_description(desc)</td><td class="param-type">str</td><td class="param-desc">Human-readable description for documentation/registries.</td></tr>
+    <tr><td class="param-name">.with_version(ver)</td><td class="param-type">str</td><td class="param-desc">Semantic version string. Default: <code>"1.0.0"</code>.</td></tr>
+    <tr><td class="param-name">.with_tags(*tags)</td><td class="param-type">str...</td><td class="param-desc">Arbitrary labels for grouping agents (e.g. <code>"prod"</code>, <code>"v2"</code>).</td></tr>
+  </table>
+
+  <p><strong>Behaviour methods</strong></p>
+  <table class="param-table">
+    <tr><th>Method</th><th>Parameter</th><th>Description</th></tr>
+    <tr><td class="param-name">.with_system_prompt(p)</td><td class="param-type">str</td><td class="param-desc">System prompt prepended to every run.</td></tr>
+    <tr><td class="param-name">.with_tools(tools)</td><td class="param-type">list[ToolDefinition]</td><td class="param-desc">Replace the tool list. Passed to every <code>RunConfig</code>.</td></tr>
+    <tr><td class="param-name">.add_tool(tool)</td><td class="param-type">ToolDefinition</td><td class="param-desc">Append a single tool to the list.</td></tr>
+    <tr><td class="param-name">.with_tool_registry(registry, *, skill_name="tool-registry", description="...")</td><td class="param-type">ToolRegistry</td><td class="param-desc">Attach registry definitions and package registry handlers into an implicit skill. Useful for MCP-backed tool sets.</td></tr>
+    <tr><td class="param-name">.with_middlewares(middlewares)</td><td class="param-type">list[AgentMiddleware]</td><td class="param-desc">Replace the agent's static middleware chain.</td></tr>
+    <tr><td class="param-name">.add_middleware(middleware)</td><td class="param-type">AgentMiddleware</td><td class="param-desc">Append one middleware to the agent's static middleware chain.</td></tr>
+    <tr><td class="param-name">.with_defaults(**kw)</td><td class="param-type">Any</td><td class="param-desc">Override default <code>RunConfig</code> fields by name, e.g. <code>max_iterations=5</code>.</td></tr>
+  </table>
+
+  <p><strong>Runtime wiring methods</strong></p>
+  <table class="param-table">
+    <tr><th>Method</th><th>Parameter</th><th>Description</th></tr>
+    <tr><td class="param-name">.use_bridge(runtime)</td><td class="param-type">AgentRuntime</td><td class="param-desc">Attach a Bridge-pattern runtime (any <code>AgentExecutor</code> subclass).</td></tr>
+    <tr><td class="param-name">.use_adapter(runtime)</td><td class="param-type">AgentRuntime</td><td class="param-desc">Attach an Adapter-pattern runtime.</td></tr>
+    <tr><td class="param-name">.use_runtime(runtime)</td><td class="param-type">AgentRuntime</td><td class="param-desc">Attach any object satisfying the <code>AgentRuntime</code> protocol.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">build</span>() <span class="ret">→ Agent</span></h4>
+  <p>Construct and return an <code>Agent</code>. Raises <code>RuntimeNotConfiguredError</code> if no runtime has been attached.</p>
+
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">AgentBuilder</span>, <span class="tp">ToolDefinition</span>, <span class="tp">RunConfig</span>
+<span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">BridgeAgentFactory</span>
+
+search_tool = <span class="tp">ToolDefinition</span>(
+    name=<span class="st">"web_search"</span>,
+    description=<span class="st">"Search the web."</span>,
+    parameters={<span class="st">"type"</span>: <span class="st">"object"</span>, <span class="st">"properties"</span>: {<span class="st">"query"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>}}},
+)
+
+agent = (
+    <span class="tp">AgentBuilder</span>()
+    .with_name(<span class="st">"Research Agent"</span>)
+    .with_description(<span class="st">"Searches the web and summarises findings."</span>)
+    .with_version(<span class="st">"2.1.0"</span>)
+    .with_tags(<span class="st">"prod"</span>, <span class="st">"research"</span>)
+    .with_system_prompt(<span class="st">"You are a thorough research assistant."</span>)
+    .with_tools([search_tool])
+    .with_defaults(max_iterations=<span class="nm">8</span>, temperature=<span class="nm">0.3</span>)
+    .use_bridge(<span class="tp">BridgeAgentFactory</span>.for_openai(client, strategy=<span class="st">"react"</span>))
+    .build()
+)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     MIDDLEWARE
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="middleware-api">
+  <h2>Middleware APIs</h2>
+  <p>Middleware is the SDK's cross-cutting interception layer. It combines shared mutable context objects with ordered <code>next(...)</code> delegation across runs, streams, model calls, and tool calls.</p>
+
+  <div id="base-agent-middleware"></div>
+  <h3 class="api-class">class BaseAgentMiddleware <span class="tag tag-class">middleware base</span></h3>
+  <p class="desc">Convenience base class with pass-through defaults for all middleware hooks. Override only the hooks you need.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">wrap_run</span>(<span class="param">context</span>: <span class="typ">AgentRunContext</span>, <span class="param">handler</span>) <span class="ret">→ RunResult</span></h4>
+  <p class="desc">Wrap a full <code>Agent.run(...)</code> execution. Applies to Bridge, Adapter, Native, and workflow-backed runtimes.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">wrap_stream</span>(<span class="param">context</span>: <span class="typ">StreamContext</span>, <span class="param">handler</span>) <span class="ret">→ AsyncGenerator[StreamChunk, None]</span></h4>
+  <p class="desc">Wrap a full <code>Agent.stream(...)</code> execution. Middleware may short-circuit by returning its own async generator.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">wrap_model_call</span>(<span class="param">context</span>: <span class="typ">ModelCallContext</span>, <span class="param">handler</span>) <span class="ret">→ ModelResponse</span></h4>
+  <p class="desc">Wrap one Bridge executor model invocation. Available only when Kneo owns the inner loop through Bridge runtimes.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">wrap_tool_call</span>(<span class="param">context</span>: <span class="typ">ToolCallContext</span>, <span class="param">handler</span>) <span class="ret">→ ToolResult</span></h4>
+  <p class="desc">Wrap one Bridge executor tool dispatch. Useful for logging, guardrails, retries, or result rewriting.</p>
+
+  <div id="middleware-contexts"></div>
+  <h3 class="api-class">Context Dataclasses <span class="tag tag-dataclass">middleware</span></h3>
+  <table class="param-table">
+    <tr><th>Type</th><th>Key Fields</th><th>Description</th></tr>
+    <tr><td class="param-name">AgentRunContext</td><td class="param-type"><code>agent_name</code>, <code>runtime_name</code>, <code>user_message</code>, <code>messages</code>, <code>run_config</code>, <code>metadata</code></td><td class="param-desc">Shared mutable state for one <code>run()</code> call.</td></tr>
+    <tr><td class="param-name">StreamContext</td><td class="param-type"><code>agent_name</code>, <code>runtime_name</code>, <code>user_message</code>, <code>messages</code>, <code>run_config</code>, <code>metadata</code></td><td class="param-desc">Shared mutable state for one <code>stream()</code> call.</td></tr>
+    <tr><td class="param-name">ModelCallContext</td><td class="param-type"><code>executor_name</code>, <code>runtime_name</code>, <code>iteration</code>, <code>messages</code>, <code>run_config</code>, <code>metadata</code></td><td class="param-desc">State for one Bridge model call.</td></tr>
+    <tr><td class="param-name">ToolCallContext</td><td class="param-type"><code>executor_name</code>, <code>runtime_name</code>, <code>iteration</code>, <code>messages</code>, <code>run_config</code>, <code>tool_call</code>, <code>metadata</code></td><td class="param-desc">State for one Bridge tool invocation.</td></tr>
+    <tr><td class="param-name">ModelResponse</td><td class="param-type"><code>text</code>, <code>tool_calls</code></td><td class="param-desc">Normalized Bridge model-call result returned from <code>wrap_model_call(...)</code>.</td></tr>
+  </table>
+
+  <div class="note"><strong>Ordering:</strong> Static middleware from <code>AgentBuilder</code> is applied first. Per-run middleware from <code>RunConfig(middlewares=[...])</code> is appended after it, so it executes deeper in the chain.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     OBSERVABILITY
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="observability-api">
+  <h2>Observability</h2>
+  <p>The <code>kneo_agent.observability</code> subpackage provides first-party OpenTelemetry support. It is gated behind the optional <code>[telemetry]</code> extra (<code>pip install "kneo-agent[telemetry]"</code>) so the core package keeps no telemetry dependencies.</p>
+
+  <div class="note">
+    <strong>Why this is a separate subpackage, not part of <code>kneo_agent.utils</code>:</strong>
+    <ol>
+      <li><strong>Optional dependency boundary.</strong> Every name re-exported from <code>kneo_agent.utils</code> is import-safe with just the core install. Hosting OTel-backed code there would either force <code>opentelemetry-api</code> into the core install or require conditional <code>try: import opentelemetry</code> guards in <code>utils/__init__.py</code>. A dedicated subpackage makes the <code>[telemetry]</code> boundary visually obvious — <code>from kneo_agent.observability import ...</code> clearly signals "this requires the extra".</li>
+      <li><strong>It is a middleware, not a helper.</strong> <code>OpenTelemetryMiddleware</code> subclasses <code>BaseAgentMiddleware</code> and participates in run / stream / model-call / tool-call dispatch. Architecturally it belongs alongside <code>core/middleware.py</code>, not in the utility bin where <code>ToolRegistry</code> and message constructors live.</li>
+      <li><strong>Room to grow.</strong> Observability tends to accrete: OTel metrics, log correlation, custom exporters, structured-logging adapters. Starting as its own subpackage gives it space without bloating <code>utils</code>.</li>
+    </ol>
+    <p><code>configure_logging</code> and <code>get_logger</code> remain in <code>kneo_agent.utils</code> because they are thin stdlib wrappers with no optional deps and don't participate in the middleware contract. If logging ever grows OTel-aware features (log/trace correlation, OTLP log export), the cleaner move is to <em>also</em> extract logging here — possibly renaming this subpackage to <code>instrumentation</code> — rather than merge observability back into <code>utils</code>.</p>
+  </div>
+
+  <div id="opentelemetry-middleware"></div>
+  <h3 class="api-class">class OpenTelemetryMiddleware <span class="tag tag-class">middleware</span></h3>
+  <p class="desc">A <code>BaseAgentMiddleware</code> subclass that emits spans for all four hook points (run, stream, model call, tool call) following the <a href="https://opentelemetry.io/docs/specs/semconv/gen-ai/">OpenTelemetry GenAI semantic conventions</a>.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">tracer</span>: <span class="typ">Tracer | None</span> = <span class="nm">None</span>, *, <span class="param">record_arguments</span>: <span class="typ">bool</span> = <span class="nm">True</span>, <span class="param">record_results</span>: <span class="typ">bool</span> = <span class="nm">False</span>)</h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">tracer</td><td class="param-type">opentelemetry.trace.Tracer | None</td><td class="param-desc">Pre-configured tracer. If <code>None</code>, a tracer named <code>"kneo_agent"</code> is acquired from the global tracer provider.</td></tr>
+    <tr><td class="param-name">record_arguments</td><td class="param-type">bool</td><td class="param-desc">Serialize tool-call arguments into <code>gen_ai.tool.call.arguments</code>. Disable when arguments may contain PII. Default: <code>True</code>.</td></tr>
+    <tr><td class="param-name">record_results</td><td class="param-type">bool</td><td class="param-desc">Attach tool results to spans. Off by default since results can be large or sensitive.</td></tr>
+  </table>
+
+  <h3>Span hierarchy</h3>
+  <pre><code>chat {agent_name}            (wrap_run)
+├── chat iter=1              (wrap_model_call)
+├── execute_tool {tool}      (wrap_tool_call)
+└── chat iter=2              (wrap_model_call)</code></pre>
+
+  <h3>Span attributes</h3>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>When emitted</th><th>Source</th></tr>
+    <tr><td class="param-name">gen_ai.system</td><td>all spans</td><td class="param-desc"><code>runtime.name</code></td></tr>
+    <tr><td class="param-name">gen_ai.operation.name</td><td>all spans</td><td class="param-desc"><code>"chat"</code> for runs and model calls; <code>"execute_tool"</code> for tool spans</td></tr>
+    <tr><td class="param-name">gen_ai.agent.name</td><td>run + stream spans</td><td class="param-desc"><code>Agent.name</code></td></tr>
+    <tr><td class="param-name">gen_ai.tool.name</td><td>tool spans</td><td class="param-desc"><code>tool_call.name</code></td></tr>
+    <tr><td class="param-name">gen_ai.tool.call.id</td><td>tool spans</td><td class="param-desc"><code>tool_call.id</code></td></tr>
+    <tr><td class="param-name">gen_ai.tool.call.arguments</td><td>tool spans (when <code>record_arguments=True</code>)</td><td class="param-desc">JSON-serialised <code>tool_call.arguments</code>, truncated at 4096 chars</td></tr>
+    <tr><td class="param-name">gen_ai.request.model</td><td>any span</td><td class="param-desc"><code>RunConfig.extra["model"]</code> when set</td></tr>
+    <tr><td class="param-name">gen_ai.request.temperature</td><td>any span</td><td class="param-desc"><code>RunConfig.temperature</code></td></tr>
+    <tr><td class="param-name">gen_ai.usage.input_tokens</td><td>run spans</td><td class="param-desc"><code>RunResult.metadata["usage"]["input_tokens"]</code> or <code>"prompt_tokens"</code> when surfaced by the runtime</td></tr>
+    <tr><td class="param-name">gen_ai.usage.output_tokens</td><td>run spans</td><td class="param-desc"><code>RunResult.metadata["usage"]["output_tokens"]</code> or <code>"completion_tokens"</code> when surfaced by the runtime</td></tr>
+  </table>
+
+  <p>Exceptions raised by downstream handlers are recorded on the active span via <code>record_exception</code> and the span status is set to <code>ERROR</code> before re-raising.</p>
+
+  <div class="note"><strong>Install:</strong> <code>pip install "kneo-agent[telemetry]"</code>. Importing the module without the extra installed raises <code>ImportError</code> at <code>OpenTelemetryMiddleware()</code> construction.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     WORKFLOWS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="workflows">
+  <h2>Workflows</h2>
+  <p>Composite workflows provide a workflow-as-agent model. Each participant receives the full conversation history, appends its own contribution, and passes the updated message list to the next participant.</p>
+  <p class="desc">The workflow package is split by runtime type: <code>workflow.py</code> contains the graph runtime, <code>sequential_workflow.py</code> contains the default orchestration runtime, <code>concurrent_workflow.py</code>, <code>handoff_workflow.py</code>, and <code>group_chat_workflow.py</code> contain the specialized orchestration runtimes, and <code>builders.py</code> contains the workflow and orchestration builders.</p>
+
+  <div id="workflow-graph"></div>
+  <h3 class="api-class">Workflow <span class="tag tag-class">graph runtime</span></h3>
+  <p class="desc">General graph workflow with explicit executors and edges. Execution proceeds in supersteps: run the current executor set, merge results into shared history, then route along matching edges. Like the other workflow runtimes, it also satisfies <code>AgentRuntime</code> and can be wrapped as a regular agent.</p>
+  <table class="param-table">
+    <tr><th>Constructor Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">executors</td><td class="param-type">dict[str, WorkflowComponent]</td><td class="param-desc">Registered workflow executors by name.</td></tr>
+    <tr><td class="param-name">start_executor_ids</td><td class="param-type">list[str]</td><td class="param-desc">Executor names scheduled in the first superstep.</td></tr>
+    <tr><td class="param-name">edges</td><td class="param-type">list[WorkflowEdge]</td><td class="param-desc">Directed routing edges between executors.</td></tr>
+  </table>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">as_agent</span>(* , <span class="param">name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">description</span>: <span class="typ">str</span> = <span class="st">""</span>, <span class="param">system_prompt</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ Agent</span></h4>
+  <p>Wrap the graph workflow in the regular <code>Agent</code> facade so callers can use <code>run()</code>, <code>stream()</code>, and <code>chat()</code> through the existing architecture.</p>
+
+  <div id="workflow-edge"></div>
+  <h3 class="api-class">WorkflowEdge <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Represents a directed edge between two workflow executors.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">source</td><td class="param-type">str</td><td class="param-desc">Source executor name.</td></tr>
+    <tr><td class="param-name">target</td><td class="param-type">str</td><td class="param-desc">Target executor name.</td></tr>
+    <tr><td class="param-name">condition</td><td class="param-type">Callable | None</td><td class="param-desc">Optional route predicate evaluated after the source executor runs.</td></tr>
+    <tr><td class="param-name">label</td><td class="param-type">str</td><td class="param-desc">Optional human-readable edge label.</td></tr>
+  </table>
+
+  <div id="workflow-component"></div>
+  <h3 class="api-class">WorkflowComponent <span class="tag tag-protocol">protocol</span></h3>
+  <p class="desc">Protocol implemented by workflow participants. A participant must expose <code>name</code>, support <code>run(messages, config)</code>, and report whether it supports streaming.</p>
+  <table class="param-table">
+    <tr><th>Member</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Human-readable participant identifier.</td></tr>
+    <tr><td class="param-name">run(messages, config)</td><td class="param-type">RunResult</td><td class="param-desc">Execute the participant against the full conversation history.</td></tr>
+    <tr><td class="param-name">supports_streaming()</td><td class="param-type">bool</td><td class="param-desc">Whether the participant can stream.</td></tr>
+  </table>
+
+  <div id="orchestration-family"></div>
+  <h3 class="api-class">Built-In Orchestration Runtimes <span class="tag tag-class">family</span></h3>
+  <p class="desc">Kneo Agent ships four participant-oriented orchestration runtimes with the same overall shape. Internally they share the same <code>OrchestrationBase</code>, and all of them satisfy both <code>WorkflowComponent</code> and <code>AgentRuntime</code>, can be nested, and can be wrapped as regular agents with <code>as_agent(...)</code>.</p>
+  <table class="param-table">
+    <tr><th>Runtime</th><th>Purpose</th><th>Default Shape</th></tr>
+    <tr><td class="param-name">SequentialWorkflow</td><td class="param-type">Default orchestration runtime</td><td class="param-desc">Runs participants in order against the evolving shared conversation.</td></tr>
+    <tr><td class="param-name">ConcurrentWorkflow</td><td class="param-type">Fan-out orchestration</td><td class="param-desc">Runs all participants against the same input snapshot in parallel.</td></tr>
+    <tr><td class="param-name">HandoffWorkflow</td><td class="param-type">Selector-driven orchestration</td><td class="param-desc">Chooses the next participant dynamically at runtime.</td></tr>
+    <tr><td class="param-name">GroupChatWorkflow</td><td class="param-type">Round-robin orchestration</td><td class="param-desc">Cycles through participants in a shared conversation for a configured number of rounds.</td></tr>
+  </table>
+
+  <div id="sequential-workflow"></div>
+  <h3 class="api-class">SequentialWorkflow <span class="tag tag-class">orchestration</span></h3>
+  <p class="desc">The default orchestration runtime. It runs participants in order and shares the same workflow/runtime surface as the other built-in orchestration runtimes.</p>
+  <table class="param-table">
+    <tr><th>Constructor Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">participants</td><td class="param-type">list[Agent | AgentRuntime | WorkflowComponent | FunctionStep]</td><td class="param-desc">Ordered workflow participants. The list must not be empty.</td></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Workflow runtime name. Exposed as <code>runtime_name</code> when wrapped as an agent.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-desc">Human-readable description for docs or registries.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">run</span>(<span class="param">messages</span>: <span class="typ">list[Message]</span>, <span class="param">config</span>: <span class="typ">RunConfig</span>) <span class="ret">→ RunResult</span></h4>
+  <p>Execute all workflow participants in order. The final result aggregates the full conversation, tool results, total iterations, and workflow metadata such as <code>workflow_steps</code>.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">as_agent</span>(* , <span class="param">name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">description</span>: <span class="typ">str</span> = <span class="st">""</span>, <span class="param">system_prompt</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ Agent</span></h4>
+  <p>Wrap the workflow in the regular <code>Agent</code> facade so callers can use <code>run()</code>, <code>stream()</code>, and <code>chat()</code> exactly as they would for any other agent.</p>
+
+  <div id="concurrent-workflow"></div>
+  <h3 class="api-class">ConcurrentWorkflow <span class="tag tag-class">orchestration</span></h3>
+  <p class="desc">Fan-out orchestration. Runs all participants against the same input snapshot in parallel and merges their output back into shared history.</p>
+  <p class="desc">Uses the same participant-oriented runtime surface as <code>SequentialWorkflow</code>, but changes the execution policy from ordered execution to parallel fan-out.</p>
+
+  <div id="handoff-workflow"></div>
+  <h3 class="api-class">HandoffWorkflow <span class="tag tag-class">orchestration</span></h3>
+  <p class="desc">Dynamic specialist routing. A selector callback chooses which participant handles the next turn.</p>
+  <p class="desc">Uses the same participant-oriented runtime surface as <code>SequentialWorkflow</code>, but changes the execution policy to selector-driven routing.</p>
+
+  <div id="groupchat-workflow"></div>
+  <h3 class="api-class">GroupChatWorkflow <span class="tag tag-class">orchestration</span></h3>
+  <p class="desc">Round-robin shared conversation. Participants speak in order for a configured number of rounds.</p>
+  <p class="desc">Uses the same participant-oriented runtime surface as <code>SequentialWorkflow</code>, but changes the execution policy to round-robin conversation turns.</p>
+
+  <div id="function-step"></div>
+  <h3 class="api-class">FunctionStep <span class="tag tag-class">workflow leaf</span></h3>
+  <p class="desc">Custom workflow participant backed by a Python callable. The handler receives the full conversation history and current <code>RunConfig</code>.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">step_name</td><td class="param-type">str</td><td class="param-desc">Workflow step name.</td></tr>
+    <tr><td class="param-name">handler</td><td class="param-type">Callable[[list[Message], RunConfig], WorkflowReturn]</td><td class="param-desc">Function or coroutine used to generate the step output.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-desc">Optional human-readable description.</td></tr>
+  </table>
+  <p class="desc">A handler may return <code>RunResult</code>, <code>Message</code>, <code>list[Message]</code>, <code>str</code>, or <code>None</code>.</p>
+  <p class="desc"><code>FunctionExecutor</code> is an exported alias for <code>FunctionStep</code> so workflow leaves can be named as executors when that terminology is clearer.</p>
+
+  <div id="human-step"></div>
+  <h3 class="api-class">HumanInTheLoopStep <span class="tag tag-class">workflow leaf</span></h3>
+  <p class="desc">Workflow participant that requests explicit human review or approval. It can resolve inline through a callback or pause execution by raising <code>HumanInterventionRequiredError</code>.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">step_name</td><td class="param-type">str</td><td class="param-desc">Workflow step name.</td></tr>
+    <tr><td class="param-name">prompt</td><td class="param-type">str | callable</td><td class="param-desc">Prompt shown to the human reviewer. May be computed from the current messages and run config.</td></tr>
+    <tr><td class="param-name">resolver</td><td class="param-type">callable | None</td><td class="param-desc">Optional callback that returns the human response inline.</td></tr>
+    <tr><td class="param-name">response_role</td><td class="param-type">str</td><td class="param-desc">Message role used when the human response is appended. Default: <code>"user"</code>.</td></tr>
+  </table>
+
+  <h3 class="api-class">HumanInterventionRequest <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Structured request object passed to human-step resolvers and surfaced in pause exceptions.</p>
+
+  <div id="workflow-builder"></div>
+  <h3 class="api-class">WorkflowBuilder <span class="tag tag-class">factory</span></h3>
+  <p class="desc">Builder for graph workflows plus convenience helpers for workflow leaves and common orchestration patterns.</p>
+  <table class="param-table">
+    <tr><th>Method</th><th>Return</th><th>Description</th></tr>
+    <tr><td class="param-name">WorkflowBuilder(start_executor, *, name="workflow", description="")</td><td class="param-type">WorkflowBuilder</td><td class="param-desc">Create a graph workflow builder with an initial executor.</td></tr>
+    <tr><td class="param-name">.add_executor(executor)</td><td class="param-type">WorkflowBuilder</td><td class="param-desc">Register another executor in the graph.</td></tr>
+    <tr><td class="param-name">.add_edge(source, target, *, condition=None, label="")</td><td class="param-type">WorkflowBuilder</td><td class="param-desc">Add a routing edge between executors.</td></tr>
+    <tr><td class="param-name">.build()</td><td class="param-type">Workflow</td><td class="param-desc">Build the graph workflow.</td></tr>
+    <tr><td class="param-name">.step(name, handler, *, description="")</td><td class="param-type">FunctionStep</td><td class="param-desc">Create a custom function-based workflow participant.</td></tr>
+    <tr><td class="param-name">.human_step(name, prompt, *, resolver=None, description="", response_role="user")</td><td class="param-type">HumanInTheLoopStep</td><td class="param-desc">Create a workflow participant that requests explicit human input.</td></tr>
+    <tr><td class="param-name">.sequential(participants, ...)</td><td class="param-type">SequentialWorkflow</td><td class="param-desc">Convenience helper for the default linear orchestration runtime.</td></tr>
+    <tr><td class="param-name">.concurrent(participants, ...)</td><td class="param-type">ConcurrentWorkflow</td><td class="param-desc">Convenience helper for fan-out composition.</td></tr>
+  </table>
+
+  <div id="orchestration-builders"></div>
+  <h3 class="api-class">Orchestration Builders <span class="tag tag-class">factories</span></h3>
+  <table class="param-table">
+    <tr><th>Builder</th><th>Builds</th><th>Description</th></tr>
+    <tr><td class="param-name">SequentialBuilder</td><td class="param-type">SequentialWorkflow</td><td class="param-desc">Default linear orchestration runtime.</td></tr>
+    <tr><td class="param-name">ConcurrentBuilder</td><td class="param-type">ConcurrentWorkflow</td><td class="param-desc">Parallel fan-out orchestration.</td></tr>
+    <tr><td class="param-name">HandoffBuilder</td><td class="param-type">HandoffWorkflow</td><td class="param-desc">Selector-driven specialist routing.</td></tr>
+    <tr><td class="param-name">GroupChatBuilder</td><td class="param-type">GroupChatWorkflow</td><td class="param-desc">Round-robin shared conversation orchestration.</td></tr>
+  </table>
+
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">AgentBuilder</span>
+<span class="kw">from</span> kneo_agent.workflows <span class="kw">import</span> <span class="tp">WorkflowBuilder</span>
+
+writer = <span class="tp">AgentBuilder</span>().with_name(<span class="st">"writer"</span>).use_runtime(writer_runtime).build()
+reviewer = <span class="tp">AgentBuilder</span>().with_name(<span class="st">"reviewer"</span>).use_runtime(reviewer_runtime).build()
+
+editorial = <span class="tp">WorkflowBuilder</span>.sequential([writer, reviewer], name=<span class="st">"editorial"</span>)
+publish = <span class="tp">WorkflowBuilder</span>.step(<span class="st">"publish"</span>, <span class="kw">lambda</span> messages, config: <span class="st">"Published."</span>)
+
+release = <span class="tp">WorkflowBuilder</span>.sequential([editorial, publish], name=<span class="st">"release"</span>)
+workflow_agent = release.as_agent(name=<span class="st">"Release Workflow"</span>)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     DATA CLASSES
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="agentconfig">
+  <h2>Core Data Classes</h2>
+
+  <h3 class="api-class">AgentConfig <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Static metadata that describes <em>what the agent is</em>. Constructed by <code>AgentBuilder.build()</code>. Exposed via <code>agent.config</code>.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">Agent display name.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-default">""</td><td class="param-desc">Human-readable description.</td></tr>
+    <tr><td class="param-name">version</td><td class="param-type">str</td><td class="param-default">"1.0.0"</td><td class="param-desc">Semantic version.</td></tr>
+    <tr><td class="param-name">system_prompt</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Default system prompt for all runs.</td></tr>
+    <tr><td class="param-name">tools</td><td class="param-type">list[ToolDefinition]</td><td class="param-default">[]</td><td class="param-desc">Tool definitions passed to every run.</td></tr>
+    <tr><td class="param-name">middlewares</td><td class="param-type">list[AgentMiddleware]</td><td class="param-default">[]</td><td class="param-desc">Static middleware chain attached to the agent.</td></tr>
+    <tr><td class="param-name">default_run_config</td><td class="param-type">dict[str, Any]</td><td class="param-default">{}</td><td class="param-desc">RunConfig field overrides applied to every run.</td></tr>
+    <tr><td class="param-name">tags</td><td class="param-type">list[str]</td><td class="param-default">[]</td><td class="param-desc">Arbitrary labels for grouping/filtering.</td></tr>
+  </table>
+
+  <div id="runconfig"></div>
+  <h3 class="api-class">RunConfig <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Per-run configuration describing <em>how a particular run behaves</em>. Merged: <code>AgentConfig.default_run_config</code> → <code>run_config</code> kwarg → <code>**extra</code> kwargs.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">max_iterations</td><td class="param-type">int</td><td class="param-default">10</td><td class="param-desc">Maximum agentic loop iterations before stopping.</td></tr>
+    <tr><td class="param-name">temperature</td><td class="param-type">float</td><td class="param-default">0.7</td><td class="param-desc">Sampling temperature forwarded to the model.</td></tr>
+    <tr><td class="param-name">system_prompt</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Overrides <code>AgentConfig.system_prompt</code> for this run.</td></tr>
+    <tr><td class="param-name">tools</td><td class="param-type">list[ToolDefinition]</td><td class="param-default">[]</td><td class="param-desc">Overrides the agent's tool list for this run.</td></tr>
+    <tr><td class="param-name">middlewares</td><td class="param-type">list[AgentMiddleware]</td><td class="param-default">[]</td><td class="param-desc">Additional middleware appended for this single invocation.</td></tr>
+    <tr><td class="param-name">extra</td><td class="param-type">dict[str, Any]</td><td class="param-default">{}</td><td class="param-desc">Provider-specific key/value pairs forwarded verbatim (e.g. <code>tool_handlers</code> for OpenAI provider).</td></tr>
+  </table>
+<pre><code><span class="cm"># Override temperature and add a per-run middleware/tool handler</span>
+result = <span class="kw">await</span> agent.run(
+    <span class="st">"Summarise the latest AI news."</span>,
+    run_config=<span class="tp">RunConfig</span>(
+        temperature=<span class="nm">0.2</span>,
+        max_iterations=<span class="nm">5</span>,
+        middlewares=[MyLoggingMiddleware()],
+        extra={<span class="st">"tool_handlers"</span>: {<span class="st">"web_search"</span>: my_search_fn}},
+    ),
+)</code></pre>
+
+  <div id="runresult"></div>
+  <h3 class="api-class">RunResult <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Everything produced by a completed <code>agent.run()</code> call.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">final_message</td><td class="param-type">str</td><td class="param-desc">The agent's final text response.</td></tr>
+    <tr><td class="param-name">messages</td><td class="param-type">list[Message]</td><td class="param-desc">Full conversation as it stood at run end, including tool messages.</td></tr>
+    <tr><td class="param-name">iterations</td><td class="param-type">int</td><td class="param-desc">Number of LLM calls made in the loop.</td></tr>
+    <tr><td class="param-name">tool_calls_performed</td><td class="param-type">list[ToolResult]</td><td class="param-desc">All tool calls executed during the run.</td></tr>
+    <tr><td class="param-name">duration_ms</td><td class="param-type">float</td><td class="param-desc">Wall-clock time in milliseconds.</td></tr>
+    <tr><td class="param-name">metadata</td><td class="param-type">dict[str, Any]</td><td class="param-desc">Strategy-specific extras, e.g. <code>{"plan": "..."}</code> from Plan-Act, <code>{"stopped_by_max_iterations": True}</code>.</td></tr>
+  </table>
+<pre><code>result = <span class="kw">await</span> agent.run(<span class="st">"Research quantum computing."</span>)
+
+print(result.final_message)
+print(<span class="st">f"Iterations: {result.iterations}"</span>)
+print(<span class="st">f"Duration:   {result.duration_ms:.1f} ms"</span>)
+print(<span class="st">f"Tools used: {[r.name for r in result.tool_calls_performed]}"</span>)
+
+<span class="kw">if</span> result.metadata.get(<span class="st">"plan"</span>):
+    print(<span class="st">f"Plan used:\n{result.metadata['plan']}"</span>)
+
+<span class="kw">if</span> result.metadata.get(<span class="st">"stopped_by_max_iterations"</span>):
+    print(<span class="st">"Warning: loop was cut short by max_iterations."</span>)</code></pre>
+
+  <div id="streamchunk"></div>
+  <h3 class="api-class">StreamChunk <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">A single unit yielded by a streaming agent run. Always check <code>chunk.type</code> before accessing optional fields.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">type</td><td class="param-type">"text" | "tool_call" | "tool_result" | "done"</td><td class="param-desc">Discriminator. Always present.</td></tr>
+    <tr><td class="param-name">content</td><td class="param-type">str | None</td><td class="param-desc">Text token. Present only when <code>type == "text"</code>.</td></tr>
+    <tr><td class="param-name">tool_call</td><td class="param-type">ToolCall | None</td><td class="param-desc">Tool invocation details. Present only when <code>type == "tool_call"</code>.</td></tr>
+    <tr><td class="param-name">tool_result</td><td class="param-type">ToolResult | None</td><td class="param-desc">Tool execution result. Present only when <code>type == "tool_result"</code>.</td></tr>
+  </table>
+
+  <div id="message"></div>
+  <h3 class="api-class">Message <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">A single turn in an agent conversation.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">role</td><td class="param-type">"user" | "assistant" | "system" | "tool"</td><td class="param-desc">Message role.</td></tr>
+    <tr><td class="param-name">content</td><td class="param-type">str</td><td class="param-desc">Message text.</td></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str | None</td><td class="param-desc">Tool name. Populated for <code>role="tool"</code> messages.</td></tr>
+    <tr><td class="param-name">tool_call_id</td><td class="param-type">str | None</td><td class="param-desc">Links a tool result to its originating call. Populated for <code>role="tool"</code> messages.</td></tr>
+  </table>
+
+  <div id="tool-types"></div>
+  <h3 class="api-class">ToolDefinition <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Tool name used by the model to call it.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-desc">Natural-language description shown to the model.</td></tr>
+    <tr><td class="param-name">parameters</td><td class="param-type">dict[str, Any]</td><td class="param-desc">JSON Schema object describing arguments.</td></tr>
+  </table>
+
+  <h3 class="api-class">ToolCall <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">id</td><td class="param-type">str</td><td class="param-desc">Unique call identifier (from the model).</td></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Tool name to invoke.</td></tr>
+    <tr><td class="param-name">arguments</td><td class="param-type">dict[str, Any]</td><td class="param-desc">Parsed JSON arguments from the model.</td></tr>
+  </table>
+
+  <h3 class="api-class">ToolResult <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">tool_call_id</td><td class="param-type">str</td><td class="param-desc">Links back to the originating <code>ToolCall.id</code>.</td></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Tool name.</td></tr>
+    <tr><td class="param-name">result</td><td class="param-type">str</td><td class="param-desc">Serialised result string returned to the model.</td></tr>
+  </table>
+
+  <div id="agentruntime"></div>
+  <h3 class="api-class">AgentRuntime <span class="tag tag-protocol">protocol</span></h3>
+  <p class="desc">The structural protocol that every runtime must satisfy. <code>AgentExecutor</code> subclasses (Bridge), platform-owned native runtimes, and <code>*Adapter</code> classes all implement this. The <code>Agent</code> class only ever depends on this protocol.</p>
+  <table class="param-table">
+    <tr><th>Member</th><th>Signature</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str (property)</td><td class="param-desc">Human-readable identifier (e.g. <code>"react@openai-agents"</code>, <code>"react@langchain"</code>, or <code>"google-adk-native"</code>).</td></tr>
+    <tr><td class="param-name">run()</td><td class="param-type">async → RunResult</td><td class="param-desc">Execute a full agent run.</td></tr>
+    <tr><td class="param-name">stream()</td><td class="param-type">def → AsyncGenerator[StreamChunk, None]</td><td class="param-desc">Async generator yielding run chunks. Declared as <code>def</code> (not <code>async def</code>) so implementations can be async generator functions and call sites iterate with <code>async for chunk in runtime.stream(...)</code> directly.</td></tr>
+    <tr><td class="param-name">supports_streaming()</td><td class="param-type">bool</td><td class="param-desc">Whether <code>stream()</code> is supported.</td></tr>
+    <tr><td class="param-name">supports_tools()</td><td class="param-type">bool</td><td class="param-desc">Whether the runtime dispatches tool calls.</td></tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BRIDGE FACTORY
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="bridge-factory">
+  <h2>BridgeAgentFactory</h2>
+  <h3 class="api-class">class BridgeAgentFactory <span class="tag tag-class">factory</span></h3>
+  <p class="desc">Static factory that constructs Kneo-owned Bridge runtimes. Strategy and platform are chosen independently when the underlying provider satisfies the Bridge <code>RuntimeImpl</code> contract.</p>
+
+  <div class="note"><strong>Scope:</strong> LangChain Bridge remains a true Bridge. Google ADK Bridge is a compatibility translation layer. OpenAI is kept as a compatibility alias and now returns a native runtime with a warning.</div>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_google_adk</span>(<span class="param">adk_runner</span>, <span class="param">session_id</span>: <span class="typ">str</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>) <span class="ret">→ AgentRuntime</span></h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">adk_runner</td><td class="param-type">Any</td><td class="param-desc">A <code>google.adk.runners.InMemoryRunner</code> or compatible instance.</td></tr>
+    <tr><td class="param-name">session_id</td><td class="param-type">str</td><td class="param-desc">ADK session identifier for this conversation.</td></tr>
+    <tr><td class="param-name">strategy</td><td class="param-type">BridgeStrategy</td><td class="param-desc"><code>"simple"</code>, <code>"react"</code>, or <code>"plan-act"</code>. Default: <code>"react"</code>.</td></tr>
+  </table>
+  <p class="desc">Warning: this is a compatibility bridge over ADK-shaped payloads. For native Google ADK loop ownership, prefer <code>NativeRuntimeFactory.for_google_adk(...)</code> or <code>AdapterAgentFactory.for_google_adk(...)</code>.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>) <span class="ret">→ AgentRuntime</span></h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">openai_client</td><td class="param-type">Any | None</td><td class="param-desc">Optional <code>AsyncOpenAI</code> client used by the OpenAI Agents SDK chat-completions model wrapper.</td></tr>
+    <tr><td class="param-name">model</td><td class="param-type">str</td><td class="param-desc">Model identifier. Default: <code>"gpt-4o"</code>.</td></tr>
+    <tr><td class="param-name">strategy</td><td class="param-type">BridgeStrategy</td><td class="param-desc">Strategy label preserved in the runtime name.</td></tr>
+    <tr><td class="param-name">runner</td><td class="param-type">Any | None</td><td class="param-desc">Optional OpenAI Agents SDK runner override, mainly useful for tests.</td></tr>
+  </table>
+  <p class="desc">Compatibility alias. This now returns the platform-owned OpenAI Agents SDK runtime and emits a warning. Prefer <code>NativeRuntimeFactory.for_openai(...)</code>.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_langchain</span>(<span class="param">chat_model</span>, <span class="param">tool_registry</span>: <span class="typ">dict | None</span> = <span class="nm">None</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>) <span class="ret">→ AgentRuntime</span></h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">chat_model</td><td class="param-type">Any</td><td class="param-desc">Any <code>langchain_core.language_models.BaseChatModel</code> subclass.</td></tr>
+    <tr><td class="param-name">tool_registry</td><td class="param-type">dict[str, Callable] | None</td><td class="param-desc">Tool name → callable mapping. Can also be registered post-construction via <code>LangChainImpl.register_tool()</code>.</td></tr>
+    <tr><td class="param-name">strategy</td><td class="param-type">BridgeStrategy</td><td class="param-desc">Loop strategy. Default: <code>"react"</code>.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">custom</span>(<span class="param">impl</span>: <span class="typ">RuntimeImpl</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>) <span class="ret">→ AgentRuntime</span></h4>
+  <p>Bridge a custom <code>RuntimeImpl</code> with any strategy. Use this to plug in a provider not natively supported by Kneo Agent.</p>
+
+<pre><code><span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">BridgeAgentFactory</span>, <span class="tp">NativeRuntimeFactory</span>
+<span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="tp">ChatOpenAI</span>
+
+<span class="cm"># True Bridge: Kneo loop over a LangChain chat model</span>
+lc_react_rt = <span class="tp">BridgeAgentFactory</span>.for_langchain(<span class="tp">ChatOpenAI</span>(), strategy=<span class="st">"react"</span>)
+
+<span class="cm"># Native runtime: platform owns the loop</span>
+oai_native_rt = <span class="tp">NativeRuntimeFactory</span>.for_openai(model=<span class="st">"gpt-4o"</span>, strategy=<span class="st">"react"</span>)
+
+print(oai_native_rt.name) <span class="cm"># "react@openai-agents"</span>
+print(lc_react_rt.name) <span class="cm"># "react@langchain"</span></code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     NATIVE FACTORY
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="native-factory">
+  <h2>NativeRuntimeFactory</h2>
+  <h3 class="api-class">class NativeRuntimeFactory <span class="tag tag-class">factory</span></h3>
+  <p class="desc">Constructs platform-owned runtimes. Use this when the underlying SDK/runtime should own the loop instead of Kneo.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>) <span class="ret">→ OpenAIAgentsRuntime</span></h4>
+  <p class="desc">Returns the OpenAI Agents SDK-backed runtime. The SDK owns the loop; the strategy is preserved in the runtime name and for Plan-Act behavior.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_google_adk</span>(<span class="param">adk_runner</span>, <span class="param">app_name</span>: <span class="typ">str</span>, <span class="param">user_id</span>: <span class="typ">str</span>, <span class="param">session_id</span>: <span class="typ">str</span>) <span class="ret">→ GoogleADKRuntime</span></h4>
+  <p class="desc">Returns the native Google ADK runtime backed by <code>runner.run_async(...)</code>. Google ADK owns the loop.</p>
+
+<pre><code><span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">NativeRuntimeFactory</span>
+
+oai_runtime = <span class="tp">NativeRuntimeFactory</span>.for_openai(model=<span class="st">"gpt-4o"</span>)
+adk_runtime = <span class="tp">NativeRuntimeFactory</span>.for_google_adk(runner, <span class="st">"app"</span>, <span class="st">"user-1"</span>, <span class="st">"session-1"</span>)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ADAPTER FACTORY
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="adapter-factory">
+  <h2>AdapterAgentFactory</h2>
+  <h3 class="api-class">class AdapterAgentFactory <span class="tag tag-class">factory</span></h3>
+  <p class="desc">Constructs Adapter-pattern runtimes that wrap existing platform objects. The platform manages its own loop; no strategy choice is needed or possible.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_google_adk</span>(<span class="param">adk_runner</span>, <span class="param">app_name</span>: <span class="typ">str</span>, <span class="param">user_id</span>: <span class="typ">str</span>, <span class="param">session_id</span>: <span class="typ">str</span>) <span class="ret">→ GoogleADKAdapter</span></h4>
+  <p class="desc">Wraps an ADK runner that exposes <code>run_async(app_name, user_id, session_id, new_message)</code> as an async generator.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">runner</span>, <span class="param">agent_definition</span>: <span class="typ">dict</span>) <span class="ret">→ OpenAIAgentsAdapter</span></h4>
+  <p class="desc">Wraps an <code>@openai/agents</code> Runner. <code>agent_definition</code> requires at minimum <code>{"name": ..., "instructions": ...}</code>.</p>
+
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_langchain</span>(<span class="param">agent_executor</span>) <span class="ret">→ LangChainAdapter</span></h4>
+  <p class="desc">Wraps a LangChain <code>AgentExecutor</code> (or <code>CompiledGraph</code>) with <code>ainvoke</code> and optionally <code>astream</code>.</p>
+
+<pre><code><span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">AdapterAgentFactory</span>
+
+<span class="cm"># Wrap an already-running LangChain AgentExecutor</span>
+lc_executor = build_langchain_agent()   <span class="cm"># your existing code, untouched</span>
+runtime = <span class="tp">AdapterAgentFactory</span>.for_langchain(lc_executor)
+
+agent = <span class="tp">AgentBuilder</span>().use_adapter(runtime).build()
+reply = <span class="kw">await</span> agent.chat(<span class="st">"What can you do?"</span>)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BRIDGE EXECUTORS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="executors">
+  <h2>Bridge Executors</h2>
+  <p>The Bridge abstraction side. These are Kneo-owned loop strategies. Inject a <code>RuntimeImpl</code> at construction time. Use Native runtimes when the platform should own the loop.</p>
+
+  <div id="simple-executor"></div>
+  <h3 class="api-class">SimpleAgentExecutor <span class="tag tag-class">executor</span></h3>
+  <p class="desc">One-shot completion. No loop, no tool calls. <code>name</code> → <code>"simple@&lt;platform&gt;"</code>.</p>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">SimpleAgentExecutor</span>
+<span class="kw">from</span> kneo_agent.providers <span class="kw">import</span> <span class="tp">LangChainImpl</span>
+
+impl = <span class="tp">LangChainImpl</span>(chat_model)
+runtime = <span class="tp">SimpleAgentExecutor</span>(impl)
+<span class="cm"># runtime.name == "simple@langchain"</span></code></pre>
+
+  <div id="react-executor"></div>
+  <h3 class="api-class">ReActAgentExecutor <span class="tag tag-class">executor</span></h3>
+  <p class="desc">Reason → Act → Observe loop. Tool calls are executed concurrently with <code>asyncio.gather</code>. Terminates when the model returns no tool calls or <code>max_iterations</code> is reached. <code>name</code> → <code>"react@&lt;platform&gt;"</code>.</p>
+
+  <p><strong>Loop invariants</strong></p>
+  <ul style="margin: 0.3rem 0 0.9rem 1.5rem; color: #8b949e; font-size: 0.88rem;">
+    <li>All tool calls within a single model response are dispatched in parallel.</li>
+    <li>Tool results are appended as <code>role="tool"</code> messages before the next completion.</li>
+    <li>If <code>max_iterations</code> is reached, <code>RunResult.metadata["stopped_by_max_iterations"] == True</code>.</li>
+  </ul>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">ReActAgentExecutor</span>
+<span class="kw">from</span> kneo_agent.providers <span class="kw">import</span> <span class="tp">LangChainImpl</span>
+
+impl = <span class="tp">LangChainImpl</span>(chat_model)
+runtime = <span class="tp">ReActAgentExecutor</span>(impl)
+agent = <span class="tp">AgentBuilder</span>().with_tools([search_tool]).use_bridge(runtime).build()
+
+result = <span class="kw">await</span> agent.run(<span class="st">"What is the latest news on AI?"</span>)
+<span class="kw">if</span> result.metadata.get(<span class="st">"stopped_by_max_iterations"</span>):
+    print(<span class="st">"Warning: loop hit max_iterations"</span>)</code></pre>
+
+  <div id="planact-executor"></div>
+  <h3 class="api-class">PlanActAgentExecutor <span class="tag tag-class">executor</span></h3>
+  <p class="desc">Two-phase strategy: generate a numbered plan (tools disabled), then execute it with the full ReAct loop. The plan is stored in <code>RunResult.metadata["plan"]</code>. <code>name</code> → <code>"plan-act@&lt;platform&gt;"</code>.</p>
+
+  <p><strong>When to use Plan-Act</strong></p>
+  <ul style="margin: 0.3rem 0 0.9rem 1.5rem; color: #8b949e; font-size: 0.88rem;">
+    <li>Complex tasks with 3+ sequential dependent steps.</li>
+    <li>Tasks where implicit ReAct loops tend to lose track of the goal.</li>
+    <li>When you want a human-readable trace of intent before execution.</li>
+  </ul>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">PlanActAgentExecutor</span>
+<span class="kw">from</span> kneo_agent.providers <span class="kw">import</span> <span class="tp">LangChainImpl</span>
+
+runtime = <span class="tp">PlanActAgentExecutor</span>(<span class="tp">LangChainImpl</span>(chat_model))
+agent = <span class="tp">AgentBuilder</span>().with_tools(tools).use_bridge(runtime).build()
+
+result = <span class="kw">await</span> agent.run(<span class="st">"Research and write a report on quantum computing."</span>)
+print(<span class="st">"Plan:\n"</span>, result.metadata[<span class="st">"plan"</span>])
+print(<span class="st">"\nReport:\n"</span>, result.final_message)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     ADAPTERS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="adapters">
+  <h2>Platform Adapters</h2>
+  <p>The Adapter pattern side. Each class wraps a fixed-interface platform object and implements <code>AgentRuntime</code>. The platform owns the agentic loop.</p>
+
+  <div id="adk-adapter"></div>
+  <h3 class="api-class">GoogleADKAdapter <span class="tag tag-class">adapter</span></h3>
+  <p class="desc">Wraps an ADK runner whose <code>run_async()</code> method yields typed events. ADK handles tool dispatch, retries, and multi-turn internally. <code>name</code> → <code>"google-adk-adapter"</code>.</p>
+<pre><code><span class="kw">from</span> google.adk.runners <span class="kw">import</span> <span class="tp">InMemoryRunner</span>
+<span class="kw">from</span> kneo_agent.runtime.adapters <span class="kw">import</span> <span class="tp">GoogleADKAdapter</span>
+
+runner = <span class="tp">InMemoryRunner</span>(agent=my_adk_agent, app_name=<span class="st">"my-app"</span>)
+adapter = <span class="tp">GoogleADKAdapter</span>(runner, app_name=<span class="st">"my-app"</span>, user_id=<span class="st">"u-1"</span>, session_id=<span class="st">"s-1"</span>)
+agent = <span class="tp">AgentBuilder</span>().use_adapter(adapter).build()</code></pre>
+
+  <div id="oai-adapter"></div>
+  <h3 class="api-class">OpenAIAgentsAdapter <span class="tag tag-class">adapter</span></h3>
+  <p class="desc">Wraps an <code>@openai/agents</code> Runner. Translates the SDK's <code>list[Message]</code> into the runner's single <code>input: str</code> and maps <code>new_items</code> back to <code>ToolResult[]</code>. <code>name</code> → <code>"openai-agents-adapter"</code>.</p>
+<pre><code><span class="kw">from</span> agents <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">Runner</span>    <span class="cm"># @openai/agents</span>
+<span class="kw">from</span> kneo_agent.runtime.adapters <span class="kw">import</span> <span class="tp">OpenAIAgentsAdapter</span>
+
+oai_agent = <span class="tp">Agent</span>(name=<span class="st">"helper"</span>, instructions=<span class="st">"Be helpful."</span>, tools=[...])
+runner = <span class="tp">Runner</span>()
+adapter = <span class="tp">OpenAIAgentsAdapter</span>(
+    runner,
+    agent_definition={<span class="st">"name"</span>: <span class="st">"helper"</span>, <span class="st">"instructions"</span>: <span class="st">"Be helpful."</span>},
+)
+agent = <span class="tp">AgentBuilder</span>().use_adapter(adapter).build()</code></pre>
+
+  <div id="lc-adapter"></div>
+  <h3 class="api-class">LangChainAdapter <span class="tag tag-class">adapter</span></h3>
+  <p class="desc">Wraps a LangChain <code>AgentExecutor</code>. Translates <code>list[Message]</code> → <code>(input, chat_history)</code> tuple format. <code>intermediate_steps</code> becomes <code>ToolResult[]</code>. <code>name</code> → <code>"langchain-adapter"</code>.</p>
+
+  <div class="note"><strong>Streaming:</strong> Only available if the executor exposes <code>astream()</code>.</div>
+<pre><code><span class="kw">from</span> langchain.agents <span class="kw">import</span> AgentExecutor, create_openai_functions_agent
+<span class="kw">from</span> kneo_agent.runtime.adapters <span class="kw">import</span> <span class="tp">LangChainAdapter</span>
+
+lc_executor = AgentExecutor(agent=..., tools=[...])
+adapter = <span class="tp">LangChainAdapter</span>(lc_executor)
+kneo_agent = <span class="tp">AgentBuilder</span>().use_adapter(adapter).build()
+
+<span class="cm"># Multi-turn: the adapter correctly extracts chat_history from history</span>
+<span class="kw">await</span> kneo_agent.chat(<span class="st">"Hello!"</span>)
+<span class="kw">await</span> kneo_agent.chat(<span class="st">"What did I just say?"</span>)   <span class="cm"># history is carried forward</span></code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     RUNTIMEIMPL
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="runtimeimpl">
+  <h2>RuntimeImpl Protocol</h2>
+  <h3 class="api-class">RuntimeImpl <span class="tag tag-protocol">protocol</span></h3>
+  <p class="desc">The Implementor interface in the Bridge pattern. Concrete Bridge providers such as <code>GoogleADKImpl</code> (compatibility layer) and <code>LangChainImpl</code> implement this. Native runtimes such as <code>OpenAIAgentsRuntime</code> do not implement <code>RuntimeImpl</code> because the platform owns the loop directly.</p>
+  <table class="param-table">
+    <tr><th>Method</th><th>Signature</th><th>Description</th></tr>
+    <tr><td class="param-name">platform_name</td><td class="param-type">str (property)</td><td class="param-desc">Short platform ID (e.g. <code>"langchain"</code> or <code>"google-adk"</code>).</td></tr>
+    <tr><td class="param-name">complete()</td><td class="param-type">async → (str, list[ToolCall])</td><td class="param-desc">Send one completion request; return <code>(text, tool_calls)</code>.</td></tr>
+    <tr><td class="param-name">execute_tool()</td><td class="param-type">async → str</td><td class="param-desc">Dispatch a tool call and return its result.</td></tr>
+    <tr><td class="param-name">stream_tokens()</td><td class="param-type">async generator → str</td><td class="param-desc">Yield raw text tokens.</td></tr>
+    <tr><td class="param-name">supports_tools()</td><td class="param-type">bool</td><td class="param-desc">Whether tool calling is supported.</td></tr>
+    <tr><td class="param-name">supports_streaming()</td><td class="param-type">bool</td><td class="param-desc">Whether <code>stream_tokens()</code> is supported.</td></tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     PROVIDERS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="google-adk-impl">
+  <h2>Providers</h2>
+
+  <h3 class="api-class">GoogleADKImpl <span class="tag tag-class">provider</span></h3>
+  <p class="desc"><code>kneo_agent.providers.google_adk</code> — Compatibility <code>RuntimeImpl</code> for Google ADK. Translates <code>list[Message]</code> / <code>RunConfig</code> into ADK-shaped payloads so Kneo Bridge executors can drive the loop.</p>
+  <p>Install: <code>pip install kneo-agent[google-adk]</code></p>
+  <div class="note"><strong>Important:</strong> This is not the native Google ADK loop-owned runtime. For that, use <code>NativeRuntimeFactory.for_google_adk(...)</code> or <code>GoogleADKRuntime</code>.</div>
+
+  <h4 class="api-method"><span class="fn">GoogleADKImpl</span>(<span class="param">adk_runner</span>: <span class="typ">Any</span>, <span class="param">session_id</span>: <span class="typ">str</span>)</h4>
+<pre><code><span class="kw">from</span> google.adk.runners <span class="kw">import</span> <span class="tp">InMemoryRunner</span>
+<span class="kw">from</span> kneo_agent.providers <span class="kw">import</span> <span class="tp">GoogleADKImpl</span>
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">ReActAgentExecutor</span>
+
+runner = <span class="tp">InMemoryRunner</span>(agent=my_adk_agent, app_name=<span class="st">"app"</span>)
+impl    = <span class="tp">GoogleADKImpl</span>(runner, session_id=<span class="st">"session-1"</span>)
+runtime = <span class="tp">ReActAgentExecutor</span>(impl)       <span class="cm"># or SimpleAgentExecutor, PlanActAgentExecutor</span></code></pre>
+
+  <div id="openai-impl"></div>
+  <h3 class="api-class">OpenAIAgentsImpl <span class="tag tag-class">native runtime</span></h3>
+  <p class="desc"><code>kneo_agent.providers.openai_agents</code> — OpenAI Agents SDK-backed native runtime. Uses the SDK's <code>Agent</code>, <code>Runner.run()</code>, and <code>Runner.run_streamed()</code> APIs directly.</p>
+  <p>Install: <code>pip install kneo-agent[openai]</code></p>
+
+  <h4 class="api-method"><span class="fn">OpenAIAgentsImpl</span>(<span class="param">openai_client</span>: <span class="typ">Any | None</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">str</span> = <span class="nm">"react"</span>, <span class="param">runner</span>: <span class="typ">Any | None</span> = <span class="nm">None</span>)</h4>
+
+  <div class="note"><strong>Tool execution:</strong> Pass tool handlers in <code>RunConfig.extra["tool_handlers"]</code> as a <code>dict[str, Callable]</code>. They are converted into OpenAI Agents SDK <code>FunctionTool</code> instances.</div>
+<pre><code><span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">NativeRuntimeFactory</span>
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">RunConfig</span>
+
+runtime = <span class="tp">NativeRuntimeFactory</span>.for_openai(model=<span class="st">"gpt-4o"</span>, strategy=<span class="st">"react"</span>)
+
+result = <span class="kw">await</span> agent.run(
+    <span class="st">"Search for Python tutorials."</span>,
+    run_config=<span class="tp">RunConfig</span>(extra={<span class="st">"tool_handlers"</span>: {<span class="st">"web_search"</span>: my_search_fn}}),
+)</code></pre>
+
+  <div id="langchain-impl"></div>
+  <h3 class="api-class">LangChainImpl <span class="tag tag-class">provider</span></h3>
+  <p class="desc"><code>kneo_agent.providers.langchain</code> — Wraps any <code>BaseChatModel</code> subclass. Tool handlers are registered in a plain Python dict — no <code>StructuredTool</code> wrapping required.</p>
+  <p>Install: <code>pip install kneo-agent[langchain]</code></p>
+
+  <h4 class="api-method"><span class="fn">LangChainImpl</span>(<span class="param">chat_model</span>: <span class="typ">Any</span>, <span class="param">tool_registry</span>: <span class="typ">dict | None</span> = <span class="nm">None</span>)</h4>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">register_tool</span>(<span class="param">name</span>: <span class="typ">str</span>, <span class="param">handler</span>: <span class="typ">Callable</span>) <span class="ret">→ None</span></h4>
+<pre><code><span class="kw">from</span> langchain_openai <span class="kw">import</span> <span class="tp">ChatOpenAI</span>
+<span class="kw">from</span> kneo_agent.providers <span class="kw">import</span> <span class="tp">LangChainImpl</span>
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">ReActAgentExecutor</span>
+
+impl = <span class="tp">LangChainImpl</span>(<span class="tp">ChatOpenAI</span>(model=<span class="st">"gpt-4o"</span>))
+impl.register_tool(<span class="st">"get_weather"</span>, <span class="kw">lambda</span> args: <span class="st">f"22 °C in {args['city']}"</span>)
+
+runtime = <span class="tp">ReActAgentExecutor</span>(impl)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     SKILLS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="skills-api">
+  <h2>Skill APIs</h2>
+  <p>Skills are reusable capability bundles that compile into <code>RunConfig</code>. Kneo Agent supports in-memory skills, Agent Skills-compatible <code>SKILL.md</code> directories, skill discovery, and on-demand loading of progressive-disclosure resources such as <code>references/</code>, <code>scripts/</code>, and <code>assets/</code>.</p>
+
+  <div id="skill-class"></div>
+  <h3 class="api-class">Skill <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc"><code>kneo_agent.core.skills</code> — reusable skill definition plus loader and resource helpers.</p>
+
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-desc">Agent Skills-compatible skill name. Must match the parent directory name when loaded from disk.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-desc">Required short description from <code>SKILL.md</code> frontmatter.</td></tr>
+    <tr><td class="param-name">system_prompt</td><td class="param-type">str | None</td><td class="param-desc">Markdown body of the skill. This is the instruction payload compiled into agent runs.</td></tr>
+    <tr><td class="param-name">tools</td><td class="param-type">list[ToolDefinition]</td><td class="param-desc">Tool definitions declared by the skill.</td></tr>
+    <tr><td class="param-name">defaults / extra / tags</td><td class="param-type">dict | list</td><td class="param-desc">Default run settings, provider extras such as <code>tool_handlers</code>, and arbitrary routing labels.</td></tr>
+    <tr><td class="param-name">license / compatibility / metadata / allowed_tools</td><td class="param-type">str | dict</td><td class="param-desc">Agent Skills frontmatter metadata preserved by the loader.</td></tr>
+    <tr><td class="param-name">source_path</td><td class="param-type">str | None</td><td class="param-desc">Absolute path to the loaded <code>SKILL.md</code> file when sourced from disk.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">from_path</span>(<span class="param">path</span>: <span class="typ">str | Path</span>) <span class="ret">→ Skill</span></h4>
+  <p class="desc">Load a skill from either a skill directory or a direct <code>SKILL.md</code> file.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">with_tool_handlers</span>(<span class="param">handlers</span>: <span class="typ">dict[str, Any]</span>) <span class="ret">→ Skill</span></h4>
+  <p class="desc">Return a copy of the skill with <code>extra["tool_handlers"]</code> merged in for runtime execution.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">resource_paths</span>() <span class="ret">→ list[str]</span></h4>
+  <p class="desc">List bundled skill resources under <code>references/</code>, <code>scripts/</code>, and <code>assets/</code>, relative to the skill root.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">read_resource</span>(<span class="param">relative_path</span>: <span class="typ">str</span>) <span class="ret">→ str</span></h4>
+  <p class="desc">Read a bundled resource file safely relative to the skill directory. Path escapes are rejected.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">activation_prompt</span>() <span class="ret">→ str</span></h4>
+  <p class="desc">Render a structured activation payload containing the skill body and discoverable bundled resources. Useful when integrating with prompt-based skill activation flows.</p>
+
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">load_skill</span>
+
+skill = load_skill(<span class="st">"examples/skills/weather"</span>)
+skill = skill.with_tool_handlers({<span class="st">"get_weather"</span>: get_weather})
+
+print(skill.resource_paths())
+print(skill.read_resource(<span class="st">"references/REFERENCE.md"</span>))
+print(skill.activation_prompt())</code></pre>
+
+  <div id="skill-discovery"></div>
+  <h3 class="api-class">Skill Discovery <span class="tag tag-function">functions</span></h3>
+  <p class="desc"><code>discover_skills</code>, <code>discover_default_skills</code>, and <code>load_skill</code> provide startup-time discovery and runtime activation for Agent Skills directories.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">load_skill</span>(<span class="param">path</span>: <span class="typ">str | Path</span>) <span class="ret">→ Skill</span></h4>
+  <p class="desc">Load a skill from a skill directory or direct <code>SKILL.md</code> path.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">discover_skills</span>(<span class="param">roots</span>: <span class="typ">list[str | Path]</span>, <span class="param">max_depth</span>: <span class="typ">int</span> = <span class="nm">4</span>) <span class="ret">→ list[SkillCatalogEntry]</span></h4>
+  <p class="desc">Scan one or more roots for <code>SKILL.md</code> files and return lightweight catalog metadata only.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">discover_default_skills</span>(<span class="param">project_root</span>: <span class="typ">str | Path | None</span> = <span class="nm">None</span>, <span class="param">user_home</span>: <span class="typ">str | Path | None</span> = <span class="nm">None</span>, <span class="param">max_depth</span>: <span class="typ">int</span> = <span class="nm">4</span>) <span class="ret">→ list[SkillCatalogEntry]</span></h4>
+  <p class="desc">Scan conventional project and user locations such as <code>.agents/skills</code> and <code>.claude/skills</code>.</p>
+
+  <h4 class="api-method"><span class="fn">SkillCatalogEntry</span>(<span class="param">name</span>: <span class="typ">str</span>, <span class="param">description</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>) <span class="ret">→ dataclass</span></h4>
+  <p class="desc">Lightweight startup-time metadata used for skill menus and registries without loading full resource trees.</p>
+
+  <div class="note"><strong>Standard:</strong> The loader expects an Agent Skills-style <code>SKILL.md</code> with YAML frontmatter and a Markdown body. Kneo Agent preserves progressive disclosure by listing bundled files but leaving resource loading explicit and on demand. See <a href="#guide-agent-skills">Agent Skills Guide</a> below for the full integration model.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     TOOL REGISTRY
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="tool-registry">
+  <h2>ToolRegistry</h2>
+  <h3 class="api-class">class ToolRegistry <span class="tag tag-class">utility</span></h3>
+  <p class="desc"><code>kneo_agent.utils.tools</code> — Maps tool names to <code>(ToolDefinition, handler)</code> pairs. Thread-safe for reads. Supports sync and async handlers.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">register</span>(<span class="param">definition</span>: <span class="typ">ToolDefinition</span>, <span class="param">handler</span>: <span class="typ">Callable</span>) <span class="ret">→ None</span></h4>
+  <p class="desc">Explicitly register a tool definition and handler. Overwrites if the name already exists (logs a warning).</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">register_agent_tool</span>(<span class="param">tool</span>: <span class="typ">AgentTool</span>) <span class="ret">→ None</span></h4>
+  <p class="desc">Register an <code>AgentTool</code> returned by <code>Agent.as_tool()</code>.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">add_agent</span>(<span class="param">agent</span>: <span class="typ">Agent</span>, **<span class="param">kwargs</span>) <span class="ret">→ AgentTool</span></h4>
+  <p class="desc">Create an <code>AgentTool</code> from an existing agent, register it immediately, and return it.</p>
+
+  <h4 class="api-method"><span class="fn">@registry.tool</span>(<span class="param">name</span>, <span class="param">description</span>, <span class="param">parameters</span>) <span class="ret">→ decorator</span></h4>
+  <p class="desc">Decorator that registers the decorated function as a tool. Returns the original function unmodified.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">call</span>(<span class="param">tool_call</span>: <span class="typ">ToolCall</span>) <span class="ret">→ str</span></h4>
+  <p class="desc">Dispatch a <code>ToolCall</code> to its handler. Supports both sync and async handlers. Returns the result coerced to a JSON string.</p>
+  <div class="raises-label">Raises</div>
+  <p class="desc"><code>KeyError</code> if no handler is registered for <code>tool_call.name</code>.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">call_sync</span>(<span class="param">tool_call</span>: <span class="typ">ToolCall</span>) <span class="ret">→ str</span></h4>
+  <p class="desc">Synchronous variant. Raises <code>RuntimeError</code> if the handler is async.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">register_mcp_server</span>(<span class="param">server</span>: <span class="typ">MCPServerConfig</span>, *, <span class="param">prefix</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ list[ToolDefinition]</span></h4>
+  <p class="desc">Connect to an MCP server, discover its tools, and register proxy handlers for them in the registry.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">aclose</span>() <span class="ret">→ None</span></h4>
+  <p class="desc">Close background MCP sessions and subprocesses owned by the registry.</p>
+
+  <p><strong>Properties</strong></p>
+  <table class="param-table">
+    <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">definitions</td><td class="param-type">list[ToolDefinition]</td><td class="param-desc">All registered <code>ToolDefinition</code> objects (pass to <code>AgentBuilder.with_tools()</code>).</td></tr>
+    <tr><td class="param-name">names</td><td class="param-type">list[str]</td><td class="param-desc">All registered tool names.</td></tr>
+    <tr><td class="param-name">len(registry)</td><td class="param-type">int</td><td class="param-desc">Number of registered tools.</td></tr>
+    <tr><td class="param-name">"name" in registry</td><td class="param-type">bool</td><td class="param-desc">Check if a tool is registered.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">to_skill</span>(<span class="param">name</span>: <span class="typ">str</span>, <span class="param">description</span>: <span class="typ">str</span> = <span class="st">""</span>, <span class="param">system_prompt</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">defaults</span>: <span class="typ">dict | None</span> = <span class="nm">None</span>, <span class="param">extra</span>: <span class="typ">dict | None</span> = <span class="nm">None</span>, <span class="param">tags</span>: <span class="typ">list[str] | None</span> = <span class="nm">None</span>) <span class="ret">→ Skill</span></h4>
+  <p class="desc">Package the registry as a <code>Skill</code> with both tool definitions and <code>tool_handlers</code> merged into <code>extra</code>.</p>
+
+<pre><code><span class="kw">import</span> json
+<span class="kw">from</span> kneo_agent.utils <span class="kw">import</span> <span class="tp">ToolRegistry</span>
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">ToolCall</span>
+
+registry = <span class="tp">ToolRegistry</span>()
+
+<span class="cm"># Synchronous handler</span>
+<span class="dc">@registry.tool</span>(
+    name=<span class="st">"get_weather"</span>,
+    description=<span class="st">"Return current weather for a city."</span>,
+    parameters={
+        <span class="st">"type"</span>: <span class="st">"object"</span>,
+        <span class="st">"properties"</span>: {<span class="st">"city"</span>: {<span class="st">"type"</span>: <span class="st">"string"</span>}},
+        <span class="st">"required"</span>: [<span class="st">"city"</span>],
+    },
+)
+<span class="kw">def</span> <span class="fn">get_weather</span>(args: dict) -> str:
+    <span class="kw">return</span> json.dumps({<span class="st">"city"</span>: args[<span class="st">"city"</span>], <span class="st">"temp_c"</span>: <span class="nm">22</span>})
+
+<span class="cm"># Async handler — both are supported</span>
+<span class="dc">@registry.tool</span>(
+    name=<span class="st">"get_time"</span>,
+    description=<span class="st">"Return the current UTC time."</span>,
+    parameters={<span class="st">"type"</span>: <span class="st">"object"</span>, <span class="st">"properties"</span>: {}},
+)
+<span class="kw">async def</span> <span class="fn">get_time</span>(args: dict) -> str:
+    <span class="kw">import</span> datetime
+    <span class="kw">return</span> datetime.datetime.utcnow().isoformat() + <span class="st">"Z"</span>
+
+<span class="cm"># Agent-as-tool registration</span>
+weather_tool = weather_agent.as_tool(name=<span class="st">"get_weather"</span>, arg_name=<span class="st">"city"</span>)
+registry.register_agent_tool(weather_tool)
+
+<span class="cm"># Use in agent</span>
+agent = <span class="tp">AgentBuilder</span>().with_tools(registry.definitions).use_bridge(runtime).build()
+
+<span class="cm"># Dispatch directly (e.g. for testing)</span>
+tc = <span class="tp">ToolCall</span>(id=<span class="st">"1"</span>, name=<span class="st">"get_weather"</span>, arguments={<span class="st">"city"</span>: <span class="st">"Tokyo"</span>})
+result = <span class="kw">await</span> registry.call(tc)   <span class="cm"># → '{"city": "Tokyo", "temp_c": 22}'</span></code></pre>
+</div>
+
+<div class="section" id="mcp-api">
+  <h2>MCP</h2>
+  <p class="desc"><code>kneo_agent.mcp</code> exposes lightweight MCP helpers for importing remote tools into the existing tool and skill pipeline.</p>
+
+  <h3 class="api-class">MCPServerConfig <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Connection description for one MCP server. Supported transports are <code>stdio</code>, <code>http</code>, and <code>sse</code>.</p>
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">stdio</span>(*, <span class="param">name</span>, <span class="param">command</span>, <span class="param">args</span> = (), <span class="param">env</span> = {}, <span class="param">cwd</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">http</span>(*, <span class="param">name</span>, <span class="param">url</span>, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0, <span class="param">sse_url</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">sse</span>(*, <span class="param">name</span>, <span class="param">sse_url</span>, <span class="param">message_url</span> = None, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0) <span class="ret">→ MCPServerConfig</span></h4>
+
+  <h3 class="api-class">MCPClientSession <span class="tag tag-class">client</span></h3>
+  <p class="desc">Async MCP client session used by <code>ToolRegistry.register_mcp_server(...)</code>. Supports initialization, <code>tools/list</code>, and <code>tools/call</code>.</p>
+
+  <h3 class="api-class">MCPTool <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc">Lightweight MCP tool description with <code>name</code>, <code>description</code>, and <code>input_schema</code>, plus conversion to <code>ToolDefinition</code>.</p>
+
+  <div class="note"><strong>Guide:</strong> See <a href="#guide-mcp">MCP Guide</a> below and the runnable examples <code>examples/12_mcp_stdio_filesystem.py</code> and <code>examples/13_mcp_http_sse.py</code>.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     MESSAGES UTILS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="messages-utils">
+  <h2>messages utilities</h2>
+  <p class="desc"><code>kneo_agent.utils.messages</code> — Convenience constructors and inspection helpers for <code>Message</code> lists.</p>
+
+  <p><strong>Constructors</strong></p>
+  <div class="chip-grid">
+    <span class="chip">user(content)</span>
+    <span class="chip">assistant(content)</span>
+    <span class="chip">system(content)</span>
+    <span class="chip">tool_result(content, *, tool_call_id, name=None)</span>
+  </div>
+
+  <p><strong>Inspection helpers</strong></p>
+  <div class="chip-grid">
+    <span class="chip">last_user_message(messages) → Message | None</span>
+    <span class="chip">last_assistant_message(messages) → Message | None</span>
+    <span class="chip">filter_by_role(messages, role) → list[Message]</span>
+  </div>
+
+  <p><strong>Serialisation</strong></p>
+  <div class="chip-grid">
+    <span class="chip">to_dict_list(messages) → list[dict]</span>
+    <span class="chip">from_dict_list(data) → list[Message]</span>
+  </div>
+
+<pre><code><span class="kw">from</span> kneo_agent.utils.messages <span class="kw">import</span> (
+    user, assistant, system, tool_result,
+    last_user_message, to_dict_list, from_dict_list,
+)
+<span class="kw">import</span> json
+
+<span class="cm"># Build a history from scratch</span>
+history = [
+    system(<span class="st">"You are a helpful assistant."</span>),
+    user(<span class="st">"What is the capital of France?"</span>),
+    assistant(<span class="st">"Paris."</span>),
+]
+
+<span class="cm"># Serialise to JSON for storage</span>
+serialised = json.dumps(to_dict_list(history))
+
+<span class="cm"># Restore from JSON</span>
+loaded = from_dict_list(json.loads(serialised))
+agent.inject_history(loaded)
+
+<span class="cm"># Inspect</span>
+last = last_user_message(history)
+print(last.content)   <span class="cm"># "What is the capital of France?"</span></code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     LOGGING UTILS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="logging-utils">
+  <h2>logging utilities</h2>
+  <p class="desc"><code>kneo_agent.utils.logging</code> — Helpers for the <code>kneo_agent.*</code> logger hierarchy. Kneo Agent never adds handlers automatically; you opt in by calling <code>configure_logging()</code>.</p>
+
+  <h4 class="api-method"><span class="fn">configure_logging</span>(<span class="param">level</span>: <span class="typ">str | int</span> = <span class="nm">"INFO"</span>, <span class="param">stream</span> = <span class="nm">sys.stderr</span>) <span class="ret">→ None</span></h4>
+  <p class="desc">Add a <code>StreamHandler</code> to the root <code>kneo_agent</code> logger. Idempotent — calling twice does not add duplicate handlers.</p>
+
+  <h4 class="api-method"><span class="fn">get_logger</span>(<span class="param">name</span>: <span class="typ">str</span>) <span class="ret">→ logging.Logger</span></h4>
+  <p class="desc">Return a child logger named <code>"kneo_agent.&lt;name&gt;"</code>.</p>
+<pre><code><span class="kw">from</span> kneo_agent.utils <span class="kw">import</span> configure_logging, get_logger
+
+<span class="cm"># Enable debug output for all kneo_agent internals</span>
+configure_logging(<span class="st">"DEBUG"</span>)
+
+<span class="cm"># Get a namespaced logger for your own code</span>
+log = get_logger(<span class="st">"my_app"</span>)
+log.info(<span class="st">"Starting agent session."</span>)
+
+<span class="cm"># Or control via standard logging</span>
+<span class="kw">import</span> logging
+logging.getLogger(<span class="st">"kneo_agent"</span>).setLevel(logging.WARNING)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     EXCEPTIONS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="exceptions">
+  <h2>Exceptions</h2>
+  <div class="exc-tree">
+    <span class="exc-base">KneoAgentError</span> (Exception)<br>
+    &nbsp;&nbsp;├─ <span class="exc-child">ConfigurationError</span><br>
+    &nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└─ <span class="exc-sub">RuntimeNotConfiguredError</span><br>
+    &nbsp;&nbsp;├─ <span class="exc-child">StreamingNotSupportedError</span><br>
+    &nbsp;&nbsp;├─ <span class="exc-child">ToolNotFoundError</span><br>
+    &nbsp;&nbsp;├─ <span class="exc-child">MaxIterationsReachedError</span><br>
+    &nbsp;&nbsp;└─ <span class="exc-child">ProviderError</span>
+  </div>
+
+  <table class="param-table" style="margin-top:1rem">
+    <tr><th>Exception</th><th>When raised</th><th>Notable attributes</th></tr>
+    <tr><td class="param-name">KneoAgentError</td><td class="param-desc">Base. Catch this to handle all SDK errors.</td><td>—</td></tr>
+    <tr><td class="param-name">ConfigurationError</td><td class="param-desc">Agent or runtime is misconfigured.</td><td>—</td></tr>
+    <tr><td class="param-name">RuntimeNotConfiguredError</td><td class="param-desc"><code>AgentBuilder.build()</code> called without a runtime.</td><td>—</td></tr>
+    <tr><td class="param-name">StreamingNotSupportedError</td><td class="param-desc"><code>agent.stream()</code> called on a non-streaming runtime.</td><td>—</td></tr>
+    <tr><td class="param-name">ToolNotFoundError</td><td class="param-desc">Model requested an unregistered tool.</td><td><code>.tool_name: str</code></td></tr>
+    <tr><td class="param-name">MaxIterationsReachedError</td><td class="param-desc">Raised optionally; executors also signal via metadata.</td><td>—</td></tr>
+    <tr><td class="param-name">ProviderError</td><td class="param-desc">Wraps errors from an underlying LLM provider.</td><td><code>.provider: str</code>, <code>.cause: Exception</code></td></tr>
+  </table>
+
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">KneoAgentError</span>, <span class="tp">StreamingNotSupportedError</span>, <span class="tp">ProviderError</span>
+
+<span class="kw">try</span>:
+    result = <span class="kw">await</span> agent.run(<span class="st">"Hello"</span>)
+<span class="kw">except</span> <span class="tp">StreamingNotSupportedError</span> <span class="kw">as</span> e:
+    print(<span class="st">f"Runtime does not stream: {e}"</span>)
+<span class="kw">except</span> <span class="tp">ProviderError</span> <span class="kw">as</span> e:
+    print(<span class="st">f"Provider '{e.provider}' failed: {e}"</span>)
+    <span class="kw">if</span> e.cause:
+        <span class="kw">raise</span> e.cause
+<span class="kw">except</span> <span class="tp">KneoAgentError</span> <span class="kw">as</span> e:
+    print(<span class="st">f"SDK error: {e}"</span>)</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     CUSTOM PROVIDER
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="custom-provider">
+  <h2>Writing a Custom Provider</h2>
+  <p>Implement the <code>RuntimeImpl</code> protocol to integrate any LLM platform not natively supported. Your class only needs to satisfy the structural protocol — no inheritance required.</p>
+<pre><code><span class="kw">from</span> typing <span class="kw">import</span> AsyncGenerator
+<span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">Message</span>, <span class="tp">RunConfig</span>, <span class="tp">ToolCall</span>
+<span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">BridgeAgentFactory</span>
+
+<span class="kw">class</span> <span class="fn">MyCustomImpl</span>:
+    <span class="nm">platform_name</span> = <span class="st">"my-platform"</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, my_client):
+        self._client = my_client
+
+    <span class="kw">async def</span> <span class="fn">complete</span>(
+        self, messages: list[<span class="tp">Message</span>], config: <span class="tp">RunConfig</span>
+    ) -> tuple[str, list[<span class="tp">ToolCall</span>]]:
+        <span class="cm"># Translate messages → your platform's format</span>
+        response = <span class="kw">await</span> self._client.generate(
+            prompt=messages[-<span class="nm">1</span>].content,
+            max_tokens=<span class="nm">1024</span>,
+        )
+        <span class="kw">return</span> response.text, []   <span class="cm"># (text, tool_calls)</span>
+
+    <span class="kw">async def</span> <span class="fn">execute_tool</span>(self, call: <span class="tp">ToolCall</span>, config: <span class="tp">RunConfig</span>) -> str:
+        <span class="cm"># Route tool calls to registered handlers</span>
+        handler = config.extra.get(<span class="st">"tool_handlers"</span>, {}).get(call.name)
+        <span class="kw">if</span> handler:
+            <span class="kw">return</span> handler(call.arguments)
+        <span class="kw">return</span> <span class="st">f'{{"error": "tool {call.name!r} not registered"}}'</span>
+
+    <span class="kw">async def</span> <span class="fn">stream_tokens</span>(
+        self, messages: list[<span class="tp">Message</span>], config: <span class="tp">RunConfig</span>
+    ) -> AsyncGenerator[str, None]:
+        <span class="kw">async for</span> token <span class="kw">in</span> self._client.stream(messages[-<span class="nm">1</span>].content):
+            <span class="kw">yield</span> token
+
+    <span class="kw">def</span> <span class="fn">supports_tools</span>(self) -> bool: <span class="kw">return</span> <span class="nm">True</span>
+    <span class="kw">def</span> <span class="fn">supports_streaming</span>(self) -> bool: <span class="kw">return</span> <span class="nm">True</span>
+
+<span class="cm"># Wire it up via BridgeAgentFactory.custom()</span>
+runtime = <span class="tp">BridgeAgentFactory</span>.custom(<span class="tp">MyCustomImpl</span>(my_client), strategy=<span class="st">"react"</span>)
+agent = <span class="tp">AgentBuilder</span>().use_bridge(runtime).build()</code></pre>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     STREAMING GUIDE
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="streaming-guide">
+  <h2>Streaming Guide</h2>
+  <p>All streaming runtimes yield <code>StreamChunk</code> objects with four possible types. The stream always ends with <code>type == "done"</code>.</p>
+
+<pre><code><span class="kw">import</span> sys
+
+<span class="kw">async def</span> <span class="fn">stream_with_tool_trace</span>(agent, message: str):
+    collected_text = []
+    tool_calls = []
+
+    <span class="kw">async for</span> chunk <span class="kw">in await</span> agent.stream(message):
+        <span class="kw">match</span> chunk.type:
+            <span class="kw">case</span> <span class="st">"text"</span>:
+                print(chunk.content, end=<span class="st">""</span>, flush=<span class="nm">True</span>)
+                collected_text.append(chunk.content)
+
+            <span class="kw">case</span> <span class="st">"tool_call"</span>:
+                tc = chunk.tool_call
+                print(<span class="st">f"\n[→ {tc.name}({tc.arguments})]"</span>)
+                tool_calls.append(tc)
+
+            <span class="kw">case</span> <span class="st">"tool_result"</span>:
+                tr = chunk.tool_result
+                print(<span class="st">f"[← {tr.name}: {tr.result[:60]}]"</span>)
+
+            <span class="kw">case</span> <span class="st">"done"</span>:
+                print()  <span class="cm"># final newline</span>
+
+    <span class="kw">return</span> <span class="st">""</span>.join(collected_text), tool_calls
+
+text, tools = <span class="kw">await</span> stream_with_tool_trace(agent, <span class="st">"Research quantum computing."</span>)</code></pre>
+
+  <div class="warn"><strong>Note:</strong> <code>agent.stream()</code> is itself async (because it may check streaming support before yielding), so always use <code>await</code> on the call and <code>async for</code> on the result.</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     BRIDGE VS ADAPTER REFERENCE
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="bridge-vs-adapter">
+  <h2>Bridge vs Adapter — Decision Reference</h2>
+  <table class="cmp-table">
+    <tr>
+      <th>Dimension</th>
+      <th>Bridge</th>
+      <th>Native</th>
+      <th>Adapter</th>
+    </tr>
+    <tr>
+      <td class="col-dim">Intent</td>
+      <td>Decouple strategy from platform so both can vary independently</td>
+      <td>Let the platform SDK/runtime own the loop directly</td>
+      <td>Convert an existing, fixed interface into the target protocol</td>
+    </tr>
+    <tr>
+      <td class="col-dim">When to use</td>
+      <td>Designing from scratch; need Kneo-owned strategies and a Bridge-compatible provider</td>
+      <td>Platform has a strong native runtime you want to preserve</td>
+      <td>Existing platform object already running; cannot change its interface</td>
+    </tr>
+    <tr>
+      <td class="col-dim">Strategy control</td>
+      <td>You own the loop (Simple / ReAct / Plan-Act)</td>
+      <td>Platform owns the loop; strategy is metadata or platform-specific behavior</td>
+      <td>Platform owns the loop; no strategy choice</td>
+    </tr>
+    <tr>
+      <td class="col-dim">Class count</td>
+      <td>M + N (not M×N): 3 + 3 = 6 classes for 9 variants</td>
+      <td>One runtime per native platform family</td>
+      <td>Exactly N classes (one per platform)</td>
+    </tr>
+    <tr>
+      <td class="col-dim">Runtime name</td>
+      <td><code>"react@langchain"</code></td>
+      <td><code>"react@openai-agents"</code> or <code>"google-adk-native"</code></td>
+      <td><code>"openai-agents-adapter"</code></td>
+    </tr>
+    <tr>
+      <td class="col-dim">Extensibility</td>
+      <td>New strategy → one class; works on all platforms automatically</td>
+      <td>New native runtime → one platform-owned implementation</td>
+      <td>New platform → one new adapter; no impact on others</td>
+    </tr>
+    <tr>
+      <td class="col-dim">Migration path</td>
+      <td>Use for Kneo-managed strategies</td>
+      <td>Use for OpenAI Agents SDK and native Google ADK execution</td>
+      <td>Use when migrating existing agents incrementally</td>
+    </tr>
+    <tr>
+      <td class="col-dim">Factory</td>
+      <td><code>BridgeAgentFactory.for_*()</code></td>
+      <td><code>NativeRuntimeFactory.for_*()</code></td>
+      <td><code>AdapterAgentFactory.for_*()</code></td>
+    </tr>
+    <tr>
+      <td class="col-dim">Builder method</td>
+      <td><code>.use_bridge(runtime)</code></td>
+      <td><code>.use_runtime(runtime)</code></td>
+      <td><code>.use_adapter(runtime)</code></td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════
+     GUIDES
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="guides">
+  <h2>Guides</h2>
+  <p>These guide sections are embedded directly in the API reference so the reference manual reads as a single document instead of sending you to separate files.</p>
+
+  <div id="guide-middleware"></div>
+  <h3 class="api-class">Agent Middleware Guide <span class="tag tag-function">guide</span></h3>
+  <p class="desc">Middleware is the SDK's cross-cutting interception layer. It is best for logging, guardrails, request mutation, tool-result rewriting, and short-circuiting.</p>
+  <ul>
+    <li><code>wrap_run(...)</code> and <code>wrap_stream(...)</code> apply to every runtime style.</li>
+    <li><code>wrap_model_call(...)</code> and <code>wrap_tool_call(...)</code> apply only to Bridge runtimes, where Kneo owns the inner loop.</li>
+    <li>Static middleware comes from <code>AgentBuilder.add_middleware(...)</code> or <code>with_middlewares(...)</code>.</li>
+    <li>Per-run middleware comes from <code>RunConfig(middlewares=[...])</code>.</li>
+  </ul>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">AgentBuilder</span>, <span class="tp">BaseAgentMiddleware</span>, <span class="tp">RunConfig</span>
+
+<span class="kw">class</span> <span class="tp">LoggingMiddleware</span>(<span class="tp">BaseAgentMiddleware</span>):
+    <span class="kw">async def</span> <span class="fn">wrap_run</span>(self, context, handler):
+        print(<span class="st">f"running {context.agent_name}"</span>)
+        <span class="kw">return await</span> handler(context)
+
+agent = (
+    <span class="tp">AgentBuilder</span>()
+    .add_middleware(<span class="tp">LoggingMiddleware</span>())
+    .use_runtime(runtime)
+    .build()
+)
+
+result = <span class="kw">await</span> agent.run(
+    <span class="st">"hello"</span>,
+    run_config=<span class="tp">RunConfig</span>(middlewares=[<span class="tp">LoggingMiddleware</span>()]),
+)</code></pre>
+  <div class="note"><strong>Examples:</strong> See <code>examples/16_agent_middleware_logging.py</code> and <code>examples/17_agent_middleware_short_circuit.py</code>.</div>
+
+  <div id="guide-agent-skills"></div>
+  <h3 class="api-class">Agent Skills Guide <span class="tag tag-function">guide</span></h3>
+  <p class="desc">Kneo Agent supports both in-memory skills and disk-backed Agent Skills-compatible <code>SKILL.md</code> directories.</p>
+  <ul>
+    <li>The Markdown body becomes <code>Skill.system_prompt</code>.</li>
+    <li>Frontmatter <code>tools</code> becomes <code>ToolDefinition[]</code>.</li>
+    <li><code>defaults</code> contributes to <code>RunConfig</code>.</li>
+    <li><code>extra</code> merges into <code>RunConfig.extra</code>.</li>
+    <li>Middleware is intentionally separate: skills compile into data, middleware stays executable policy.</li>
+  </ul>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> load_skill
+
+skill = load_skill(<span class="st">"examples/skills/weather"</span>)
+skill = skill.with_tool_handlers({<span class="st">"get_weather"</span>: get_weather})
+
+print(skill.resource_paths())
+print(skill.read_resource(<span class="st">"references/REFERENCE.md"</span>))</code></pre>
+  <div class="note"><strong>Progressive disclosure:</strong> bundled <code>references/</code>, <code>scripts/</code>, and <code>assets/</code> stay discoverable but are not injected automatically into every run.</div>
+
+  <div id="guide-mcp"></div>
+  <h3 class="api-class">MCP Guide <span class="tag tag-function">guide</span></h3>
+  <p class="desc">MCP is treated as an external tool source, not a separate runtime family.</p>
+  <ol>
+    <li>Connect with <code>MCPServerConfig</code>.</li>
+    <li>Discover tools with <code>ToolRegistry.register_mcp_server(...)</code>.</li>
+    <li>Convert them into ordinary <code>ToolDefinition</code> plus proxy handlers.</li>
+    <li>Attach the registry with <code>AgentBuilder.with_tool_registry(...)</code>.</li>
+  </ol>
+  <p>Bridge, Native, and Adapter runtimes can all use MCP tools through the existing <code>RunConfig</code> and <code>tool_handlers</code> path.</p>
+<pre><code><span class="kw">from</span> kneo_agent <span class="kw">import</span> <span class="tp">MCPServerConfig</span>
+<span class="kw">from</span> kneo_agent.utils <span class="kw">import</span> <span class="tp">ToolRegistry</span>
+
+registry = <span class="tp">ToolRegistry</span>()
+<span class="kw">await</span> registry.register_mcp_server(
+    <span class="tp">MCPServerConfig</span>.stdio(
+        name=<span class="st">"filesystem"</span>,
+        command=<span class="st">"npx"</span>,
+        args=[<span class="st">"-y"</span>, <span class="st">"@modelcontextprotocol/server-filesystem"</span>, <span class="st">"/tmp"</span>],
+    ),
+    prefix=<span class="st">"fs_"</span>,
+)</code></pre>
+  <div class="note"><strong>Middleware pairing:</strong> use run middleware for tracing or guardrails, and Bridge tool-call middleware when you want to inspect or rewrite MCP tool results before the next model turn.</div>
+
+  <div id="guide-human-loop"></div>
+  <h3 class="api-class">Human In The Loop Guide <span class="tag tag-function">guide</span></h3>
+  <p class="desc">Human review is modeled as a normal workflow participant rather than a separate runtime family.</p>
+  <ul>
+    <li>Use middleware for automated policy, logging, and short-circuiting.</li>
+    <li>Use <code>WorkflowBuilder.human_step(...)</code> when a real person must approve, edit, or pause execution.</li>
+    <li>Human steps work in sequential workflows, graph workflows, nested workflows, and orchestration runtimes.</li>
+  </ul>
+<pre><code><span class="kw">from</span> kneo_agent.workflows <span class="kw">import</span> <span class="tp">WorkflowBuilder</span>
+
+review = <span class="tp">WorkflowBuilder</span>.human_step(
+    <span class="st">"approval"</span>,
+    <span class="st">"Approve this draft?"</span>,
+    resolver=<span class="kw">lambda</span> request: <span class="st">"Approved by Alice"</span>,
+)</code></pre>
+  <div class="note"><strong>Examples:</strong> See <code>examples/14_workflow_human_in_loop_resolver.py</code> and <code>examples/15_workflow_human_in_loop_pause.py</code>.</div>
+</div>
+
+
+<!-- ── Footer ─────────────────────────────────────────────── -->
+<div class="page-footer">
+  <p>Kneo Agent v1.2.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
+  <p style="margin-top:0.3rem">Run the test suite: <code>pytest -q tests</code> &nbsp;·&nbsp; Or: <code>make test</code></p>
+</div>
+
+</main>
+
+<script>
+// Sidebar active link tracking
+const links = document.querySelectorAll('#sidebar a');
+const sections = document.querySelectorAll('[id]');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const match = document.querySelector(`#sidebar a[href="#${entry.target.id}"]`);
+      if (match) match.classList.add('active');
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

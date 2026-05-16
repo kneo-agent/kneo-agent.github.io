@@ -1,0 +1,104 @@
+release: bump to 1.2.0
+
+Substantial backwards-compatible minor release. No public name from
+1.1.x is removed or changed in shape; everything below is additive.
+
+Added — public surface
+- Local-LLM support: new base_url= / api_key= keyword args on
+  OpenAIAgentsImpl, NativeRuntimeFactory.for_openai,
+  BridgeAgentFactory.for_openai, build_agent, and build_sync_agent.
+  Lazy AsyncOpenAI import keeps the no-extras install green.
+- New kneo_agent.middleware subpackage: RetryMiddleware,
+  RateLimitMiddleware, TokenBudgetMiddleware (+ TokenBudgetExceeded),
+  RedactionMiddleware (+ COMMON_PATTERNS). Framework types
+  re-exported so callers import everything from one module.
+- New kneo_agent.workflows.RetryStep wraps any WorkflowComponent
+  with retry-on-failure semantics; preserves the inner component's
+  name so existing graph edges still match.
+- New SecretProvider Protocol in kneo_agent.utils plus three
+  reference implementations (Env / File / Mapping), runtime_checkable.
+- MCP TLS / mTLS / custom-CA: verify=, ca_bundle=, client_cert=,
+  client_key= on MCPServerConfig.http() and .sse(), plus a new
+  build_ssl_context() helper. Both transports thread the context
+  into urlopen(..., context=...).
+- Formal RunResult.metadata["usage"] schema documented on
+  RunResult; OpenAI Agents native runtime now populates it from
+  raw_responses[*].usage (Responses API + Chat Completions naming
+  both accepted).
+- Python 3.13 classifier in pyproject.toml.
+
+Added — docs
+- docs/api_stability.md (public-surface definition + deprecation policy)
+- docs/upgrading_to_1.2.md (practical upgrade walkthrough)
+- docs/self_hosted_observability.md (OTLP / Jaeger / Tempo / SigNoz)
+- docs/offline_install.md (air-gap install + no-phone-home audit)
+- New release callout + sidebar entry in the API reference manual;
+  HTML re-rendered, PDF regenerated via the existing puppeteer pipeline.
+- mcp_guide.md gains a TLS / mTLS / custom-CA section.
+- agent_middleware_guide.md gains a "Production middleware bundle"
+  section.
+- docs/README.md gains a Guide Map + Cookbook recipes table; package-
+  contents diagram updated for new subpackages.
+
+Added — examples/cookbook/ (7 recipes; all offline-runnable in CI)
+- local_ollama.py, workflow_branching_and_retry.py, mcp_server_catalog.py,
+  sql_query_tool.py, rest_api_tool.py, object_store_tool.py,
+  search_index_tool.py.
+
+Added — tests + CI
+- tests/unit/test_public_api_snapshot.py — pins the 75 top-level
+  __all__ names and the size of each subpackage's __all__.
+- tests/unit/test_middleware_bundle.py — 20 tests covering each new
+  middleware plus middleware-ordering contract (outside-in, short-
+  circuit, exception propagation) and Redaction + OTel composition.
+- tests/unit/test_redaction_regression.py — fixture matrix of
+  representative secret shapes asserted absent from logs / OTel
+  spans / RunResult.tool_calls_performed.
+- tests/unit/test_runtime_usage.py — pins the cross-runtime
+  metadata["usage"] contract; documents which runtimes don't yet
+  populate.
+- tests/unit/test_workflow_retry.py — RetryStep success / exhaustion
+  / cancellation / WorkflowBuilder integration.
+- tests/unit/test_mcp_tls.py — TLS / mTLS / custom-CA contexts,
+  including a self-signed mTLS cert generated in-test.
+- tests/unit/test_streaming_contract.py — Agent.stream raises
+  StreamingNotSupportedError rather than silently degrading.
+- tests/integration/test_examples.py — extended to walk
+  examples/cookbook/.
+- tests/integration/test_doc_example_drift.py — fails when an
+  examples/...py path mentioned in any doc (including
+  releases/*.md) is missing or not smoke-tested.
+- CI: import-no-extras job now imports every public subsystem and
+  asserts agents / langchain / google.adk / opentelemetry are NOT
+  pulled into the core install.
+
+Fixed
+- RedactionMiddleware.wrap_run also scrubs
+  RunResult.tool_calls_performed[*].result. Discovered by the new
+  redaction regression tests; previously a runtime that built
+  ToolResult objects directly inside run() (skipping
+  wrap_tool_call) leaked secrets through that field.
+
+Changed
+- README + docs/README now flag the build_sync_agent / SyncAgent
+  RuntimeError failure mode in Jupyter / FastAPI handlers, matching
+  the wording already in the API reference.
+
+Project metadata
+- CODE_OF_CONDUCT.md (Contributor Covenant 2.1 by reference;
+  reports routed to GitHub private security advisories).
+- SECURITY.md (private-disclosure via GitHub advisories;
+  supported-version table; in/out-of-scope lists).
+- MANIFEST.in now bundles CODE_OF_CONDUCT.md + SECURITY.md.
+- README-dev.md now states the project's audience explicitly
+  (SME / OSS-developer / on-prem / enterprise integration).
+- releases/v1.2.0.md — durable copy of the GitHub Release body.
+- releases/v1.2.0.commit.txt — durable copy of this commit message.
+- TODO-1.2.0.md (release-planning artifact carried with the change).
+- TODO-PyPI.md re-keyed from v1.1.1 to v1.2.0.
+
+Gates: ruff clean, mypy --strict clean (49 source files),
+261 tests passed (10 skipped), coverage 86.12%, twine check PASSED
+on sdist + wheel.
+
+Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>

@@ -1,0 +1,29 @@
+project:
+  name: kneo-agent-demo
+  owner: ai-platform
+  default_environment: dev
+service:
+  default_url: http://localhost:8000
+local:
+  state_path: .kneo/kneo_runs.sqlite
+specs:
+  default_spec: examples/research_agent.yaml
+runtime_defaults:
+  preferred_mode: bridge
+  allowed_modes: [bridge, native]
+  fallback_mode: native
+environments:
+  dev:
+    policy_enforcement:
+      enabled: false
+  staging:
+    policy_enforcement:
+      require_tool_permissions: true
+      blocked_diagnostic_codes: [E_UNSAFE_TOOL_IMPORT, E_UNSAFE_FUNCTION_IMPORT]
+  prod:
+    policy_enforcement:
+      require_tool_permissions: true
+      deny_unrestricted_tools: true
+      require_human_review: true
+      require_guardrails: true
+      blocked_diagnostic_codes: [E_UNSAFE_TOOL_IMPORT, E_UNSAFE_FUNCTION_IMPORT]

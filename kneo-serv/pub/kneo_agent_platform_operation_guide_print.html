@@ -1,0 +1,1863 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kneo Agent Platform — Operation Guide</title>
+  <style>
+
+html { font-size: 14px; }
+body { font-family: Arial, sans-serif; margin: 40px; color: #222; line-height: 1.55; }
+h1, h2, h3, h4 { color: #111; }
+h1 { font-size: 1.85rem; margin-top: 0; }
+h2 { font-size: 1.4rem; margin-top: 1.6em; }
+h3 { font-size: 1.15rem; margin-top: 1.4em; }
+pre { background: #f5f5f5; padding: 12px; overflow-x: auto; border-radius: 6px;
+      white-space: pre-wrap; overflow-wrap: anywhere; font-size: 0.85rem; }
+code { background: #f5f5f5; padding: .1em .3em; border-radius: 4px; font-size: 0.9em; }
+img { max-width: 100%; height: auto; display: block; margin: 16px auto; }
+figure { margin: 24px 0; }
+ul, ol { margin: 0 0 1em 1.5em; }
+p { margin: 0 0 1em; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.95rem;
+        table-layout: fixed; word-wrap: break-word; overflow-wrap: anywhere; }
+th, td { border: 1px solid #ddd; padding: 8px 10px; vertical-align: top; text-align: left; }
+.page { max-width: none; }
+em { color: #444; }
+
+/* Cover */
+.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 8.5in;
+  text-align: center;
+  break-after: page;
+  page-break-after: always;
+}
+.cover h1 { font-size: 2.6rem; margin: 0.2em 0 0.1em; font-weight: 700;
+            border: none; padding: 0; }
+.cover .tagline { font-size: 1.4rem; color: #444; margin: 0 0 2.2em; }
+.cover .meta { margin: 0.25em 0; color: #666; font-size: 1.05rem; }
+.cover .desc { margin-top: 3.5em; max-width: 28em; color: #555;
+               font-style: italic; font-size: 0.95rem; }
+
+/* TOC */
+.toc-block { break-after: page; page-break-after: always; }
+.toc ul { list-style: none; padding-left: 1.2em; margin: 0; }
+.toc > ul { padding-left: 0; }
+.toc li { margin: 0.18em 0; font-size: 0.95rem; }
+.toc a {
+  color: #1a3a82;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.toc a:hover { text-decoration: underline; }
+/* Three flex items per entry: title text · dotted leader · page number.
+   The leader grows to fill the gap; title and page-num are intrinsic-width. */
+.toc a .title { flex: 0 0 auto; }
+.toc a .leader {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted #aaa;
+  align-self: end;
+  margin-bottom: 0.32em;
+  min-width: 1.5em;
+}
+.toc a .page-num {
+  flex: 0 0 auto;
+  color: #555;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Every top-level chapter (h1 outside cover) starts a new page. */
+@media print {
+  h1 { page-break-before: always; break-before: page; }
+  .cover h1, .toc-block h1 { page-break-before: avoid; break-before: avoid; }
+}
+  </style>
+</head>
+<body>
+  <main class="page"><div class="cover" markdown="0">
+<h1>Kneo Agent Platform</h1>
+<p class="tagline">Operation Guide</p>
+<p class="meta">Version 0.1.0</p>
+<p class="meta">2026-05-13</p>
+<p class="desc">Deployment shapes, TLS termination, security hardening, observability, backup and recovery, upgrade, incident response, troubleshooting, and the deployment smoke test — one printable operator guide.</p>
+</div>
+
+<div class="toc-block">
+<h1 id="table-of-contents">Table of contents</h1>
+<div class="toc">
+<div class="toc">
+<ul>
+<li><a href="#table-of-contents"><span class="title">Table of contents</span><span class="leader"></span><span class="page-num">2</span></a></li>
+<li><a href="#deployment"><span class="title">Deployment</span><span class="leader"></span><span class="page-num">5</span></a><ul>
+<li><a href="#container"><span class="title">Container</span><span class="leader"></span><span class="page-num">5</span></a></li>
+<li><a href="#compose"><span class="title">Compose</span><span class="leader"></span><span class="page-num">5</span></a></li>
+<li><a href="#tls-and-reverse-proxy"><span class="title">TLS and reverse proxy</span><span class="leader"></span><span class="page-num">6</span></a></li>
+<li><a href="#choosing-a-persistence-backend"><span class="title">Choosing a persistence backend</span><span class="leader"></span><span class="page-num">6</span></a></li>
+<li><a href="#readiness-and-liveness"><span class="title">Readiness and liveness</span><span class="leader"></span><span class="page-num">6</span></a></li>
+</ul>
+</li>
+<li><a href="#tls-and-reverse-proxy_1"><span class="title">TLS and reverse proxy</span><span class="leader"></span><span class="page-num">6</span></a><ul>
+<li><a href="#topology"><span class="title">Topology</span><span class="leader"></span><span class="page-num">8</span></a></li>
+<li><a href="#bind-address"><span class="title">Bind address</span><span class="leader"></span><span class="page-num">8</span></a></li>
+<li><a href="#trusted-proxy-headers"><span class="title">Trusted-proxy headers</span><span class="leader"></span><span class="page-num">9</span></a></li>
+<li><a href="#reverse-proxy-snippets"><span class="title">Reverse-proxy snippets</span><span class="leader"></span><span class="page-num">9</span></a><ul>
+<li><a href="#nginx"><span class="title">nginx</span><span class="leader"></span><span class="page-num">9</span></a></li>
+<li><a href="#caddy"><span class="title">Caddy</span><span class="leader"></span><span class="page-num">9</span></a></li>
+<li><a href="#aws-alb-generic-l7-load-balancer"><span class="title">AWS ALB / generic L7 load balancer</span><span class="leader"></span><span class="page-num">10</span></a></li>
+</ul>
+</li>
+<li><a href="#health-check-endpoints-behind-the-proxy"><span class="title">Health-check endpoints behind the proxy</span><span class="leader"></span><span class="page-num">10</span></a></li>
+<li><a href="#verifying-tls-is-actually-in-front"><span class="title">Verifying TLS is actually in front</span><span class="leader"></span><span class="page-num">10</span></a></li>
+<li><a href="#what-010-does-not-provide"><span class="title">What 0.1.0 does not provide</span><span class="leader"></span><span class="page-num">11</span></a></li>
+</ul>
+</li>
+<li><a href="#security-hardening"><span class="title">Security hardening</span><span class="leader"></span><span class="page-num">12</span></a><ul>
+<li><a href="#pre-launch-checklist"><span class="title">Pre-launch checklist</span><span class="leader"></span><span class="page-num">12</span></a><ul>
+<li><a href="#1-enable-authentication"><span class="title">1. Enable authentication</span><span class="leader"></span><span class="page-num">12</span></a></li>
+<li><a href="#2-assign-the-narrowest-role"><span class="title">2. Assign the narrowest role</span><span class="leader"></span><span class="page-num">12</span></a></li>
+<li><a href="#3-rotate-keys-without-downtime"><span class="title">3. Rotate keys without downtime</span><span class="leader"></span><span class="page-num">13</span></a></li>
+<li><a href="#4-sign-spec-bundles-for-production"><span class="title">4. Sign spec bundles for production</span><span class="leader"></span><span class="page-num">13</span></a></li>
+<li><a href="#5-terminate-tls-upstream"><span class="title">5. Terminate TLS upstream</span><span class="leader"></span><span class="page-num">13</span></a></li>
+<li><a href="#6-lock-down-container-and-host"><span class="title">6. Lock down container and host</span><span class="leader"></span><span class="page-num">13</span></a></li>
+<li><a href="#7-protect-the-audit-trail"><span class="title">7. Protect the audit trail</span><span class="leader"></span><span class="page-num">14</span></a></li>
+<li><a href="#8-keep-redaction-in-place"><span class="title">8. Keep redaction in place</span><span class="leader"></span><span class="page-num">14</span></a></li>
+</ul>
+</li>
+<li><a href="#what-010-deliberately-does-not-provide"><span class="title">What 0.1.0 deliberately does not provide</span><span class="leader"></span><span class="page-num">14</span></a></li>
+</ul>
+</li>
+<li><a href="#observability"><span class="title">Observability</span><span class="leader"></span><span class="page-num">16</span></a><ul>
+<li><a href="#three-signals-three-surfaces"><span class="title">Three signals, three surfaces</span><span class="leader"></span><span class="page-num">16</span></a></li>
+<li><a href="#structured-request-logs"><span class="title">Structured request logs</span><span class="leader"></span><span class="page-num">16</span></a><ul>
+<li><a href="#shape"><span class="title">Shape</span><span class="leader"></span><span class="page-num">16</span></a></li>
+<li><a href="#configuration"><span class="title">Configuration</span><span class="leader"></span><span class="page-num">17</span></a></li>
+<li><a href="#production-tuning"><span class="title">Production tuning</span><span class="leader"></span><span class="page-num">17</span></a></li>
+<li><a href="#log-aggregation-wiring"><span class="title">Log aggregation wiring</span><span class="leader"></span><span class="page-num">17</span></a></li>
+</ul>
+</li>
+<li><a href="#service-side-trace-events"><span class="title">Service-side trace events</span><span class="leader"></span><span class="page-num">18</span></a></li>
+<li><a href="#opentelemetry-spans"><span class="title">OpenTelemetry spans</span><span class="leader"></span><span class="page-num">18</span></a><ul>
+<li><a href="#exporter-configuration"><span class="title">Exporter configuration</span><span class="leader"></span><span class="page-num">18</span></a></li>
+</ul>
+</li>
+<li><a href="#what-to-watch-in-production"><span class="title">What to watch in production</span><span class="leader"></span><span class="page-num">19</span></a></li>
+<li><a href="#what-this-page-does-not-cover"><span class="title">What this page does not cover</span><span class="leader"></span><span class="page-num">19</span></a></li>
+</ul>
+</li>
+<li><a href="#backup-and-recovery"><span class="title">Backup and recovery</span><span class="leader"></span><span class="page-num">20</span></a><ul>
+<li><a href="#what-needs-to-be-preserved"><span class="title">What needs to be preserved</span><span class="leader"></span><span class="page-num">20</span></a></li>
+<li><a href="#postgresql-production-path"><span class="title">PostgreSQL — production path</span><span class="leader"></span><span class="page-num">20</span></a><ul>
+<li><a href="#take-a-backup"><span class="title">Take a backup</span><span class="leader"></span><span class="page-num">21</span></a></li>
+<li><a href="#restore-from-a-backup-destructive-wipes-current-state"><span class="title">Restore from a backup (destructive — wipes current state)</span><span class="leader"></span><span class="page-num">21</span></a></li>
+<li><a href="#off-site-rotation"><span class="title">Off-site rotation</span><span class="leader"></span><span class="page-num">21</span></a></li>
+<li><a href="#data-only-restore-into-a-clean-volume"><span class="title">Data-only restore into a clean volume</span><span class="leader"></span><span class="page-num">21</span></a></li>
+</ul>
+</li>
+<li><a href="#sqlite-single-host-installs"><span class="title">SQLite — single-host installs</span><span class="leader"></span><span class="page-num">22</span></a></li>
+<li><a href="#backup-frequency"><span class="title">Backup frequency</span><span class="leader"></span><span class="page-num">22</span></a></li>
+<li><a href="#verifying-a-restore"><span class="title">Verifying a restore</span><span class="leader"></span><span class="page-num">23</span></a></li>
+<li><a href="#rolling-back-after-a-failed-upgrade"><span class="title">Rolling back after a failed upgrade</span><span class="leader"></span><span class="page-num">23</span></a></li>
+<li><a href="#disaster-recovery-checklist"><span class="title">Disaster recovery checklist</span><span class="leader"></span><span class="page-num">24</span></a></li>
+<li><a href="#what-this-page-does-not-cover_1"><span class="title">What this page does not cover</span><span class="leader"></span><span class="page-num">24</span></a></li>
+</ul>
+</li>
+<li><a href="#upgrade-guide"><span class="title">Upgrade guide</span><span class="leader"></span><span class="page-num">25</span></a><ul>
+<li><a href="#versioning"><span class="title">Versioning</span><span class="leader"></span><span class="page-num">25</span></a></li>
+<li><a href="#standard-upgrade-procedure"><span class="title">Standard upgrade procedure</span><span class="leader"></span><span class="page-num">25</span></a></li>
+<li><a href="#persistence-migrations"><span class="title">Persistence migrations</span><span class="leader"></span><span class="page-num">26</span></a></li>
+<li><a href="#spec-migrations"><span class="title">Spec migrations</span><span class="leader"></span><span class="page-num">26</span></a></li>
+<li><a href="#sdk-compatibility"><span class="title">SDK compatibility</span><span class="leader"></span><span class="page-num">26</span></a></li>
+<li><a href="#configuration-changes"><span class="title">Configuration changes</span><span class="leader"></span><span class="page-num">27</span></a></li>
+<li><a href="#cli-changes"><span class="title">CLI changes</span><span class="leader"></span><span class="page-num">27</span></a></li>
+<li><a href="#version-specific-notes"><span class="title">Version-specific notes</span><span class="leader"></span><span class="page-num">27</span></a><ul>
+<li><a href="#010-initial-release"><span class="title">0.1.0 — initial release</span><span class="leader"></span><span class="page-num">27</span></a></li>
+</ul>
+</li>
+<li><a href="#rolling-back"><span class="title">Rolling back</span><span class="leader"></span><span class="page-num">27</span></a></li>
+<li><a href="#reporting-upgrade-issues"><span class="title">Reporting upgrade issues</span><span class="leader"></span><span class="page-num">28</span></a></li>
+</ul>
+</li>
+<li><a href="#incident-response"><span class="title">Incident response</span><span class="leader"></span><span class="page-num">29</span></a><ul>
+<li><a href="#triage-tree"><span class="title">Triage tree</span><span class="leader"></span><span class="page-num">29</span></a></li>
+<li><a href="#readyz-failure-matrix"><span class="title">/readyz failure matrix</span><span class="leader"></span><span class="page-num">29</span></a></li>
+<li><a href="#common-production-incidents"><span class="title">Common production incidents</span><span class="leader"></span><span class="page-num">30</span></a></li>
+<li><a href="#what-to-capture-before-escalating"><span class="title">What to capture before escalating</span><span class="leader"></span><span class="page-num">31</span></a></li>
+<li><a href="#when-to-roll-back"><span class="title">When to roll back</span><span class="leader"></span><span class="page-num">32</span></a></li>
+<li><a href="#what-this-page-does-not-cover_2"><span class="title">What this page does not cover</span><span class="leader"></span><span class="page-num">32</span></a></li>
+</ul>
+</li>
+<li><a href="#troubleshooting"><span class="title">Troubleshooting</span><span class="leader"></span><span class="page-num">33</span></a><ul>
+<li><a href="#1-service-wont-start-or-wont-accept-traffic"><span class="title">1. Service won't start or won't accept traffic</span><span class="leader"></span><span class="page-num">33</span></a><ul>
+<li><a href="#11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured">1.1 RuntimeError: KNEO service auth is enabled but no API keys are configured</a></li>
+<li><a href="#12-readyz-returns-503"><span class="title">1.2 /readyz returns 503</span><span class="leader"></span><span class="page-num">33</span></a></li>
+<li><a href="#13-runtimeerror-platformmanager-has-not-been-configured"><span class="title">1.3 RuntimeError: PlatformManager has not been configured</span><span class="leader"></span><span class="page-num">33</span></a></li>
+<li><a href="#14-runtimeerror-invalid-kneo_serv_api_keys-entry"><span class="title">1.4 RuntimeError: Invalid KNEO_SERV_API_KEYS entry</span><span class="leader"></span><span class="page-num">34</span></a></li>
+</ul>
+</li>
+<li><a href="#2-persistence-and-store-failures"><span class="title">2. Persistence and store failures</span><span class="leader"></span><span class="page-num">34</span></a><ul>
+<li><a href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite"><span class="title">2.1 PostgreSQL DSN configured but service falls back to SQLite</span><span class="leader"></span><span class="page-num">34</span></a></li>
+<li><a href="#22-psycopgoperationalerror-on-startup-or-first-request"><span class="title">2.2 psycopg.OperationalError on startup or first request</span><span class="leader"></span><span class="page-num">34</span></a></li>
+<li><a href="#23-sqlite-database-is-locked-errors"><span class="title">2.3 SQLite database is locked errors</span><span class="leader"></span><span class="page-num">34</span></a></li>
+<li><a href="#24-schema-migration-appears-to-have-run-but-old-data-is-missing"><span class="title">2.4 Schema migration appears to have run but old data is missing</span><span class="leader"></span><span class="page-num">35</span></a></li>
+<li><a href="#25-backuprestore-mismatch"><span class="title">2.5 Backup/restore mismatch</span><span class="leader"></span><span class="page-num">35</span></a></li>
+</ul>
+</li>
+<li><a href="#3-secrets-credentials-and-provider-integration"><span class="title">3. Secrets, credentials, and provider integration</span><span class="leader"></span><span class="page-num">35</span></a><ul>
+<li><a href="#31-missingsecreterror-on-agent-run"><span class="title">3.1 MissingSecretError on agent run</span><span class="leader"></span><span class="page-num">35</span></a></li>
+<li><a href="#32-get-readyz-reports-missing-providermcp-secrets"><span class="title">3.2 GET /readyz reports missing provider/MCP secrets</span><span class="leader"></span><span class="page-num">35</span></a></li>
+<li><a href="#33-kneo-spec-bundle-verify-fails"><span class="title">3.3 kneo spec bundle verify fails</span><span class="leader"></span><span class="page-num">36</span></a></li>
+</ul>
+</li>
+<li><a href="#4-authentication-and-authorization"><span class="title">4. Authentication and authorization</span><span class="leader"></span><span class="page-num">36</span></a><ul>
+<li><a href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required"><span class="title">4.1 401 Unauthorized — A valid Kneo service API key is required</span><span class="leader"></span><span class="page-num">36</span></a></li>
+<li><a href="#42-403-forbidden-missing-required-scope-scope">4.2 403 Forbidden — Missing required scope: &lt;scope&gt;</a></li>
+<li><a href="#43-health-endpoints-work-all-other-routes-401"><span class="title">4.3 Health endpoints work, all other routes 401</span><span class="leader"></span><span class="page-num">36</span></a></li>
+</ul>
+</li>
+<li><a href="#5-run-lifecycle-problems"><span class="title">5. Run lifecycle problems</span><span class="leader"></span><span class="page-num">36</span></a><ul>
+<li><a href="#51-async-runs-sit-in-queued-and-never-progress"><span class="title">5.1 Async runs sit in queued and never progress</span><span class="leader"></span><span class="page-num">36</span></a></li>
+<li><a href="#52-cancelled-run-still-finishes-as-succeeded"><span class="title">5.2 Cancelled run still finishes as succeeded</span><span class="leader"></span><span class="page-num">37</span></a></li>
+<li><a href="#53-run-hangs-at-a-workflow-step"><span class="title">5.3 Run hangs at a workflow step</span><span class="leader"></span><span class="page-num">37</span></a></li>
+<li><a href="#54-409-conflict-idempotency_key_conflict"><span class="title">5.4 409 Conflict — idempotency_key_conflict</span><span class="leader"></span><span class="page-num">37</span></a></li>
+<li><a href="#55-400-bad-request-invalid_idempotency_key"><span class="title">5.5 400 Bad Request — invalid_idempotency_key</span><span class="leader"></span><span class="page-num">37</span></a></li>
+</ul>
+</li>
+<li><a href="#6-spec-validation-and-compilation"><span class="title">6. Spec validation and compilation</span><span class="leader"></span><span class="page-num">38</span></a><ul>
+<li><a href="#61-speccompilationerror-with-diagnostics"><span class="title">6.1 SpecCompilationError with diagnostics</span><span class="leader"></span><span class="page-num">38</span></a></li>
+<li><a href="#62-valueerror-tool-name-has-no-implementation">6.2 ValueError: Tool '&lt;name&gt;' has no implementation</a></li>
+<li><a href="#63-inline-spec-rejected-with-size-error"><span class="title">6.3 Inline spec rejected with size error</span><span class="leader"></span><span class="page-num">38</span></a></li>
+</ul>
+</li>
+<li><a href="#7-observability"><span class="title">7. Observability</span><span class="leader"></span><span class="page-num">38</span></a><ul>
+<li><a href="#71-structured-logs-missing-request_id"><span class="title">7.1 Structured logs missing request_id</span><span class="leader"></span><span class="page-num">38</span></a></li>
+<li><a href="#72-opentelemetry-not-exporting"><span class="title">7.2 OpenTelemetry not exporting</span><span class="leader"></span><span class="page-num">38</span></a></li>
+<li><a href="#73-trace-events-missing-for-a-run"><span class="title">7.3 Trace events missing for a run</span><span class="leader"></span><span class="page-num">39</span></a></li>
+</ul>
+</li>
+<li><a href="#8-human-in-the-loop"><span class="title">8. Human-in-the-loop</span><span class="leader"></span><span class="page-num">39</span></a><ul>
+<li><a href="#81-lockacquisitionerror-on-resume"><span class="title">8.1 LockAcquisitionError on resume</span><span class="leader"></span><span class="page-num">39</span></a></li>
+<li><a href="#82-continuation-expired-or-missing"><span class="title">8.2 Continuation expired or missing</span><span class="leader"></span><span class="page-num">39</span></a></li>
+</ul>
+</li>
+<li><a href="#9-release-and-supply-chain"><span class="title">9. Release and supply chain</span><span class="leader"></span><span class="page-num">39</span></a></li>
+<li><a href="#what-to-capture-before-opening-a-bug"><span class="title">What to capture before opening a bug</span><span class="leader"></span><span class="page-num">40</span></a></li>
+</ul>
+</li>
+<li><a href="#deployment-smoke-test"><span class="title">Deployment smoke test</span><span class="leader"></span><span class="page-num">41</span></a><ul>
+<li><a href="#compose-stack"><span class="title">Compose stack</span><span class="leader"></span><span class="page-num">41</span></a></li>
+<li><a href="#postgresql-coverage"><span class="title">PostgreSQL coverage</span><span class="leader"></span><span class="page-num">42</span></a></li>
+<li><a href="#staging-and-remote-smoke"><span class="title">Staging and remote smoke</span><span class="leader"></span><span class="page-num">42</span></a></li>
+<li><a href="#see-also"><span class="title">See also</span><span class="leader"></span><span class="page-num">43</span></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<h1 id="deployment">Deployment</h1>
+<p><em>Source: <a href="../user/deployment.md"><code>docs/user/deployment.md</code></a></em></p>
+<p>Reference for the supported deployment shapes. For a guided zero-to-running
+walkthrough on Docker Compose with PostgreSQL, see
+<a href="../user/tutorial_postgres_deployment.md"><code>tutorial_postgres_deployment.md</code></a>. For
+every environment variable referenced below, see
+<a href="../user/environment.md"><code>environment.md</code></a>.</p>
+<p>The service supports three shapes:</p>
+<ul>
+<li><strong>Container</strong> — a single <code>kneo-serv</code> image with a database you supply.</li>
+<li><strong>Compose</strong> — the bundled stack that starts the API plus PostgreSQL.</li>
+<li><strong>Embedded</strong> — <code>kneo_serv.service.app:create_app()</code> mounted in your own
+  ASGI server (covered in
+  <a href="../user/tutorial_custom_tool.md#7-ship-the-tool-to-the-service"><code>tutorial_custom_tool.md § 7</code></a>).</li>
+</ul>
+<h2 id="container">Container</h2>
+<p>Build the service image:</p>
+<pre><code class="language-bash">docker build -t kneo-serv:local .
+</code></pre>
+<p>Run it against PostgreSQL. The image installs the <code>kneo-serv[deploy]</code> extra,
+which includes PostgreSQL and SDK telemetry support:</p>
+<pre><code class="language-bash">docker run --rm -p 8000:8000 \
+  -e KNEO_SERV_DATABASE_URL=postgresql://kneo_serv:change-me@host.docker.internal:5432/kneo_serv \
+  -e KNEO_SERV_AUTH_ENABLED=true \
+  -e KNEO_SERV_API_KEYS='operator:replace-token:operator' \
+  kneo-serv:local
+</code></pre>
+<h2 id="compose">Compose</h2>
+<p>The bundled Compose stack starts the API plus PostgreSQL:</p>
+<pre><code class="language-bash">cp deploy/production.env.example deploy/production.env
+docker compose --env-file deploy/production.env up --build
+</code></pre>
+<p>Replace every placeholder token and database password before binding the
+service to a network. The stack defaults to port <code>8000</code>; set
+<code>KNEO_SERV_PORT</code> to change the host-side port.</p>
+<p>For a staging rehearsal, use the staging env example:</p>
+<pre><code class="language-bash">cp deploy/staging.env.example deploy/staging.env
+KNEO_SERV_ENV_FILE=./deploy/staging.env \
+  docker compose --env-file deploy/staging.env up --build
+</code></pre>
+<p><code>deploy/staging.env</code> is gitignored. Keep SDK telemetry argument/result
+capture (<code>KNEO_SERV_OTEL_RECORD_ARGUMENTS</code>, <code>KNEO_SERV_OTEL_RECORD_RESULTS</code>)
+disabled in staging unless the deployment's data classification has
+explicitly approved payload capture.</p>
+<h2 id="tls-and-reverse-proxy">TLS and reverse proxy</h2>
+<p>The service speaks bare HTTP and does not terminate TLS itself. For any
+deployment exposed beyond <code>127.0.0.1</code>, place a reverse proxy
+(nginx, Caddy, AWS ALB, or similar) in front and terminate TLS there.
+See <a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a> for topology, bind-address
+guidance, and trusted-proxy header handling.</p>
+<h2 id="choosing-a-persistence-backend">Choosing a persistence backend</h2>
+<table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SQLite</strong></td>
+<td>Local dev or single-process service. Default when <code>KNEO_SERV_DATABASE_URL</code> is unset.</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>Any multi-process or production deployment. Set <code>KNEO_SERV_DATABASE_URL</code>. Requires <code>kneo-serv[postgres]</code> or <code>kneo-serv[deploy]</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>When <code>KNEO_SERV_DATABASE_URL</code> is set, the service uses PostgreSQL for run
+state, checkpoints, idempotency records, queue leases, locks, audit events,
+and workflow continuations. Without it, the service falls back to SQLite for
+state and file-backed continuations.</p>
+<p>Multi-process SQLite is not a supported topology; see
+<a href="#23-sqlite-database-is-locked-errors">troubleshooting.md § 2.3</a>.</p>
+<h2 id="readiness-and-liveness">Readiness and liveness</h2>
+<p>Wire these endpoints into your supervisor or load balancer:</p>
+<pre><code class="language-http">GET /livez      # process liveness
+GET /readyz     # readiness: all dependencies healthy
+GET /healthz    # lightweight overall health
+</code></pre>
+<p><code>/livez</code> and <code>/readyz</code> are intentionally unauthenticated for probe
+integration. <code>/readyz</code> returns <code>503</code> with a structured <code>not_ready</code> payload
+when any dependency check fails — see
+<a href="#12-readyz-returns-503">troubleshooting.md § 1.2</a> for the
+failure shape.</p>
+<h1 id="tls-and-reverse-proxy_1">TLS and reverse proxy</h1>
+<p><em>Source: <a href="../user/tls_and_proxy.md"><code>docs/user/tls_and_proxy.md</code></a></em></p>
+<p>The Kneo Agent Platform service speaks plain HTTP. It does not terminate TLS, parse
+<code>X-Forwarded-*</code> headers itself, or rate-limit by IP. Any deployment that
+faces a network beyond <code>127.0.0.1</code> must run behind a reverse proxy that
+terminates TLS and shields the service.</p>
+<p>For deployment shapes (Container, Compose, Embedded) and the choice of
+persistence backend, see <a href="#deployment"><code>deployment.md</code></a>. For the
+hardening checklist that includes TLS, see
+<a href="#security-hardening"><code>security_hardening.md</code></a>.</p>
+<h2 id="topology">Topology</h2>
+<pre><code>client ──HTTPS──► reverse proxy ──HTTP──► kneo-serv
+                  (TLS termination,
+                   request size limits,
+                   rate limiting,
+                   client-IP injection)
+</code></pre>
+<p>The proxy is responsible for:</p>
+<ul>
+<li>TLS termination and certificate management</li>
+<li>Request body size limits at the edge (defense in depth above
+  <code>KNEO_SERV_MAX_BODY_BYTES</code>)</li>
+<li>IP-based rate limiting if you need it (the service has no built-in
+  per-IP limiter)</li>
+<li>Forwarding the client IP for the service's structured logs</li>
+</ul>
+<p>Run the proxy and <code>kneo-serv</code> on the same host (or in the same private
+network) so the unencrypted hop is not exposed.</p>
+<h2 id="bind-address">Bind address</h2>
+<table>
+<thead>
+<tr>
+<th>Topology</th>
+<th><code>--host</code> value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Proxy + service on the same host</td>
+<td><code>127.0.0.1</code></td>
+<td>Service is unreachable except through the proxy.</td>
+</tr>
+<tr>
+<td>Proxy + service in a shared private network</td>
+<td><code>0.0.0.0</code></td>
+<td>The network boundary is the proxy; firewall the service port.</td>
+</tr>
+<tr>
+<td>Compose (<code>compose.yaml</code>)</td>
+<td><code>0.0.0.0</code> inside the container; only the proxy's port is published on the host.</td>
+<td>The Compose stack's internal network already isolates the API service.</td>
+</tr>
+</tbody>
+</table>
+<p>The Dockerfile defaults to <code>--host 0.0.0.0 --port 8000</code>. Override with
+<code>KNEO_SERV_PORT</code> for the published host-side port; the container port is
+fixed at <code>8000</code>.</p>
+<h2 id="trusted-proxy-headers">Trusted-proxy headers</h2>
+<p>The service logs the immediate TCP peer as <code>client_ip</code> in its structured
+request logs (<a href="#observability"><code>observability.md</code></a>). When a proxy
+fronts the service, the immediate peer is the proxy, not the original
+client. To capture the real client IP in logs and traces, configure the
+proxy to write <code>X-Forwarded-For</code> upstream and ingest it at your log
+aggregator — the service itself does not rewrite <code>client_ip</code> from
+<code>X-Forwarded-For</code> (no implicit trust).</p>
+<p>The service does honor <code>X-Request-ID</code> and echoes it back on the response.
+Proxies that already inject a request ID should pass it through; the
+service generates a UUID per request otherwise.</p>
+<h2 id="reverse-proxy-snippets">Reverse-proxy snippets</h2>
+<p>These are minimal examples. Production configurations should add timeouts,
+buffer sizing, and rate-limit zones; consult your proxy's docs.</p>
+<h3 id="nginx">nginx</h3>
+<pre><code class="language-nginx">server {
+  listen 443 ssl http2;
+  server_name kneo.example.com;
+
+  ssl_certificate     /etc/letsencrypt/live/kneo.example.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/kneo.example.com/privkey.pem;
+
+  client_max_body_size 2m;   # match or exceed KNEO_SERV_MAX_BODY_BYTES
+
+  location / {
+    proxy_pass         http://127.0.0.1:8000;
+    proxy_http_version 1.1;
+    proxy_set_header   Host              $host;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   X-Request-ID      $request_id;
+    proxy_read_timeout 130s;             # exceed KNEO_SERV_CLIENT_TIMEOUT
+  }
+}
+</code></pre>
+<h3 id="caddy">Caddy</h3>
+<pre><code class="language-caddyfile">kneo.example.com {
+  reverse_proxy 127.0.0.1:8000 {
+    header_up X-Forwarded-For {remote_host}
+    header_up X-Request-ID    {http.request.uuid}
+  }
+  request_body {
+    max_size 2MB
+  }
+}
+</code></pre>
+<h3 id="aws-alb-generic-l7-load-balancer">AWS ALB / generic L7 load balancer</h3>
+<ul>
+<li>Listener: HTTPS 443 with an ACM certificate; redirect 80 → 443.</li>
+<li>Target group: HTTP, port 8000, healthcheck <code>GET /readyz</code> (interval 30s,
+  unhealthy threshold 3, success codes <code>200</code>). <code>/readyz</code> is unauthenticated
+  by design.</li>
+<li>Idle timeout: ≥ <code>KNEO_SERV_CLIENT_TIMEOUT</code> (default 120s); set 130s for a
+  safety margin.</li>
+<li>Body size: ALBs cap at 1 MiB by default — if you accept larger inline
+  specs (<code>KNEO_SERV_MAX_INLINE_SPEC_BYTES</code> is 256 KiB by default), use a
+  CloudFront or nginx tier in front and bypass the ALB cap accordingly.</li>
+</ul>
+<h2 id="health-check-endpoints-behind-the-proxy">Health-check endpoints behind the proxy</h2>
+<p>Expose <code>/livez</code> and <code>/readyz</code> directly to the proxy or load balancer.
+Both are unauthenticated to keep probe integration simple. Do <strong>not</strong>
+expose <code>/readyz</code> to the public internet — its <code>503 not_ready</code> payload
+includes internal check names and registry contents that should stay
+inside the operational perimeter.</p>
+<p>For most setups: bind the proxy's probe routes to internal listeners
+only, or restrict the source IP range to your load-balancer subnet.</p>
+<h2 id="verifying-tls-is-actually-in-front">Verifying TLS is actually in front</h2>
+<pre><code class="language-bash"># TLS terminates at the proxy, service is unreachable directly.
+curl -sf https://kneo.example.com/readyz | jq '.metadata.ready'   # → true
+curl -sf http://kneo.example.com/readyz                            # → connection refused / 301
+curl -sf http://127.0.0.1:8000/readyz                              # → only succeeds from the proxy host
+</code></pre>
+<p>If the third command succeeds from outside the proxy host, the service
+port is reachable from the public network and the bind address or
+firewall is misconfigured.</p>
+<h2 id="what-010-does-not-provide">What 0.1.0 does not provide</h2>
+<ul>
+<li><strong>No built-in TLS.</strong> Terminate at the proxy.</li>
+<li><strong>No <code>X-Forwarded-For</code> rewriting.</strong> Capture client IPs at the proxy
+  or in your log aggregator.</li>
+<li><strong>No per-IP rate limiting.</strong> Use the proxy's rate-limit zone.</li>
+<li><strong>No mTLS to upstream providers.</strong> Provider connections go out from the
+  service host; lock down egress at the network layer.</li>
+</ul>
+<p>See <a href="#security-hardening"><code>security_hardening.md</code></a> for the full
+pre-launch checklist.</p>
+<h1 id="security-hardening">Security hardening</h1>
+<p><em>Source: <a href="../user/security_hardening.md"><code>docs/user/security_hardening.md</code></a></em></p>
+<p>Pre-launch checklist for taking a <code>kneo-serv</code> deployment to production.
+Each item references the authoritative configuration doc; this page is
+the single sheet to walk before going live.</p>
+<p>For the auth model itself (roles, scopes, route mapping), see
+<a href="../user/service_api.md#authentication"><code>service_api.md § Authentication</code></a>. For
+audit-event details, see
+<a href="../user/service_api.md#audit-events"><code>service_api.md § Audit events</code></a>.</p>
+<h2 id="pre-launch-checklist">Pre-launch checklist</h2>
+<h3 id="1-enable-authentication">1. Enable authentication</h3>
+<ul>
+<li>[ ] <code>KNEO_SERV_AUTH_ENABLED=true</code> is set (or <code>KNEO_SERV_API_KEYS</code> /
+  <code>KNEO_SERV_ADMIN_API_KEY</code> are set, which enables auth implicitly).</li>
+<li>[ ] No API keys are committed to the repo, the Compose <code>.env</code> file, or
+  example configs.</li>
+<li>[ ] Each consumer has its own key, named so audit events identify the
+  caller (<code>KNEO_SERV_API_KEYS='ci:…:service;analyst:…:viewer'</code>).</li>
+<li>[ ] The admin key (<code>KNEO_SERV_ADMIN_API_KEY</code>) is issued separately and
+  used only for break-glass operations.</li>
+</ul>
+<h3 id="2-assign-the-narrowest-role">2. Assign the narrowest role</h3>
+<p>Pick the narrowest built-in role that covers each caller's needs. The
+canonical role-to-scope mapping lives in
+<a href="../user/service_api.md#authentication"><code>service_api.md § Authentication</code></a>; below
+is the operational guidance for choosing between them.</p>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin</code></td>
+<td>Break-glass operator key only</td>
+</tr>
+<tr>
+<td><code>operator</code></td>
+<td>Day-to-day operator console / CI deploy</td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td>Server-to-server callers that drive runs</td>
+</tr>
+<tr>
+<td><code>reviewer</code></td>
+<td>Human-in-the-loop approvers</td>
+</tr>
+<tr>
+<td><code>viewer</code></td>
+<td>Dashboards, read-only analytics</td>
+</tr>
+</tbody>
+</table>
+<p>Custom scopes are allowed in the third field of <code>KNEO_SERV_API_KEYS</code> when
+no built-in role fits.</p>
+<ul>
+<li>[ ] No consumer is using <code>admin</code> for routine traffic.</li>
+<li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
+</ul>
+<h3 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime</h3>
+<p><code>kneo-serv</code> 0.1.0 has no in-place key rotation API. Rotation is a config
+swap:</p>
+<ol>
+<li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
+   (semicolon-separated entries; same <code>name:</code> is fine).</li>
+<li>Restart the service. Both keys are now valid.</li>
+<li>Roll callers over to the new key.</li>
+<li>Remove the old entry from <code>KNEO_SERV_API_KEYS</code>.</li>
+<li>Restart again.</li>
+</ol>
+<ul>
+<li>[ ] Rotation procedure is rehearsed in staging before production keys
+  are issued.</li>
+<li>[ ] Old keys are revoked, not left "in case."</li>
+</ul>
+<h3 id="4-sign-spec-bundles-for-production">4. Sign spec bundles for production</h3>
+<p>For environments that block ad-hoc spec edits:</p>
+<ul>
+<li>[ ] <code>KNEO_SERV_SPEC_SIGNING_KEY</code> is set in CI and on the service hosts
+  (different value than any API key).</li>
+<li>[ ] Production deploys use signed bundles only:
+  <code>kneo spec bundle sign … --approved-by &lt;name&gt; --env prod</code> and
+  <code>kneo spec bundle verify &lt;bundle&gt;</code> in the deploy pipeline.</li>
+<li>[ ] Project config declares <code>environments.prod.policy_enforcement</code> so
+  CLI and API spec flows enforce policy after overlays
+  (<a href="../user/project_config.md"><code>project_config.md</code></a>).</li>
+</ul>
+<h3 id="5-terminate-tls-upstream">5. Terminate TLS upstream</h3>
+<ul>
+<li>[ ] A reverse proxy in front of the service terminates TLS; the
+  service bind address is <code>127.0.0.1</code> or restricted to a private
+  network. See <a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a>.</li>
+<li>[ ] <code>/readyz</code> is exposed only to the load balancer or probe subnet
+  (see
+  <a href="#health-check-endpoints-behind-the-proxy"><code>tls_and_proxy.md § Health-check endpoints behind the proxy</code></a>).</li>
+<li>[ ] The proxy enforces a request body size limit ≥
+  <code>KNEO_SERV_MAX_BODY_BYTES</code>.</li>
+</ul>
+<h3 id="6-lock-down-container-and-host">6. Lock down container and host</h3>
+<p>The bundled Dockerfile already enforces a non-root user (<code>kneo</code>); you
+do not need to override it.
+(<a href="../../Dockerfile"><code>Dockerfile</code></a>)</p>
+<ul>
+<li>[ ] Container runs as the non-root <code>kneo</code> user (default).</li>
+<li>[ ] Image is pulled from a trusted registry; tags are pinned by digest
+  in production manifests.</li>
+<li>[ ] CI scans the image (Trivy, Grype, or equivalent) for known CVEs;
+  releases blocked on critical findings.</li>
+<li>[ ] Host or Kubernetes drops Linux capabilities the service doesn't
+  need (no <code>NET_ADMIN</code>, no <code>SYS_ADMIN</code>).</li>
+<li>[ ] Egress is restricted at the network layer to the provider, MCP,
+  and observability endpoints the deployment actually uses.</li>
+</ul>
+<p>The container's filesystem is <strong>not</strong> read-only — the service writes
+checkpoints, queue state, and optionally SQLite files. If you need
+read-only-root, mount writable volumes for <code>.kneo/</code> (SQLite + continuations)
+and the artifact paths declared in your spec.</p>
+<h3 id="7-protect-the-audit-trail">7. Protect the audit trail</h3>
+<ul>
+<li>[ ] Audit events are persisted in the same backend as run state
+  (PostgreSQL in production); the DB is backed up per
+  <a href="#backup-and-recovery"><code>backup_and_recovery.md</code></a>.</li>
+<li>[ ] <code>audit:read</code> is scoped to a small set of principals (compliance,
+  on-call, incident-response).</li>
+<li>[ ] Audit-event retention is set deliberately. If
+  <code>KNEO_SERV_RETENTION_RUNS_DAYS</code> is set, runs and their audit events age
+  out together — confirm that aligns with your compliance window before
+  enabling it (<a href="../user/environment.md#retention"><code>environment.md § Retention</code></a>).</li>
+</ul>
+<h3 id="8-keep-redaction-in-place">8. Keep redaction in place</h3>
+<p><code>kneo-serv</code> redacts secrets, tokens, authorization headers, emails, and
+SSNs from responses, traces, checkpoints, and CLI JSON output by default
+(<a href="../user/service_api.md#redaction"><code>service_api.md § Redaction</code></a>). The two
+escape hatches both default to off:</p>
+<ul>
+<li>[ ] <code>KNEO_SERV_OTEL_RECORD_ARGUMENTS=false</code> (unless tool arguments are
+  classified safe to emit to your trace backend).</li>
+<li>[ ] <code>KNEO_SERV_OTEL_RECORD_RESULTS=false</code> (same rationale).</li>
+<li>[ ] Custom tools and middleware do not log user inputs or provider
+  responses without redaction.</li>
+</ul>
+<h2 id="what-010-deliberately-does-not-provide">What 0.1.0 deliberately does not provide</h2>
+<p>Operators sometimes go looking for these; document the gap rather than
+inventing it:</p>
+<ul>
+<li><strong>No built-in TLS.</strong> Terminate at a reverse proxy
+  (<a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a>).</li>
+<li><strong>No per-IP rate limiting.</strong> Use the reverse proxy's rate-limit zone.</li>
+<li><strong>No mTLS to upstream providers.</strong> Provider HTTPS calls leave the
+  service host; control with egress firewall rules.</li>
+<li><strong>No live key rotation API.</strong> Keys are configured via env vars; rotate
+  with a config swap and restart (§ 3).</li>
+<li><strong>No external secret-manager integration.</strong> Secrets are injected via
+  environment variables. Use your platform's secret store (Kubernetes
+  Secrets, AWS Secrets Manager, Vault) to populate the env at startup.</li>
+<li><strong>No SCIM or directory integration.</strong> API keys are flat-file in
+  <code>KNEO_SERV_API_KEYS</code>; map them to identities in your audit log
+  aggregator.</li>
+</ul>
+<p>These are tracked in the roadmap, not bugs. See
+<a href="../plan/roadmap.md"><code>docs/plan/roadmap.md</code></a>.</p>
+<h1 id="observability">Observability</h1>
+<p><em>Source: <a href="../user/observability.md"><code>docs/user/observability.md</code></a></em></p>
+<p>Operator guide for wiring <code>kneo-serv</code>'s structured logs, request tracing,
+and OpenTelemetry exports into a production observability stack.</p>
+<p>This page is the setup view. For symptoms and recovery when observability
+itself misbehaves, see
+<a href="#7-observability"><code>troubleshooting.md § 7</code></a>. For the
+full env-var list, see
+<a href="../user/environment.md#observability"><code>environment.md § Observability</code></a>.</p>
+<h2 id="three-signals-three-surfaces">Three signals, three surfaces</h2>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What it is</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Structured request logs</td>
+<td>One JSON record per HTTP request, redacted</td>
+<td><code>RequestLoggingMiddleware</code> (always on by default)</td>
+</tr>
+<tr>
+<td>Service-side trace events</td>
+<td>Per-run trace and checkpoint records, queryable via the API</td>
+<td><code>TracingMiddleware</code>, exposed at <code>/v1/runs/{run_id}/trace</code></td>
+</tr>
+<tr>
+<td>OpenTelemetry spans</td>
+<td>Distributed-tracing spans across SDK-driven agent and tool calls</td>
+<td><code>kneo_agent.observability.OpenTelemetryMiddleware</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
+</tr>
+</tbody>
+</table>
+<p>There is <strong>no metrics endpoint</strong> in 0.1.0. Scrape latency and error rate
+from your reverse-proxy access logs or from OTel span attributes.</p>
+<h2 id="structured-request-logs">Structured request logs</h2>
+<h3 id="shape">Shape</h3>
+<p>Each request emits a single JSON record on the <code>kneo_serv.service</code> logger:</p>
+<pre><code class="language-json">{
+  &quot;client_ip&quot;: &quot;10.0.0.7&quot;,
+  &quot;duration_ms&quot;: 18.214,
+  &quot;event&quot;: &quot;http_request&quot;,
+  &quot;method&quot;: &quot;POST&quot;,
+  &quot;path&quot;: &quot;/v1/runs&quot;,
+  &quot;request_id&quot;: &quot;f3b3…&quot;,
+  &quot;run_id&quot;: &quot;run_…&quot;,
+  &quot;status_code&quot;: 201,
+  &quot;user_agent&quot;: &quot;kneo-serv-client/0.1.0&quot;
+}
+</code></pre>
+<p>Fields the middleware always emits: <code>event</code>, <code>request_id</code>, <code>method</code>,
+<code>path</code>, <code>status_code</code>, <code>duration_ms</code>. Optional fields when available:
+<code>client_ip</code>, <code>user_agent</code>. Route-derived fields when the path includes
+them: <code>run_id</code>, <code>continuation_id</code>. When the request raises:
+<code>error</code> (exception class name) and <code>message</code> (exception message).
+Redaction is applied to every payload before it reaches the log line.
+(<a href="../../kneo_serv/observability/structured_logging.py"><code>kneo_serv/observability/structured_logging.py</code></a>)</p>
+<h3 id="configuration">Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KNEO_SERV_REQUEST_LOGS</code></td>
+<td><code>true</code></td>
+<td>Enable the JSON request log middleware.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_LOG_LEVEL</code></td>
+<td><code>INFO</code></td>
+<td>Service logger level.</td>
+</tr>
+</tbody>
+</table>
+<p><code>request_id</code> is generated server-side as a UUID unless the client sends
+<code>X-Request-ID</code>; either way the service echoes it back on the response
+header.</p>
+<h3 id="production-tuning">Production tuning</h3>
+<ul>
+<li>Keep <code>KNEO_SERV_LOG_LEVEL=INFO</code> in production. <code>DEBUG</code> doubles log
+  volume and can leak diagnostic payloads from middleware that wraps the
+  request logger.</li>
+<li>Configure your container runtime's log driver (Docker <code>json-file</code> with
+  rotation, Kubernetes <code>kubectl logs</code> rotation, journald) — the service
+  writes to stdout and relies on the runtime to rotate.</li>
+</ul>
+<h3 id="log-aggregation-wiring">Log aggregation wiring</h3>
+<ul>
+<li><strong>ELK / OpenSearch.</strong> Ship stdout via Filebeat or Vector. The records
+  are already JSON; map <code>request_id</code> and <code>run_id</code> as indexed fields. Pin
+  <code>service.name=kneo-serv</code> from the shipper for cross-deployment search.</li>
+<li><strong>Loki.</strong> A Promtail pipeline with a <code>json</code> stage will lift
+  <code>request_id</code>, <code>run_id</code>, <code>status_code</code>, and <code>duration_ms</code> to labels.
+  Keep label cardinality bounded — don't promote <code>request_id</code> to a
+  Loki label, query it as content.</li>
+<li><strong>Cloud-managed (CloudWatch Logs, GCP Logging).</strong> Forward stdout; the
+  managed pipeline parses JSON automatically.</li>
+</ul>
+<p>The reverse proxy in front of <code>kneo-serv</code> (<a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a>)
+has the true client IP. The service logs the immediate TCP peer; correlate
+to the proxy's access logs by <code>request_id</code> (forward <code>X-Request-ID</code> upstream).</p>
+<h2 id="service-side-trace-events">Service-side trace events</h2>
+<p>Service-side trace events are persisted as part of run state and
+returned at <code>GET /v1/runs/{run_id}/trace</code>. They cover workflow step
+transitions, tool calls, checkpoints, and audit boundaries. These events
+are emitted by <code>TracingMiddleware</code> independent of any OTel exporter, so
+they are always available even without OpenTelemetry.</p>
+<p>See
+<a href="../user/service_api.md#audit-events"><code>service_api.md § Audit events</code></a> and
+<a href="../user/service_api.md#replay-and-checkpoint-diff"><code>service_api.md § Replay and checkpoint diff</code></a>
+for the contract.</p>
+<h2 id="opentelemetry-spans">OpenTelemetry spans</h2>
+<p>When the deployment includes the SDK telemetry support (the <code>[telemetry]</code>
+or <code>[deploy]</code> extras), set <code>KNEO_SERV_OTEL_ENABLED=true</code> to attach
+<code>kneo_agent.observability.OpenTelemetryMiddleware</code>. Argument and result
+capture (<code>KNEO_SERV_OTEL_RECORD_ARGUMENTS</code>,
+<code>KNEO_SERV_OTEL_RECORD_RESULTS</code>) are off by default because tool inputs
+and outputs frequently contain user payloads — enable them only after
+the deployment's data classification has approved payload capture.</p>
+<p>See <a href="../user/environment.md#observability"><code>environment.md § Observability</code></a> for
+the full env-var reference.</p>
+<h3 id="exporter-configuration">Exporter configuration</h3>
+<p>The service uses the OpenTelemetry global tracer provider; exporters are
+configured with standard <code>OTEL_*</code> environment variables that the OTel
+SDK reads. Example for OTLP/HTTP to any compatible backend (Honeycomb,
+Grafana Tempo, Tempo Cloud, Datadog, an OTel Collector):</p>
+<pre><code class="language-bash">export KNEO_SERV_OTEL_ENABLED=true
+
+export OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+export OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+export OTEL_EXPORTER_OTLP_HEADERS=&quot;x-honeycomb-team=$HONEYCOMB_API_KEY&quot;
+export OTEL_SERVICE_NAME=kneo-serv
+export OTEL_RESOURCE_ATTRIBUTES=&quot;deployment.environment=prod&quot;
+</code></pre>
+<p>For a self-hosted OTel Collector running as a sidecar:</p>
+<pre><code class="language-bash">export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+export OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+</code></pre>
+<p>If OTel does not appear to be exporting, see
+<a href="#72-opentelemetry-not-exporting"><code>troubleshooting.md § 7.2</code></a>.</p>
+<h2 id="what-to-watch-in-production">What to watch in production</h2>
+<p>A minimal alerting baseline covers the failure modes that page on-call:</p>
+<table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>What it means</th>
+<th>Where to read it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/readyz</code> returns <code>503</code> for more than 1 probe interval</td>
+<td>A dependency check is failing</td>
+<td>Reverse proxy / load balancer health checks</td>
+</tr>
+<tr>
+<td>Sustained <code>5xx</code> rate above baseline</td>
+<td>Service-side errors</td>
+<td>Proxy access logs; <code>status_code</code> from JSON logs</td>
+</tr>
+<tr>
+<td><code>duration_ms</code> p95 climbing over baseline</td>
+<td>Latency regression — provider, queue, or DB pressure</td>
+<td>JSON log records</td>
+</tr>
+<tr>
+<td>Queue depth (<code>status=queued</code>) growing unbounded</td>
+<td>Workers stuck or backpressured</td>
+<td><code>/readyz</code> <code>queue</code> check; <code>kneo runs list --status queued</code></td>
+</tr>
+<tr>
+<td>Spike in <code>event=http_request</code> records with <code>error</code></td>
+<td>Application-level exceptions</td>
+<td>JSON log records</td>
+</tr>
+</tbody>
+</table>
+<p>Wire your alerting against these signals from the proxy and the
+aggregated logs; the service does not push its own alerts.</p>
+<h2 id="what-this-page-does-not-cover">What this page does not cover</h2>
+<ul>
+<li><strong>Per-IP rate limiting and traffic shaping.</strong> The reverse proxy's job
+  (<a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a>).</li>
+<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in 0.1.0. Use OTel
+  spans to derive request rate, error rate, and latency, or scrape the
+  reverse proxy.</li>
+<li><strong>Tracing internals.</strong> For the design of the in-process tracer and
+  checkpoint events, see
+  <a href="../dev/design.md"><code>docs/dev/design.md</code></a> and
+  <a href="../dev/implementation_map.md"><code>docs/dev/implementation_map.md</code></a>.</li>
+</ul>
+<h1 id="backup-and-recovery">Backup and recovery</h1>
+<p><em>Source: <a href="../user/backup_and_recovery.md"><code>docs/user/backup_and_recovery.md</code></a></em></p>
+<p>Production procedure for backing up <code>kneo-serv</code> state, verifying restores,
+and rolling back a deployment. This page consolidates the operator surface;
+the underlying Python API and SQL commands stay in their respective
+references.</p>
+<p>For the upgrade context that ends in "and keep a backup", see
+<a href="#upgrade-guide"><code>upgrade.md</code></a>. For the Python backup API used by the SQLite
+maintenance helpers, see
+<a href="../user/service_api.md#backup-and-restore"><code>service_api.md § Backup and restore</code></a>.</p>
+<h2 id="what-needs-to-be-preserved">What needs to be preserved</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Where it lives</th>
+<th>Backup mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run state, queue, checkpoints, audit events, idempotency, locks, policies</td>
+<td>PostgreSQL (<code>KNEO_SERV_DATABASE_URL</code> set) or SQLite at <code>.kneo/kneo_runs.sqlite</code> (default)</td>
+<td><code>pg_dump</code> / SQLite online-backup</td>
+</tr>
+<tr>
+<td>Workflow continuations</td>
+<td>PostgreSQL when set, otherwise files under <code>.kneo/continuations/</code></td>
+<td>DB dump or filesystem backup</td>
+</tr>
+<tr>
+<td>Spec bundles</td>
+<td>Source repo + your CI artifacts (signed bundles)</td>
+<td>Repo + artifact store</td>
+</tr>
+<tr>
+<td>Artifacts (workflow outputs)</td>
+<td>Filesystem paths declared by your specs</td>
+<td>Filesystem backup</td>
+</tr>
+<tr>
+<td>Logs</td>
+<td>stdout via container log driver → log aggregator</td>
+<td>Aggregator retention</td>
+</tr>
+</tbody>
+</table>
+<p>The DB is the load-bearing piece. Everything else can be reconstructed
+from the DB and your spec repo, except for filesystem-stored
+continuations and artifacts when PostgreSQL is not configured.</p>
+<h2 id="postgresql-production-path">PostgreSQL — production path</h2>
+<p>The Compose stack and any production deployment should set
+<code>KNEO_SERV_DATABASE_URL</code>. In that mode all state above (except artifacts)
+lives in PostgreSQL.</p>
+<h3 id="take-a-backup">Take a backup</h3>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env exec db \
+  pg_dump -U &quot;$POSTGRES_USER&quot; &quot;$POSTGRES_DB&quot; \
+  | gzip &gt; &quot;kneo_serv-$(date +%Y%m%d-%H%M).sql.gz&quot;
+</code></pre>
+<p>For a host-level Postgres install, run <code>pg_dump</code> directly as the
+<code>postgres</code> user; the data shape is the same.</p>
+<h3 id="restore-from-a-backup-destructive-wipes-current-state">Restore from a backup <em>(destructive — wipes current state)</em></h3>
+<pre><code class="language-bash">gunzip -c kneo_serv-YYYYmmDD-HHMM.sql.gz \
+  | docker compose --env-file deploy/production.env exec -T db \
+      psql -U &quot;$POSTGRES_USER&quot; &quot;$POSTGRES_DB&quot;
+</code></pre>
+<p>Restore replaces every row in the database. Stop the API container first
+so no in-flight write races the restore:</p>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env stop api
+gunzip -c kneo_serv-YYYYmmDD-HHMM.sql.gz \
+  | docker compose --env-file deploy/production.env exec -T db \
+      psql -U &quot;$POSTGRES_USER&quot; &quot;$POSTGRES_DB&quot;
+docker compose --env-file deploy/production.env start api
+</code></pre>
+<h3 id="off-site-rotation">Off-site rotation</h3>
+<p>Local backups protect against operator error, not host loss. After each
+dump, copy the gzip off the host:</p>
+<ul>
+<li>S3, Azure Blob, or GCS bucket with versioning + lifecycle to archive
+  older dumps.</li>
+<li>Encrypt at rest (server-side encryption is sufficient if your control
+  plane is locked down; client-side encryption for stricter regimes).</li>
+<li>Apply a separate IAM identity for upload-only versus read.</li>
+</ul>
+<h3 id="data-only-restore-into-a-clean-volume">Data-only restore into a clean volume</h3>
+<p>For test-restore drills and disaster recovery into a fresh PostgreSQL
+volume, the service handles schema migrations on startup. Capture a
+data-only dump and exclude the <code>schema_migrations</code> rows so the new
+volume's migration state isn't overwritten:</p>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env exec -T db \
+  pg_dump -U &quot;$POSTGRES_USER&quot; -d &quot;$POSTGRES_DB&quot; --data-only --inserts \
+  -f /tmp/kneo_serv_data.sql
+docker cp &lt;db-container-id&gt;:/tmp/kneo_serv_data.sql /tmp/kneo_serv_data.sql
+grep -v &quot;INSERT INTO public.schema_migrations&quot; /tmp/kneo_serv_data.sql \
+  &gt; /tmp/kneo_serv_data_restore.sql
+</code></pre>
+<p>Restore into a clean volume after the API has come up at least once (so
+migrations have run):</p>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env down -v
+docker compose --env-file deploy/production.env up --build -d
+docker cp /tmp/kneo_serv_data_restore.sql \
+  &lt;db-container-id&gt;:/tmp/kneo_serv_data_restore.sql
+docker compose --env-file deploy/production.env exec -T db \
+  psql -v ON_ERROR_STOP=1 -U &quot;$POSTGRES_USER&quot; -d &quot;$POSTGRES_DB&quot; \
+  -f /tmp/kneo_serv_data_restore.sql
+docker compose --env-file deploy/production.env restart api
+</code></pre>
+<p><code>ON_ERROR_STOP=1</code> aborts the restore on the first failing INSERT so you
+don't end up with partial state.</p>
+<h2 id="sqlite-single-host-installs">SQLite — single-host installs</h2>
+<p>When <code>KNEO_SERV_DATABASE_URL</code> is unset, run state lives in
+<code>.kneo/kneo_runs.sqlite</code> and continuations in <code>.kneo/continuations/</code>. The
+service ships an online backup helper:</p>
+<pre><code class="language-python">from kneo_serv.maintenance import backup_sqlite_database, restore_sqlite_database
+
+# Online — safe while the service is running
+backup_sqlite_database(
+    &quot;.kneo/kneo_runs.sqlite&quot;,
+    &quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;,
+)
+
+# Restore into a new location, then swap into place during a window
+restore_sqlite_database(
+    &quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;,
+    &quot;.kneo/kneo_runs.restored.sqlite&quot;,
+)
+</code></pre>
+<p><code>backup_sqlite_database</code> uses SQLite's <code>backup()</code> API and is safe to run
+against a live database. <code>restore_sqlite_database</code> is a plain file copy —
+stop the service before swapping the restored file into the live path,
+or you'll race the writer.</p>
+<p>Also back up <code>.kneo/continuations/</code> and any artifact paths your specs
+write to; these are not inside the SQLite file.</p>
+<h2 id="backup-frequency">Backup frequency</h2>
+<p>There is no single recommended cadence. Tie it to your retention policy
+and your tolerance for re-running work:</p>
+<table>
+<thead>
+<tr>
+<th>Workload shape</th>
+<th>Cadence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low run volume, short retention</td>
+<td>Daily dump, 30-day retention</td>
+</tr>
+<tr>
+<td>Active production, multi-day retention enabled (<code>KNEO_SERV_RETENTION_*</code>)</td>
+<td>Hourly dump, 7-day retention; daily off-site copy</td>
+</tr>
+<tr>
+<td>Audit-heavy compliance workloads</td>
+<td>Per-hour dump kept for the compliance window; verified test-restore monthly</td>
+</tr>
+</tbody>
+</table>
+<p>The relevant env vars are in
+<a href="../user/environment.md#retention"><code>environment.md § Retention</code></a>. A retention
+policy that prunes runs after 7 days needs backups newer than 7 days, or
+the restore set is empty.</p>
+<h2 id="verifying-a-restore">Verifying a restore</h2>
+<p>Backups are unproven until they have been restored. Verify on the
+schedule below, not after a real incident.</p>
+<ol>
+<li>Provision a scratch host or namespace and restore the backup into it.</li>
+<li>Start <code>kneo-serv</code> against the restored database.</li>
+<li>Verify dependencies:
+   <code>bash
+   curl -sf http://127.0.0.1:8000/readyz | jq '.metadata.ready'   # → true</code></li>
+<li>Verify a known run survived:
+   <code>bash
+   curl -sf "http://127.0.0.1:8000/v1/runs?limit=5" \
+     -H "Authorization: Bearer $OP_TOKEN" | jq '.runs[].run_id'</code></li>
+<li>Run the deployment smoke against the restored stack
+   (<a href="#deployment-smoke-test"><code>deployment_smoke.md</code></a>). It exercises
+   run create → fetch → cancel and confirms checkpoints persist.</li>
+<li>Verify audit events from before the backup are present:
+   <code>bash
+   curl -sf "http://127.0.0.1:8000/v1/audit-events?limit=5" \
+     -H "Authorization: Bearer $OP_TOKEN" | jq '.events[].event_type'</code></li>
+</ol>
+<p>Recommended cadence: monthly restore drill into a scratch environment,
+plus a restore drill immediately before any major upgrade.</p>
+<h2 id="rolling-back-after-a-failed-upgrade">Rolling back after a failed upgrade</h2>
+<p>Migrations are schema-forward and not safe to downgrade in place. If a
+new release misbehaves and the issue can't be patched forward:</p>
+<ol>
+<li><strong>Stop the service.</strong> Quiesce writers; the proxy can keep returning
+   <code>503</code> from <code>/readyz</code> until step 5.
+   <code>bash
+   docker compose --env-file deploy/production.env stop api</code></li>
+<li><strong>Restore persistence</strong> from the pre-upgrade backup using the
+   PostgreSQL or SQLite procedure above.</li>
+<li><strong>Re-install the previous version.</strong> Pin the image tag or reinstall
+   the pip package at the prior version. Update Compose / Kubernetes
+   manifests accordingly.</li>
+<li><strong>Restart the service.</strong>
+   <code>bash
+   docker compose --env-file deploy/production.env start api</code></li>
+<li><strong>Verify</strong> with <code>curl /readyz</code> and the deployment smoke
+   (<a href="#deployment-smoke-test"><code>deployment_smoke.md</code></a>).</li>
+</ol>
+<p>Keep the pre-upgrade backup until you have verified the new version
+through at least one business cycle.</p>
+<h2 id="disaster-recovery-checklist">Disaster recovery checklist</h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Recovery</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lost the host, database survived</td>
+<td>Provision new host → install <code>kneo-serv</code> → point <code>KNEO_SERV_DATABASE_URL</code> at the surviving DB → start.</td>
+</tr>
+<tr>
+<td>Lost the database</td>
+<td>Provision DB → restore latest dump → start service → verify <code>/readyz</code> and a known run.</td>
+</tr>
+<tr>
+<td>Lost host and database</td>
+<td>Provision DB → restore latest off-site dump → provision host → start service → verify.</td>
+</tr>
+<tr>
+<td>Corrupted checkpoints for one run</td>
+<td>Use <code>GET /v1/runs/{run_id}/checkpoints/diff</code> to identify the bad checkpoint; cancel and re-run from the last good step. The DB itself is fine.</td>
+</tr>
+<tr>
+<td>Restore brought back stale data, signs of mismatch</td>
+<td>See <a href="#25-backuprestore-mismatch"><code>troubleshooting.md § 2.5</code></a> for the recovery shape.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-this-page-does-not-cover_1">What this page does not cover</h2>
+<ul>
+<li><strong>Performance and capacity sizing.</strong> Deferred until the benchmark
+  suite ships — see
+  <a href="../TODO-docs.md"><code>TODO-docs.md § Performance and capacity guide</code></a>.</li>
+<li><strong>The Python backup API surface.</strong> Stays in
+  <a href="../user/service_api.md#backup-and-restore"><code>service_api.md § Backup and restore</code></a>.</li>
+<li><strong>Release-team verification gates</strong> for the GA cut. Those live in
+  <a href="../plan/release_checklist.md"><code>release_checklist.md</code></a>.</li>
+</ul>
+<h1 id="upgrade-guide">Upgrade guide</h1>
+<p><em>Source: <a href="../user/upgrade.md"><code>docs/user/upgrade.md</code></a></em></p>
+<p>Conventions for upgrading Kneo Agent Platform (<code>kneo-serv</code>) between
+releases, plus version-specific notes when a release has breaking changes.</p>
+<p>For the release process itself (gates, tagging, artifacts), see
+<a href="../plan/release_checklist.md">release_checklist.md</a>. For the supported
+<code>kneo_agent</code> SDK range, see <a href="../dev/sdk_alignment.md">sdk_alignment.md</a>.</p>
+<h2 id="versioning">Versioning</h2>
+<p>Kneo Agent Platform follows semantic versioning:</p>
+<ul>
+<li><strong>Patch</strong> (<code>0.1.0</code> → <code>0.1.1</code>): bug fixes; persistence schemas, route
+  contracts, CLI commands, and env-var names do not change.</li>
+<li><strong>Minor</strong> (<code>0.1.x</code> → <code>0.2.0</code>): additive changes. Persistence schemas may
+  add new tables or columns with migrations; routes and CLI may add new
+  surfaces. Existing surfaces remain available with the same shape unless
+  the release notes call out an exception.</li>
+<li><strong>Major</strong> (<code>0.x</code> → <code>1.0</code>): may remove or change surfaces. Read the release
+  notes before upgrading; expect to update calling code.</li>
+</ul>
+<p>The HTTP API is also versioned at the URL prefix (<code>/v1</code>); legacy unversioned
+routes remain available alongside <code>/v1</code>. See
+<a href="../dev/design.md#13-stability-and-versioning">design.md § 13</a>.</p>
+<h2 id="standard-upgrade-procedure">Standard upgrade procedure</h2>
+<ol>
+<li><strong>Read the release notes</strong> for every minor/major version between your
+   current and target version. Patch upgrades only need the latest patch's
+   notes. Notes for the current release are at
+   <a href="../pub/release_notes_0.1.0.md">release_notes_0.1.0.md</a>.</li>
+<li><strong>Pin the target version</strong> in your dependency manifest:
+   <code>kneo-serv[deploy]==X.Y.Z</code></li>
+<li><strong>Stop traffic</strong> to the service (or drain via a load balancer). Background
+   runs that are queued will be reclaimed by the worker after restart;
+   in-flight runs that complete during the drain will record normally.</li>
+<li><strong>Back up persistence.</strong> Follow
+   <a href="#backup-and-recovery"><code>backup_and_recovery.md</code></a> (<code>pg_dump</code> for
+   PostgreSQL, <code>backup_sqlite_database()</code> for SQLite). Keep the backup
+   until you have verified the new version through at least one business
+   cycle.</li>
+<li><strong>Install the new version</strong> in your deployment image or environment.</li>
+<li><strong>Restart the service.</strong> Migrations apply automatically at startup.
+   Watch the structured log for <code>migration</code> events and any
+   <code>migration_failed</code> errors.</li>
+<li><strong>Verify</strong> with <code>GET /readyz</code> and the deployment smoke script:
+   <code>bash
+   python scripts/deployment_smoke.py --base-url http://&lt;host&gt;:&lt;port&gt;</code></li>
+<li><strong>Resume traffic.</strong></li>
+</ol>
+<p>If <code>GET /readyz</code> does not return 200 within a few seconds of restart, see
+<a href="#12-readyz-returns-503">troubleshooting.md § 1.2</a>.</p>
+<h2 id="persistence-migrations">Persistence migrations</h2>
+<p>Every store that has a schema (<code>SQLiteRunStateStore</code>,
+<code>PostgresRunStateStore</code>) tracks its schema version and applies
+forward-only migrations on first connection. Migrations are
+idempotent and never drop columns or rows on their own. The
+file-based stores have no schema; they tolerate older record shapes
+through the row decoder.</p>
+<p>If a migration fails, the service refuses to serve requests rather than
+running on a partially-migrated schema. Fix the underlying cause
+(usually a permissions or disk-space problem), then restart.</p>
+<p>Downgrades are not supported. Restore from backup if you need to revert.</p>
+<p>For contributors authoring new migrations (conventions, the dialect
+portability rules, the test patterns), see
+<a href="../dev/migrations.md"><code>docs/dev/migrations.md</code></a>.</p>
+<h2 id="spec-migrations">Spec migrations</h2>
+<p>The YAML spec format is versioned at <code>version: v1</code>. The compiler accepts
+older shapes through automatic normalization, but for clarity the CLI can
+write upgraded specs to disk:</p>
+<pre><code class="language-bash">kneo spec migrate legacy_agent.yaml --output migrated_agent.yaml
+kneo spec migrate migrated_agent.yaml --check --json
+</code></pre>
+<p>Specs that pass <code>kneo spec validate</code> on the source version will
+continue to compile after upgrading; specs that hit deprecation warnings
+should be migrated proactively before a future release removes the
+fallback.</p>
+<p>Signed bundles created with <code>kneo spec bundle sign</code> are tied to the
+signing key, not the kneo-serv version, so bundles signed before an
+upgrade continue to verify after as long as the signing key is unchanged.</p>
+<h2 id="sdk-compatibility">SDK compatibility</h2>
+<p><code>kneo-serv</code> declares a <code>kneo-agent</code> range in <code>pyproject.toml</code>. When
+upgrading kneo-serv, let pip resolve the matching SDK; do not pin SDK
+versions outside that range. The compatibility tests
+(<code>tests/test_sdk_compatibility.py</code>) assert the SDK surface used by the
+service, so a version mismatch surfaces as a test failure.</p>
+<p>If you maintain custom runtimes or middlewares that import directly from
+<code>kneo_agent</code>, run those compatibility tests after upgrading and update
+imports in lockstep.</p>
+<h2 id="configuration-changes">Configuration changes</h2>
+<p>Environment-variable names and defaults are part of the public surface.
+Changes are recorded in <a href="../user/environment.md">environment.md</a> and called out in
+release notes:</p>
+<ul>
+<li>New variables default to behavior consistent with the previous release.</li>
+<li>Renamed variables retain a deprecation alias for at least one minor
+  release; a startup warning is emitted when the alias is used.</li>
+<li>Removed variables are removed only at major versions.</li>
+</ul>
+<p>After upgrading, diff your env file against the latest
+<a href="../../deploy/production.env.example">deploy/production.env.example</a> (or
+<code>staging.env.example</code>) to spot any new optional variables.</p>
+<h2 id="cli-changes">CLI changes</h2>
+<p>The <code>kneo</code> CLI is regenerated each release; see
+<a href="../user/cli_reference.md">cli_reference.md</a> for the current shape. New
+subcommands are additive within minor releases. Subcommand behavior may
+change at major releases — check the release notes.</p>
+<p>CLI profiles stored at <code>~/.kneo_serv/profiles.json</code> carry forward across
+releases. The profile schema is itself versioned and migrated in place.</p>
+<h2 id="version-specific-notes">Version-specific notes</h2>
+<p>This section grows as releases ship. Each entry should describe what
+changed, what action operators must take, and how to verify the upgrade.</p>
+<h3 id="010-initial-release">0.1.0 — initial release</h3>
+<p>No upgrade applies; this is the first published version. See
+<a href="../pub/release_notes_0.1.0.md">release_notes_0.1.0.md</a> for scope, capabilities,
+and verified release-candidate steps.</p>
+<h2 id="rolling-back">Rolling back</h2>
+<p>Schema-forward migrations make in-place downgrade unsafe; the only
+supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then
+re-install the previous version.</p>
+<p>For the full step-by-step procedure — stop, restore, re-install, restart,
+verify with the deployment smoke — see
+<a href="#rolling-back-after-a-failed-upgrade"><code>backup_and_recovery.md § Rolling back after a failed upgrade</code></a>.</p>
+<p>Keep the pre-upgrade backup until you have verified the new version
+through at least one business cycle.</p>
+<h2 id="reporting-upgrade-issues">Reporting upgrade issues</h2>
+<p>Capture the same context listed in
+<a href="#what-to-capture-before-opening-a-bug">troubleshooting.md § What to capture before opening a bug</a>,
+plus:</p>
+<ul>
+<li>Source version (<code>pip show kneo-serv</code> before the upgrade).</li>
+<li>Target version (after the upgrade).</li>
+<li>Migration log lines from the first start on the new version.</li>
+<li>The exact env file or compose <code>.env</code> (with secrets redacted).</li>
+</ul>
+<h1 id="incident-response">Incident response</h1>
+<p><em>Source: <a href="../user/incident_response.md"><code>docs/user/incident_response.md</code></a></em></p>
+<p>On-call entry point for <code>kneo-serv</code>. This page is the triage tree —
+"the service looks wrong, where do I look first?" The symptom-by-symptom
+deep dive lives in <a href="#troubleshooting"><code>troubleshooting.md</code></a>; this page
+sends you there.</p>
+<p>For backup and rollback procedures, see
+<a href="#backup-and-recovery"><code>backup_and_recovery.md</code></a>. For the API
+definition of the health endpoints, see
+<a href="../user/service_api.md#health-checks"><code>service_api.md § Health checks</code></a>.</p>
+<h2 id="triage-tree">Triage tree</h2>
+<pre><code>   ┌── /healthz returns 200 ───── service process is alive
+   │                              ─ check /readyz next
+   │
+1. │── /healthz times out ─────── process is down or unreachable
+   │                              ─ check the container / supervisor
+   │                              ─ check the reverse proxy upstream
+   │
+   └── /healthz 5xx ──────────────  application crashed mid-request
+                                   ─ check stderr / container logs
+                                   ─ see troubleshooting.md § 1
+
+   ┌── /readyz returns 200 ────── dependencies healthy
+   │                              ─ problem is in a specific run/spec
+   │                              ─ check the run path below
+   │
+2. │── /readyz returns 503 ──────  read the `metadata.checks` payload
+   │                              ─ use the matrix below to find the
+   │                                failing dependency, then jump to
+   │                                the matching troubleshooting § n
+   │
+   └── /readyz times out ────────  same path as /healthz timeout above
+</code></pre>
+<p><code>/healthz</code> and <code>/readyz</code> are unauthenticated by design — you can probe
+them from anywhere you can reach the service port.</p>
+<pre><code class="language-bash">curl -sf http://&lt;host&gt;:&lt;port&gt;/healthz | jq
+curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz  | jq '.metadata.checks'
+</code></pre>
+<h2 id="readyz-failure-matrix"><code>/readyz</code> failure matrix</h2>
+<p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code> with
+<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code>. The keys you
+will see and what each means:
+(<a href="../../kneo_serv/service/routes_health.py"><code>kneo_serv/service/routes_health.py</code></a>)</p>
+<table>
+<thead>
+<tr>
+<th>Check key</th>
+<th>What it probes</th>
+<th>Common failure</th>
+<th>Where to go</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api</code></td>
+<td>API wiring sentinel</td>
+<td>Never fails on its own</td>
+<td>If it does, the manager isn't configured — <a href="#13-runtimeerror-platformmanager-has-not-been-configured">§ 1.3</a></td>
+</tr>
+<tr>
+<td><code>run_state_store</code></td>
+<td><code>manager.run_state_store.list_runs(limit=1)</code> succeeds</td>
+<td>DB unreachable, schema missing, credentials wrong</td>
+<td><a href="#21-postgresql-dsn-configured-but-service-falls-back-to-sqlite">§ 2.1</a> / <a href="#22-psycopgoperationalerror-on-startup-or-first-request">§ 2.2</a></td>
+</tr>
+<tr>
+<td><code>continuation_store</code></td>
+<td><code>manager.continuation_store.list()</code> succeeds</td>
+<td>File path missing, permissions wrong, DB issue</td>
+<td><a href="#2-persistence-and-store-failures">§ 2</a></td>
+</tr>
+<tr>
+<td><code>queue</code></td>
+<td><code>list_queued_runs(status=…)</code> returns for <code>queued</code> / <code>running</code> / <code>failed</code></td>
+<td>Queue table missing or DB stall</td>
+<td><a href="#2-persistence-and-store-failures">§ 2</a>, <a href="#51-async-runs-sit-in-queued-and-never-progress">§ 5.1</a></td>
+</tr>
+<tr>
+<td><code>runtime_registry</code></td>
+<td>Number of registered runtimes (declared via factories)</td>
+<td>Empty registry — service started without runtimes</td>
+<td><a href="../dev/extending.md"><code>extending.md</code></a> for runtime registration</td>
+</tr>
+<tr>
+<td><code>tool_registry</code></td>
+<td>Number of registered tools</td>
+<td>Empty registry — service started without tools</td>
+<td><a href="../dev/extending.md"><code>extending.md</code></a></td>
+</tr>
+<tr>
+<td><code>providers</code></td>
+<td>Secrets named in <code>KNEO_SERV_HEALTH_PROVIDERS</code> resolve</td>
+<td>Provider env var missing or empty</td>
+<td><a href="#32-get-readyz-reports-missing-providermcp-secrets">§ 3.2</a></td>
+</tr>
+<tr>
+<td><code>mcp</code></td>
+<td>Secrets named in <code>KNEO_SERV_HEALTH_MCP_SECRETS</code> resolve</td>
+<td>MCP secret missing</td>
+<td><a href="#32-get-readyz-reports-missing-providermcp-secrets">§ 3.2</a></td>
+</tr>
+</tbody>
+</table>
+<p>The payload includes per-check <code>error</code> (exception class) and <code>message</code>
+for failed checks, so you usually don't have to guess which subsystem
+is at fault — copy the message into the relevant troubleshooting
+section.</p>
+<h2 id="common-production-incidents">Common production incidents</h2>
+<p>If <code>/healthz</code> and <code>/readyz</code> are both green but the service is "wrong":</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>First check</th>
+<th>Deep dive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>All requests return <code>401</code></td>
+<td><code>Authorization</code> / <code>X-Kneo-Api-Key</code> header is present and valid</td>
+<td><a href="#41-401-unauthorized-a-valid-kneo-service-api-key-is-required">§ 4.1</a>, <a href="#43-health-endpoints-work-all-other-routes-401">§ 4.3</a></td>
+</tr>
+<tr>
+<td>Specific consumer returns <code>403</code></td>
+<td>The key's role/scope covers the route</td>
+<td><a href="#42-403-forbidden-missing-required-scope-scope">§ 4.2</a>, <a href="#2-assign-the-narrowest-role"><code>security_hardening.md § 2</code></a></td>
+</tr>
+<tr>
+<td>Async runs stuck in <code>queued</code></td>
+<td>Worker process is up; queue table reachable</td>
+<td><a href="#51-async-runs-sit-in-queued-and-never-progress">§ 5.1</a></td>
+</tr>
+<tr>
+<td>Runs hang mid-workflow</td>
+<td>The step's tool or provider call is timing out</td>
+<td><a href="#53-run-hangs-at-a-workflow-step">§ 5.3</a></td>
+</tr>
+<tr>
+<td><code>409 idempotency_key_conflict</code></td>
+<td>Caller is reusing a key with a different payload</td>
+<td><a href="#54-409-conflict-idempotency_key_conflict">§ 5.4</a></td>
+</tr>
+<tr>
+<td>Tool reports <code>MissingSecretError</code></td>
+<td>Provider secret env var is set on the service host</td>
+<td><a href="#31-missingsecreterror-on-agent-run">§ 3.1</a></td>
+</tr>
+<tr>
+<td>Logs missing <code>request_id</code></td>
+<td>You are reading the right logger (<code>kneo_serv.service</code>), not raw uvicorn</td>
+<td><a href="#71-structured-logs-missing-request_id">§ 7.1</a>, <a href="#observability"><code>observability.md</code></a></td>
+</tr>
+<tr>
+<td>OpenTelemetry exporter silent</td>
+<td><code>KNEO_SERV_OTEL_ENABLED=true</code> and <code>[telemetry]</code> extra installed</td>
+<td><a href="#72-opentelemetry-not-exporting">§ 7.2</a>, <a href="#observability"><code>observability.md</code></a></td>
+</tr>
+<tr>
+<td>Human task <code>409 resource_locked</code></td>
+<td>Another resume is in flight for the same continuation</td>
+<td><a href="#81-lockacquisitionerror-on-resume">§ 8.1</a></td>
+</tr>
+<tr>
+<td>Restored backup but state looks stale or mismatched</td>
+<td>Stop, re-verify the dump source, follow the recovery shape</td>
+<td><a href="#25-backuprestore-mismatch">§ 2.5</a>, <a href="#backup-and-recovery"><code>backup_and_recovery.md</code></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-to-capture-before-escalating">What to capture before escalating</h2>
+<p>When the runbook doesn't have an entry that fits, capture this context
+before paging the on-call developer. It is the same set
+<a href="#what-to-capture-before-opening-a-bug"><code>troubleshooting.md</code></a>
+asks for in a bug report:</p>
+<ul>
+<li>Service version and commit (<code>pip show kneo-serv</code> or the image tag).</li>
+<li>Environment context (<code>uname -a</code>, Python version, Postgres version).</li>
+<li>The <code>request_id</code> and <code>run_id</code> of an affected request.</li>
+<li><code>GET /readyz</code> body, even when it returns <code>200</code>.</li>
+<li>For run-shaped problems: <code>GET /v1/runs/{run_id}</code>,
+  <code>GET /v1/runs/{run_id}/trace</code>, and <code>GET /v1/runs/{run_id}/checkpoints</code>
+  (redacted output is fine to share).</li>
+<li>For spec-shaped problems: the output of
+  <code>kneo spec validate &lt;path&gt; --json</code>.</li>
+<li>Recent audit events that mention the affected resource:
+  <code>GET /v1/audit-events?run_id=&lt;id&gt;</code>.</li>
+</ul>
+<h2 id="when-to-roll-back">When to roll back</h2>
+<p>If the incident started immediately after a deploy and isn't covered by
+the matrix above:</p>
+<ol>
+<li>Confirm the deploy is the trigger — diff the running version against
+   the previous version, check the time correlation with the first
+   503/5xx.</li>
+<li>If yes, follow
+   <a href="#rolling-back-after-a-failed-upgrade"><code>backup_and_recovery.md § Rolling back after a failed upgrade</code></a>.</li>
+</ol>
+<p>Rolling back when the trigger isn't the deploy throws away forward
+progress. Diagnose first.</p>
+<h2 id="what-this-page-does-not-cover_2">What this page does not cover</h2>
+<ul>
+<li><strong>Severity definitions and paging policy.</strong> Owned by your on-call rota,
+  not by <code>kneo-serv</code>.</li>
+<li><strong>Post-incident review template.</strong> Out of scope.</li>
+<li><strong>Failure modes during a <code>kneo-serv</code> release itself</strong> — those are in
+  <a href="../plan/release_checklist.md"><code>release_checklist.md</code></a> and
+  <a href="#9-release-and-supply-chain"><code>troubleshooting.md § 9</code></a>.</li>
+</ul>
+<h1 id="troubleshooting">Troubleshooting</h1>
+<p><em>Source: <a href="../user/troubleshooting.md"><code>docs/user/troubleshooting.md</code></a></em></p>
+<p>An operator-facing runbook indexed by symptom. Each entry lists the symptom,
+how to confirm the root cause, and the fix; cross-references point at the
+authoritative configuration doc when one exists.</p>
+<p>If you are responding to a live incident and don't yet have a symptom,
+start at <a href="#incident-response"><code>incident_response.md</code></a> — it walks
+<code>/healthz</code> → <code>/readyz</code> → the right section here. This page is the
+symptom-indexed deep dive.</p>
+<p>When you're not sure where to start, check <code>GET /readyz</code>
+(<a href="#12-readyz-returns-503">§ 1.2</a>) — it exposes the per-dependency status the
+service uses internally, and most "service is unhealthy" tickets resolve to
+one of its check entries.</p>
+<h2 id="1-service-wont-start-or-wont-accept-traffic">1. Service won't start or won't accept traffic</h2>
+<h3 id="11-runtimeerror-kneo-service-auth-is-enabled-but-no-api-keys-are-configured">1.1 <code>RuntimeError: KNEO service auth is enabled but no API keys are configured</code></h3>
+<p>The service refuses to start when auth is enabled without keys.
+<a href="../../kneo_serv/service/auth.py#L109"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: check the startup log for the message above.</li>
+<li>Fix: set <code>KNEO_SERV_API_KEYS</code> (entries are
+  <code>name:key:role_or_scope[,role_or_scope]</code>, semicolon-separated) and/or
+  <code>KNEO_SERV_ADMIN_API_KEY</code>. To run without auth, set
+  <code>KNEO_SERV_AUTH_ENABLED=false</code> (only for local dev).</li>
+<li>Reference: <a href="../user/environment.md#service-auth">environment.md § Service Auth</a>,
+  <a href="../plan/production_readiness_review.md">production_readiness_review.md § Role Boundary Review</a>.</li>
+</ul>
+<h3 id="12-readyz-returns-503">1.2 <code>/readyz</code> returns 503</h3>
+<p><code>GET /readyz</code> returns
+<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code> when any dependency
+check fails. <a href="../../kneo_serv/service/routes_health.py#L53"><code>service/routes_health.py</code></a></p>
+<ul>
+<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq</code>. Each per-dependency
+  entry has <code>ok: false</code> plus <code>error</code> and <code>message</code> for failed checks.</li>
+<li>Fix: the per-check failure matrix (which check maps to which recovery
+  action) lives in
+  <a href="#readyz-failure-matrix"><code>incident_response.md § /readyz failure matrix</code></a>.
+  In summary: store failures are covered by §2; provider/MCP secret
+  failures by §3.</li>
+</ul>
+<h3 id="13-runtimeerror-platformmanager-has-not-been-configured">1.3 <code>RuntimeError: PlatformManager has not been configured</code></h3>
+<p>The default <code>app</code> factory configures the platform manager automatically. This
+error appears when you pass <code>configure_default_manager=False</code> to
+<code>create_app()</code> and never call <code>set_platform_manager()</code> before serving.
+<a href="../../kneo_serv/service/dependencies.py#L26"><code>service/dependencies.py</code></a></p>
+<ul>
+<li>Fix: either drop the override, or call
+  <code>kneo_serv.service.dependencies.set_platform_manager(...)</code> before the first
+  request.</li>
+</ul>
+<h3 id="14-runtimeerror-invalid-kneo_serv_api_keys-entry">1.4 <code>RuntimeError: Invalid KNEO_SERV_API_KEYS entry</code></h3>
+<p>The format is <code>name:key:role_or_scope[,role_or_scope]</code> per entry, separated
+by semicolons. Whitespace inside entries is trimmed; missing colons trigger
+this error. <a href="../../kneo_serv/service/auth.py#L169"><code>service/auth.py</code></a></p>
+<ul>
+<li>Fix: re-render <code>KNEO_SERV_API_KEYS</code>. Examples:</li>
+<li><code>operator:OP_TOKEN:operator;reviewer:REV_TOKEN:reviewer</code></li>
+<li><code>svc:SVC_TOKEN:runs:write,human:read,human:write</code></li>
+<li>Reference: <a href="../user/environment.md#service-auth">environment.md § Service Auth</a>,
+  <a href="../plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</li>
+</ul>
+<h2 id="2-persistence-and-store-failures">2. Persistence and store failures</h2>
+<h3 id="21-postgresql-dsn-configured-but-service-falls-back-to-sqlite">2.1 PostgreSQL DSN configured but service falls back to SQLite</h3>
+<p>The service uses PostgreSQL only when <code>KNEO_SERV_DATABASE_URL</code> is set <strong>and</strong>
+the <code>[postgres]</code> or <code>[deploy]</code> extra is installed. See
+<a href="../../kneo_serv/service/factory.py#L140"><code>service/factory.py</code></a>.</p>
+<ul>
+<li>Confirm: in a dev shell, <code>python -c "import psycopg; print(psycopg.__version__)"</code>.</li>
+<li>Fix: install <code>kneo-serv[deploy]</code> (Docker image already does this), or
+  <code>kneo-serv[postgres]</code> if you don't need telemetry.</li>
+</ul>
+<h3 id="22-psycopgoperationalerror-on-startup-or-first-request">2.2 <code>psycopg.OperationalError</code> on startup or first request</h3>
+<p>The DSN can't connect. Common causes: wrong host, missing TLS, wrong
+credentials, database not yet created.</p>
+<ul>
+<li>Confirm: <code>psql "$KNEO_SERV_DATABASE_URL" -c '\dt'</code> from the same network
+  context as the service.</li>
+<li>Fix: correct the DSN, ensure the database exists, and confirm the user has
+  privileges. <code>KNEO_SERV_DATABASE_URL</code> must be a libpq-style URL.</li>
+</ul>
+<h3 id="23-sqlite-database-is-locked-errors">2.3 SQLite <code>database is locked</code> errors</h3>
+<p>Concurrent writes to a single SQLite file can collide. The default service
+worker is single-threaded per process; this typically appears when running
+multiple service processes against the same SQLite file.</p>
+<ul>
+<li>Fix: switch to PostgreSQL (set <code>KNEO_SERV_DATABASE_URL</code>). Multi-process
+  SQLite is not a supported deployment topology.</li>
+</ul>
+<h3 id="24-schema-migration-appears-to-have-run-but-old-data-is-missing">2.4 Schema migration appears to have run but old data is missing</h3>
+<p>Migrations are idempotent and version-tracked per store; they don't drop
+data. If rows look missing after an upgrade, check whether you actually
+upgraded the same database the service is reading.</p>
+<ul>
+<li>Confirm: compare <code>KNEO_SERV_DATABASE_URL</code> (or SQLite path) between the
+  upgrade context and the running service. A stale state file at
+  <code>.kneo/kneo_runs.sqlite</code> is a common cause.</li>
+</ul>
+<h3 id="25-backuprestore-mismatch">2.5 Backup/restore mismatch</h3>
+<p><code>kneo_serv.maintenance.backup_sqlite_database()</code> produces a file copy that
+restore expects to find on the same SQLite version line. Restoring across
+incompatible SQLite versions can fail.</p>
+<ul>
+<li>Fix: align <code>sqlite3</code> versions, or migrate to PostgreSQL where backup goes
+  through <code>pg_dump</code> / <code>pg_restore</code>. See
+  <a href="../plan/staging_release_runbook.md">staging_release_runbook.md</a> and
+  <a href="../plan/release_checklist.md">release_checklist.md</a> for the seeded recovery drill.</li>
+</ul>
+<h2 id="3-secrets-credentials-and-provider-integration">3. Secrets, credentials, and provider integration</h2>
+<h3 id="31-missingsecreterror-on-agent-run">3.1 <code>MissingSecretError</code> on agent run</h3>
+<p>Provider keys, MCP credentials, and runtime settings are resolved through
+env-var references in project config; raw values are never stored.
+<a href="../../kneo_serv/security/secrets.py#L39"><code>security/secrets.py</code></a></p>
+<ul>
+<li>Confirm: <code>kneo config secrets --json</code> lists which references exist
+  and whether each resolves. The endpoint
+  <code>GET /security/credentials</code> exposes the same view (requires
+  <code>credentials:read</code>).</li>
+<li>Fix: export the env var named in the error. Set
+  <code>KNEO_SERV_REQUIRE_PROVIDER_SECRETS=true</code> to fail fast at startup
+  instead of at first run.</li>
+</ul>
+<h3 id="32-get-readyz-reports-missing-providermcp-secrets">3.2 <code>GET /readyz</code> reports missing provider/MCP secrets</h3>
+<p>Readiness reports the secrets named in <code>KNEO_SERV_HEALTH_PROVIDERS</code> and
+<code>KNEO_SERV_HEALTH_MCP_SECRETS</code>. These are operator-curated allowlists, so
+expect 503 if you list a secret that isn't actually exported.</p>
+<ul>
+<li>Fix: trim the list to secrets you actually use, or export the missing one.</li>
+</ul>
+<h3 id="33-kneo-spec-bundle-verify-fails">3.3 <code>kneo spec bundle verify</code> fails</h3>
+<p>Bundle verification requires <code>KNEO_SERV_SPEC_SIGNING_KEY</code> to match the key
+used to sign. Bundles signed with a different key (or unsigned) fail
+verification.</p>
+<ul>
+<li>Fix: rotate the signing key consistently across signing and verifying
+  hosts. The key is HMAC-only; do not commit it.</li>
+</ul>
+<h2 id="4-authentication-and-authorization">4. Authentication and authorization</h2>
+<h3 id="41-401-unauthorized-a-valid-kneo-service-api-key-is-required">4.1 <code>401 Unauthorized — A valid Kneo service API key is required</code></h3>
+<p>The route requires auth and the request didn't carry a valid token.
+<a href="../../kneo_serv/service/auth.py#L152"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: send <code>Authorization: Bearer &lt;key&gt;</code> or <code>X-Kneo-Api-Key: &lt;key&gt;</code>.</li>
+<li>Fix: use one of the configured keys. The CLI service client reads
+  <code>KNEO_SERV_API_KEY</code>. For multi-environment workflows use CLI profiles
+  (<code>kneo config profile use ...</code>).</li>
+</ul>
+<h3 id="42-403-forbidden-missing-required-scope-scope">4.2 <code>403 Forbidden — Missing required scope: &lt;scope&gt;</code></h3>
+<p>The token authenticated but the principal does not hold the scope the route
+requires. <a href="../../kneo_serv/service/auth.py#L140"><code>service/auth.py</code></a></p>
+<ul>
+<li>Confirm: the scope in the error body tells you exactly what is missing.</li>
+<li>Fix: assign the principal a role that includes the scope, or add the
+  scope explicitly in <code>KNEO_SERV_API_KEYS</code>. See the route ↔ scope matrix in
+  <a href="../plan/production_readiness_review.md">production_readiness_review.md</a>.</li>
+<li>Common gotchas:</li>
+<li><code>POST /specs/run</code> requires <code>runs:write</code>, not <code>specs:read</code>.</li>
+<li>Reviewer cannot create runs or change policies.</li>
+<li>Service role cannot mutate environment policies (only operator/admin).</li>
+</ul>
+<h3 id="43-health-endpoints-work-all-other-routes-401">4.3 Health endpoints work, all other routes 401</h3>
+<p><code>/healthz</code>, <code>/livez</code>, and <code>/readyz</code> are intentionally unauthenticated for
+load-balancer probes. Everything else is gated by the auth dependency. This
+is by design; see
+<a href="../plan/production_readiness_review.md#route-scope-matrix">production_readiness_review.md § Route Scope Matrix</a>.</p>
+<h2 id="5-run-lifecycle-problems">5. Run lifecycle problems</h2>
+<h3 id="51-async-runs-sit-in-queued-and-never-progress">5.1 Async runs sit in <code>queued</code> and never progress</h3>
+<p>The platform worker is started by <code>create_default_platform_manager()</code> in
+<a href="../../kneo_serv/service/factory.py#L118"><code>service/factory.py</code></a>. If a custom
+embedding skips <code>manager.start_worker()</code>, queued runs never drain.</p>
+<ul>
+<li>Confirm: <code>GET /runs?status=queued</code> shows queued items; <code>GET /readyz</code> shows
+  the queue dependency as ok; the service log has no "worker" lines.</li>
+<li>Fix: ensure <code>start_worker()</code> is called in the host process after
+  constructing <code>PlatformManager</code> directly, or use the default factory.</li>
+</ul>
+<h3 id="52-cancelled-run-still-finishes-as-succeeded">5.2 Cancelled run still finishes as <code>succeeded</code></h3>
+<p>Cancellation is cooperative through <code>CancellationToken</code> and propagates only
+at unit-of-work boundaries. A step that completes between the cancel
+request and the next checkpoint will record its result, but <code>RunState</code>
+remains <code>cancelled</code> — the platform does not overwrite cancelled status with
+completed results.</p>
+<ul>
+<li>Confirm: <code>GET /runs/{run_id}</code> should still report <code>status: cancelled</code>
+  even if the last checkpoint shows completion of a step.</li>
+<li>If <code>status</code> shows <code>succeeded</code> after a cancel, file an issue with the run
+  id, the checkpoint timeline (<code>/runs/{run_id}/checkpoints</code>), and the trace
+  (<code>/runs/{run_id}/trace</code>).</li>
+</ul>
+<h3 id="53-run-hangs-at-a-workflow-step">5.3 Run hangs at a workflow step</h3>
+<p>Workflow steps support <code>on_error: retry</code>, <code>max_retries</code>, and
+<code>timeout_seconds</code>. If a step has no timeout and the underlying provider/MCP
+call blocks, the step blocks too.</p>
+<ul>
+<li>Fix: set step-level timeouts, or set the global defaults
+  <code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code> /
+  <code>KNEO_SERV_MCP_TIMEOUT_SECONDS</code>.</li>
+</ul>
+<h3 id="54-409-conflict-idempotency_key_conflict">5.4 <code>409 Conflict — idempotency_key_conflict</code></h3>
+<p><code>Idempotency-Key</code> was reused with a different request body for the same
+scope. <a href="../../kneo_serv/service/idempotency.py#L52"><code>service/idempotency.py</code></a></p>
+<ul>
+<li>Fix: pick a new key for the new request body, or reuse the same body for
+  the original key. Idempotency records hash the canonical JSON of the
+  request payload and replay the original response on match.</li>
+</ul>
+<h3 id="55-400-bad-request-invalid_idempotency_key">5.5 <code>400 Bad Request — invalid_idempotency_key</code></h3>
+<p><code>Idempotency-Key</code> headers must be 1–256 characters after trimming.
+<a href="../../kneo_serv/service/idempotency.py#L23"><code>service/idempotency.py</code></a></p>
+<ul>
+<li>Fix: shorten the key. UUIDs are sufficient.</li>
+</ul>
+<h2 id="6-spec-validation-and-compilation">6. Spec validation and compilation</h2>
+<h3 id="61-speccompilationerror-with-diagnostics">6.1 <code>SpecCompilationError</code> with diagnostics</h3>
+<p><code>SpecCompiler</code> raises this on either schema or semantic validation failure.
+<a href="../../kneo_serv/spec/compiler.py#L57"><code>spec/compiler.py</code></a></p>
+<ul>
+<li>Confirm: <code>kneo spec validate &lt;path&gt;</code> prints the same diagnostics
+  with location info.</li>
+<li>Fix: address each diagnostic. Common causes:</li>
+<li>Missing/extra fields in <code>version: v1</code> shape.</li>
+<li>References to undefined components/tools.</li>
+<li>Memory/guardrail policy mis-shape.</li>
+<li>Migrate older specs with <code>kneo spec migrate &lt;path&gt; --output &lt;new&gt;</code>.</li>
+</ul>
+<h3 id="62-valueerror-tool-name-has-no-implementation">6.2 <code>ValueError: Tool '&lt;name&gt;' has no implementation</code></h3>
+<p>The spec references a tool name that is not registered with the
+<code>ToolRegistry</code>. <a href="../../kneo_serv/spec/builder.py#L42"><code>spec/builder.py</code></a></p>
+<ul>
+<li>Fix: register the tool (programmatically or via MCP import), or remove
+  the reference. The default service registers example tools; toggle with
+  <code>include_example_tools</code> when constructing <code>PlatformManager</code> directly.</li>
+</ul>
+<h3 id="63-inline-spec-rejected-with-size-error">6.3 Inline spec rejected with size error</h3>
+<p>Inline specs and overrides are bounded.
+<a href="../../kneo_serv/service/limits.py#L62"><code>service/limits.py</code></a></p>
+<ul>
+<li>Fix: tune the relevant limit (<code>KNEO_SERV_MAX_INLINE_SPEC_BYTES</code>,
+  <code>KNEO_SERV_MAX_OVERRIDES_BYTES</code>, <code>KNEO_SERV_MAX_METADATA_BYTES</code>,
+  <code>KNEO_SERV_MAX_BODY_BYTES</code>) or move the spec to a path on disk. Limits
+  exist to keep the service from deserializing arbitrarily large payloads.</li>
+</ul>
+<h2 id="7-observability">7. Observability</h2>
+<h3 id="71-structured-logs-missing-request_id">7.1 Structured logs missing <code>request_id</code></h3>
+<p>The structured logging middleware always populates <code>request_id</code>; missing
+fields usually mean the log was emitted before <code>RequestLoggingMiddleware</code>
+attached, or you're reading raw uvicorn access logs instead of the service
+logger.</p>
+<ul>
+<li>Fix: filter by logger name <code>kneo_serv</code> or by JSON log format. Clients
+  can supply <code>X-Request-ID</code> to override the generated id; the service
+  echoes it on the response.</li>
+</ul>
+<h3 id="72-opentelemetry-not-exporting">7.2 OpenTelemetry not exporting</h3>
+<p>The SDK <code>OpenTelemetryMiddleware</code> only attaches when both
+<code>KNEO_SERV_OTEL_ENABLED=true</code> and the <code>[telemetry]</code> extra is installed.</p>
+<ul>
+<li>Fix: install <code>kneo-serv[deploy]</code> (Docker image) or <code>kneo-serv[telemetry]</code>,
+  set <code>KNEO_SERV_OTEL_ENABLED=true</code>, and ensure standard OTel exporter env
+  vars (<code>OTEL_EXPORTER_OTLP_ENDPOINT</code>, etc.) are set.</li>
+<li>Tool arguments and results are <strong>not</strong> captured by default. Enable with
+  <code>KNEO_SERV_OTEL_RECORD_ARGUMENTS=true</code> and/or
+  <code>KNEO_SERV_OTEL_RECORD_RESULTS=true</code> only after you've confirmed the
+  data classification allows payload capture.</li>
+</ul>
+<h3 id="73-trace-events-missing-for-a-run">7.3 Trace events missing for a run</h3>
+<p>Service-side trace events live in run metadata and at
+<code>/runs/{run_id}/trace</code>. They are emitted by <code>TracingMiddleware</code> and the
+in-process <code>Tracer</code>, independent of OTel. Missing events most often mean
+the run was never executed (e.g. queued and abandoned) or the spec
+disabled tracing.</p>
+<ul>
+<li>Fix: confirm the run reached <code>running</code>/<code>succeeded</code>. If the workflow
+  middleware list omits <code>TracingMiddleware</code>, restore it (the default chain
+  includes it).</li>
+</ul>
+<h2 id="8-human-in-the-loop">8. Human-in-the-loop</h2>
+<h3 id="81-lockacquisitionerror-on-resume">8.1 <code>LockAcquisitionError</code> on resume</h3>
+<p>A <code>POST /human-tasks/{continuation_id}/resume</code> failed because another
+caller currently holds the resume lock for the same continuation.
+<a href="../../kneo_serv/platform/manager.py#L522"><code>platform/manager.py</code></a></p>
+<ul>
+<li>Confirm: the error body identifies the lock name. The first caller is
+  still in flight.</li>
+<li>Fix: wait for the in-flight resume to complete; do not retry blindly.
+  Use idempotency keys on resume to make retries safe.</li>
+</ul>
+<h3 id="82-continuation-expired-or-missing">8.2 Continuation expired or missing</h3>
+<p>If the continuation store was rotated (e.g. <code>.kneo/continuations</code>
+recreated, or PostgreSQL row deleted), <code>/human-tasks/{continuation_id}</code>
+returns 404.</p>
+<ul>
+<li>Fix: the run cannot be resumed. Start a new run.</li>
+</ul>
+<h2 id="9-release-and-supply-chain">9. Release and supply chain</h2>
+<p>For release-flow issues (mypy, pip-audit, build, tag, publish), follow
+<a href="../plan/release_checklist.md">release_checklist.md</a> and
+<a href="../plan/supply_chain_review.md">supply_chain_review.md</a>. The release workflow at
+<a href="../../.github/workflows/release.yml"><code>.github/workflows/release.yml</code></a> emits the
+gate that failed in its job summary.</p>
+<h2 id="what-to-capture-before-opening-a-bug">What to capture before opening a bug</h2>
+<p>When a problem isn't covered above:</p>
+<ul>
+<li>Service version and commit (<code>pip show kneo-serv</code>, plus the git commit if
+  installed from source).</li>
+<li>Environment context (<code>uname -a</code>, Python version, Postgres version if
+  used).</li>
+<li>The <code>request_id</code> and <code>run_id</code> from logs.</li>
+<li><code>GET /readyz</code> body.</li>
+<li>For run problems: <code>GET /runs/{run_id}</code>, <code>GET /runs/{run_id}/trace</code>, and
+  <code>GET /runs/{run_id}/checkpoints</code> (redacted output is fine to share).</li>
+<li>For spec problems: the output of <code>kneo spec validate &lt;path&gt; --json</code>.</li>
+</ul>
+<p>Audit events are accessible at <code>GET /audit-events</code> and frequently contain
+the operator action that preceded a fault.</p>
+<h1 id="deployment-smoke-test">Deployment smoke test</h1>
+<p><em>Source: <a href="../user/deployment_smoke.md"><code>docs/user/deployment_smoke.md</code></a></em></p>
+<p>This smoke test validates a running service deployment through the public
+HTTP API. It uses the self-contained <code>examples/smoke_human_workflow.yaml</code>
+spec and covers health, readiness, auth behavior, spec validation, run
+creation, human resume, audit listing, credential inventory, and environment
+policy updates.</p>
+<h2 id="compose-stack">Compose stack</h2>
+<p>Prepare a production env file:</p>
+<pre><code class="language-bash">cp deploy/production.env.example deploy/production.env
+</code></pre>
+<p><code>deploy/production.env</code> is intentionally ignored by source control. Replace
+all placeholder tokens and passwords before binding a deployment to a real
+network. For local CI/smoke runs, the documented placeholder values are used
+only to exercise the auth path.</p>
+<p>Start the API and PostgreSQL:</p>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env up --build -d
+</code></pre>
+<p>Run the smoke test against the unversioned routes:</p>
+<pre><code class="language-bash">python scripts/deployment_smoke.py \
+  --base-url http://127.0.0.1:8000 \
+  --api-key replace-admin-token \
+  --operator-api-key replace-operator-token \
+  --reviewer-api-key replace-reviewer-token \
+  --viewer-api-key replace-viewer-token \
+  --expect-auth
+</code></pre>
+<p>Run the same smoke test against the versioned routes:</p>
+<pre><code class="language-bash">python scripts/deployment_smoke.py \
+  --base-url http://127.0.0.1:8000 \
+  --api-prefix /v1 \
+  --api-key replace-admin-token \
+  --operator-api-key replace-operator-token \
+  --reviewer-api-key replace-reviewer-token \
+  --viewer-api-key replace-viewer-token \
+  --expect-auth
+</code></pre>
+<p>Shut the stack down when finished:</p>
+<pre><code class="language-bash">docker compose --env-file deploy/production.env down
+</code></pre>
+<h2 id="postgresql-coverage">PostgreSQL coverage</h2>
+<p>The compose stack uses PostgreSQL by default through
+<code>KNEO_SERV_DATABASE_URL=postgresql://...@db:5432/...</code>, so the smoke path above
+also validates PostgreSQL-backed run state, checkpoints, continuations, queue
+records, locks, audit events, and project metadata.</p>
+<p>For a separately managed PostgreSQL database, start the API with
+<code>KNEO_SERV_DATABASE_URL</code> set and run the same <code>scripts/deployment_smoke.py</code>
+commands against that service URL.</p>
+<h2 id="staging-and-remote-smoke">Staging and remote smoke</h2>
+<p>Prepare a staging env file from the example:</p>
+<pre><code class="language-bash">cp deploy/staging.env.example deploy/staging.env
+</code></pre>
+<p>Replace every placeholder token, database password, provider key, and telemetry
+endpoint before use. For compose-based staging rehearsals, set
+<code>KNEO_SERV_ENV_FILE</code> so the API container reads the staging file:</p>
+<pre><code class="language-bash">python scripts/validate_staging_env.py deploy/staging.env
+</code></pre>
+<p>The validator fails if required staging settings are missing, scoped API roles
+are incomplete, payload telemetry capture is enabled, provider secret checks
+are disabled, or placeholder values remain.</p>
+<p>For repeatable staging gates, render the local file from secret-backed
+environment variables instead of editing it by hand:</p>
+<pre><code class="language-bash">export KNEO_STAGING_API_KEYS=&quot;operator:&lt;operator-token&gt;:operator;reviewer:&lt;reviewer-token&gt;:reviewer;viewer:&lt;viewer-token&gt;:viewer&quot;
+export KNEO_STAGING_ADMIN_API_KEY=&lt;admin-token&gt;
+export KNEO_STAGING_SPEC_SIGNING_KEY=&lt;signing-key&gt;
+export KNEO_STAGING_DATABASE_URL=&lt;postgresql-dsn&gt;
+export KNEO_STAGING_POSTGRES_PASSWORD=&lt;compose-db-password&gt;
+export KNEO_STAGING_OTEL_EXPORTER_OTLP_ENDPOINT=&lt;otel-endpoint&gt;
+export KNEO_STAGING_OPENAI_API_KEY=&lt;openai-key&gt;
+export KNEO_STAGING_MCP_API_KEY=&lt;mcp-key&gt;
+python scripts/render_staging_env.py --output deploy/staging.env
+</code></pre>
+<pre><code class="language-bash">KNEO_SERV_ENV_FILE=./deploy/staging.env \
+  docker compose --env-file deploy/staging.env up --build -d
+</code></pre>
+<p>For a remote staging deployment, run the smoke script against the public
+staging URL with scoped keys:</p>
+<pre><code class="language-bash">export KNEO_STAGING_BASE_URL=https://staging.example.com
+export KNEO_STAGING_OPERATOR_TOKEN=&lt;operator-token&gt;
+export KNEO_STAGING_REVIEWER_TOKEN=&lt;reviewer-token&gt;
+export KNEO_STAGING_VIEWER_TOKEN=&lt;viewer-token&gt;
+python scripts/deployment_smoke.py --api-prefix /v1 --expect-auth
+</code></pre>
+<p>The operator key validates specs, creates runs, reads audit and credential
+inventory, and updates policy state. The reviewer key resumes the human task.
+The viewer key is optional; when supplied, the smoke verifies that policy writes
+are rejected with <code>403</code>.</p>
+<p>The full staging release gate validates <code>deploy/staging.env</code>, derives the
+scoped smoke tokens from <code>KNEO_SERV_API_KEYS</code>, and runs the <code>/v1</code> remote smoke:</p>
+<pre><code class="language-bash">python scripts/staging_release_gate.py \
+  --env-file deploy/staging.env \
+  --base-url https://staging.example.com
+</code></pre>
+<p>The GitHub Actions <code>Staging Gate</code> workflow runs the same renderer and release
+gate from the <code>staging</code> environment secrets. Dispatch it with the deployed
+staging URL after the service is reachable.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="#data-only-restore-into-a-clean-volume"><code>backup_and_recovery.md § Data-only restore into a clean volume</code></a>
+  — the seeded recovery drill that pairs with the scoped Compose smoke
+  above. Run the smoke first to populate run, checkpoint, audit, and
+  policy state, then exercise the data-only restore to verify it
+  survives a fresh volume.</li>
+</ul></main>
+</body>
+</html>
