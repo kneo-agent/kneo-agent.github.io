@@ -55,7 +55,7 @@
    this wordmark's text fills ~62%, so the wordmark needs a taller
    CSS height to compensate. */
 .md-header__wordmark {
-  height: 2.15rem;
+  height: 2.8rem;
   width: auto;
   vertical-align: middle;
   display: inline-block;
