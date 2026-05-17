@@ -1,15 +1,21 @@
 /* Landing-page hero typography and polish.
    Scoped to the landing site only — sub-sites use Material defaults. */
 
-/* Hero-sized page title. Targets the page's first H1, which is the
-   "Kneo Agent" title rendered by mkdocs from the markdown H1. */
+/* Hero page title. The markdown H1 holds the Kneo Agent wordmark image
+   (alt="Kneo Agent" so the page <title> in the browser tab is still
+   correct). Height is set to match the cap-height of the prior 3.5rem
+   text heading. */
 .md-typeset h1:first-of-type {
-  font-size: 3.5rem;
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
   text-align: center;
   margin: 2.5rem auto 0.75rem;
+  line-height: 1;
+}
+
+.md-typeset h1:first-of-type img.hero-wordmark {
+  height: 3.5rem;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Subtitle: the paragraph immediately following the page H1. */
@@ -64,8 +70,10 @@
 /* Responsive: scale the hero down on smaller screens. */
 @media (max-width: 48rem) {
   .md-typeset h1:first-of-type {
-    font-size: 2.5rem;
     margin-top: 1.5rem;
+  }
+  .md-typeset h1:first-of-type img.hero-wordmark {
+    height: 2.5rem;
   }
   .md-typeset h1:first-of-type + p {
     font-size: 1.05rem;
