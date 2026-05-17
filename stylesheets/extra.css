@@ -49,10 +49,13 @@
 }
 
 /* Product wordmark injected by hooks/header_link.py in place of the
-   site-title text. Sized to match the company logo height; the image
-   has its own padding around the artwork. */
+   site-title text. Height tuned so the cap-height of "K" in "Kneo"
+   matches the cap-height of "K" in the company logo (both ~21px) —
+   the Kneron logo image has its text filling ~88% of its height while
+   this wordmark's text fills ~62%, so the wordmark needs a taller
+   CSS height to compensate. */
 .md-header__wordmark {
-  height: 1.6rem;
+  height: 2.15rem;
   width: auto;
   vertical-align: middle;
   display: inline-block;
