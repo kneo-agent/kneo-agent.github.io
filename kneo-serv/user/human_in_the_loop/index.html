@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/human_in_the_loop/">
       
       
-        <link rel="prev" href="../examples/">
+        <link rel="prev" href="../run_recipes/">
       
       
         <link rel="next" href="../tutorial_custom_tool/">
@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -579,6 +581,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -748,6 +778,34 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="9 · Timeouts and escalation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expiring-paused-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiring paused runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on_timeout-scope-as-of-020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        on_timeout scope as of 0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1172,10 +1230,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1303,62 +1357,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1584,6 +1582,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="9 · Timeouts and escalation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#expiring-paused-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expiring paused runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#on_timeout-scope-as-of-020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        on_timeout scope as of 0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1801,13 +1827,37 @@ mechanism enables continuation. Check <code>/runs/{id}/recovery</code> to see
 whether continuation is available, then call <code>/runs/{id}/continue</code>.</p>
 <h2 id="9-timeouts-and-escalation">9 · Timeouts and escalation<a class="headerlink" href="#9-timeouts-and-escalation" title="Permanent link">&para;</a></h2>
 <p><code>components.humans.&lt;id&gt;.timeout_seconds</code> and <code>on_timeout</code> declare the
-policy. The platform records the deadline on the continuation; whether a
-ticket is auto-escalated to a different reviewer is up to your routing
-layer plus the <code>on_timeout: escalate</code> hint that the spec compiler
-preserves on the continuation metadata.</p>
-<p>The platform does not currently auto-cancel paused runs at the deadline;
-operators are expected to act on <code>human-tasks</code> listings before timeout.
-The "expired" state is an explicit <code>0.2.x</code> follow-up.</p>
+policy. When a sequential workflow pauses on a human step that declares
+a positive <code>timeout_seconds</code>, the platform computes
+<code>expires_at = pause_time + timeout_seconds</code> and stashes it on the
+continuation. Whether a ticket is auto-escalated to a different
+reviewer is up to your routing layer plus the <code>on_timeout: escalate</code>
+hint that the spec compiler preserves on the continuation metadata.</p>
+<h3 id="expiring-paused-runs">Expiring paused runs<a class="headerlink" href="#expiring-paused-runs" title="Permanent link">&para;</a></h3>
+<p>Call <code>PlatformManager.prune_expired_human_tasks()</code> on whatever cadence
+the deployment needs (cron, scheduled run, manual operator action — the
+same pattern as <code>prune_retention()</code>; there is no built-in scheduler).</p>
+<p>For each saved continuation whose <code>expires_at</code> is in the past and whose
+underlying run is still <code>blocked</code>, the prune:</p>
+<ul>
+<li>Marks the run <code>expired</code> (a new lifecycle status alongside <code>failed</code> /
+  <code>cancelled</code>); <code>run.error.type</code> is <code>human_task_expired</code> with a message
+  recording the configured timeout.</li>
+<li>Records a <code>human.expired</code> audit event with <code>run_id</code>,
+  <code>continuation_id</code>, <code>timeout_seconds</code>, <code>expires_at</code>, and the cutoff
+  time used.</li>
+<li>Deletes the continuation (the audit event is the historical record).</li>
+</ul>
+<p>Runs that have already resumed before the prune fires (status no longer
+<code>blocked</code>) are skipped — the resume path owns the terminal state. Calls
+are idempotent: a second prune at the same cutoff returns <code>0</code>.</p>
+<h3 id="on_timeout-scope-as-of-020"><code>on_timeout</code> scope as of 0.2.0<a class="headerlink" href="#on_timeout-scope-as-of-020" title="Permanent link">&para;</a></h3>
+<p><code>on_timeout: fail</code> (the default) is fully wired through the prune path
+above. <code>on_timeout: continue</code> and <code>on_timeout: escalate</code> are recorded on
+the continuation metadata but are not yet differentiated at prune time —
+they are currently treated as <code>fail</code>. Wiring those branches (resume with
+a default response for <code>continue</code>, re-route or notify for <code>escalate</code>) is
+tracked as a 0.2.x follow-up.</p>
 <h2 id="common-failure-modes">Common failure modes<a class="headerlink" href="#common-failure-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

@@ -27,7 +27,7 @@
     
     
       
-        <title>Pub - Kneo Agent SDK</title>
+        <title>Publication-grade artifacts - Kneo Agent SDK</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#pub" class="md-skip">
+        <a href="#publication-grade-artifacts" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pub
+              Publication-grade artifacts
             
           </span>
         </div>
@@ -1263,10 +1263,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#files" class="md-nav__link">
+  <a href="#contents" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Files
+        Contents
       
     </span>
   </a>
@@ -1290,12 +1290,33 @@
 
 
 
-<h1 id="pub">Pub<a class="headerlink" href="#pub" title="Permanent link">&para;</a></h1>
-<h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
+<h1 id="publication-grade-artifacts">Publication-grade artifacts<a class="headerlink" href="#publication-grade-artifacts" title="Permanent link">&para;</a></h1>
+<p>Documents intended for distribution to end users as-is. The full
+project index lives at <code>../README.md</code>.</p>
+<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="kneo_agent_api_reference.html"><code>kneo_agent_api_reference.html</code></a></li>
-<li><a href="kneo_agent_api_reference.pdf"><code>kneo_agent_api_reference.pdf</code></a></li>
+<li><a href="kneo_agent_api_reference.html"><code>kneo_agent_api_reference.html</code></a> /
+  <a href="kneo_agent_api_reference.pdf"><code>.pdf</code></a> — the full public-API
+  reference manual. Self-contained, dark-themed HTML with sidebar
+  navigation; the PDF is the same content rendered for offline /
+  print consumption.</li>
 </ul>
+<p>Both files are <strong>hand-maintained</strong> rather than generated from the <code>.md</code>
+sources under <code>../dev/</code>. They are tracked in git so
+consumers can read the offline copies without rebuilding.</p>
+<p>Regeneration of the PDF from the HTML is wired through
+<code>../script/render_pdf_with_header_footer.mjs</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">TS</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span><span class="s1">&#39;+%Y-%m-%d %H:%M:%S %Z&#39;</span><span class="k">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>node<span class="w"> </span>docs/script/render_pdf_with_header_footer.mjs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docs/pub/kneo_agent_api_reference.html&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/docs/pub/kneo_agent_api_reference.pdf&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="s2">&quot;Kneo Agent — API Reference Manual&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$TS</span><span class="s2">&quot;</span>
+</code></pre></div>
+<p>The per-release recipe in
+<code>../dev/HowTo-pub-PyPI.md</code> calls out
+regenerating the reference manual during pre-flight; if you only edited
+the HTML in this directory, the PDF needs to follow.</p>
 
 
 

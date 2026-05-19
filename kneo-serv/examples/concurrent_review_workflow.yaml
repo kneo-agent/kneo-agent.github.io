@@ -1,0 +1,67 @@
+version: v1
+
+# Concurrent review workflow: three reviewers run in parallel against the
+# same input, each evaluating a different concern (security, accessibility,
+# performance). The platform fans out to all participants, collects each
+# response, and returns the combined result.
+#
+# Run locally:
+#   kneo spec validate examples/concurrent_review_workflow.yaml
+#   kneo spec compile  examples/concurrent_review_workflow.yaml
+#   kneo run --input "Review the auth middleware refactor" \
+#     --target workflow examples/concurrent_review_workflow.yaml
+
+agent:
+  name: concurrent-root
+  system_prompt: Root agent for the concurrent review workflow.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: concurrent
+  name: parallel-review
+  participants:
+    - id: security-review
+      kind: agent
+      ref: security-reviewer
+    - id: accessibility-review
+      kind: agent
+      ref: accessibility-reviewer
+    - id: performance-review
+      kind: agent
+      ref: performance-reviewer
+
+components:
+  agents:
+    security-reviewer:
+      name: security-reviewer
+      system_prompt: |
+        Review the input for authentication, authorization, input-validation,
+        and secret-handling concerns. Respond with concrete findings only.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    accessibility-reviewer:
+      name: accessibility-reviewer
+      system_prompt: |
+        Review the input for accessibility concerns: keyboard navigation,
+        screen-reader compatibility, color contrast, and assistive
+        technology support. Respond with concrete findings only.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    performance-reviewer:
+      name: performance-reviewer
+      system_prompt: |
+        Review the input for performance concerns: tail latency, allocation
+        hot spots, blocking I/O on hot paths, and quadratic algorithms.
+        Respond with concrete findings only.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}

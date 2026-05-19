@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -1139,10 +1169,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1270,62 +1296,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1882,6 +1852,12 @@ in <a href="../service_api/"><code>service_api.md</code></a>.</p>
 </tr>
 </tbody>
 </table>
+<p>Retention windows can also be set per-project in <code>.kneo/config.yaml</code>
+under a top-level <code>retention:</code> block — see
+<a href="../project_config/#retention">project_config.md § Retention</a>. Env-var
+precedence: an env var, if set, overrides the project-config value for
+that field. Use the env-var path as the operator escape hatch when the
+host needs to deviate from per-project defaults.</p>
 <h2 id="checkpoint-storage">Checkpoint storage<a class="headerlink" href="#checkpoint-storage" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

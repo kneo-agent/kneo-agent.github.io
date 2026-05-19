@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -708,6 +710,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -1139,10 +1169,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1270,62 +1296,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1574,20 +1544,28 @@ over HTTP.</p>
 <li>Optional: Docker, if you want to follow the service path with PostgreSQL.</li>
 </ul>
 <h2 id="1-install">1. Install<a class="headerlink" href="#1-install" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:kneo-agent/kneo-serv.git
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>kneo-serv
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<p>Pick the path that matches what you're doing.</p>
+<p><strong>Trying it out / using it as an application</strong> — install from PyPI
+(available from <code>kneo-serv 0.2.0</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>kneo-serv
 </code></pre></div>
-<p>Verify the CLI is on your <code>PATH</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kneo<span class="w"> </span>--help
+<p><strong>Contributing or hacking on the source</strong> — clone and install in
+editable mode with the dev extra:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:kneo-agent/kneo-serv.git
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>kneo-serv
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</code></pre></div>
+<p>Either path exposes the <code>kneo</code> command. Verify:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kneo<span class="w"> </span>--help
 </code></pre></div>
 <p>If you don't have an OpenAI key handy, swap to the dummy provider used by
 the smoke test (see <a href="#5-no-real-provider-the-dummy-path">§ 5</a> below).</p>
 <h2 id="2-validate-and-compile-a-spec">2. Validate and compile a spec<a class="headerlink" href="#2-validate-and-compile-a-spec" title="Permanent link">&para;</a></h2>
 <p>The repo ships a runnable research-agent spec.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/research_agent.yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/research_agent.yaml
 </code></pre></div>
 <p><code>validate</code> runs schema + semantic checks and prints diagnostics; <code>compile</code>
 goes further and constructs the agent and workflow objects without
@@ -1596,63 +1574,63 @@ running them. Both should exit 0.</p>
 (<code>agent.tools[0]</code>, etc.) and a short reason. The most common causes are
 listed in <a href="../troubleshooting/#6-spec-validation-and-compilation">troubleshooting.md § 6</a>.</p>
 <h2 id="3-run-locally">3. Run locally<a class="headerlink" href="#3-run-locally" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;Summarize Nvidia&#39;s AI strategy in three bullet points&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--target<span class="w"> </span>workflow
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OPENAI_API_KEY</span><span class="o">=</span>sk-...
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;Summarize Nvidia&#39;s AI strategy in three bullet points&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--target<span class="w"> </span>workflow
 </code></pre></div>
 <p>Local runs persist state at <code>.kneo/kneo_runs.sqlite</code> and continuations
 under <code>.kneo/continuations</code>. Inspect them:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kneo<span class="w"> </span>runs<span class="w"> </span>get<span class="w"> </span>&lt;run_id&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kneo<span class="w"> </span>runs<span class="w"> </span>trace<span class="w"> </span>&lt;run_id&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>kneo<span class="w"> </span>runs<span class="w"> </span>checkpoints<span class="w"> </span>&lt;run_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kneo<span class="w"> </span>runs<span class="w"> </span>get<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kneo<span class="w"> </span>runs<span class="w"> </span>trace<span class="w"> </span>&lt;run_id&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>kneo<span class="w"> </span>runs<span class="w"> </span>checkpoints<span class="w"> </span>&lt;run_id&gt;
 </code></pre></div>
 <p>The run output lands in <code>RunResult.output_text</code>; the CLI also prints it on
 stdout by default. Use <code>--json</code> to get the full structured response.</p>
 <h2 id="4-try-a-human-in-the-loop-workflow">4. Try a human-in-the-loop workflow<a class="headerlink" href="#4-try-a-human-in-the-loop-workflow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/human_approval_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
 </code></pre></div>
 <p>The JSON response includes a <code>continuation_id</code> and a <code>request_id</code>. Resume
 with an approval:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
 </code></pre></div>
 <p>For a deeper end-to-end walkthrough, see
 <a href="../human_in_the_loop/">human_in_the_loop.md</a>.</p>
 <h2 id="5-no-real-provider-the-dummy-path">5. No real provider: the dummy path<a class="headerlink" href="#5-no-real-provider-the-dummy-path" title="Permanent link">&para;</a></h2>
 <p>The smoke spec uses the in-process <code>dummy</code> provider so it runs without real
 credentials.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;smoke&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;smoke&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
 </code></pre></div>
 <p>This is the same flow the deployment smoke exercises; see
 <a href="../deployment_smoke/"><code>deployment_smoke.md</code></a>.</p>
 <h2 id="6-run-as-a-service">6. Run as a service<a class="headerlink" href="#6-run-as-a-service" title="Permanent link">&para;</a></h2>
 <p>In one terminal, start the API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:operator-token:operator&#39;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>kneo<span class="w"> </span>service<span class="w"> </span>serve<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:operator-token:operator&#39;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>kneo<span class="w"> </span>service<span class="w"> </span>serve<span class="w"> </span>--host<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
 </code></pre></div>
 <p>In another, hit the API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEY</span><span class="o">=</span>operator-token
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/livez
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_API_KEY</span><span class="o">=</span>operator-token
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/livez
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </code></pre></div>
 <p>Submit a run through the CLI's service mode:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
 </code></pre></div>
 <p>Or directly with curl:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="s1">    &quot;input&quot;: &quot;hello&quot;,</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;spec_path&quot;: &quot;examples/smoke_human_workflow.yaml&quot;,</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;target&quot;: &quot;workflow&quot;</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KNEO_SERV_API_KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="s1">    &quot;input&quot;: &quot;hello&quot;,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;spec_path&quot;: &quot;examples/smoke_human_workflow.yaml&quot;,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;target&quot;: &quot;workflow&quot;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <p>For the full HTTP contract, see <a href="../service_api/">service_api.md</a>. For
 deployment topology (Docker, Compose, PostgreSQL), see
@@ -1660,14 +1638,14 @@ deployment topology (Docker, Compose, PostgreSQL), see
 <h2 id="7-use-a-profile-for-repeated-calls">7. Use a profile for repeated calls<a class="headerlink" href="#7-use-a-profile-for-repeated-calls" title="Permanent link">&para;</a></h2>
 <p>CLI profiles save <code>--service-url</code> and <code>--api-key</code> so you don't type them on
 every command.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>--api-key<span class="w"> </span>operator-token
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span>use<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>kneo<span class="w"> </span>human<span class="w"> </span>list<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="nb">local</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--service-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--api-key<span class="w"> </span>operator-token
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>kneo<span class="w"> </span>config<span class="w"> </span>profile<span class="w"> </span>use<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>kneo<span class="w"> </span>run<span class="w"> </span>examples/smoke_human_workflow.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>kneo<span class="w"> </span>human<span class="w"> </span>list<span class="w"> </span>--profile<span class="w"> </span><span class="nb">local</span>
 </code></pre></div>
 <p>Profiles live at <code>~/.kneo_serv/profiles.json</code> (or
 <code>KNEO_SERV_PROFILES_PATH</code>) with owner-only file permissions. Stored

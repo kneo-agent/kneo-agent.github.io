@@ -1,0 +1,72 @@
+version: v1
+
+# Group-chat workflow: three personas debate a design proposal over two
+# rounds. Each round visits all participants in declaration order; with
+# `rounds: 2`, every persona gets two turns (six total exchanges). Useful
+# when you want a structured back-and-forth rather than a one-shot fan-out
+# (see concurrent_review_workflow.yaml for that pattern).
+#
+# Run locally:
+#   kneo spec validate examples/group_chat_workflow.yaml
+#   kneo spec compile  examples/group_chat_workflow.yaml
+#   kneo run --input "Should we adopt gRPC for service-to-service calls?" \
+#     --target workflow examples/group_chat_workflow.yaml
+
+agent:
+  name: group-chat-root
+  system_prompt: Root agent for the group-chat workflow.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: group-chat
+  name: design-debate
+  rounds: 2
+  participants:
+    - id: proponent
+      kind: agent
+      ref: proponent
+    - id: skeptic
+      kind: agent
+      ref: skeptic
+    - id: pragmatist
+      kind: agent
+      ref: pragmatist
+
+components:
+  agents:
+    proponent:
+      name: proponent
+      system_prompt: |
+        You argue *for* the proposal under discussion. Be specific about
+        the benefits, costs avoided, and concrete use cases that improve.
+        Acknowledge previous turns in the conversation before adding new
+        points.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    skeptic:
+      name: skeptic
+      system_prompt: |
+        You argue *against* the proposal under discussion. Be specific
+        about hidden costs, operational risks, and concrete failure modes.
+        Acknowledge previous turns in the conversation before adding new
+        points.
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}
+    pragmatist:
+      name: pragmatist
+      system_prompt: |
+        You synthesize the proponent's and skeptic's positions, identify
+        which concerns are decisive, and propose a concrete path forward
+        (adopt, reject, or pilot with explicit success criteria).
+      model: {provider: openai, name: gpt-4o-mini}
+      strategy: {type: simple}
+      runtime_preferences: {preferred_mode: bridge, allowed_modes: [bridge]}

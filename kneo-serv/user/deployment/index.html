@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -1095,10 +1125,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1226,62 +1252,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1486,29 +1456,35 @@ every environment variable referenced below, see
   <a href="../tutorial_custom_tool/#7-ship-the-tool-to-the-service"><code>tutorial_custom_tool.md § 7</code></a>).</li>
 </ul>
 <h2 id="container">Container<a class="headerlink" href="#container" title="Permanent link">&para;</a></h2>
-<p>Build the service image:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>kneo-serv:local<span class="w"> </span>.
+<p>Pull the published image from GitHub Container Registry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Run it against PostgreSQL. The image installs the <code>kneo-serv[deploy]</code> extra,
-which includes PostgreSQL and SDK telemetry support:</p>
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.2.2</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.2</code>),
+and <code>latest</code>. amd64-only for the 0.2.x line; arm64 is on the 0.2.x
+point-release backlog. The image installs the <code>kneo-serv[deploy]</code>
+extra (psycopg + SDK telemetry).</p>
+<p>Run it against PostgreSQL:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_DATABASE_URL</span><span class="o">=</span>postgresql://kneo_serv:change-me@host.docker.internal:5432/kneo_serv<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:replace-token:operator&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>kneo-serv:local
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-serv:latest
+</code></pre></div>
+<p>For local builds from a source checkout (contributor / pre-publish):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>kneo-serv:local<span class="w"> </span>.
 </code></pre></div>
 <h2 id="compose">Compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h2>
 <p>The bundled Compose stack starts the API plus PostgreSQL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build
 </code></pre></div>
 <p>Replace every placeholder token and database password before binding the
 service to a network. The stack defaults to port <code>8000</code>; set
 <code>KNEO_SERV_PORT</code> to change the host-side port.</p>
 <p>For a staging rehearsal, use the staging env example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cp<span class="w"> </span>deploy/staging.env.example<span class="w"> </span>deploy/staging.env
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>--build
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>deploy/staging.env.example<span class="w"> </span>deploy/staging.env
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>--build
 </code></pre></div>
 <p><code>deploy/staging.env</code> is gitignored. Keep SDK telemetry argument/result
 capture (<code>KNEO_SERV_OTEL_RECORD_ARGUMENTS</code>, <code>KNEO_SERV_OTEL_RECORD_RESULTS</code>)
@@ -1547,9 +1523,9 @@ state and file-backed continuations.</p>
 <a href="../troubleshooting/#23-sqlite-database-is-locked-errors">troubleshooting.md § 2.3</a>.</p>
 <h2 id="readiness-and-liveness">Readiness and liveness<a class="headerlink" href="#readiness-and-liveness" title="Permanent link">&para;</a></h2>
 <p>Wire these endpoints into your supervisor or load balancer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="err">GET /livez      # process liveness</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="err">GET /readyz     # readiness: all dependencies healthy</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="err">GET /healthz    # lightweight overall health</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">GET /livez      # process liveness</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="err">GET /readyz     # readiness: all dependencies healthy</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="err">GET /healthz    # lightweight overall health</span>
 </code></pre></div>
 <p><code>/livez</code> and <code>/readyz</code> are intentionally unauthenticated for probe
 integration. <code>/readyz</code> returns <code>503</code> with a structured <code>not_ready</code> payload

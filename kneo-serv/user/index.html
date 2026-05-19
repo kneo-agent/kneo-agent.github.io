@@ -27,7 +27,7 @@
     
     
       
-        <title>User - Kneo Agent Platform</title>
+        <title>User documentation - Kneo Agent Platform</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#user" class="md-skip">
+        <a href="#user-documentation" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              User
+              User documentation
             
           </span>
         </div>
@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -993,10 +1023,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1137,62 +1163,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1298,10 +1268,32 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pages" class="md-nav__link">
+  <a href="#application-developer-reading-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pages
+        Application developer reading order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator-sre-reading-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator / SRE reading order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -1325,28 +1317,41 @@
 
 
 
-<h1 id="user">User<a class="headerlink" href="#user" title="Permanent link">&para;</a></h1>
-<h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
+<h1 id="user-documentation">User documentation<a class="headerlink" href="#user-documentation" title="Permanent link">&para;</a></h1>
+<p>End-user docs for <strong>Kneo Agent Platform</strong>. Two audiences live here —
+<strong>application developers</strong> writing YAML specs and calling the API, and
+<strong>operators / SRE</strong> deploying and running the service. Pick a reading
+order below.</p>
+<p>For the top-level docs index see docs/README.md.</p>
+<h2 id="application-developer-reading-order">Application developer reading order<a class="headerlink" href="#application-developer-reading-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="quickstart/">quickstart.md</a> — install to running, ~15 min.</li>
+<li><a href="cli/">cli.md</a> — CLI usage patterns; generated reference is <a href="cli_reference/">cli_reference.md</a>.</li>
+<li><a href="service_api/">service_api.md</a> — HTTP API contract with <code>curl</code> examples.</li>
+<li><a href="examples/">examples.md</a> — annotated walk through <code>examples/</code>.</li>
+<li><a href="tutorial_custom_tool/">tutorial_custom_tool.md</a> — end-to-end custom-tool tutorial.</li>
+<li><a href="human_in_the_loop/">human_in_the_loop.md</a> — pause/resume walkthrough.</li>
+<li><a href="project_config/">project_config.md</a> — <code>.kneo/config.yaml</code> reference.</li>
+</ol>
+<h2 id="operator-sre-reading-order">Operator / SRE reading order<a class="headerlink" href="#operator-sre-reading-order" title="Permanent link">&para;</a></h2>
+<ol>
+<li><a href="tutorial_postgres_deployment/">tutorial_postgres_deployment.md</a> — zero to running on PostgreSQL, ~30 min.</li>
+<li><a href="deployment/">deployment.md</a> — Docker, Compose, persistence selection.</li>
+<li><a href="environment/">environment.md</a> — every environment variable.</li>
+<li><a href="tls_and_proxy/">tls_and_proxy.md</a> — reverse proxy, TLS termination, trusted-proxy headers.</li>
+<li><a href="security_hardening/">security_hardening.md</a> — pre-launch hardening checklist.</li>
+<li><a href="observability/">observability.md</a> — structured logs, OpenTelemetry, what to watch.</li>
+<li><a href="backup_and_recovery/">backup_and_recovery.md</a> — backups, verified restore, rollback after a failed upgrade.</li>
+<li><a href="upgrade/">upgrade.md</a> — upgrade procedure and version-specific notes.</li>
+<li><a href="incident_response/">incident_response.md</a> — on-call triage tree and <code>/readyz</code> failure matrix.</li>
+<li><a href="troubleshooting/">troubleshooting.md</a> — symptom-indexed runbook.</li>
+<li><a href="deployment_smoke/">deployment_smoke.md</a> — smoke-test command sequences.</li>
+</ol>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="quickstart/">Quickstart</a></li>
-<li><a href="service_api/">Platform service API</a></li>
-<li><a href="cli/">CLI usage</a></li>
-<li><a href="cli_reference/">Kneo Serv CLI Reference</a></li>
-<li><a href="examples/">Examples</a></li>
-<li><a href="human_in_the_loop/">Human-in-the-loop walkthrough</a></li>
-<li><a href="tutorial_custom_tool/">Tutorial: writing a custom tool end-to-end</a></li>
-<li><a href="tutorial_postgres_deployment/">Tutorial: deploying with PostgreSQL from zero</a></li>
-<li><a href="deployment/">Deployment</a></li>
-<li><a href="environment/">Environment variables</a></li>
-<li><a href="tls_and_proxy/">TLS and reverse proxy</a></li>
-<li><a href="security_hardening/">Security hardening</a></li>
-<li><a href="observability/">Observability</a></li>
-<li><a href="backup_and_recovery/">Backup and recovery</a></li>
-<li><a href="upgrade/">Upgrade guide</a></li>
-<li><a href="incident_response/">Incident response</a></li>
-<li><a href="troubleshooting/">Troubleshooting</a></li>
-<li><a href="deployment_smoke/">Deployment smoke test</a></li>
-<li><a href="project_config/">Project <code>.kneo/</code> config</a></li>
+<li><a href="cli_reference/">cli_reference.md</a> is generated by <code>docs/script/generate_reference_docs.py</code>. CI runs it with <code>--check</code> and fails on drift.</li>
+<li>The HTTP API's raw OpenAPI spec lives at <a href="../pub/openapi.json"><code>docs/pub/openapi.json</code></a>.</li>
+<li>Operator runbooks have a release-engineering counterpart in <code>docs/plan/</code> — see release_checklist.md and staging_release_runbook.md.</li>
 </ul>
 
 

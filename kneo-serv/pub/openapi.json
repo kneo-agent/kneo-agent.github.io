@@ -298,7 +298,6 @@
             "type": "string"
           },
           "version": {
-            "default": "0.1.0",
             "title": "Version",
             "type": "string"
           }
@@ -1417,7 +1416,7 @@
   "info": {
     "description": "Platform service API for Kneo Agent runs, specs, traces, checkpoints, and human-in-the-loop tasks.",
     "title": "Kneo Agent Platform API",
-    "version": "0.1.0"
+    "version": "0.2.2"
   },
   "openapi": "3.1.0",
   "paths": {

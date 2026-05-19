@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -1173,10 +1203,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1304,62 +1330,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1662,8 +1632,9 @@ full env-var list, see
 </tr>
 </tbody>
 </table>
-<p>There is <strong>no metrics endpoint</strong> in 0.1.0. Scrape latency and error rate
-from your reverse-proxy access logs or from OTel span attributes.</p>
+<p>There is <strong>no metrics endpoint</strong> in the 0.2.x line. Scrape latency and
+error rate from your reverse-proxy access logs or from OTel span
+attributes.</p>
 <h2 id="structured-request-logs">Structured request logs<a class="headerlink" href="#structured-request-logs" title="Permanent link">&para;</a></h2>
 <h3 id="shape">Shape<a class="headerlink" href="#shape" title="Permanent link">&para;</a></h3>
 <p>Each request emits a single JSON record on the <code>kneo_serv.service</code> logger:</p>
@@ -1676,7 +1647,7 @@ from your reverse-proxy access logs or from OTel span attributes.</p>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f3b3…&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_…&quot;</span><span class="p">,</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">&quot;status_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">&quot;user_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kneo-serv-client/0.1.0&quot;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="nt">&quot;user_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kneo-serv-client/0.2.2&quot;</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">}</span>
 </code></pre></div>
 <p>Fields the middleware always emits: <code>event</code>, <code>request_id</code>, <code>method</code>,
@@ -1803,7 +1774,7 @@ Grafana Tempo, Tempo Cloud, Datadog, an OTel Collector):</p>
 <tr>
 <td>Queue depth (<code>status=queued</code>) growing unbounded</td>
 <td>Workers stuck or backpressured</td>
-<td><code>/readyz</code> <code>queue</code> check; <code>kneo runs list --status queued</code></td>
+<td><code>/readyz</code> <code>queue</code> check; <code>curl "$BASE/v1/runs?status=queued&amp;limit=20"</code></td>
 </tr>
 <tr>
 <td>Spike in <code>event=http_request</code> records with <code>error</code></td>
@@ -1818,9 +1789,9 @@ aggregated logs; the service does not push its own alerts.</p>
 <ul>
 <li><strong>Per-IP rate limiting and traffic shaping.</strong> The reverse proxy's job
   (<a href="../tls_and_proxy/"><code>tls_and_proxy.md</code></a>).</li>
-<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in 0.1.0. Use OTel
-  spans to derive request rate, error rate, and latency, or scrape the
-  reverse proxy.</li>
+<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in the 0.2.x line.
+  Use OTel spans to derive request rate, error rate, and latency, or
+  scrape the reverse proxy.</li>
 <li><strong>Tracing internals.</strong> For the design of the in-process tracer and
   checkpoint events, see
   <code>docs/dev/design.md</code> and

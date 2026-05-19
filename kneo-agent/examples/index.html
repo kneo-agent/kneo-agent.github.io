@@ -1269,10 +1269,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#subsections" class="md-nav__link">
+  <a href="#directory-map" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Subsections
+        Directory map
       
     </span>
   </a>
@@ -1280,10 +1280,82 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#files" class="md-nav__link">
+  <a href="#suggested-reading-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Files
+        Suggested reading order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#by-topic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        By topic
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="By topic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#runtime-styles-pick-by-who-owns-the-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime styles — pick by who owns the loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cookbook-cookbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cookbook (cookbook/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample-data-skills" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sample data (skills/)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running
       
     </span>
   </a>
@@ -1308,33 +1380,164 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<h2 id="subsections">Subsections<a class="headerlink" href="#subsections" title="Permanent link">&para;</a></h2>
+<p>Runnable Python scripts that exercise the public Kneo Agent SDK
+surface. Every script in this directory uses mock or local models
+where possible so it runs without real API keys; the few that need a
+specific service flag it in their docstring.</p>
+<p>For project-level orientation see the top-level
+README. For the user-facing task guides that match
+several of these examples, see <a href="../user/"><code>../docs/user/</code></a>.</p>
+<h2 id="directory-map">Directory map<a class="headerlink" href="#directory-map" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>examples/
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── 01..19_*.py         numbered tour of each major capability
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── cookbook/           longer-form recipes for SME / on-prem / enterprise use
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── skills/             sample SKILL.md skill loaded by example 08
+</code></pre></div>
+<h2 id="suggested-reading-order">Suggested reading order<a class="headerlink" href="#suggested-reading-order" title="Permanent link">&para;</a></h2>
+<p>The fastest path from "I want an agent" to having one running:</p>
+<ol>
+<li><a href="19_simple_builder.py"><code>19_simple_builder.py</code></a> — <code>build_sync_agent</code>,
+   the one-line shortcut. No <code>asyncio</code> boilerplate.</li>
+<li><a href="07_tool_registry_and_streaming.py"><code>07_tool_registry_and_streaming.py</code></a>
+   — local tools and streaming chunks.</li>
+<li>One <strong>provider-specific</strong> example matching your stack:
+   <a href="02_bridge_openai.py"><code>02_bridge_openai.py</code></a>,
+   <a href="03_bridge_langchain.py"><code>03_bridge_langchain.py</code></a>, or
+   <a href="01_bridge_google_adk.py"><code>01_bridge_google_adk.py</code></a>.</li>
+<li><a href="08_skill_file_ingestion.py"><code>08_skill_file_ingestion.py</code></a> — load
+   the <a href="skills/"><code>skills/weather/</code></a> skill from disk.</li>
+<li><a href="09_workflow_as_agent.py"><code>09_workflow_as_agent.py</code></a> — sequential
+   workflow wrapped as an <code>Agent</code>.</li>
+<li>From here, branch into the topics that match your needs: MCP
+   (12–13), human-in-the-loop (14–15), middleware (16–17), telemetry
+   (18), or alternative runtime styles (Adapter 04–06).</li>
+</ol>
+<h2 id="by-topic">By topic<a class="headerlink" href="#by-topic" title="Permanent link">&para;</a></h2>
+<h3 id="runtime-styles-pick-by-who-owns-the-loop">Runtime styles — pick by who owns the loop<a class="headerlink" href="#runtime-styles-pick-by-who-owns-the-loop" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>When</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bridge</strong></td>
+<td>Kneo owns the reasoning loop; you pick <code>simple</code> / <code>react</code> / <code>plan-act</code></td>
+<td><a href="01_bridge_google_adk.py"><code>01</code></a> Google ADK · <a href="02_bridge_openai.py"><code>02</code></a> OpenAI · <a href="03_bridge_langchain.py"><code>03</code></a> LangChain</td>
+</tr>
+<tr>
+<td><strong>Adapter</strong></td>
+<td>The provider SDK owns the loop; Kneo wraps it</td>
+<td><a href="04_adapter_google_adk.py"><code>04</code></a> Google ADK · <a href="05_adapter_openai_agents.py"><code>05</code></a> OpenAI Agents · <a href="06_adapter_langchain.py"><code>06</code></a> LangChain</td>
+</tr>
+<tr>
+<td><strong>Native</strong></td>
+<td>The provider SDK exposes its own runtime (used via factory)</td>
+<td><a href="05_adapter_openai_agents.py"><code>05</code></a>, <a href="18_opentelemetry_middleware.py"><code>18</code></a></td>
+</tr>
+<tr>
+<td><strong>Builder shortcut</strong></td>
+<td>One-call construction without explicit factories</td>
+<td><a href="19_simple_builder.py"><code>19</code></a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h3>
 <ul>
-<li><a href="cookbook/">Cookbook/</a></li>
-<li><a href="skills/">Skills/</a></li>
+<li><strong>Tools and streaming</strong> —
+  <a href="07_tool_registry_and_streaming.py"><code>07_tool_registry_and_streaming.py</code></a>.</li>
+<li><strong>Skills</strong> —
+  <a href="08_skill_file_ingestion.py"><code>08_skill_file_ingestion.py</code></a> ingests
+  the <code>SKILL.md</code>-format skill under
+  <a href="skills/"><code>skills/weather/</code></a> including its <code>references/</code> and
+  <code>scripts/</code> resources.</li>
+<li><strong>Workflows</strong> —
+  <a href="09_workflow_as_agent.py"><code>09_workflow_as_agent.py</code></a> (graph +
+  sequential as agent),
+  <a href="10_workflow_orchestrations.py"><code>10_workflow_orchestrations.py</code></a>
+  (concurrent / handoff / group chat).</li>
+<li><strong>Agent-as-tool</strong> —
+  <a href="11_agent_as_tool.py"><code>11_agent_as_tool.py</code></a> exposes one agent to
+  another via <code>agent.as_tool(...)</code>.</li>
+<li><strong>MCP tool servers</strong> —
+  <a href="12_mcp_stdio_filesystem.py"><code>12_mcp_stdio_filesystem.py</code></a> (stdio
+  transport),
+  <a href="13_mcp_http_sse.py"><code>13_mcp_http_sse.py</code></a> (HTTP + SSE).</li>
+<li><strong>Human-in-the-loop</strong> —
+  <a href="14_workflow_human_in_loop_resolver.py"><code>14_workflow_human_in_loop_resolver.py</code></a>
+  (inline resolver),
+  <a href="15_workflow_human_in_loop_pause.py"><code>15_workflow_human_in_loop_pause.py</code></a>
+  (pause / resume across calls).</li>
+<li><strong>Middleware</strong> —
+  <a href="16_agent_middleware_logging.py"><code>16_agent_middleware_logging.py</code></a>
+  (run / model / tool hooks),
+  <a href="17_agent_middleware_short_circuit.py"><code>17_agent_middleware_short_circuit.py</code></a>
+  (guardrails, stream short-circuiting).</li>
+<li><strong>Telemetry</strong> —
+  <a href="18_opentelemetry_middleware.py"><code>18_opentelemetry_middleware.py</code></a>
+  requires the <code>[telemetry]</code> extra; emits GenAI semantic-convention
+  spans to a <code>ConsoleSpanExporter</code>.</li>
 </ul>
-<h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
+<h2 id="cookbook-cookbook">Cookbook (<a href="cookbook/"><code>cookbook/</code></a>)<a class="headerlink" href="#cookbook-cookbook" title="Permanent link">&para;</a></h2>
+<p>Longer-form recipes for SME / on-prem / enterprise integration. Read
+the one that matches the problem in front of you — they are not a
+sequence.</p>
+<table>
+<thead>
+<tr>
+<th>Recipe</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="cookbook/local_ollama.py"><code>local_ollama.py</code></a></td>
+<td>Point the OpenAI runtime at a local Ollama / vLLM / llama.cpp / LocalAI server via <code>base_url=</code>.</td>
+</tr>
+<tr>
+<td><a href="cookbook/workflow_branching_and_retry.py"><code>workflow_branching_and_retry.py</code></a></td>
+<td>Graph workflow combining <code>WorkflowBuilder.add_edge(condition=...)</code> routing with <code>RetryStep</code> resilience.</td>
+</tr>
+<tr>
+<td><a href="cookbook/mcp_server_catalog.py"><code>mcp_server_catalog.py</code></a></td>
+<td>Load a YAML/JSON list of <code>MCPServerConfig</code> entries at app startup.</td>
+</tr>
+<tr>
+<td><a href="cookbook/sql_query_tool.py"><code>sql_query_tool.py</code></a></td>
+<td>Read-only parameter-bound SQL tool over SQLite (<code>psycopg2</code> / <code>pymysql</code> / <code>pyodbc</code> swap noted).</td>
+</tr>
+<tr>
+<td><a href="cookbook/rest_api_tool.py"><code>rest_api_tool.py</code></a></td>
+<td>Per-host REST tool with auth resolved from a <code>SecretProvider</code>.</td>
+</tr>
+<tr>
+<td><a href="cookbook/object_store_tool.py"><code>object_store_tool.py</code></a></td>
+<td>List / get / put against MinIO / on-prem S3 via boto3's <code>endpoint_url=</code>.</td>
+</tr>
+<tr>
+<td><a href="cookbook/search_index_tool.py"><code>search_index_tool.py</code></a></td>
+<td>Elasticsearch / OpenSearch query tool with a query-type allow-list.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="sample-data-skills">Sample data (<a href="skills/"><code>skills/</code></a>)<a class="headerlink" href="#sample-data-skills" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="01_bridge_google_adk.py"><code>01_bridge_google_adk.py</code></a></li>
-<li><a href="02_bridge_openai.py"><code>02_bridge_openai.py</code></a></li>
-<li><a href="03_bridge_langchain.py"><code>03_bridge_langchain.py</code></a></li>
-<li><a href="04_adapter_google_adk.py"><code>04_adapter_google_adk.py</code></a></li>
-<li><a href="05_adapter_openai_agents.py"><code>05_adapter_openai_agents.py</code></a></li>
-<li><a href="06_adapter_langchain.py"><code>06_adapter_langchain.py</code></a></li>
-<li><a href="07_tool_registry_and_streaming.py"><code>07_tool_registry_and_streaming.py</code></a></li>
-<li><a href="08_skill_file_ingestion.py"><code>08_skill_file_ingestion.py</code></a></li>
-<li><a href="09_workflow_as_agent.py"><code>09_workflow_as_agent.py</code></a></li>
-<li><a href="10_workflow_orchestrations.py"><code>10_workflow_orchestrations.py</code></a></li>
-<li><a href="11_agent_as_tool.py"><code>11_agent_as_tool.py</code></a></li>
-<li><a href="12_mcp_stdio_filesystem.py"><code>12_mcp_stdio_filesystem.py</code></a></li>
-<li><a href="13_mcp_http_sse.py"><code>13_mcp_http_sse.py</code></a></li>
-<li><a href="14_workflow_human_in_loop_resolver.py"><code>14_workflow_human_in_loop_resolver.py</code></a></li>
-<li><a href="15_workflow_human_in_loop_pause.py"><code>15_workflow_human_in_loop_pause.py</code></a></li>
-<li><a href="16_agent_middleware_logging.py"><code>16_agent_middleware_logging.py</code></a></li>
-<li><a href="17_agent_middleware_short_circuit.py"><code>17_agent_middleware_short_circuit.py</code></a></li>
-<li><a href="18_opentelemetry_middleware.py"><code>18_opentelemetry_middleware.py</code></a></li>
-<li><a href="19_simple_builder.py"><code>19_simple_builder.py</code></a></li>
+<li><a href="skills/weather/"><code>skills/weather/</code></a> — a complete
+  <code>SKILL.md</code>-format skill with <code>references/REFERENCE.md</code> and
+  <code>scripts/normalize_weather.py</code> as bundled resources. Loaded by
+  example 08.</li>
 </ul>
+<h2 id="running">Running<a class="headerlink" href="#running" title="Permanent link">&para;</a></h2>
+<p>Every script is self-contained and runs from the repo root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>examples/19_simple_builder.py
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>examples/cookbook/local_ollama.py
+</code></pre></div>
+<p>A <code>tests/integration/test_doc_example_drift.py</code> gate verifies every
+<code>examples/...py</code> referenced from a doc actually exists on disk, so
+renaming an example without updating the docs is caught in CI.</p>
 
 
 

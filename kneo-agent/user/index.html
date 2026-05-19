@@ -27,7 +27,7 @@
     
     
       
-        <title>User - Kneo Agent SDK</title>
+        <title>User-facing guides - Kneo Agent SDK</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#user" class="md-skip">
+        <a href="#user-facing-guides" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              User
+              User-facing guides
             
           </span>
         </div>
@@ -1263,10 +1263,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#pages" class="md-nav__link">
+  <a href="#building-agents-on-the-sdk" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Pages
+        Building agents on the SDK
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operating-and-upgrading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operating and upgrading
       
     </span>
   </a>
@@ -1290,17 +1301,40 @@
 
 
 
-<h1 id="user">User<a class="headerlink" href="#user" title="Permanent link">&para;</a></h1>
-<h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
+<h1 id="user-facing-guides">User-facing guides<a class="headerlink" href="#user-facing-guides" title="Permanent link">&para;</a></h1>
+<p>Task-oriented guides for application developers building agents on the
+SDK, plus operator-facing docs for self-hosted / air-gapped /
+observability-aware setups. The full project index lives at
+<code>../README.md</code>.</p>
+<h2 id="building-agents-on-the-sdk">Building agents on the SDK<a class="headerlink" href="#building-agents-on-the-sdk" title="Permanent link">&para;</a></h2>
+<p>Read these as a sequence the first time you reach for each capability:</p>
+<ol>
+<li><a href="agent_skills_guide/"><code>agent_skills_guide.md</code></a> — packaging prompt
+   fragments + tool bundles + defaults into <code>Skill</code> objects (Python or
+   <code>SKILL.md</code> files); discovery; bundled resources; activation payloads.</li>
+<li><a href="mcp_guide/"><code>mcp_guide.md</code></a> — importing remote MCP tool servers
+   over <code>stdio</code>, <code>http</code>, <code>sse</code>; corporate TLS / mTLS / custom-CA wiring
+   for HTTP and SSE transports.</li>
+<li><a href="agent_middleware_guide/"><code>agent_middleware_guide.md</code></a> — the four
+   middleware hook points (run / stream / model / tool) and the v1.2.0
+   production bundle (<code>RetryMiddleware</code>, <code>RateLimitMiddleware</code>,
+   <code>TokenBudgetMiddleware</code>, <code>RedactionMiddleware</code>).</li>
+<li><a href="human_in_the_loop_guide/"><code>human_in_the_loop_guide.md</code></a> —
+   workflow steps with pause/resume, resolver callbacks, and
+   approval semantics.</li>
+</ol>
+<h2 id="operating-and-upgrading">Operating and upgrading<a class="headerlink" href="#operating-and-upgrading" title="Permanent link">&para;</a></h2>
+<p>Read these out of order; pick what your environment needs:</p>
 <ul>
-<li><a href="agent_skills_guide/">Agent Skills Guide</a></li>
-<li><a href="agent_middleware_guide/">Agent Middleware Guide</a></li>
-<li><a href="mcp_guide/">MCP Guide</a></li>
-<li><a href="human_in_the_loop_guide/">Human In The Loop Guide</a></li>
-<li><a href="self_hosted_observability/">Self-hosted observability</a></li>
-<li><a href="offline_install/">Offline / air-gapped install</a></li>
-<li><a href="api_stability/">API Stability and Deprecation Policy</a></li>
-<li><a href="upgrading_to_1.2/">Upgrading to 1.2.0</a></li>
+<li><a href="api_stability/"><code>api_stability.md</code></a> — what counts as the public
+  surface; the deprecation policy. Read this once early.</li>
+<li><a href="upgrading_to_1.2/"><code>upgrading_to_1.2.md</code></a> — version-specific
+  upgrade walkthrough from 1.1.x. Read this when you bump pins.</li>
+<li><a href="self_hosted_observability/"><code>self_hosted_observability.md</code></a> —
+  wiring the OpenTelemetry middleware to a user-run OTLP collector,
+  Jaeger, Grafana Tempo, or SigNoz.</li>
+<li><a href="offline_install/"><code>offline_install.md</code></a> — air-gapped install via
+  <code>pip download</code> + <code>--no-index --find-links</code>; no-phone-home audit.</li>
 </ul>
 
 

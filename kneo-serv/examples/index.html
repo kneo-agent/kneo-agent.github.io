@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/examples/">
       
       
-        <link rel="prev" href="../pub/release_notes_0.1.0/">
+        <link rel="prev" href="../pub/kneo_agent_platform_operation_guide/">
       
       
       
@@ -25,7 +25,7 @@
     
     
       
-        <title>Examples - Kneo Agent Platform</title>
+        <title>Kneo Agent Platform examples - Kneo Agent Platform</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#examples" class="md-skip">
+        <a href="#kneo-agent-platform-examples" class="md-skip">
           Skip to content
         </a>
       
@@ -105,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Examples
+              Kneo Agent Platform examples
             
           </span>
         </div>
@@ -374,6 +374,8 @@
       
         
       
+        
+      
     
     
     
@@ -557,6 +559,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -988,10 +1018,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1132,62 +1158,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1296,10 +1266,43 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#files" class="md-nav__link">
+  <a href="#reading-order" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Files
+        Reading order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reference-not-a-spec-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference (not a spec to run)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supporting-python-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supporting Python helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#caveats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caveats
       
     </span>
   </a>
@@ -1323,19 +1326,72 @@
 
 
 
-<h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
+<h1 id="kneo-agent-platform-examples">Kneo Agent Platform examples<a class="headerlink" href="#kneo-agent-platform-examples" title="Permanent link">&para;</a></h1>
+<p>Runnable spec files and supporting Python helpers for <code>kneo-serv</code>.
+Use them to validate a local install, exercise the CLI, or as
+starting points for your own specs.</p>
+<p>For the annotated walkthrough — exact <code>kneo spec</code> / <code>kneo run</code>
+commands, expected output, caveats — see
+<a href="../user/examples/"><code>docs/user/examples.md</code></a>.</p>
+<h2 id="reading-order">Reading order<a class="headerlink" href="#reading-order" title="Permanent link">&para;</a></h2>
+<p>If you're new, work through these specs in order. Each one builds on
+concepts the previous one introduces.</p>
+<ol>
+<li><strong><a href="research_agent.yaml"><code>research_agent.yaml</code></a></strong> — single-agent
+   research pipeline with a plan-act strategy, two tools, and a
+   sequential workflow. The simplest end-to-end example. Three
+   environment overlays
+   (<a href="research_agent.dev.yaml"><code>research_agent.dev.yaml</code></a>,
+   <a href="research_agent.staging.yaml"><code>research_agent.staging.yaml</code></a>,
+   <a href="research_agent.prod.yaml"><code>research_agent.prod.yaml</code></a>)
+   demonstrate the overlay system.</li>
+<li><strong><a href="graph_review_workflow.yaml"><code>graph_review_workflow.yaml</code></a></strong> —
+   graph workflow with conditional edges (retrieve → analyze →
+   review → revise/finalize). Adds graph shape and conditional
+   routing on top of the basic sequential pattern.</li>
+<li><strong><a href="concurrent_review_workflow.yaml"><code>concurrent_review_workflow.yaml</code></a></strong>
+   — concurrent workflow where three reviewers (security,
+   accessibility, performance) run against the same input in
+   parallel and the platform collects their responses. Adds
+   fan-out / fan-in to your mental model.</li>
+<li><strong><a href="group_chat_workflow.yaml"><code>group_chat_workflow.yaml</code></a></strong> —
+   group-chat workflow where a proponent, skeptic, and pragmatist
+   debate a proposal over two rounds. Adds multi-agent
+   conversation with <code>rounds: N</code> and ordered participant
+   declaration.</li>
+<li><strong><a href="human_approval_workflow.yaml"><code>human_approval_workflow.yaml</code></a></strong>
+   — sequential workflow with a human-in-the-loop step between
+   draft and publish. Adds the pause/resume continuation API.</li>
+<li><strong><a href="smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a></strong> —
+   minimal human-in-the-loop spec that uses the <code>dummy</code> provider.
+   Useful for deployment smoke tests that exercise the pause/resume
+   path without a real LLM.</li>
+</ol>
+<h2 id="reference-not-a-spec-to-run">Reference (not a spec to run)<a class="headerlink" href="#reference-not-a-spec-to-run" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="project_config.yaml"><code>project_config.yaml</code></a></li>
-<li><a href="research_agent.yaml"><code>research_agent.yaml</code></a></li>
-<li><a href="research_agent.dev.yaml"><code>research_agent.dev.yaml</code></a></li>
-<li><a href="research_agent.staging.yaml"><code>research_agent.staging.yaml</code></a></li>
-<li><a href="research_agent.prod.yaml"><code>research_agent.prod.yaml</code></a></li>
-<li><a href="graph_review_workflow.yaml"><code>graph_review_workflow.yaml</code></a></li>
-<li><a href="human_approval_workflow.yaml"><code>human_approval_workflow.yaml</code></a></li>
-<li><a href="smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a></li>
-<li><a href="app_functions.py"><code>app_functions.py</code></a></li>
-<li><a href="human_functions.py"><code>human_functions.py</code></a></li>
+<li><strong><a href="project_config.yaml"><code>project_config.yaml</code></a></strong> — example
+  <code>.kneo/config.yaml</code> showing per-environment overlays and policy
+  enforcement. Project-level config that <code>kneo</code> reads when pointed
+  at a project directory.</li>
+</ul>
+<h2 id="supporting-python-helpers">Supporting Python helpers<a class="headerlink" href="#supporting-python-helpers" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="app_functions.py"><code>app_functions.py</code></a></strong> — function references
+  for <code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>,
+  <code>webpage_reader</code>, <code>summarize</code>). Stub implementations meant to be
+  replaced with real ones in your own spec.</li>
+<li><strong><a href="human_functions.py"><code>human_functions.py</code></a></strong> — function
+  references for <code>human_approval_workflow.yaml</code> (<code>draft_report</code>,
+  <code>publish_report</code>). Also stubs.</li>
+</ul>
+<h2 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h2>
+<ul>
+<li>These specs are <strong>non-production placeholders</strong>. The
+  <code>provider</code>/<code>model</code> fields point at common defaults
+  (<code>openai/gpt-4o</code>, <code>openai/gpt-4o-mini</code>) and should be retargeted
+  before any real use.</li>
+<li>The Python helpers return placeholder strings — replace with real
+  implementations before running against production tooling.</li>
 </ul>
 
 

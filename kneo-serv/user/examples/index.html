@@ -16,7 +16,7 @@
         <link rel="prev" href="../cli_reference/">
       
       
-        <link rel="next" href="../human_in_the_loop/">
+        <link rel="next" href="../run_recipes/">
       
       
         
@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -648,6 +650,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#concurrent_review_workflowyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        concurrent_review_workflow.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group_chat_workflowyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group_chat_workflow.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#human_approval_workflowyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -756,6 +780,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1179,10 +1231,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1310,62 +1358,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1511,6 +1503,28 @@
     <span class="md-ellipsis">
       
         graph_review_workflow.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#concurrent_review_workflowyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        concurrent_review_workflow.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#group_chat_workflowyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        group_chat_workflow.yaml
       
     </span>
   </a>
@@ -1674,12 +1688,32 @@ based on output. Demonstrates <code>GraphWorkflow</code>, conditional edges, and
 component agent references.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/graph_review_workflow.yaml
 </code></pre></div>
+<h3 id="concurrent_review_workflowyaml"><a href="../../examples/concurrent_review_workflow.yaml"><code>concurrent_review_workflow.yaml</code></a><a class="headerlink" href="#concurrent_review_workflowyaml" title="Permanent link">&para;</a></h3>
+<p>A concurrent workflow that fans out a single input to three reviewers
+(security, accessibility, performance) running in parallel. The platform
+collects each participant's response and returns the combined result.
+Demonstrates <code>ConcurrentWorkflow</code>, <code>participants:</code>-style declaration, and
+the fan-out / fan-in pattern.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/concurrent_review_workflow.yaml
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Review the auth middleware refactor&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>examples/concurrent_review_workflow.yaml
+</code></pre></div>
+<h3 id="group_chat_workflowyaml"><a href="../../examples/group_chat_workflow.yaml"><code>group_chat_workflow.yaml</code></a><a class="headerlink" href="#group_chat_workflowyaml" title="Permanent link">&para;</a></h3>
+<p>A group-chat workflow with three personas (proponent, skeptic,
+pragmatist) debating a design proposal over two rounds. Each round
+visits all participants in declaration order, so <code>rounds: 2</code> produces
+six total turns. Demonstrates <code>GroupChatWorkflow</code>, the <code>rounds:</code> knob,
+and ordered participant declaration for structured back-and-forth.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/group_chat_workflow.yaml
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;Should we adopt gRPC for service-to-service calls?&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>examples/group_chat_workflow.yaml
+</code></pre></div>
 <h3 id="human_approval_workflowyaml"><a href="../../examples/human_approval_workflow.yaml"><code>human_approval_workflow.yaml</code></a><a class="headerlink" href="#human_approval_workflowyaml" title="Permanent link">&para;</a></h3>
 <p>Sequential workflow with a human-in-the-loop step (<code>kind: human</code>) between
 draft and publish. Use it to exercise the pause/resume API.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json<span class="w"> </span>examples/human_approval_workflow.yaml
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Output includes a continuation_id; resume with:</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;hello&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json<span class="w"> </span>examples/human_approval_workflow.yaml
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Output includes a continuation_id; resume with:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
 </code></pre></div>
 <p>The deeper human-task documentation is in
 <code>design.md § 8.5</code> and
@@ -1688,7 +1722,7 @@ the <a href="../service_api/">HTTP API's <code>/human-tasks/...</code> endpoints
 <p>Lightweight human-in-the-loop spec that uses the <code>dummy</code> provider so it
 runs without real provider credentials. Used by the deployment smoke
 script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
 </code></pre></div>
 <p>See <a href="../deployment_smoke/"><code>deployment_smoke.md</code></a> for the full smoke
 sequence.</p>
@@ -1697,8 +1731,8 @@ sequence.</p>
 <p>Reference <code>.kneo/config.yaml</code> content showing project metadata, service
 defaults, runtime defaults, and per-environment policy enforcement
 overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, or use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <p>The schema and overlay rules are in
 <a href="../project_config/"><code>project_config.md</code></a>.</p>
@@ -1720,13 +1754,13 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
    through <code>ToolRegistry</code> or MCP servers (see
    <code>extending.md</code>).</li>
 <li>Validate against your target environment:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
 <li>Compile to confirm the workflow builds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 <li>Run locally before deploying:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../deployment/"><code>deployment.md</code></a>.</p>

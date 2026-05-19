@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -915,10 +945,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-010-deliberately-does-not-provide" class="md-nav__link">
+  <a href="#what-kneo-serv-deliberately-does-not-provide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What 0.1.0 deliberately does not provide
+        What kneo-serv deliberately does not provide
       
     </span>
   </a>
@@ -1156,10 +1186,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1287,62 +1313,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1566,10 +1536,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-010-deliberately-does-not-provide" class="md-nav__link">
+  <a href="#what-kneo-serv-deliberately-does-not-provide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What 0.1.0 deliberately does not provide
+        What kneo-serv deliberately does not provide
       
     </span>
   </a>
@@ -1655,8 +1625,8 @@ no built-in role fits.</p>
 <li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
 </ul>
 <h3 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime<a class="headerlink" href="#3-rotate-keys-without-downtime" title="Permanent link">&para;</a></h3>
-<p><code>kneo-serv</code> 0.1.0 has no in-place key rotation API. Rotation is a config
-swap:</p>
+<p><code>kneo-serv</code> has no in-place key rotation API in the 0.2.x line.
+Rotation is a config swap:</p>
 <ol>
 <li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
    (semicolon-separated entries; same <code>name:</code> is fine).</li>
@@ -1738,7 +1708,7 @@ escape hatches both default to off:</p>
 <li>[ ] Custom tools and middleware do not log user inputs or provider
   responses without redaction.</li>
 </ul>
-<h2 id="what-010-deliberately-does-not-provide">What 0.1.0 deliberately does not provide<a class="headerlink" href="#what-010-deliberately-does-not-provide" title="Permanent link">&para;</a></h2>
+<h2 id="what-kneo-serv-deliberately-does-not-provide">What <code>kneo-serv</code> deliberately does not provide<a class="headerlink" href="#what-kneo-serv-deliberately-does-not-provide" title="Permanent link">&para;</a></h2>
 <p>Operators sometimes go looking for these; document the gap rather than
 inventing it:</p>
 <ul>

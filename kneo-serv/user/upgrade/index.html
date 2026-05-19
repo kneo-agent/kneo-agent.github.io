@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -562,6 +564,34 @@
     
   
     Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
   
 
     
@@ -993,6 +1023,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#020-first-public-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 — first public distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#021-healthz-version-and-docker-app-permission-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.1 — /healthz version and Docker /app permission fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#022-fastapi-infoversion-fix-post-020-docs-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.2 — FastAPI info.version fix + post-0.2.0 docs sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1167,10 +1230,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1298,62 +1357,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -1571,6 +1574,39 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#020-first-public-distribution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.0 — first public distribution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#021-healthz-version-and-docker-app-permission-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.1 — /healthz version and Docker /app permission fix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#022-fastapi-infoversion-fix-post-020-docs-sweep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.2.2 — FastAPI info.version fix + post-0.2.0 docs sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1641,7 +1677,7 @@ design.md § 13.</p>
 <li><strong>Read the release notes</strong> for every minor/major version between your
    current and target version. Patch upgrades only need the latest patch's
    notes. Notes for the current release are at
-   <a href="../../pub/release_notes_0.1.0/">release_notes_0.1.0.md</a>.</li>
+   release_notes_0.1.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -1726,8 +1762,98 @@ releases. The profile schema is itself versioned and migrated in place.</p>
 changed, what action operators must take, and how to verify the upgrade.</p>
 <h3 id="010-initial-release">0.1.0 — initial release<a class="headerlink" href="#010-initial-release" title="Permanent link">&para;</a></h3>
 <p>No upgrade applies; this is the first published version. See
-<a href="../../pub/release_notes_0.1.0/">release_notes_0.1.0.md</a> for scope, capabilities,
+release_notes_0.1.0.md for scope, capabilities,
 and verified release-candidate steps.</p>
+<h3 id="020-first-public-distribution">0.2.0 — first public distribution<a class="headerlink" href="#020-first-public-distribution" title="Permanent link">&para;</a></h3>
+<p><strong>This is the first cut to publish a real <code>kneo-serv</code> package.</strong> 0.1.0
+and 0.1.1 shipped as GitHub Release artifacts only; 0.2.0 is the first
+version available via <code>pip install kneo-serv</code> and <code>docker pull
+ghcr.io/kneo-agent/kneo-serv</code>.</p>
+<p><strong>Version trajectory on PyPI</strong>: <code>0.0.0 → 0.2.0</code>. The <code>kneo-serv 0.0.0</code>
+placeholder published on 2026-05-14 reserved the distribution name; it
+shipped an empty importable module with no <code>kneo</code> CLI binary (no
+<code>[project.scripts]</code> entry). Any user who tried <code>pip install kneo-serv
+&amp;&amp; kneo --version</code> during the placeholder window saw <code>kneo: command
+not found</code> — 0.2.0 is the first cut to install the binary. The
+placeholder is yanked once 0.2.0 ships; existing explicit <code>==0.0.0</code>
+pins still resolve, but default <code>pip install kneo-serv</code> jumps straight
+to 0.2.0.</p>
+<p><strong>Install paths</strong>:
+- <code>pip install kneo-serv</code> — first time this works end-to-end.
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.2.0</code> (and <code>:0.2</code>, and
+  <code>:latest</code>) — first time the image is available without a local
+  build.</p>
+<p><strong>Deployment migration</strong> for operators on 0.1.x using <code>compose.yaml</code>
+with the bundled <code>build: context: .</code>:
+- Default flow becomes <code>docker compose pull &amp;&amp; docker compose up -d</code>
+  against the GHCR image.
+- The <code>build:</code> block stays in <code>compose.yaml</code> for contributors and the
+  CI smoke test (<code>docker compose up --build</code>).
+- No required changes to <code>deploy/production.env</code> or
+  <code>deploy/staging.env</code> from 0.1.1.</p>
+<p><strong>Persistence schemas</strong>: unchanged from 0.1.1. No migrations required.</p>
+<p><strong>Feature additions visible to operators</strong> (full per-feature detail in
+<code>release_notes_0.2.0.md</code>):
+- <code>kneo spec lint</code> — CI-friendly validator subcommand that exits
+  non-zero on any warnings or errors.
+- Retention windows now live in <code>.kneo/config.yaml</code> under a
+  <code>retention:</code> block, with env vars as the operator override.
+- Human-task expiration via
+  <code>PlatformManager.prune_expired_human_tasks()</code> — paused runs whose
+  human-step deadline has passed transition to a new <code>expired</code> status
+  and emit <code>human.expired</code> audit events.
+- Two new reference example specs:
+  <code>concurrent_review_workflow.yaml</code> and <code>group_chat_workflow.yaml</code>.
+- Docker-based local PostgreSQL integration testing via
+  <code>python scripts/postgres_test.py</code>.</p>
+<p>No breaking changes to spec syntax, HTTP API contracts, CLI command
+names, env-var names, or persistence schemas. Specs that validated
+under 0.1.1 continue to validate under 0.2.0.</p>
+<h3 id="021-healthz-version-and-docker-app-permission-fix">0.2.1 — <code>/healthz</code> version and Docker <code>/app</code> permission fix<a class="headerlink" href="#021-healthz-version-and-docker-app-permission-fix" title="Permanent link">&para;</a></h3>
+<p>Patch release fixing two regressions discovered while smoke-testing the
+published 0.2.0 image. Both are bug fixes; no new features, no contract
+changes.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.2.1</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.2.1</code> — <code>:0.2</code> and <code>:latest</code>
+  now resolve to the 0.2.1 digest.</p>
+<p><strong>What was broken in 0.2.0</strong>:
+- <code>GET /healthz</code> returned <code>"version":"0.1.0"</code> from the 0.2.0 image
+  because <code>HealthResponse.version</code> was a hardcoded string literal. 0.2.1
+  resolves the field dynamically via <code>importlib.metadata.version("kneo-serv")</code>.
+- Plain <code>docker run -p 8000:8000 ghcr.io/kneo-agent/kneo-serv:0.2.0</code>
+  crashed on startup with
+  <code>PermissionError: [Errno 13] Permission denied: '.kneo'</code> because <code>/app</code>
+  was root-owned but the container drops to the non-root <code>kneo</code> user
+  before creating the SQLite-fallback path. 0.2.1 adds
+  <code>chown -R kneo:kneo /app</code> to the install layer. The Docker Compose
+  deployment path was unaffected (it pins <code>KNEO_SERV_DATABASE_URL</code> to
+  PostgreSQL).</p>
+<p><strong>Persistence schemas</strong>: unchanged from 0.2.0. No migrations required.</p>
+<p>No breaking changes to spec syntax, HTTP API contracts, CLI command
+names, env-var names, or persistence schemas.</p>
+<h3 id="022-fastapi-infoversion-fix-post-020-docs-sweep">0.2.2 — FastAPI <code>info.version</code> fix + post-0.2.0 docs sweep<a class="headerlink" href="#022-fastapi-infoversion-fix-post-020-docs-sweep" title="Permanent link">&para;</a></h3>
+<p>Patch release fixing one regression in the same family as 0.2.1 plus
+a documentation sweep. No feature changes, no contract changes, no
+schema changes.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.2.2</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.2.2</code> — <code>:0.2</code> and
+  <code>:latest</code> now resolve to the 0.2.2 digest.</p>
+<p><strong>What was broken in 0.2.1</strong>:
+- <code>GET /openapi.json</code> returned <code>info.version: "0.1.0"</code> from the 0.2.1
+  image because the FastAPI app constructor in
+  <code>kneo_serv/service/app.py</code> still pinned a hardcoded literal. The
+  0.2.1 cut fixed <code>HealthResponse.version</code> but missed this parallel
+  occurrence. 0.2.2 resolves both via the same
+  <code>importlib.metadata.version("kneo-serv")</code> helper, called at
+  app-construction time.</p>
+<p><strong>Documentation</strong>:
+- Forward-looking plan docs and "as of 0.1.0" framing in user/dev
+  docs swept to match the 0.2.x shipped reality. No content lost —
+  historical files (CHANGELOG entries, shipped release notes,
+  <code>TODO-0.2.0.md</code>, ADRs) are unchanged.</p>
+<p><strong>Persistence schemas</strong>: unchanged from 0.2.1. No migrations required.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

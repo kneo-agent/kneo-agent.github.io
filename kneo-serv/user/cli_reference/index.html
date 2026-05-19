@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -1025,6 +1027,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../run_recipes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run with Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../human_in_the_loop/" class="md-nav__link">
         
   
@@ -1436,10 +1466,6 @@
       
         
       
-        
-      
-        
-      
     
     
     
@@ -1567,62 +1593,6 @@
     
   
     Kneo Agent Platform Operation Guide
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.1/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.1 release notes
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../pub/release_notes_0.1.0/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform 0.1.0 release notes
   
 
     
@@ -2324,11 +2294,13 @@
 <a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
 <a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a> Commands
 <a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a> validate
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a> compile
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a> resolve
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a> migrate        Migrate an older YAML spec to the current v1 shape.
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a> policy-report  Generate a policy evaluation report for a spec.
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a> bundle         Sign and verify approved spec bundles
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a> lint           Surface validator warnings and errors. Exits 1 if any are
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>                found.
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a> compile
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a> resolve
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a> migrate        Migrate an older YAML spec to the current v1 shape.
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a> policy-report  Generate a policy evaluation report for a spec.
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a> bundle         Sign and verify approved spec bundles
 </code></pre></div>
 <h2 id="kneo-spec-validate"><code>kneo spec validate</code><a class="headerlink" href="#kneo-spec-validate" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> Usage: kneo spec validate [OPTIONS] [SPEC_PATH]
