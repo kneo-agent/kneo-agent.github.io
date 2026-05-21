@@ -1658,6 +1658,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-side-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform-side spans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#exporter-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1994,6 +2005,17 @@
     <span class="md-ellipsis">
       
         0.2.2 — FastAPI info.version fix + post-0.2.0 docs sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3.0
       
     </span>
   </a>
@@ -3229,6 +3251,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-side-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform-side spans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#exporter-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3565,6 +3598,17 @@
     <span class="md-ellipsis">
       
         0.2.2 — FastAPI info.version fix + post-0.2.0 docs sweep
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3.0
       
     </span>
   </a>
@@ -4280,10 +4324,14 @@ every environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.2.2</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.2</code>),
-and <code>latest</code>. amd64-only for the 0.2.x line; arm64 is on the 0.2.x
-point-release backlog. The image installs the <code>kneo-serv[deploy]</code>
-extra (psycopg + SDK telemetry).</p>
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.3.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.3</code>),
+and <code>latest</code>. amd64-only for the 0.3.x line; arm64 is deferred to
+1.0. From 0.3.0 onward the image
+is keyless-signed via cosign and ships with a CycloneDX SBOM
+attestation — verification commands in
+<code>supply_chain_review.md § Verification commands</code>.
+The image installs the <code>kneo-serv[deploy]</code> extra (psycopg + SDK
+telemetry).</p>
 <p>Run it against PostgreSQL:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_DATABASE_URL</span><span class="o">=</span>postgresql://kneo_serv:change-me@host.docker.internal:5432/kneo_serv<span class="w"> </span><span class="se">\</span>
@@ -4694,8 +4742,8 @@ full env-var list, see
 </tr>
 <tr>
 <td>OpenTelemetry spans</td>
-<td>Distributed-tracing spans across SDK-driven agent and tool calls</td>
-<td><code>kneo_agent.observability.OpenTelemetryMiddleware</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
+<td>Distributed-tracing spans across SDK-driven agent / tool calls <strong>and</strong> platform-side operations (queue dispatch, worker lease, continuation lock)</td>
+<td><code>kneo_agent.observability.OpenTelemetryMiddleware</code> + <code>kneo_serv.observability.platform_tracer</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
 </tr>
 </tbody>
 </table>
@@ -4793,6 +4841,44 @@ and outputs frequently contain user payloads — enable them only after
 the deployment's data classification has approved payload capture.</p>
 <p>See <a href="../../user/environment/#observability"><code>environment.md § Observability</code></a> for
 the full env-var reference.</p>
+<h4 id="platform-side-spans">Platform-side spans<a class="headerlink" href="#platform-side-spans" title="Permanent link">&para;</a></h4>
+<p>The SDK's <code>OpenTelemetryMiddleware</code> covers the <em>agent boundary</em> — runs,
+tool calls, model calls. The platform also instruments operations that
+happen <em>outside</em> the agent's execution:</p>
+<table>
+<thead>
+<tr>
+<th>Span name</th>
+<th>Where</th>
+<th>Attributes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kneo.queue.dispatch</code></td>
+<td><code>PlatformManager.dispatch_run</code> — when a run is enqueued for an async worker</td>
+<td><code>kneo.run.id</code></td>
+</tr>
+<tr>
+<td><code>kneo.worker.lease</code></td>
+<td>Async worker loop — one span per lease attempt against the queue</td>
+<td><code>kneo.worker.id</code>, <code>kneo.worker.lease_seconds</code>, <code>kneo.worker.claimed</code> (bool), <code>kneo.run.id</code> (if claimed)</td>
+</tr>
+<tr>
+<td><code>kneo.continuation.lock</code></td>
+<td><code>PlatformManager.resume_human_task</code> — when the per-continuation lock is acquired before resume</td>
+<td><code>kneo.continuation.id</code>, <code>kneo.lock.name</code>, <code>kneo.lock.ttl_seconds</code>, <code>kneo.lock.acquired</code> (bool)</td>
+</tr>
+</tbody>
+</table>
+<p>These spans share the same <code>KNEO_SERV_OTEL_ENABLED</code> flag — they're a
+clean no-op when telemetry is off (no overhead beyond a single env-var
+check). Span names use the <code>kneo.&lt;area&gt;.&lt;operation&gt;</code> convention so they
+sort cleanly alongside SDK-owned spans in tracing UIs.</p>
+<p>Lease spans with <code>kneo.worker.claimed=false</code> indicate an empty queue —
+useful for measuring how often workers idle. Continuation lock spans
+with <code>kneo.lock.acquired=false</code> correlate with the <code>LockAcquisitionError</code>
+shown in <a href="#81-lockacquisitionerror-on-resume">troubleshooting.md § 8.1</a>.</p>
 <h4 id="exporter-configuration">Exporter configuration<a class="headerlink" href="#exporter-configuration" title="Permanent link">&para;</a></h4>
 <p>The service uses the OpenTelemetry global tracer provider; exporters are
 configured with standard <code>OTEL_*</code> environment variables that the OTel
@@ -5315,6 +5401,68 @@ schema changes.</p>
   historical files (CHANGELOG entries, shipped release notes,
   <code>TODO-0.2.0.md</code>, ADRs) are unchanged.</p>
 <p><strong>Persistence schemas</strong>: unchanged from 0.2.1. No migrations required.</p>
+<h4 id="030">0.3.0<a class="headerlink" href="#030" title="Permanent link">&para;</a></h4>
+<p>Next additive minor on the 0.2.x line. No breaking changes to spec
+syntax, HTTP API contracts, CLI command names, env-var names, or
+persistence schemas. Full narrative in
+<code>release_notes_0.3.0.md</code>.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.3.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.3.0</code> — <code>:0.3</code> and
+  <code>:latest</code> now resolve to the 0.3.0 digest. The image is now
+  signed (cosign keyless via Sigstore) and ships with a CycloneDX
+  SBOM attestation; verification commands are in
+  <code>supply_chain_review.md § Verification commands</code>.</p>
+<p><strong>SDK floor bump</strong>:
+- The <code>kneo-agent</code> SDK floor moves from <code>&gt;=1.1.1</code> to <code>&gt;=1.2.0</code>.
+  Pip auto-resolves on <code>pip install -U kneo-serv</code>, but operators
+  pinning the SDK separately (e.g. via a constraints file or a
+  monorepo lockfile) must ensure their install is on <code>1.2.0</code> or
+  newer. The compat test suite passed against <code>kneo-agent 1.2.0</code>
+  throughout the 0.2.x line; the floor was kept low to avoid
+  forcing 0.1.x users to upgrade. 0.3.0 is the natural inflection
+  point to lift it.</p>
+<p><strong>New <code>timed_out</code> lifecycle status</strong>:
+- Runs that hit their run-level deadline transition to a new
+  terminal <code>timed_out</code> status (alongside <code>completed</code>, <code>failed</code>,
+  <code>cancelled</code>, <code>expired</code>). Operator tooling that switches on
+  <code>state.status</code> should accept it as terminal — e.g. dashboards,
+  alerting rules, retention sweeps (which the platform's own
+  <code>RetentionPolicy.run_statuses</code> already includes).
+- The <code>error.type</code> field on a timed-out run is <code>run_timed_out</code>,
+  distinct from <code>human_task_expired</code> (which the existing <code>expired</code>
+  status uses).</p>
+<p><strong>New runtime surfaces</strong>:
+- <code>start_run_from_spec(..., timeout_seconds=N)</code> and
+  <code>run_from_spec(..., timeout_seconds=N)</code> accept an optional
+  wall-clock deadline. Operator-callable
+  <code>PlatformManager.prune_timed_out_runs()</code> walks runs and force-cancels
+  those past their deadline. Same operator-cron pattern as
+  <code>prune_retention()</code> and <code>prune_expired_human_tasks()</code> — no
+  built-in scheduler.
+- The human-task <code>on_timeout: continue</code> and <code>on_timeout: escalate</code>
+  literals are now wired in the runtime (they were accepted by the
+  spec but silently treated as <code>fail</code> in 0.2.x). Operators with
+  specs that declared these literals will see the documented
+  behaviour for the first time. Audit consumers should expect new
+  event types: <code>human.continued</code>, <code>human.continue_failed</code>,
+  <code>human.escalated</code>, <code>run.timed_out</code>.
+- New route <code>GET /v1/runs/{run_id}/policy-report</code> returns the spec
+  policy report for a stored run, no spec bundle required
+  client-side. Auth: <code>specs:read</code> scope (same as the existing
+  <code>POST /v1/specs/policy-report</code>).</p>
+<p><strong>New observability surfaces</strong>:
+- Three new platform-side OpenTelemetry spans
+  (<code>kneo.queue.dispatch</code>, <code>kneo.worker.lease</code>,
+  <code>kneo.continuation.lock</code>) join the SDK's agent-boundary spans
+  when <code>KNEO_SERV_OTEL_ENABLED=true</code>. Pre-existing OTel pipelines
+  pick them up automatically once telemetry is enabled — no extra
+  configuration required. See
+  <a href="#platform-side-spans"><code>observability.md § Platform-side spans</code></a>.</p>
+<p><strong>Persistence schemas</strong>: unchanged. The new <code>RunState.deadline_at</code>
+and <code>Checkpoint.iteration</code> fields default to <code>None</code> and <code>1</code>
+respectively in the dataclass, so existing rows round-trip cleanly
+through the JSON-payload SQLite / PostgreSQL stores.</p>
 <h3 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h3>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

@@ -1459,10 +1459,14 @@ every environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.2.2</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.2</code>),
-and <code>latest</code>. amd64-only for the 0.2.x line; arm64 is on the 0.2.x
-point-release backlog. The image installs the <code>kneo-serv[deploy]</code>
-extra (psycopg + SDK telemetry).</p>
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.3.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.3</code>),
+and <code>latest</code>. amd64-only for the 0.3.x line; arm64 is deferred to
+1.0. From 0.3.0 onward the image
+is keyless-signed via cosign and ships with a CycloneDX SBOM
+attestation — verification commands in
+<code>supply_chain_review.md § Verification commands</code>.
+The image installs the <code>kneo-serv[deploy]</code> extra (psycopg + SDK
+telemetry).</p>
 <p>Run it against PostgreSQL:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_DATABASE_URL</span><span class="o">=</span>postgresql://kneo_serv:change-me@host.docker.internal:5432/kneo_serv<span class="w"> </span><span class="se">\</span>

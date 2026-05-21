@@ -1694,10 +1694,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#on_timeout-scope-as-of-020" class="md-nav__link">
+  <a href="#run-level-timeouts-vs-human-task-timeouts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        on_timeout scope as of 0.2.0
+        Run-level timeouts vs. human-task timeouts
       
     </span>
   </a>
@@ -2454,10 +2454,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#on_timeout-scope-as-of-020" class="md-nav__link">
+  <a href="#run-level-timeouts-vs-human-task-timeouts" class="md-nav__link">
     <span class="md-ellipsis">
       
-        on_timeout scope as of 0.2.0
+        Run-level timeouts vs. human-task timeouts
       
     </span>
   </a>
@@ -3399,34 +3399,79 @@ whether continuation is available, then call <code>/runs/{id}/continue</code>.</
 policy. When a sequential workflow pauses on a human step that declares
 a positive <code>timeout_seconds</code>, the platform computes
 <code>expires_at = pause_time + timeout_seconds</code> and stashes it on the
-continuation. Whether a ticket is auto-escalated to a different
-reviewer is up to your routing layer plus the <code>on_timeout: escalate</code>
-hint that the spec compiler preserves on the continuation metadata.</p>
+continuation along with the chosen <code>on_timeout</code> value. The prune step
+below dispatches on that value (<code>fail</code> / <code>continue</code> / <code>escalate</code>).
+Auto-routing of an escalated task to a different reviewer is still up
+to the operator's external workflow — the platform marks the task as
+escalated and emits an audit event, but does not auto-reassign.</p>
 <h4 id="expiring-paused-runs">Expiring paused runs<a class="headerlink" href="#expiring-paused-runs" title="Permanent link">&para;</a></h4>
 <p>Call <code>PlatformManager.prune_expired_human_tasks()</code> on whatever cadence
 the deployment needs (cron, scheduled run, manual operator action — the
 same pattern as <code>prune_retention()</code>; there is no built-in scheduler).</p>
 <p>For each saved continuation whose <code>expires_at</code> is in the past and whose
-underlying run is still <code>blocked</code>, the prune:</p>
+underlying run is still <code>blocked</code>, the prune dispatches on
+<code>pending_human_request["on_timeout"]</code>:</p>
 <ul>
-<li>Marks the run <code>expired</code> (a new lifecycle status alongside <code>failed</code> /
-  <code>cancelled</code>); <code>run.error.type</code> is <code>human_task_expired</code> with a message
-  recording the configured timeout.</li>
-<li>Records a <code>human.expired</code> audit event with <code>run_id</code>,
-  <code>continuation_id</code>, <code>timeout_seconds</code>, <code>expires_at</code>, and the cutoff
-  time used.</li>
-<li>Deletes the continuation (the audit event is the historical record).</li>
+<li><strong><code>fail</code></strong> (default): marks the run <code>expired</code> (a lifecycle status
+  alongside <code>failed</code> / <code>cancelled</code>); <code>run.error.type</code> is
+  <code>human_task_expired</code> with a message recording the configured
+  timeout. Records a <code>human.expired</code> audit event with <code>run_id</code>,
+  <code>continuation_id</code>, <code>timeout_seconds</code>, <code>expires_at</code>, <code>expired_at</code>
+  (the cutoff used), and <code>on_timeout</code>. Deletes the continuation.</li>
+<li><strong><code>continue</code></strong>: synthesizes an <code>approved</code> <code>HumanResponse</code> carrying
+  <code>metadata.auto_continued = true</code>, <code>metadata.reason = "timeout"</code>, and
+  the original <code>metadata.original_assignee</code>, then resumes the workflow
+  past the paused step. Records a <code>human.continued</code> audit event
+  before the resume attempt; if the resume itself raises, also
+  records <code>human.continue_failed</code> (with <code>error_type</code> and
+  <code>error_message</code>) and deletes the continuation so the prune does
+  not retry indefinitely.</li>
+<li><strong><code>escalate</code></strong>: keeps the run <code>blocked</code> and stamps
+  <code>pending_human_request["escalated_at"]</code> (plus a copy of the
+  original <code>expires_at</code> as <code>original_expires_at</code>) on the
+  continuation. Records a <code>human.escalated</code> audit event including
+  the original <code>assignee</code>. Subsequent prune calls <strong>skip</strong>
+  continuations carrying the <code>escalated_at</code> marker — escalation fires
+  once. The continuation stays alive until an operator resumes it via
+  the normal <code>/continuations/{id}/resume</code> path (typically after
+  reassigning to a different reviewer in the operator's external
+  workflow).</li>
 </ul>
-<p>Runs that have already resumed before the prune fires (status no longer
-<code>blocked</code>) are skipped — the resume path owns the terminal state. Calls
-are idempotent: a second prune at the same cutoff returns <code>0</code>.</p>
-<h4 id="on_timeout-scope-as-of-020"><code>on_timeout</code> scope as of 0.2.0<a class="headerlink" href="#on_timeout-scope-as-of-020" title="Permanent link">&para;</a></h4>
-<p><code>on_timeout: fail</code> (the default) is fully wired through the prune path
-above. <code>on_timeout: continue</code> and <code>on_timeout: escalate</code> are recorded on
-the continuation metadata but are not yet differentiated at prune time —
-they are currently treated as <code>fail</code>. Wiring those branches (resume with
-a default response for <code>continue</code>, re-route or notify for <code>escalate</code>) is
-tracked as a 0.2.x follow-up.</p>
+<p>Runs that have already resumed before the prune fires (status no
+longer <code>blocked</code>) are skipped on every branch — the resume path owns
+the terminal state. Calls are idempotent on the <code>fail</code> and <code>escalate</code>
+paths; the <code>continue</code> path is single-shot per continuation by
+construction (success deletes via the resume; failure deletes
+explicitly).</p>
+<p><code>prune_expired_human_tasks()</code> returns the count of continuations
+processed this call across all branches. Already-escalated
+continuations are skipped and do not contribute to the count.</p>
+<h4 id="run-level-timeouts-vs-human-task-timeouts">Run-level timeouts vs. human-task timeouts<a class="headerlink" href="#run-level-timeouts-vs-human-task-timeouts" title="Permanent link">&para;</a></h4>
+<p>Two independent timeouts can apply to a run that's blocked on a human
+step:</p>
+<ul>
+<li><strong>Human-task timeout</strong> (<code>components.humans.&lt;id&gt;.timeout_seconds</code> +
+  <code>on_timeout</code>): bounded waiting time on <em>this specific human step</em>.
+  Stored on the continuation as <code>expires_at</code>. Handled by
+  <code>prune_expired_human_tasks()</code> per the dispatch above.</li>
+<li><strong>Run-level timeout</strong> (<code>start_run_from_spec(...,
+  timeout_seconds=N)</code>): bounded wall-clock for the <em>whole run</em>, no
+  matter which step it's currently on. Stored on the run state as
+  <code>deadline_at</code>. Handled by
+  <code>PlatformManager.prune_timed_out_runs()</code>.</li>
+</ul>
+<p>Whichever fires first wins. If the run-level prune fires while the
+run is blocked on a human task, the run transitions to <code>timed_out</code>
+(not <code>expired</code>), the continuation is deleted, and a <code>run.timed_out</code>
+audit event is recorded — the human-task path is preempted. If the
+human-task prune fires first, the human-task <code>on_timeout</code> semantics
+apply as documented above; the run-level deadline becomes irrelevant
+because the run is no longer in <code>blocked</code> status.</p>
+<p>The <code>timed_out</code> lifecycle status is distinct from <code>expired</code>:
+<code>expired</code> means a human task missed its deadline (the run was waiting
+on a human); <code>timed_out</code> means the run as a whole missed its
+deadline (could have been waiting on a human, could have been
+mid-execution).</p>
 <h3 id="common-failure-modes_1">Common failure modes<a class="headerlink" href="#common-failure-modes_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

@@ -963,6 +963,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-side-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform-side spans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#exporter-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1543,6 +1554,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#platform-side-spans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform-side spans
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#exporter-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1627,8 +1649,8 @@ full env-var list, see
 </tr>
 <tr>
 <td>OpenTelemetry spans</td>
-<td>Distributed-tracing spans across SDK-driven agent and tool calls</td>
-<td><code>kneo_agent.observability.OpenTelemetryMiddleware</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
+<td>Distributed-tracing spans across SDK-driven agent / tool calls <strong>and</strong> platform-side operations (queue dispatch, worker lease, continuation lock)</td>
+<td><code>kneo_agent.observability.OpenTelemetryMiddleware</code> + <code>kneo_serv.observability.platform_tracer</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
 </tr>
 </tbody>
 </table>
@@ -1726,6 +1748,44 @@ and outputs frequently contain user payloads — enable them only after
 the deployment's data classification has approved payload capture.</p>
 <p>See <a href="../environment/#observability"><code>environment.md § Observability</code></a> for
 the full env-var reference.</p>
+<h3 id="platform-side-spans">Platform-side spans<a class="headerlink" href="#platform-side-spans" title="Permanent link">&para;</a></h3>
+<p>The SDK's <code>OpenTelemetryMiddleware</code> covers the <em>agent boundary</em> — runs,
+tool calls, model calls. The platform also instruments operations that
+happen <em>outside</em> the agent's execution:</p>
+<table>
+<thead>
+<tr>
+<th>Span name</th>
+<th>Where</th>
+<th>Attributes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kneo.queue.dispatch</code></td>
+<td><code>PlatformManager.dispatch_run</code> — when a run is enqueued for an async worker</td>
+<td><code>kneo.run.id</code></td>
+</tr>
+<tr>
+<td><code>kneo.worker.lease</code></td>
+<td>Async worker loop — one span per lease attempt against the queue</td>
+<td><code>kneo.worker.id</code>, <code>kneo.worker.lease_seconds</code>, <code>kneo.worker.claimed</code> (bool), <code>kneo.run.id</code> (if claimed)</td>
+</tr>
+<tr>
+<td><code>kneo.continuation.lock</code></td>
+<td><code>PlatformManager.resume_human_task</code> — when the per-continuation lock is acquired before resume</td>
+<td><code>kneo.continuation.id</code>, <code>kneo.lock.name</code>, <code>kneo.lock.ttl_seconds</code>, <code>kneo.lock.acquired</code> (bool)</td>
+</tr>
+</tbody>
+</table>
+<p>These spans share the same <code>KNEO_SERV_OTEL_ENABLED</code> flag — they're a
+clean no-op when telemetry is off (no overhead beyond a single env-var
+check). Span names use the <code>kneo.&lt;area&gt;.&lt;operation&gt;</code> convention so they
+sort cleanly alongside SDK-owned spans in tracing UIs.</p>
+<p>Lease spans with <code>kneo.worker.claimed=false</code> indicate an empty queue —
+useful for measuring how often workers idle. Continuation lock spans
+with <code>kneo.lock.acquired=false</code> correlate with the <code>LockAcquisitionError</code>
+shown in <a href="../troubleshooting/#81-lockacquisitionerror-on-resume">troubleshooting.md § 8.1</a>.</p>
 <h3 id="exporter-configuration">Exporter configuration<a class="headerlink" href="#exporter-configuration" title="Permanent link">&para;</a></h3>
 <p>The service uses the OpenTelemetry global tracer provider; exporters are
 configured with standard <code>OTEL_*</code> environment variables that the OTel

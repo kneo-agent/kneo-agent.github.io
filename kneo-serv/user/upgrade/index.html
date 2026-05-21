@@ -1056,6 +1056,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1607,6 +1618,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.3.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1854,6 +1876,68 @@ schema changes.</p>
   historical files (CHANGELOG entries, shipped release notes,
   <code>TODO-0.2.0.md</code>, ADRs) are unchanged.</p>
 <p><strong>Persistence schemas</strong>: unchanged from 0.2.1. No migrations required.</p>
+<h3 id="030">0.3.0<a class="headerlink" href="#030" title="Permanent link">&para;</a></h3>
+<p>Next additive minor on the 0.2.x line. No breaking changes to spec
+syntax, HTTP API contracts, CLI command names, env-var names, or
+persistence schemas. Full narrative in
+<code>release_notes_0.3.0.md</code>.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.3.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.3.0</code> — <code>:0.3</code> and
+  <code>:latest</code> now resolve to the 0.3.0 digest. The image is now
+  signed (cosign keyless via Sigstore) and ships with a CycloneDX
+  SBOM attestation; verification commands are in
+  <code>supply_chain_review.md § Verification commands</code>.</p>
+<p><strong>SDK floor bump</strong>:
+- The <code>kneo-agent</code> SDK floor moves from <code>&gt;=1.1.1</code> to <code>&gt;=1.2.0</code>.
+  Pip auto-resolves on <code>pip install -U kneo-serv</code>, but operators
+  pinning the SDK separately (e.g. via a constraints file or a
+  monorepo lockfile) must ensure their install is on <code>1.2.0</code> or
+  newer. The compat test suite passed against <code>kneo-agent 1.2.0</code>
+  throughout the 0.2.x line; the floor was kept low to avoid
+  forcing 0.1.x users to upgrade. 0.3.0 is the natural inflection
+  point to lift it.</p>
+<p><strong>New <code>timed_out</code> lifecycle status</strong>:
+- Runs that hit their run-level deadline transition to a new
+  terminal <code>timed_out</code> status (alongside <code>completed</code>, <code>failed</code>,
+  <code>cancelled</code>, <code>expired</code>). Operator tooling that switches on
+  <code>state.status</code> should accept it as terminal — e.g. dashboards,
+  alerting rules, retention sweeps (which the platform's own
+  <code>RetentionPolicy.run_statuses</code> already includes).
+- The <code>error.type</code> field on a timed-out run is <code>run_timed_out</code>,
+  distinct from <code>human_task_expired</code> (which the existing <code>expired</code>
+  status uses).</p>
+<p><strong>New runtime surfaces</strong>:
+- <code>start_run_from_spec(..., timeout_seconds=N)</code> and
+  <code>run_from_spec(..., timeout_seconds=N)</code> accept an optional
+  wall-clock deadline. Operator-callable
+  <code>PlatformManager.prune_timed_out_runs()</code> walks runs and force-cancels
+  those past their deadline. Same operator-cron pattern as
+  <code>prune_retention()</code> and <code>prune_expired_human_tasks()</code> — no
+  built-in scheduler.
+- The human-task <code>on_timeout: continue</code> and <code>on_timeout: escalate</code>
+  literals are now wired in the runtime (they were accepted by the
+  spec but silently treated as <code>fail</code> in 0.2.x). Operators with
+  specs that declared these literals will see the documented
+  behaviour for the first time. Audit consumers should expect new
+  event types: <code>human.continued</code>, <code>human.continue_failed</code>,
+  <code>human.escalated</code>, <code>run.timed_out</code>.
+- New route <code>GET /v1/runs/{run_id}/policy-report</code> returns the spec
+  policy report for a stored run, no spec bundle required
+  client-side. Auth: <code>specs:read</code> scope (same as the existing
+  <code>POST /v1/specs/policy-report</code>).</p>
+<p><strong>New observability surfaces</strong>:
+- Three new platform-side OpenTelemetry spans
+  (<code>kneo.queue.dispatch</code>, <code>kneo.worker.lease</code>,
+  <code>kneo.continuation.lock</code>) join the SDK's agent-boundary spans
+  when <code>KNEO_SERV_OTEL_ENABLED=true</code>. Pre-existing OTel pipelines
+  pick them up automatically once telemetry is enabled — no extra
+  configuration required. See
+  <a href="../observability/#platform-side-spans"><code>observability.md § Platform-side spans</code></a>.</p>
+<p><strong>Persistence schemas</strong>: unchanged. The new <code>RunState.deadline_at</code>
+and <code>Checkpoint.iteration</code> fields default to <code>None</code> and <code>1</code>
+respectively in the dataclass, so existing rows round-trip cleanly
+through the JSON-payload SQLite / PostgreSQL stores.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then
