@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kneo Agent Client — API Reference Manual</title>
+<style>
+/* ── Reset & base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0d1117;
+  color: #c9d1d9;
+  line-height: 1.7;
+  display: flex;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────── */
+#sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 260px; overflow-y: auto;
+  background: #161b22;
+  border-right: 1px solid #21262d;
+  padding: 0 0 2rem;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: #30363d transparent;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+.sidebar-header {
+  padding: 1.25rem 1.25rem 0.75rem;
+  border-bottom: 1px solid #21262d;
+  position: sticky; top: 0;
+  background: #161b22;
+  z-index: 1;
+}
+.sidebar-header .product-name {
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #58a6ff;
+}
+.sidebar-header h1 {
+  font-size: 1rem; font-weight: 700; color: #f0f6fc;
+  margin-top: 0.1rem;
+}
+.sidebar-header .version {
+  font-size: 0.72rem; color: #8b949e; margin-top: 0.2rem;
+}
+
+.nav-section { padding: 0.6rem 0; border-bottom: 1px solid #21262d; }
+.nav-section-label {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #8b949e;
+  padding: 0.4rem 1.25rem 0.25rem;
+}
+.nav-section a {
+  display: block; padding: 0.28rem 1.25rem 0.28rem 1.6rem;
+  color: #8b949e; text-decoration: none;
+  font-size: 0.82rem; border-left: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+.nav-section a:hover { color: #f0f6fc; background: #21262d; border-left-color: #30363d; }
+.nav-section a.active { color: #58a6ff; border-left-color: #58a6ff; background: #1f2937; }
+.nav-section a.sub { padding-left: 2.1rem; font-size: 0.78rem; }
+
+/* ── Main content ───────────────────────────────────────────── */
+#main {
+  margin-left: 260px;
+  min-height: 100vh;
+  max-width: 960px;
+  padding: 2.5rem 3rem 4rem;
+  flex: 1;
+}
+
+/* ── Page header ────────────────────────────────────────────── */
+.page-header {
+  border-bottom: 1px solid #21262d;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.page-header .kicker {
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #58a6ff; margin-bottom: 0.4rem;
+}
+.page-header h1 {
+  font-size: 2.4rem; font-weight: 800; color: #f0f6fc;
+  letter-spacing: -0.02em; line-height: 1.15;
+}
+.page-header .subtitle {
+  color: #8b949e; font-size: 1.05rem; margin-top: 0.5rem;
+  max-width: 600px;
+}
+.badge-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+.badge {
+  font-size: 0.72rem; font-weight: 600; padding: 0.2rem 0.55rem;
+  border-radius: 99px; border: 1px solid;
+}
+.badge-blue { color: #58a6ff; border-color: #1f3a5f; background: #0d2137; }
+.badge-green { color: #3fb950; border-color: #1a3a1f; background: #0d2311; }
+.badge-purple { color: #bc8cff; border-color: #2d1f4e; background: #160d2e; }
+
+/* ── Section headings ───────────────────────────────────────── */
+.section { margin-bottom: 4rem; }
+.section > h2 {
+  font-size: 1.5rem; font-weight: 700; color: #f0f6fc;
+  padding-bottom: 0.5rem; border-bottom: 1px solid #21262d;
+  margin-bottom: 1.5rem; letter-spacing: -0.01em;
+}
+h3.api-class {
+  font-size: 1.15rem; font-weight: 700; color: #f0f6fc;
+  margin: 2rem 0 0.5rem;
+}
+h3.api-class .tag {
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 0.15rem 0.45rem;
+  border-radius: 4px; vertical-align: middle; margin-left: 0.5rem;
+}
+.tag-class { background: #1f3a5f; color: #58a6ff; }
+.tag-dataclass { background: #1a3a1f; color: #3fb950; }
+.tag-protocol { background: #2d1f4e; color: #bc8cff; }
+.tag-function { background: #2d1f16; color: #ffa657; }
+.tag-exception { background: #3a1f1f; color: #f85149; }
+
+h4.api-method {
+  font-size: 0.92rem; font-weight: 600; color: #e6edf3;
+  margin: 1.2rem 0 0.3rem; font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  background: #161b22; border: 1px solid #21262d; border-radius: 6px;
+  padding: 0.45rem 0.75rem;
+}
+h4.api-method .ret { color: #8b949e; font-weight: 400; }
+h4.api-method .kw { color: #ff7b72; }
+h4.api-method .fn { color: #d2a8ff; }
+h4.api-method .param { color: #ffa657; }
+h4.api-method .typ { color: #79c0ff; }
+
+/* ── Prose ──────────────────────────────────────────────────── */
+p { margin-bottom: 0.85rem; color: #c9d1d9; }
+.desc { color: #8b949e; font-size: 0.88rem; margin: 0.2rem 0 0.8rem; }
+.note {
+  background: #1c2128; border-left: 3px solid #58a6ff; border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.88rem; color: #8b949e;
+}
+.note strong { color: #58a6ff; }
+.warn {
+  background: #2d1f0e; border-left: 3px solid #ffa657; border-radius: 0 6px 6px 0;
+  padding: 0.75rem 1rem; margin: 1rem 0; font-size: 0.88rem; color: #c9d1d9;
+}
+.warn strong { color: #ffa657; }
+
+/* ── Parameters table ───────────────────────────────────────── */
+.param-table { width: 100%; border-collapse: collapse; margin: 0.6rem 0 1.2rem; font-size: 0.86rem; }
+.param-table th {
+  text-align: left; padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid #21262d; color: #8b949e;
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600;
+}
+.param-table td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #161b22; vertical-align: top; }
+.param-table tr:last-child td { border-bottom: none; }
+.param-table code { font-size: 0.82rem; }
+.param-name { color: #ffa657; font-family: monospace; white-space: nowrap; }
+.param-type { color: #79c0ff; font-family: monospace; }
+.param-default { color: #3fb950; font-family: monospace; }
+.param-desc { color: #8b949e; }
+
+/* ── Code blocks ────────────────────────────────────────────── */
+pre {
+  background: #161b22; border: 1px solid #21262d; border-radius: 8px;
+  padding: 1.1rem 1.25rem; overflow-x: auto;
+  margin: 0.8rem 0 1.4rem; position: relative;
+}
+pre code {
+  font-family: 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
+  font-size: 0.83rem; line-height: 1.65; color: #c9d1d9;
+}
+code {
+  font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.85em; background: #21262d; color: #e6edf3;
+  border-radius: 4px; padding: 0.1em 0.35em;
+}
+pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
+
+/* Syntax highlight colours */
+.kw  { color: #ff7b72; }   /* keywords: async def class import from return etc */
+.fn  { color: #d2a8ff; }   /* function names */
+.st  { color: #a5d6ff; }   /* strings */
+.cm  { color: #8b949e; font-style: italic; } /* comments */
+.nm  { color: #ffa657; }   /* numbers / special names */
+.tp  { color: #79c0ff; }   /* types */
+.op  { color: #ff7b72; }   /* operators */
+.at  { color: #e6edf3; }   /* self, cls, plain text */
+.dc  { color: #3fb950; }   /* decorators */
+
+/* ── Returns / raises ───────────────────────────────────────── */
+.returns-label, .raises-label {
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.07em; margin: 0.7rem 0 0.25rem;
+}
+.returns-label { color: #3fb950; }
+.raises-label  { color: #f85149; }
+
+/* ── Exception tree ─────────────────────────────────────────── */
+.exc-tree { font-family: monospace; font-size: 0.85rem; line-height: 1.8; color: #c9d1d9;
+  background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 1rem 1.25rem; }
+.exc-tree .exc-base { color: #f85149; font-weight: 600; }
+.exc-tree .exc-child { color: #ffa657; }
+.exc-tree .exc-sub { color: #e6edf3; }
+
+/* ── Comparison table ───────────────────────────────────────── */
+.cmp-table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.86rem; }
+.cmp-table th {
+  padding: 0.5rem 0.9rem; border-bottom: 2px solid #21262d; text-align: left;
+  font-size: 0.8rem; font-weight: 700; color: #f0f6fc; background: #1c2128;
+}
+.cmp-table td { padding: 0.5rem 0.9rem; border-bottom: 1px solid #21262d; color: #c9d1d9; vertical-align: top; }
+.cmp-table tr:last-child td { border-bottom: none; }
+.cmp-table tr:hover td { background: #1c2128; }
+.cmp-table .col-dim { color: #58a6ff; font-weight: 600; }
+
+/* ── Quick-ref chips ────────────────────────────────────────── */
+.chip-grid { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.5rem 0 1rem; }
+.chip {
+  font-size: 0.76rem; font-weight: 600; padding: 0.22rem 0.6rem;
+  border-radius: 99px; background: #21262d; color: #8b949e;
+  border: 1px solid #30363d; font-family: monospace;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+.page-footer {
+  margin-top: 4rem; padding-top: 1.5rem; border-top: 1px solid #21262d;
+  font-size: 0.8rem; color: #8b949e;
+}
+
+/* ── Front matter ──────────────────────────────────────────── */
+.front-cover,
+.front-toc {
+  border: 1px solid #21262d;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+  padding: 2.5rem 2.5rem 2.75rem;
+  margin-bottom: 2rem;
+}
+
+.front-cover {
+  min-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cover-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #58a6ff;
+  margin-bottom: 0.8rem;
+}
+
+.cover-title {
+  font-size: 3.15rem;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: #f0f6fc;
+  max-width: 9ch;
+  margin-bottom: 0.7rem;
+}
+
+.cover-subtitle-heading {
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #c9d1d9;
+  margin-bottom: 1rem;
+}
+
+.cover-subtitle {
+  font-size: 1.08rem;
+  color: #8b949e;
+  max-width: 38rem;
+}
+
+.cover-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 2.2rem;
+}
+
+.cover-card {
+  border: 1px solid #21262d;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 1rem 1.1rem;
+}
+
+.cover-card-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8b949e;
+  margin-bottom: 0.3rem;
+}
+
+.cover-card-value {
+  font-size: 1rem;
+  color: #f0f6fc;
+  font-weight: 600;
+}
+
+.cover-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-end;
+  padding-top: 2rem;
+}
+
+.cover-footer-note {
+  max-width: 28rem;
+  color: #8b949e;
+  font-size: 0.92rem;
+}
+
+.front-toc-title {
+  font-size: 2rem;
+  color: #f0f6fc;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.front-toc-intro {
+  color: #8b949e;
+  margin-bottom: 1.4rem;
+  max-width: 44rem;
+}
+
+.toc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2rem;
+}
+
+.toc-group {
+  break-inside: avoid;
+}
+
+.toc-group h3 {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #58a6ff;
+  margin-bottom: 0.55rem;
+}
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.toc-list li {
+  margin: 0 0 0.38rem;
+}
+
+.toc-list a {
+  color: #c9d1d9;
+  text-decoration: none;
+}
+
+.toc-list a:hover {
+  color: #f0f6fc;
+}
+
+.toc-sub {
+  padding-left: 1rem;
+  font-size: 0.94em;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  #main { margin-left: 0; padding: 1.5rem 1rem; }
+  .cover-meta,
+  .toc-grid {
+    grid-template-columns: 1fr;
+  }
+  .cover-title {
+    font-size: 2.35rem;
+  }
+  .cover-subtitle-heading {
+    font-size: 1.65rem;
+  }
+  .cover-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── Print / PDF ────────────────────────────────────────────── */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.6in;
+  }
+
+  html {
+    /* Base print font size — every other rule below is in `rem`, so
+       changing this single value rescales the entire PDF. 18px is too
+       generous for an API reference; 14px keeps tables and code blocks
+       readable while fitting more content per page. */
+    font-size: 14px !important;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  body {
+    display: block;
+    line-height: 1.75;
+  }
+
+  #sidebar {
+    display: none !important;
+  }
+
+  #main {
+    margin-left: 0 !important;
+    max-width: none;
+    min-height: auto;
+    padding: 0;
+  }
+
+  .front-cover,
+  .front-toc {
+    background: #ffffff !important;
+    border-color: #d0d7de !important;
+    box-shadow: none !important;
+  }
+
+  .front-cover {
+    min-height: calc(100vh - 1.2in);
+    page-break-after: always;
+    break-after: page;
+    margin-bottom: 0;
+  }
+
+  .front-toc {
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .page-header {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  .page-header h1 { font-size: 2.65rem !important; }
+  .front-toc-title { font-size: 2.2rem !important; }
+  .cover-title { font-size: 3.4rem !important; color: #111111 !important; }
+  .cover-subtitle-heading { font-size: 2rem !important; color: #111111 !important; }
+
+  .cover-subtitle,
+  .cover-footer-note,
+  .front-toc-intro,
+  .cover-card-label { color: #4b5563 !important; }
+
+  .cover-eyebrow,
+  .toc-group h3 { color: #0b57d0 !important; }
+
+  .cover-card { background: #ffffff !important; border-color: #d0d7de !important; }
+  .cover-card-value,
+  .front-toc-title,
+  .toc-list a { color: #111111 !important; }
+
+  .page-header .subtitle { font-size: 1.2rem !important; }
+  .section > h2 { font-size: 1.7rem !important; }
+  h3.api-class { font-size: 1.3rem !important; }
+  h4.api-method { font-size: 1.02rem !important; padding: 0.55rem 0.85rem; }
+
+  p, li, .desc, .note, .warn, .page-footer { font-size: 1rem !important; }
+  .param-table, .cmp-table, .exc-tree { font-size: 0.98rem !important; }
+  .param-table th, .cmp-table th, .returns-label, .raises-label { font-size: 0.82rem !important; }
+  pre code, .param-table code, code, .chip,
+  .param-name, .param-type, .param-default { font-size: 0.95rem !important; }
+
+  pre {
+    padding: 1.2rem 1.3rem;
+    white-space: pre-wrap !important;
+    overflow-x: visible !important;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  pre code { white-space: pre-wrap !important; word-wrap: break-word; overflow-wrap: anywhere; }
+
+  .param-name, .param-type, .param-default {
+    white-space: normal !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .param-table, .cmp-table {
+    table-layout: fixed;
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .param-table td, .cmp-table td { word-wrap: break-word; overflow-wrap: anywhere; }
+
+  .page-header,
+  .section > h2,
+  .page-footer,
+  .param-table th, .param-table td,
+  .cmp-table th, .cmp-table td,
+  .nav-section, .sidebar-header { border-color: #d0d7de !important; }
+
+  .page-header h1,
+  .section > h2,
+  h3.api-class,
+  h4.api-method,
+  p, .desc, .param-desc,
+  .cmp-table td, .page-footer, .exc-tree { color: #111111 !important; }
+
+  .page-header .subtitle,
+  .sidebar-header .version,
+  .nav-section-label,
+  .param-table th,
+  h4.api-method .ret, .desc, .cm { color: #4b5563 !important; }
+
+  .page-header .kicker,
+  .sidebar-header .product-name,
+  .note strong,
+  .cmp-table .col-dim { color: #0b57d0 !important; }
+
+  .badge, .tag-class, .tag-dataclass, .tag-protocol, .tag-function, .tag-exception,
+  h4.api-method, .note, .warn, .exc-tree, pre, code,
+  .cmp-table th, .chip { background: #ffffff !important; }
+
+  .note, .warn, .exc-tree, pre, h4.api-method, .chip, code, .cmp-table th { border-color: #d0d7de !important; }
+
+  .note { color: #1f2937 !important; border-left-color: #0b57d0 !important; }
+  .warn { color: #1f2937 !important; border-left-color: #b45309 !important; }
+  .warn strong, .returns-label { color: #166534 !important; }
+  .raises-label, .exc-tree .exc-base { color: #b42318 !important; }
+  .exc-tree .exc-child, .param-name, h4.api-method .param, .nm { color: #9a3412 !important; }
+  .param-type, h4.api-method .typ, .tp, .st { color: #1d4ed8 !important; }
+  .param-default, .dc { color: #166534 !important; }
+  h4.api-method .kw, .kw, .op, .tag-exception { color: #b42318 !important; }
+  h4.api-method .fn, .fn, .tag-protocol { color: #6d28d9 !important; }
+  .tag-class { color: #0b57d0 !important; }
+  .tag-dataclass { color: #166534 !important; }
+  .tag-function { color: #9a3412 !important; }
+  .tag-class, .tag-dataclass, .tag-protocol, .tag-function, .tag-exception,
+  .badge-blue, .badge-green, .badge-purple { border-color: currentColor !important; }
+  pre code, code, .at, .exc-tree .exc-sub { color: #111111 !important; }
+  a, a:visited { color: #0b57d0 !important; }
+  .cmp-table tr:hover td { background: transparent !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ═══════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-header">
+    <div class="product-name">Kneo Agent Client</div>
+    <h1>API Reference</h1>
+    <div class="version">v0.1.0 · 2026-05-25</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Front matter</div>
+    <a href="#front-cover">Cover</a>
+    <a href="#front-toc">Table of Contents</a>
+    <a href="#whats-new">What's new in v0.1.0</a>
+    <a href="#introduction">Introduction</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Top-level</div>
+    <a href="#kneoclient">KneoClient</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Core</div>
+    <a href="#transport">Transport</a>
+    <a href="#synctransport">SyncTransport</a>
+    <a href="#profile">Profile &amp; profiles</a>
+    <a href="#apikeyauth">ApiKeyAuth &amp; AuthScheme</a>
+    <a href="#retrypolicy">RetryPolicy</a>
+    <a href="#idempotency">Idempotency helpers</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#request-id">Request-ID helpers</a>
+    <a href="#logging">Logging helpers</a>
+    <a href="#exceptions">Exceptions</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Platform adapter</div>
+    <a href="#platformclient">PlatformClient</a>
+    <a href="#healthclient" class="sub">HealthClient</a>
+    <a href="#runsclient" class="sub">RunsClient</a>
+    <a href="#humantasksclient" class="sub">HumanTasksClient</a>
+    <a href="#auditclient" class="sub">AuditClient</a>
+    <a href="#credentialsclient" class="sub">CredentialsClient</a>
+    <a href="#policiesclient" class="sub">PoliciesClient</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Agent adapter</div>
+    <a href="#agentclient">AgentClient</a>
+    <a href="#specsclient" class="sub">SpecsClient</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-section-label">Reference</div>
+    <a href="#compatibility">Compatibility matrix</a>
+    <a href="#guides">Guides</a>
+  </div>
+</nav>
+
+<!-- ══ MAIN ══════════════════════════════════════════════════ -->
+<main id="main">
+
+<!-- ── COVER ───────────────────────────────────────────────── -->
+<section class="front-cover" id="front-cover">
+  <div>
+    <div class="cover-eyebrow">Kneo Agent Client</div>
+    <h1 class="cover-title">API&nbsp;Reference</h1>
+    <p class="cover-subtitle-heading">Typed Python SDK + adapter toolkit for the Kneo Agent Platform <code>/v1</code>.</p>
+    <p class="cover-subtitle">
+      Single-document reference for every public class, dataclass, exception, and helper that <code>kneo-client</code>
+      exposes. Sibling to the kneo_agent SDK reference; same dark-themed layout, same hand-maintained discipline.
+    </p>
+  </div>
+
+  <div class="cover-meta">
+    <div class="cover-card">
+      <div class="cover-card-label">Version</div>
+      <div class="cover-card-value">v0.1.0</div>
+    </div>
+    <div class="cover-card">
+      <div class="cover-card-label">Pinned to kneo_serv</div>
+      <div class="cover-card-value">v0.4.0 (/v1 only)</div>
+    </div>
+    <div class="cover-card">
+      <div class="cover-card-label">Python</div>
+      <div class="cover-card-value">≥ 3.12</div>
+    </div>
+  </div>
+
+  <div class="cover-footer">
+    <p class="cover-footer-note">
+      The user-facing prose ships separately as the Kneo Agent Client User Guide PDF.
+      Source markdown lives under <code>docs/user/</code> on the repo. Architecture lives in
+      <code>docs/dev/architecture.md</code> and the design handout PDF.
+    </p>
+    <p class="cover-footer-note" style="text-align: right;">
+      © 2026 Kneron, Inc. and kneo-client contributors · MIT
+    </p>
+  </div>
+</section>
+
+<!-- ── TABLE OF CONTENTS ──────────────────────────────────── -->
+<section class="front-toc" id="front-toc">
+  <h2 class="front-toc-title">Table of Contents</h2>
+  <p class="front-toc-intro">
+    Read the front matter first; then jump to any class. The sidebar
+    on screen mirrors this layout; in the printed PDF, navigation is
+    page-numbered through the per-page footer.
+  </p>
+
+  <div class="toc-grid">
+    <div class="toc-group">
+      <h3>Front matter</h3>
+      <ul class="toc-list">
+        <li><a href="#whats-new">What's new in v0.1.0</a></li>
+        <li><a href="#introduction">Introduction</a></li>
+      </ul>
+      <h3 style="margin-top: 1.2rem;">Top-level</h3>
+      <ul class="toc-list">
+        <li><a href="#kneoclient"><code>KneoClient</code></a></li>
+      </ul>
+      <h3 style="margin-top: 1.2rem;">Core</h3>
+      <ul class="toc-list">
+        <li><a href="#transport"><code>Transport</code></a></li>
+        <li><a href="#synctransport"><code>SyncTransport</code></a></li>
+        <li><a href="#profile"><code>Profile</code> &amp; profiles</a></li>
+        <li><a href="#apikeyauth"><code>ApiKeyAuth</code> &amp; <code>AuthScheme</code></a></li>
+        <li><a href="#retrypolicy"><code>RetryPolicy</code></a></li>
+        <li><a href="#idempotency">Idempotency helpers</a></li>
+        <li><a href="#pagination">Pagination</a></li>
+        <li><a href="#request-id">Request-ID helpers</a></li>
+        <li><a href="#logging">Logging helpers</a></li>
+        <li><a href="#exceptions">Exceptions</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-group">
+      <h3>Platform adapter</h3>
+      <ul class="toc-list">
+        <li><a href="#platformclient"><code>PlatformClient</code></a></li>
+        <li class="toc-sub"><a href="#healthclient"><code>HealthClient</code></a></li>
+        <li class="toc-sub"><a href="#runsclient"><code>RunsClient</code></a></li>
+        <li class="toc-sub"><a href="#humantasksclient"><code>HumanTasksClient</code></a></li>
+        <li class="toc-sub"><a href="#auditclient"><code>AuditClient</code></a></li>
+        <li class="toc-sub"><a href="#credentialsclient"><code>CredentialsClient</code></a></li>
+        <li class="toc-sub"><a href="#policiesclient"><code>PoliciesClient</code></a></li>
+      </ul>
+      <h3 style="margin-top: 1.2rem;">Agent adapter</h3>
+      <ul class="toc-list">
+        <li><a href="#agentclient"><code>AgentClient</code></a></li>
+        <li class="toc-sub"><a href="#specsclient"><code>SpecsClient</code></a></li>
+      </ul>
+      <h3 style="margin-top: 1.2rem;">Reference</h3>
+      <ul class="toc-list">
+        <li><a href="#compatibility">Compatibility matrix</a></li>
+        <li><a href="#guides">Guides</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="page-header">
+  <div class="kicker">Kneo Agent Client</div>
+  <h1>API Reference Manual</h1>
+  <p class="subtitle">
+    Every public class and helper, organized for both screen reading
+    and printing. Adapted from the kneo_agent SDK reference's
+    dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
+  </p>
+  <div class="badge-row">
+    <span class="badge badge-blue">v0.1.0</span>
+    <span class="badge badge-green">Python ≥ 3.12</span>
+    <span class="badge badge-purple">kneo_serv /v1 · 0.4.x</span>
+  </div>
+</div>
+
+<!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
+<section class="section" id="whats-new">
+  <h2>What's new in v0.1.0</h2>
+  <p>First public release. Everything in this document is new.</p>
+  <p>Headline pieces:</p>
+  <ul style="margin-left: 1.5em;">
+    <li><strong>Full <code>/v1</code> coverage.</strong> All 25 platform <code>/v1</code> endpoints have hand-rolled wrappers backed by <code>Transport</code>. The contract test in <code>tests/contract/test_path_coverage.py</code> verifies the wrap is exhaustive against the pinned spec.</li>
+    <li><strong>Async-first with a sync facade.</strong> <code>KneoClient</code> and every adapter method are <code>async def</code>. <code>SyncTransport</code> wraps the async transport in a background thread + event loop via <code>anyio.from_thread.start_blocking_portal()</code> for callers that cannot run an event loop.</li>
+    <li><strong>Typed throughout.</strong> Strict <code>mypy</code> on <code>kneo_client.{core, platform, agent}</code>; PEP&nbsp;561 <code>py.typed</code> marker ships in the wheel.</li>
+    <li><strong>Reproducible release.</strong> Sigstore cosign keyless signing on every artifact; CycloneDX SBOM attached to the GitHub release; PyPI Trusted Publishing.</li>
+  </ul>
+  <p>
+    See the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.1.0.md">0.1.0 release notes</a> for the long-form summary.
+  </p>
+</section>
+
+<!-- ── INTRODUCTION ───────────────────────────────────────── -->
+<section class="section" id="introduction">
+  <h2>Introduction</h2>
+  <p>
+    <code>kneo-client</code> is the shared client layer behind <strong>Kneo Agent Dashboard</strong>
+    (operations) and <strong>Kneo Agent Studio</strong> (development). It owns the operational semantics
+    of talking to a Kneo Agent Platform instance over its <code>/v1</code> HTTP API so that downstream
+    products do not each re-invent them.
+  </p>
+  <p>Three layers, strict dependency direction <em>generated → core → adapters</em>:</p>
+  <ul style="margin-left: 1.5em;">
+    <li><code>kneo_client._generated</code> — <em>private.</em> Generated from the pinned <code>kneo_serv</code> OpenAPI spec via <code>openapi-python-client</code>. External code must not import from this subpackage.</li>
+    <li><code>kneo_client.core</code> — handwritten cross-cutting layer: <code>Transport</code>, <code>Profile</code>, <code>ApiKeyAuth</code>, <code>RetryPolicy</code>, idempotency, pagination, request IDs, redacted logging, normalized errors.</li>
+    <li><code>kneo_client.platform</code> and <code>kneo_client.agent</code> — domain-shaped adapters built on <code>Transport</code>. <code>PlatformClient</code> for the Dashboard, <code>AgentClient</code> for the Studio.</li>
+  </ul>
+  <p>
+    Public entry point is a unified <code>KneoClient</code> with <code>.platform</code> and
+    <code>.agent</code> namespaces backed by a single shared <code>Transport</code>.
+  </p>
+  <div class="note">
+    <strong>Privacy boundary.</strong> Anything under <code>kneo_client._generated</code> is private
+    implementation. Its surface can change between any two <code>kneo-client</code> releases without
+    notice. If a generated type or helper is useful to external consumers, it gets re-exported through
+    <code>core</code>, <code>platform</code>, or <code>agent</code>; otherwise it stays internal.
+  </div>
+  <p>
+    For the architectural rationale see
+    <code>docs/dev/architecture.md</code> on the repo. For each major design choice see the ADRs under
+    <code>docs/dev/adrs/</code>.
+  </p>
+</section>
+
+<!-- ── KneoClient ─────────────────────────────────────────── -->
+<section class="section" id="kneoclient">
+  <h2>KneoClient</h2>
+  <p>The public entry point. Owns one <a href="#transport"><code>Transport</code></a> and mounts <code>.platform</code> and <code>.agent</code> namespaces backed by it. Async context manager; closes its transport on exit.</p>
+
+  <h3 class="api-class">class KneoClient <span class="tag tag-class">class</span></h3>
+  <p class="desc">Async client for a Kneo Agent Platform instance.</p>
+
+  <p><strong>Attributes</strong></p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">platform</td><td class="param-type"><a href="#platformclient">PlatformClient</a></td><td class="param-desc">Operational surface — runs, traces, audit, credentials, policies, health.</td></tr>
+    <tr><td class="param-name">agent</td><td class="param-type"><a href="#agentclient">AgentClient</a></td><td class="param-desc">Development surface — spec validate / compile / explain / policy_report / run.</td></tr>
+    <tr><td class="param-name">profile</td><td class="param-type"><a href="#profile">Profile</a></td><td class="param-desc">The resolved profile this client is bound to.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">profile</span>: <span class="typ">Profile</span>, *, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>) <span class="ret">→ None</span></h4>
+  <p>Build a <code>KneoClient</code> bound to <code>profile</code>. The transport is constructed eagerly; nothing happens on the network until the first <code>.platform.*</code> or <code>.agent.*</code> call.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">profile</td><td class="param-type">Profile</td><td class="param-default">—</td><td class="param-desc">Resolved profile carrying URL, API key, scheme, and timeout.</td></tr>
+    <tr><td class="param-name">retry_policy</td><td class="param-type">RetryPolicy | None</td><td class="param-default">None</td><td class="param-desc">Override the default retry policy (3 attempts, exp backoff). See <a href="#retrypolicy"><code>RetryPolicy</code></a>.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">@classmethod</span> <span class="kw">def</span> <span class="fn">from_profile</span>(<span class="param">name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, **<span class="param">overrides</span>: <span class="typ">Any</span>) <span class="ret">→ KneoClient</span></h4>
+  <p>Resolve a profile via <a href="#load_profile"><code>load_profile()</code></a> and build a <code>KneoClient</code>. Convenience for the common case of "use the standard config-file / env / kwargs resolution chain".</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Profile name to load. Falls back to <code>$KNEO_PROFILE</code> then <code>"default"</code>.</td></tr>
+    <tr><td class="param-name">**overrides</td><td class="param-type">Any</td><td class="param-default">—</td><td class="param-desc">Forwarded to <code>load_profile</code>: <code>config_file</code>, <code>url</code>, <code>api_key</code>, <code>auth_scheme</code>, <code>timeout</code>.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">aclose</span>() <span class="ret">→ None</span></h4>
+  <p>Close the underlying transport. Idempotent.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">__aenter__</span>() <span class="ret">→ KneoClient</span> · <span class="kw">async def</span> <span class="fn">__aexit__</span>(*<span class="param">exc</span>) <span class="ret">→ None</span></h4>
+  <p>Async context manager. Use <code>async with KneoClient.from_profile() as client:</code> to ensure the transport closes on exit.</p>
+
+  <p><strong>Example</strong></p>
+<pre><code><span class="kw">import</span> asyncio
+<span class="kw">from</span> kneo_client <span class="kw">import</span> KneoClient
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    <span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
+        ready = <span class="kw">await</span> client.platform.health.readyz()
+        print(<span class="st">f"ok={ready.ok}"</span>)
+
+        run = <span class="kw">await</span> client.platform.runs.create({<span class="st">"spec_id"</span>: <span class="st">"my-spec"</span>})
+        terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(run.run_id, timeout=<span class="nm">120</span>)
+        print(<span class="st">f"final={terminal.status}"</span>)
+
+asyncio.run(main())</code></pre>
+</section>
+
+<!-- ── Transport ──────────────────────────────────────────── -->
+<section class="section" id="transport">
+  <h2>Transport</h2>
+  <p>The request engine. <code>Transport</code> is the only layer that does I/O; every adapter call eventually routes through its <a href="#transport-request"><code>request()</code></a> method.</p>
+  <p>Owns: the <code>httpx.AsyncClient</code>, the auth flow, the retry loop, idempotency-key injection, request-ID injection, redacted logging, and the error-to-exception mapping point.</p>
+
+  <h3 class="api-class">class Transport <span class="tag tag-class">class</span></h3>
+  <p class="desc">Async HTTP transport for a Kneo Agent Platform instance.</p>
+
+  <p><strong>Attributes</strong></p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">profile</td><td class="param-type"><a href="#profile">Profile</a></td><td class="param-desc">The profile this transport is bound to (read-only).</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">profile</span>: <span class="typ">Profile</span>, *, <span class="param">http_client</span>: <span class="typ">httpx.AsyncClient | None</span> = <span class="nm">None</span>, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>) <span class="ret">→ None</span></h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">profile</td><td class="param-type">Profile</td><td class="param-default">—</td><td class="param-desc">Resolved profile.</td></tr>
+    <tr><td class="param-name">http_client</td><td class="param-type">httpx.AsyncClient | None</td><td class="param-default">None</td><td class="param-desc">Optional pre-built client. When supplied, the caller owns its lifecycle; <code>aclose()</code> will not close it. Base URL and auth are <em>not</em> overridden on a passed-in client.</td></tr>
+    <tr><td class="param-name">retry_policy</td><td class="param-type">RetryPolicy | None</td><td class="param-default">None</td><td class="param-desc">Defaults to <code>RetryPolicy()</code> (3 attempts, exp backoff with jitter).</td></tr>
+  </table>
+
+  <div id="transport-request"></div>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>: <span class="typ">Any</span> = <span class="nm">None</span>, <span class="param">params</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">headers</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">request_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
+  <p>Send an HTTP request with auth, retries, idempotency, and error mapping.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">method</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">HTTP method (<code>GET</code>, <code>POST</code>, …).</td></tr>
+    <tr><td class="param-name">path</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">Path relative to the profile's base URL (e.g. <code>/v1/runs</code>).</td></tr>
+    <tr><td class="param-name">json</td><td class="param-type">Any</td><td class="param-default">None</td><td class="param-desc">JSON body.</td></tr>
+    <tr><td class="param-name">params</td><td class="param-type">Mapping[str, Any] | None</td><td class="param-default">None</td><td class="param-desc">Query string parameters.</td></tr>
+    <tr><td class="param-name">headers</td><td class="param-type">Mapping[str, str] | None</td><td class="param-default">None</td><td class="param-desc">Extra headers. Auth, <code>Idempotency-Key</code>, and <code>X-Request-ID</code> are added automatically and override anything in this mapping.</td></tr>
+    <tr><td class="param-name">idempotency_key</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Override the auto-generated <code>POST</code> idempotency key. Validated against the 256-character platform limit. Ignored on non-<code>POST</code> methods.</td></tr>
+    <tr><td class="param-name">request_id</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Override the auto-generated request ID.</td></tr>
+  </table>
+  <div class="returns-label">Returns</div>
+  <p class="desc"><code>httpx.Response</code> — the successful response (status &lt; 400).</p>
+  <div class="raises-label">Raises</div>
+  <p class="desc">A <a href="#exceptions"><code>KneoError</code></a> subclass after retries are exhausted. See <a href="#exceptions">Exceptions</a> for the mapping.</p>
+
+  <p><strong>Retry behavior</strong></p>
+  <p>The transport retries on:</p>
+  <ul style="margin-left: 1.5em;">
+    <li>Transport-level errors from <code>httpx</code> (DNS, connect, read timeout, TLS).</li>
+    <li>HTTP status in <code>RETRYABLE_STATUS_CODES = {429, 502, 503, 504}</code>.</li>
+  </ul>
+  <p>Retries fire only for:</p>
+  <ul style="margin-left: 1.5em;">
+    <li><strong>Idempotent verbs</strong> — <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, <code>DELETE</code>.</li>
+    <li><strong><code>POST</code> with an idempotency key</strong> — which is always, since the transport auto-injects a UUID4 key on every <code>POST</code>.</li>
+  </ul>
+  <p>A <code>Retry-After</code> response header on 429 overrides the computed delay verbatim (jitter is not applied on top).</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">aclose</span>() <span class="ret">→ None</span></h4>
+  <p>Close the underlying <code>httpx.AsyncClient</code> if this <code>Transport</code> owns it. When a caller-supplied <code>http_client</code> was passed to <code>__init__</code>, the caller's client is not closed.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">__aenter__</span>() · <span class="kw">async def</span> <span class="fn">__aexit__</span>(*<span class="param">exc</span>)</h4>
+  <p>Async context manager. <code>async with Transport(profile) as t:</code> closes the transport on exit.</p>
+
+  <p><strong>Example: direct use (no adapter)</strong></p>
+<pre><code><span class="kw">import</span> asyncio
+<span class="kw">from</span> kneo_client.core.profiles <span class="kw">import</span> load_profile
+<span class="kw">from</span> kneo_client.core.transport <span class="kw">import</span> Transport
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    profile = load_profile()
+    <span class="kw">async with</span> Transport(profile) <span class="kw">as</span> t:
+        resp = <span class="kw">await</span> t.request(<span class="st">"GET"</span>, <span class="st">"/v1/healthz"</span>)
+        print(resp.json())
+
+asyncio.run(main())</code></pre>
+</section>
+
+<!-- ── SyncTransport ──────────────────────────────────────── -->
+<section class="section" id="synctransport">
+  <h2>SyncTransport</h2>
+  <p>Synchronous facade around <a href="#transport"><code>Transport</code></a>. Runs the async transport in a dedicated background thread + event loop via <code>anyio.from_thread.start_blocking_portal()</code>. Each call dispatches into that loop and blocks until the coroutine returns.</p>
+  <p>For callers that cannot run an event loop (scripts, notebooks, sync frameworks). The async surface remains the recommended path.</p>
+
+  <h3 class="api-class">class SyncTransport <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">profile</span>: <span class="typ">Profile</span>, *, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>) <span class="ret">→ None</span></h4>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>=<span class="nm">None</span>, <span class="param">params</span>=<span class="nm">None</span>, <span class="param">headers</span>=<span class="nm">None</span>, <span class="param">idempotency_key</span>=<span class="nm">None</span>, <span class="param">request_id</span>=<span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
+  <p>Synchronous version of <code>Transport.request</code>. Same arguments, same semantics; blocks until done.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">close</span>() <span class="ret">→ None</span> · <span class="kw">def</span> <span class="fn">__enter__</span>() · <span class="kw">def</span> <span class="fn">__exit__</span>(*<span class="param">exc</span>)</h4>
+  <p>Lifecycle. Use <code>with SyncTransport(profile) as t:</code> to close the background portal on exit.</p>
+
+  <div class="warn">
+    <strong>Caveat.</strong> <code>SyncTransport</code> does <strong>not</strong> mount <code>.platform</code> / <code>.agent</code> adapters. Those are async-only. Sync consumers wanting wrapped endpoints either glue async-to-sync at the call site, or drop to <code>t.request(method, path, …)</code> directly.
+  </div>
+
+  <p><strong>Example</strong></p>
+<pre><code><span class="kw">from</span> kneo_client.core.profiles <span class="kw">import</span> load_profile
+<span class="kw">from</span> kneo_client.core.transport <span class="kw">import</span> SyncTransport
+
+<span class="kw">with</span> SyncTransport(load_profile()) <span class="kw">as</span> t:
+    resp = t.request(<span class="st">"GET"</span>, <span class="st">"/v1/healthz"</span>)
+    print(resp.json())</code></pre>
+</section>
+
+<!-- ── Profile ────────────────────────────────────────────── -->
+<section class="section" id="profile">
+  <h2>Profile &amp; profiles</h2>
+  <p>A <em>profile</em> is a frozen dataclass bundling <code>(name, url, api_key, auth_scheme, timeout)</code> — everything <code>Transport</code> needs to talk to one Kneo Agent Platform instance.</p>
+
+  <h3 class="api-class">class Profile <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc"><code>frozen=True</code>. Pass directly to <code>KneoClient(profile)</code> or build via <a href="#load_profile"><code>load_profile()</code></a>.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">Profile name. Informational; used in log records.</td></tr>
+    <tr><td class="param-name">url</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">Base URL of the platform instance.</td></tr>
+    <tr><td class="param-name">api_key</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">API key to authenticate with. Treat like any other secret; the redaction-aware logger masks it in header output.</td></tr>
+    <tr><td class="param-name">auth_scheme</td><td class="param-type">AuthScheme</td><td class="param-default">BEARER</td><td class="param-desc">How to present the key (<code>Authorization: Bearer</code> vs <code>X-Kneo-Api-Key</code>).</td></tr>
+    <tr><td class="param-name">timeout</td><td class="param-type">float</td><td class="param-default">30.0</td><td class="param-desc">Per-request timeout in seconds.</td></tr>
+  </table>
+
+  <h3 class="api-class">class ProfileError <span class="tag tag-exception">exception</span></h3>
+  <p>Raised when a profile cannot be resolved (missing <code>url</code> / <code>api_key</code>, malformed TOML, bad scheme, non-numeric timeout, etc.).</p>
+
+  <div id="load_profile"></div>
+  <h3 class="api-class">load_profile() <span class="tag tag-function">function</span></h3>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">load_profile</span>(<span class="param">name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, *, <span class="param">config_file</span>: <span class="typ">Path | None</span> = <span class="nm">None</span>, <span class="param">url</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">api_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">auth_scheme</span>: <span class="typ">AuthScheme | str | None</span> = <span class="nm">None</span>, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>) <span class="ret">→ Profile</span></h4>
+  <p>Resolve a <code>Profile</code> from TOML config + env vars + explicit kwargs. Resolution order (later overrides earlier):</p>
+  <ol style="margin-left: 1.5em;">
+    <li>TOML at <code>config_file</code> (default: <code>~/.config/kneo/client.toml</code> via <code>platformdirs</code>).</li>
+    <li>Environment variables: <code>KNEO_URL</code>, <code>KNEO_API_KEY</code>, <code>KNEO_AUTH_SCHEME</code>, <code>KNEO_TIMEOUT</code>. <code>KNEO_PROFILE</code> selects which TOML section to load.</li>
+    <li>Explicit keyword arguments to this function.</li>
+  </ol>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">name</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Profile name. Falls back to <code>$KNEO_PROFILE</code>, then <code>"default"</code>.</td></tr>
+    <tr><td class="param-name">config_file</td><td class="param-type">Path | None</td><td class="param-default">None</td><td class="param-desc">Override the default TOML location. Non-existent files are skipped silently.</td></tr>
+    <tr><td class="param-name">url, api_key, auth_scheme, timeout</td><td class="param-type">str / AuthScheme / float</td><td class="param-default">None</td><td class="param-desc">Override the resolved field. <code>auth_scheme</code> accepts either an enum or its string value.</td></tr>
+  </table>
+  <div class="returns-label">Returns</div>
+  <p class="desc"><code>Profile</code> — fully resolved.</p>
+  <div class="raises-label">Raises</div>
+  <p class="desc"><code>ProfileError</code> — if <code>url</code> or <code>api_key</code> cannot be resolved from any source, or if the config file is malformed.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">default_config_path</span>() <span class="ret">→ Path</span></h4>
+  <p>Return the XDG-style default location of <code>client.toml</code> (<code>~/.config/kneo/client.toml</code> on Linux, <code>~/Library/Application Support/kneo/client.toml</code> on macOS, etc., via <code>platformdirs.user_config_dir("kneo")</code>).</p>
+
+  <p><strong>Environment-variable constants</strong></p>
+  <table class="param-table">
+    <tr><th>Constant</th><th>Value</th><th>Purpose</th></tr>
+    <tr><td class="param-name">DEFAULT_PROFILE_NAME</td><td class="param-default">"default"</td><td class="param-desc">Profile name when none is specified.</td></tr>
+    <tr><td class="param-name">DEFAULT_TIMEOUT_SECONDS</td><td class="param-default">30.0</td><td class="param-desc">Default per-request timeout.</td></tr>
+    <tr><td class="param-name">ENV_PROFILE</td><td class="param-default">"KNEO_PROFILE"</td><td class="param-desc">Selects which TOML section to load.</td></tr>
+    <tr><td class="param-name">ENV_URL</td><td class="param-default">"KNEO_URL"</td><td class="param-desc">Override profile <code>url</code>.</td></tr>
+    <tr><td class="param-name">ENV_API_KEY</td><td class="param-default">"KNEO_API_KEY"</td><td class="param-desc">Override profile <code>api_key</code>.</td></tr>
+    <tr><td class="param-name">ENV_AUTH_SCHEME</td><td class="param-default">"KNEO_AUTH_SCHEME"</td><td class="param-desc">Override profile <code>auth_scheme</code>.</td></tr>
+    <tr><td class="param-name">ENV_TIMEOUT</td><td class="param-default">"KNEO_TIMEOUT"</td><td class="param-desc">Override profile <code>timeout</code>.</td></tr>
+  </table>
+
+  <p><strong>Example: TOML config</strong></p>
+<pre><code><span class="cm"># ~/.config/kneo/client.toml</span>
+[default]
+url = <span class="st">"https://kneo.example.com"</span>
+api_key = <span class="st">"prod-key"</span>
+auth_scheme = <span class="st">"bearer"</span>
+timeout = <span class="nm">30.0</span>
+
+[staging]
+url = <span class="st">"https://staging-kneo.example.com"</span>
+api_key = <span class="st">"staging-key"</span></code></pre>
+
+  <p><strong>Example: resolve a profile</strong></p>
+<pre><code><span class="kw">from</span> kneo_client.core.profiles <span class="kw">import</span> load_profile
+
+p = load_profile()                    <span class="cm"># 'default' from TOML + env</span>
+p = load_profile(<span class="st">"staging"</span>)           <span class="cm"># explicit profile</span>
+p = load_profile(url=<span class="st">"https://ad-hoc"</span>, api_key=tok)  <span class="cm"># explicit kwargs win</span></code></pre>
+</section>
+
+<!-- ── ApiKeyAuth ─────────────────────────────────────────── -->
+<section class="section" id="apikeyauth">
+  <h2>ApiKeyAuth &amp; AuthScheme</h2>
+  <p>The platform accepts the API key as either <code>Authorization: Bearer &lt;key&gt;</code> or <code>X-Kneo-Api-Key: &lt;key&gt;</code>. <code>ApiKeyAuth</code> is an <code>httpx.Auth</code> subclass that injects the chosen header on every outgoing request; <code>AuthScheme</code> is the enum that picks which.</p>
+
+  <h3 class="api-class">class AuthScheme <span class="tag tag-dataclass">enum</span></h3>
+  <p>String-valued enum.</p>
+  <table class="param-table">
+    <tr><th>Member</th><th>Value</th><th>Header injected</th></tr>
+    <tr><td class="param-name">BEARER</td><td class="param-default">"bearer"</td><td class="param-desc"><code>Authorization: Bearer &lt;key&gt;</code></td></tr>
+    <tr><td class="param-name">KNEO_API_KEY</td><td class="param-default">"kneo_api_key"</td><td class="param-desc"><code>X-Kneo-Api-Key: &lt;key&gt;</code></td></tr>
+  </table>
+
+  <h3 class="api-class">class ApiKeyAuth <span class="tag tag-class">class</span></h3>
+  <p class="desc">Inherits from <code>httpx.Auth</code>. Compatible with both <code>httpx.Client</code> and <code>httpx.AsyncClient</code> because httpx's auth flow is a synchronous generator.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">api_key</span>: <span class="typ">str</span>, <span class="param">scheme</span>: <span class="typ">AuthScheme</span> = <span class="tp">AuthScheme</span>.BEARER) <span class="ret">→ None</span></h4>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">api_key</td><td class="param-type">str</td><td class="param-default">—</td><td class="param-desc">Non-empty API key. Empty values raise <code>ValueError</code>.</td></tr>
+    <tr><td class="param-name">scheme</td><td class="param-type">AuthScheme</td><td class="param-default">BEARER</td><td class="param-desc">Header scheme.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">auth_flow</span>(<span class="param">request</span>: <span class="typ">httpx.Request</span>) <span class="ret">→ Generator[httpx.Request, httpx.Response, None]</span></h4>
+  <p>Injects the API key header and yields the request unchanged. Called by httpx for every redirect / retry attempt at the transport-level layer.</p>
+</section>
+
+<!-- ── RetryPolicy ────────────────────────────────────────── -->
+<section class="section" id="retrypolicy">
+  <h2>RetryPolicy</h2>
+  <p>A frozen dataclass describing when and how long to wait between attempts. <code>Transport</code> applies it; the policy itself does no I/O.</p>
+
+  <h3 class="api-class">class RetryPolicy <span class="tag tag-dataclass">dataclass</span></h3>
+  <p class="desc"><code>frozen=True</code>.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">max_attempts</td><td class="param-type">int</td><td class="param-default">3</td><td class="param-desc">Total attempts including the first try. Set to 1 to disable retries.</td></tr>
+    <tr><td class="param-name">base_delay</td><td class="param-type">float</td><td class="param-default">0.2</td><td class="param-desc">Seconds to wait before the second attempt. Each subsequent attempt doubles up to <code>max_delay</code>.</td></tr>
+    <tr><td class="param-name">max_delay</td><td class="param-type">float</td><td class="param-default">30.0</td><td class="param-desc">Cap on the computed delay before jitter.</td></tr>
+    <tr><td class="param-name">jitter</td><td class="param-type">float</td><td class="param-default">0.1</td><td class="param-desc">Fraction of the delay to randomize by, in <code>[0, 1]</code>. With <code>jitter=0.1</code> and a 1-second delay, the actual sleep is uniformly in <code>[0.9, 1.1]</code>.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">delay_for</span>(<span class="param">attempt</span>: <span class="typ">int</span>, <span class="param">retry_after</span>: <span class="typ">float | None</span> = <span class="nm">None</span>) <span class="ret">→ float</span></h4>
+  <p>Compute the sleep duration before <code>attempt</code> (1-indexed). <code>attempt=1</code> returns 0 (no delay before the first try).</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">attempt</td><td class="param-type">int</td><td class="param-default">—</td><td class="param-desc">The upcoming attempt number, starting at 2.</td></tr>
+    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Optional server-supplied hint (from a <code>Retry-After</code> header). When set, returned verbatim; jitter is not applied (the server's hint is authoritative).</td></tr>
+  </table>
+
+  <p><strong>RETRYABLE_STATUS_CODES</strong></p>
+  <p>Module constant: <code>frozenset({429, 502, 503, 504})</code>. Intentionally not configurable; if your platform deployment legitimately returns transient <code>500</code>s, fix the platform.</p>
+
+  <p><strong>Example</strong></p>
+<pre><code><span class="kw">from</span> kneo_client <span class="kw">import</span> KneoClient
+<span class="kw">from</span> kneo_client.core.retries <span class="kw">import</span> RetryPolicy
+
+<span class="cm"># Aggressive policy for a flaky network</span>
+client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="nm">8</span>, base_delay=<span class="nm">0.5</span>))
+
+<span class="cm"># No retries (first failure surfaces immediately)</span>
+client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="nm">1</span>))</code></pre>
+</section>
+
+<!-- ── Idempotency ────────────────────────────────────────── -->
+<section class="section" id="idempotency">
+  <h2>Idempotency helpers</h2>
+  <p>Every <code>POST</code> the client sends carries an <code>Idempotency-Key</code>. <code>Transport</code> auto-injects a fresh UUID4 per request unless the caller supplies one via the method's <code>idempotency_key=</code> parameter.</p>
+  <p>The platform short-circuits a duplicate <code>POST</code> with the same key + identical payload, returning the original response. Reuse of the same key with a different payload yields HTTP 409, surfaced as <a href="#exceptions"><code>KneoIdempotencyMismatchError</code></a>.</p>
+
+  <table class="param-table">
+    <tr><th>Constant</th><th>Value</th><th>Purpose</th></tr>
+    <tr><td class="param-name">IDEMPOTENCY_KEY_HEADER</td><td class="param-default">"Idempotency-Key"</td><td class="param-desc">The header name as the platform expects it.</td></tr>
+    <tr><td class="param-name">MAX_KEY_LENGTH</td><td class="param-default">256</td><td class="param-desc">Platform-enforced maximum length for the value.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">new_idempotency_key</span>() <span class="ret">→ str</span></h4>
+  <p>Return a fresh UUID4-based idempotency key as a string.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">validate_idempotency_key</span>(<span class="param">key</span>: <span class="typ">str</span>) <span class="ret">→ None</span></h4>
+  <p>Validate an externally-supplied key. Raises <code>ValueError</code> if empty or longer than <code>MAX_KEY_LENGTH</code>.</p>
+</section>
+
+<!-- ── Pagination ─────────────────────────────────────────── -->
+<section class="section" id="pagination">
+  <h2>Pagination</h2>
+  <p>Platform list endpoints accept <code>limit</code> (1–1000, default 100), <code>offset</code>, <code>sort_by</code>, <code>sort_order</code>. Responses carry <code>count</code>, <code>total</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code> plus the items array.</p>
+  <p><code>PaginatedResult</code> is a generic wrapper; <code>iterate_all()</code> is an async iterator that walks pages transparently.</p>
+
+  <h3 class="api-class">class PaginatedResult[T] <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">items</td><td class="param-type">list[T]</td><td class="param-desc">Items on this page.</td></tr>
+    <tr><td class="param-name">total</td><td class="param-type">int</td><td class="param-desc">Total items across all pages, as reported by the server.</td></tr>
+    <tr><td class="param-name">limit</td><td class="param-type">int</td><td class="param-desc">Page size requested.</td></tr>
+    <tr><td class="param-name">offset</td><td class="param-type">int</td><td class="param-desc">Offset of the first item on this page.</td></tr>
+    <tr><td class="param-name">sort_by</td><td class="param-type">str | None</td><td class="param-desc">Sort field, if specified by the server.</td></tr>
+    <tr><td class="param-name">sort_order</td><td class="param-type">str | None</td><td class="param-desc"><code>"asc"</code> or <code>"desc"</code>.</td></tr>
+  </table>
+  <p><strong>Properties</strong></p>
+  <table class="param-table">
+    <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">count</td><td class="param-type">int</td><td class="param-desc"><code>len(items)</code>.</td></tr>
+    <tr><td class="param-name">has_more</td><td class="param-type">bool</td><td class="param-desc"><code>offset + count &lt; total</code>.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">iterate_all</span>(<span class="param">fetch_page</span>: <span class="typ">Callable[[int, int], Awaitable[PaginatedResult[T]]]</span>, *, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>) <span class="ret">→ AsyncIterator[T]</span></h4>
+  <p>Walk all items across pages. <code>fetch_page(limit, offset)</code> must return a <code>PaginatedResult</code>. Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code>.</p>
+
+  <p><strong>Constants:</strong> <code>DEFAULT_PAGE_SIZE = 100</code>, <code>MAX_PAGE_SIZE = 1000</code>.</p>
+
+  <div class="note">
+    <strong>Note.</strong> The list adapter methods on <code>PlatformClient</code> return the raw generated response model today (not a <code>PaginatedResult</code>). To use <code>iterate_all()</code>, wrap the adapter call with a small adapter that builds a <code>PaginatedResult</code> from the response. See the <a href="#guides">Pagination recipe</a> below.
+  </div>
+</section>
+
+<!-- ── Request-ID ─────────────────────────────────────────── -->
+<section class="section" id="request-id">
+  <h2>Request-ID helpers</h2>
+  <p>Every request carries an <code>X-Request-ID</code>. The transport auto-injects a UUID4; callers can override via the method's <code>request_id=</code> parameter for cross-service correlation. The platform echoes the ID on responses and in audit events.</p>
+
+  <table class="param-table">
+    <tr><th>Constant</th><th>Value</th></tr>
+    <tr><td class="param-name">REQUEST_ID_HEADER</td><td class="param-default">"X-Request-ID"</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">generate_request_id</span>() <span class="ret">→ str</span></h4>
+  <p>Return a fresh UUID4-based request ID as a string.</p>
+</section>
+
+<!-- ── Logging ────────────────────────────────────────────── -->
+<section class="section" id="logging">
+  <h2>Logging helpers</h2>
+  <p>Loggers under the <code>kneo_client.*</code> namespace use the standard <code>logging</code> machinery. All header payloads are passed through <code>redact_headers()</code> before any sink sees them.</p>
+
+  <table class="param-table">
+    <tr><th>Constant</th><th>Value</th></tr>
+    <tr><td class="param-name">REDACTED</td><td class="param-default">"&lt;redacted&gt;"</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">get_logger</span>(<span class="param">name</span>: <span class="typ">str</span> = <span class="st">"kneo_client"</span>) <span class="ret">→ logging.Logger</span></h4>
+  <p>Return a logger under the <code>kneo_client.*</code> hierarchy. Bare names like <code>"transport"</code> are namespaced to <code>kneo_client.transport</code>; already-namespaced names (e.g. <code>"kneo_client.foo"</code>) pass through unchanged.</p>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">redact_headers</span>(<span class="param">headers</span>: <span class="typ">Mapping[str, str]</span>) <span class="ret">→ dict[str, str]</span></h4>
+  <p>Return a copy of <code>headers</code> with sensitive values replaced by <code>&lt;redacted&gt;</code>. Sensitive header tokens (case-insensitive, substring match): <code>authorization</code>, <code>x-kneo-api-key</code>, <code>cookie</code>, <code>set-cookie</code>, <code>proxy-authorization</code>.</p>
+
+  <div class="warn">
+    <strong>Body redaction is the caller's responsibility.</strong> The redaction layer masks headers, not bodies. If you log request / response payloads, filter them at your application's logging-formatter layer.
+  </div>
+</section>
+
+<!-- ── Exceptions ─────────────────────────────────────────── -->
+<section class="section" id="exceptions">
+  <h2>Exceptions</h2>
+  <p>Every failure surfaces as a typed exception derived from <code>KneoError</code>. Each one carries the original HTTP status, response body (parsed JSON when possible), the server-assigned request ID, and — for <code>POST</code> failures — the idempotency key that was sent.</p>
+
+  <p><strong>Hierarchy</strong></p>
+  <div class="exc-tree">
+<span class="exc-base">KneoError</span>
+├── <span class="exc-child">KneoNetworkError</span>          <span class="exc-sub"># transport-level: DNS / connect / TLS / read timeout</span>
+├── <span class="exc-child">KneoAuthError</span>             <span class="exc-sub"># HTTP 401</span>
+├── <span class="exc-child">KneoPermissionError</span>       <span class="exc-sub"># HTTP 403</span>
+├── <span class="exc-child">KneoNotFoundError</span>         <span class="exc-sub"># HTTP 404</span>
+├── <span class="exc-child">KneoConflictError</span>         <span class="exc-sub"># HTTP 409 (generic)</span>
+│   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 on idempotency-key replay with different payload</span>
+├── <span class="exc-child">KneoRateLimited</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
+└── <span class="exc-child">KneoServerError</span>           <span class="exc-sub"># HTTP 5xx</span>
+  </div>
+
+  <h3 class="api-class">class KneoError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">Base exception. Inherits from <code>Exception</code>.</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">status</td><td class="param-type">int | None</td><td class="param-desc">HTTP status, or <code>None</code> for transport-level failures.</td></tr>
+    <tr><td class="param-name">body</td><td class="param-type">Any</td><td class="param-desc">Parsed JSON dict, raw text, or <code>None</code>.</td></tr>
+    <tr><td class="param-name">request_id</td><td class="param-type">str | None</td><td class="param-desc">The <code>X-Request-ID</code> the platform returned, when present.</td></tr>
+    <tr><td class="param-name">idempotency_key</td><td class="param-type">str | None</td><td class="param-desc">The <code>Idempotency-Key</code> sent on the failing request, when set.</td></tr>
+  </table>
+
+  <h3 class="api-class">class KneoRateLimited <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">Adds one attribute on top of <code>KneoError</code>:</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-desc">Seconds parsed from the <code>Retry-After</code> header.</td></tr>
+  </table>
+
+  <h3 class="api-class">from_response() <span class="tag tag-function">function</span></h3>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">from_response</span>(<span class="param">response</span>: <span class="typ">httpx.Response</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ KneoError</span></h4>
+  <p>Map an HTTP response to the appropriate <code>KneoError</code> subclass.</p>
+  <table class="cmp-table">
+    <tr><th>HTTP status</th><th>Exception</th><th>Notes</th></tr>
+    <tr><td class="col-dim">401</td><td><code>KneoAuthError</code></td><td>Missing or invalid API key.</td></tr>
+    <tr><td class="col-dim">403</td><td><code>KneoPermissionError</code></td><td>Key valid; insufficient scope.</td></tr>
+    <tr><td class="col-dim">404</td><td><code>KneoNotFoundError</code></td><td>Resource missing.</td></tr>
+    <tr><td class="col-dim">409 (with key)</td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload.</td></tr>
+    <tr><td class="col-dim">409 (no key)</td><td><code>KneoConflictError</code></td><td>Generic conflict.</td></tr>
+    <tr><td class="col-dim">429</td><td><code>KneoRateLimited</code></td><td>Carries <code>retry_after</code>.</td></tr>
+    <tr><td class="col-dim">5xx</td><td><code>KneoServerError</code></td><td>Server-side failure.</td></tr>
+    <tr><td class="col-dim">Other</td><td><code>KneoError</code></td><td>Catch-all.</td></tr>
+    <tr><td class="col-dim">Transport</td><td><code>KneoNetworkError</code></td><td>Wrapped from <code>httpx.HTTPError</code>.</td></tr>
+  </table>
+
+  <p><strong>Example</strong></p>
+<pre><code><span class="kw">from</span> kneo_client.core.errors <span class="kw">import</span> KneoError, KneoIdempotencyMismatchError, KneoRateLimited
+
+<span class="kw">try</span>:
+    run = <span class="kw">await</span> client.platform.runs.create(payload, idempotency_key=key)
+<span class="kw">except</span> KneoIdempotencyMismatchError <span class="kw">as</span> exc:
+    <span class="cm"># Same key reused with a different payload — almost always a caller bug.</span>
+    log.error(<span class="st">"mismatch on key=%r body=%r"</span>, exc.idempotency_key, exc.body)
+    <span class="kw">raise</span>
+<span class="kw">except</span> KneoRateLimited <span class="kw">as</span> exc:
+    <span class="kw">await</span> asyncio.sleep(exc.retry_after <span class="kw">or</span> <span class="nm">10</span>)
+<span class="kw">except</span> KneoError <span class="kw">as</span> exc:
+    log.error(<span class="st">"create_run failed status=%s rid=%s"</span>, exc.status, exc.request_id)
+    <span class="kw">raise</span></code></pre>
+</section>
+
+<!-- ── PlatformClient ─────────────────────────────────────── -->
+<section class="section" id="platformclient">
+  <h2>PlatformClient</h2>
+  <p>Operational surface for <strong>Kneo Agent Dashboard</strong>. Aggregates six sub-clients backed by a shared <a href="#transport"><code>Transport</code></a>.</p>
+
+  <h3 class="api-class">class PlatformClient <span class="tag tag-class">class</span></h3>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">health</td><td class="param-type"><a href="#healthclient">HealthClient</a></td><td class="param-desc"><code>/v1/{healthz,livez,readyz}</code></td></tr>
+    <tr><td class="param-name">runs</td><td class="param-type"><a href="#runsclient">RunsClient</a></td><td class="param-desc"><code>/v1/runs</code> + 11 sub-endpoints</td></tr>
+    <tr><td class="param-name">human_tasks</td><td class="param-type"><a href="#humantasksclient">HumanTasksClient</a></td><td class="param-desc"><code>/v1/human-tasks</code> family</td></tr>
+    <tr><td class="param-name">audit</td><td class="param-type"><a href="#auditclient">AuditClient</a></td><td class="param-desc"><code>/v1/audit-events</code></td></tr>
+    <tr><td class="param-name">credentials</td><td class="param-type"><a href="#credentialsclient">CredentialsClient</a></td><td class="param-desc"><code>/v1/security/credentials</code></td></tr>
+    <tr><td class="param-name">policies</td><td class="param-type"><a href="#policiesclient">PoliciesClient</a></td><td class="param-desc"><code>/v1/policies/environment</code> family</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">transport</span>: <span class="typ">Transport</span>) <span class="ret">→ None</span></h4>
+  <p>Build the aggregator and attach all six sub-clients. Usually you don't construct one directly — <code>KneoClient(profile).platform</code> gives you one.</p>
+</section>
+
+<!-- ── HealthClient ───────────────────────────────────────── -->
+<section class="section" id="healthclient">
+  <h2>HealthClient</h2>
+  <p>Wraps the three platform health probes.</p>
+
+  <h3 class="api-class">class HealthClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">healthz</span>() <span class="ret">→ HealthResponse</span></h4>
+  <p>GET <code>/v1/healthz</code> — overall service health.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">livez</span>() <span class="ret">→ HealthResponse</span></h4>
+  <p>GET <code>/v1/livez</code> — process liveness. Does <em>not</em> check downstream deps.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">readyz</span>() <span class="ret">→ HealthResponse</span></h4>
+  <p>GET <code>/v1/readyz</code> — readiness (database, queue, runtime registry, providers, MCP).</p>
+
+  <p><strong>Response (<code>HealthResponse</code>)</strong></p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">ok</td><td class="param-type">bool</td><td class="param-desc">Overall pass/fail.</td></tr>
+    <tr><td class="param-name">service</td><td class="param-type">str | UNSET</td><td class="param-desc">Service name, e.g. <code>"kneo-serv-platform"</code>.</td></tr>
+    <tr><td class="param-name">version</td><td class="param-type">str | UNSET</td><td class="param-desc">Platform version.</td></tr>
+    <tr><td class="param-name">metadata</td><td class="param-type">HealthResponseMetadata | UNSET</td><td class="param-desc">Per-check breakdown.</td></tr>
+  </table>
+</section>
+
+<!-- ── RunsClient ─────────────────────────────────────────── -->
+<section class="section" id="runsclient">
+  <h2>RunsClient</h2>
+  <p>The largest sub-client — 12 endpoints + one convenience helper (<code>wait_for_completion</code>). Covers the full run lifecycle: create, list, get, cancel, continue, replay, trace, checkpoints, policy reports, recovery.</p>
+
+  <h3 class="api-class">class RunsClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">create</span>(<span class="param">body</span>: <span class="typ">RunCreateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
+  <p>POST <code>/v1/runs</code> — start a new run. Idempotency key is auto-generated unless caller supplies one.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"updated_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ RunListResponse</span></h4>
+  <p>GET <code>/v1/runs</code> — list runs with limit/offset pagination.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunStatusResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}</code> — fetch the current status of a run.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">cancel</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunStatusResponse</span></h4>
+  <p>POST <code>/v1/runs/{run_id}/cancel</code> — cooperatively cancel a running run. The platform may not honor the cancel if the run is already in a terminal state; the returned status reflects the post-cancel state.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">continue_</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
+  <p>POST <code>/v1/runs/{run_id}/continue</code> — resume a paused run (typically after a human task was resumed). Trailing underscore avoids the Python <code>continue</code> keyword collision.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">replay</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunReplayResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/replay</code> — fetch a deterministic replay view derived from the run's checkpoints + trace.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ TraceResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/trace</code> — fetch the event trace for a run (tool calls, model calls, middleware decisions, etc.).</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">checkpoints</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"sequence"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ CheckpointListResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/checkpoints</code> — list a run's serialized state snapshots.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">checkpoints_diff</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">from_sequence</span>: <span class="typ">int | None</span> = <span class="nm">None</span>, <span class="param">to_sequence</span>: <span class="typ">int | None</span> = <span class="nm">None</span>) <span class="ret">→ CheckpointDiffResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/checkpoints/diff</code> — diff two checkpoints.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">policy_report</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ dict[str, Any]</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/policy-report</code> — fetch policy outcomes for a run. Returns the raw JSON body; the platform's policy-report schema is intentionally open-ended and not modeled as a typed response.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">recovery</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunRecoveryResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/recovery</code> — fetch the recovery context for a failed run (what state can be recovered, what next action is recommended).</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">wait_for_completion</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>, <span class="param">poll_interval</span>: <span class="typ">float</span> = <span class="nm">1.0</span>, <span class="param">terminal_statuses</span>: <span class="typ">Iterable[str] | None</span> = <span class="nm">None</span>) <span class="ret">→ RunStatusResponse</span></h4>
+  <p>Poll <code>get(run_id)</code> until the run reaches a terminal status. Convenience helper; not a separate platform endpoint.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">timeout</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Total time budget in seconds. <code>None</code> means wait indefinitely.</td></tr>
+    <tr><td class="param-name">poll_interval</td><td class="param-type">float</td><td class="param-default">1.0</td><td class="param-desc">Seconds to sleep between polls.</td></tr>
+    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Defaults to <code>{"completed", "failed", "cancelled"}</code>. Pass <code>{"paused_human_review", ...}</code> to treat additional states as terminal.</td></tr>
+  </table>
+  <div class="returns-label">Returns</div>
+  <p class="desc">The terminal <code>RunStatusResponse</code>.</p>
+  <div class="raises-label">Raises</div>
+  <p class="desc"><code>TimeoutError</code> if <code>timeout</code> elapses before a terminal status is reached.</p>
+
+  <p><strong>Module constant:</strong> <code>DEFAULT_TERMINAL_STATUSES = frozenset({"completed", "failed", "cancelled"})</code>.</p>
+
+  <p><strong>Example: end-to-end run</strong></p>
+<pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
+    created = <span class="kw">await</span> client.platform.runs.create({<span class="st">"spec_id"</span>: <span class="st">"my-spec"</span>})
+    terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(
+        created.run_id, poll_interval=<span class="nm">2.0</span>, timeout=<span class="nm">600</span>
+    )
+    print(<span class="st">f"final={terminal.status}"</span>)
+
+    trace = <span class="kw">await</span> client.platform.runs.trace(created.run_id, limit=<span class="nm">20</span>)
+    <span class="kw">for</span> ev <span class="kw">in</span> trace.events:
+        print(ev)</code></pre>
+</section>
+
+<!-- ── HumanTasksClient ───────────────────────────────────── -->
+<section class="section" id="humantasksclient">
+  <h2>HumanTasksClient</h2>
+  <p>Human-in-the-loop pause points. A run that requires operator review surfaces as a <em>human task</em>, identified by a <code>continuation_id</code>. Resuming posts a decision and unblocks the paused continuation.</p>
+
+  <h3 class="api-class">class HumanTasksClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"created_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ HumanTaskListResponse</span></h4>
+  <p>GET <code>/v1/human-tasks</code> — list pending and recent human tasks.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>) <span class="ret">→ HumanTaskResponse</span></h4>
+  <p>GET <code>/v1/human-tasks/{continuation_id}</code> — fetch a single human task.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">resume</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">HumanResumeRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ HumanResumeResponse</span></h4>
+  <p>POST <code>/v1/human-tasks/{continuation_id}/resume</code> — resume a paused run with a decision.</p>
+</section>
+
+<!-- ── AuditClient ────────────────────────────────────────── -->
+<section class="section" id="auditclient">
+  <h2>AuditClient</h2>
+  <p>Audit events are the canonical operational log: every run, human-task, credential, and policy mutation produces one.</p>
+
+  <h3 class="api-class">class AuditClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">principal</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ AuditEventListResponse</span></h4>
+  <p>GET <code>/v1/audit-events</code> — list audit events with three optional filters (event type, run, principal).</p>
+</section>
+
+<!-- ── CredentialsClient ──────────────────────────────────── -->
+<section class="section" id="credentialsclient">
+  <h2>CredentialsClient</h2>
+  <p>Lists the credential <em>references</em> the platform knows about. The platform never returns raw secret material via the HTTP API.</p>
+
+  <h3 class="api-class">class CredentialsClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>() <span class="ret">→ CredentialInventoryResponse</span></h4>
+  <p>GET <code>/v1/security/credentials</code> — list known credential references.</p>
+</section>
+
+<!-- ── PoliciesClient ─────────────────────────────────────── -->
+<section class="section" id="policiesclient">
+  <h2>PoliciesClient</h2>
+  <p>Environment policies map deployment targets (e.g. <code>dev</code>, <code>staging</code>, <code>prod</code>) to policy bundles that gate which specs / agents are allowed to run there.</p>
+
+  <h3 class="api-class">class PoliciesClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_list</span>() <span class="ret">→ EnvironmentPolicyListResponse</span></h4>
+  <p>GET <code>/v1/policies/environment</code> — list policies for every environment.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_get</span>(<span class="param">environment</span>: <span class="typ">str</span>) <span class="ret">→ EnvironmentPolicyResponse</span></h4>
+  <p>GET <code>/v1/policies/environment/{environment}</code> — fetch one environment's policy.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_put</span>(<span class="param">environment</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">EnvironmentPolicyRequest | dict</span>) <span class="ret">→ EnvironmentPolicyResponse</span></h4>
+  <p>PUT <code>/v1/policies/environment/{environment}</code> — replace an environment's policy.</p>
+  <div class="note">
+    <strong>Note.</strong> <code>PUT</code> is idempotent by HTTP semantics; the transport does not inject an <code>Idempotency-Key</code> for it.
+  </div>
+</section>
+
+<!-- ── AgentClient ────────────────────────────────────────── -->
+<section class="section" id="agentclient">
+  <h2>AgentClient</h2>
+  <p>Development surface for <strong>Kneo Agent Studio</strong>. Currently aggregates one sub-client (<a href="#specsclient"><code>SpecsClient</code></a>).</p>
+
+  <h3 class="api-class">class AgentClient <span class="tag tag-class">class</span></h3>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">specs</td><td class="param-type"><a href="#specsclient">SpecsClient</a></td><td class="param-desc"><code>/v1/specs/*</code></td></tr>
+  </table>
+</section>
+
+<!-- ── SpecsClient ────────────────────────────────────────── -->
+<section class="section" id="specsclient">
+  <h2>SpecsClient</h2>
+  <p>Spec validation, compilation, explanation, policy-report, and ad-hoc dry-run. The Studio iterate-and-test loop.</p>
+
+  <h3 class="api-class">class SpecsClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">validate</span>(<span class="param">body</span>: <span class="typ">SpecValidateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecValidateResponse</span></h4>
+  <p>POST <code>/v1/specs/validate</code> — schema + semantic validation of a spec.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">compile</span>(<span class="param">body</span>: <span class="typ">SpecCompileRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecCompileResponse</span></h4>
+  <p>POST <code>/v1/specs/compile</code> — compile a spec to its runtime representation.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">explain</span>(<span class="param">body</span>: <span class="typ">SpecExplainRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecExplainResponse</span></h4>
+  <p>POST <code>/v1/specs/explain</code> — human-readable summary of a spec.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">policy_report</span>(<span class="param">body</span>: <span class="typ">SpecPolicyReportRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecPolicyReportResponse</span></h4>
+  <p>POST <code>/v1/specs/policy-report</code> — preview policy outcomes for a spec.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">run</span>(<span class="param">body</span>: <span class="typ">RunCreateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
+  <p>POST <code>/v1/specs/run</code> — ad-hoc dry-run of a spec. Distinct from <a href="#runsclient"><code>RunsClient.create</code></a>: <code>specs.run</code> accepts an inline spec rather than a spec reference, and is intended for Studio's iterate-and-test flow.</p>
+
+  <p><strong>Example: validate-then-compile</strong></p>
+<pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
+    payload = {<span class="st">"spec"</span>: spec_text}
+    validated = <span class="kw">await</span> client.agent.specs.validate(payload)
+    <span class="kw">if not</span> validated.valid:
+        <span class="kw">for</span> d <span class="kw">in</span> validated.diagnostics <span class="kw">or</span> []:
+            print(d)
+        <span class="kw">return</span>
+    compiled = <span class="kw">await</span> client.agent.specs.compile(payload)
+    <span class="kw">if not</span> compiled.ok:
+        <span class="kw">for</span> d <span class="kw">in</span> compiled.diagnostics <span class="kw">or</span> []:
+            print(d)</code></pre>
+</section>
+
+<!-- ── Compatibility ──────────────────────────────────────── -->
+<section class="section" id="compatibility">
+  <h2>Compatibility matrix</h2>
+  <p>Which <code>kneo-client</code> release supports which <code>kneo_serv</code> platform version. The platform's <code>/v1</code> HTTP API is a stability boundary.</p>
+
+  <table class="cmp-table">
+    <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
+    <tr><td class="col-dim">0.1.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Current</td></tr>
+  </table>
+
+  <p><strong>Forward compatibility</strong></p>
+  <p>A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps. New endpoints are available via the drop-to-transport escape hatch until the next <code>kneo-client</code> release wraps them:</p>
+<pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
+    resp = <span class="kw">await</span> client._transport.request(<span class="st">"GET"</span>, <span class="st">"/v1/some/new/endpoint"</span>)
+    payload = resp.json()</code></pre>
+
+  <p><strong>Backward compatibility</strong></p>
+  <p><code>kneo-client X.Y.Z</code> is <strong>not</strong> guaranteed against <code>kneo_serv</code> releases older than its pin. Wrappers may rely on response fields that older versions don't emit, and error mapping assumes the current platform error shape. Pin to a matching <code>kneo-client</code> minor when talking to an older platform.</p>
+</section>
+
+<!-- ── Guides ─────────────────────────────────────────────── -->
+<section class="section" id="guides">
+  <h2>Guides</h2>
+
+  <h3 class="api-class">Wrapping <code>iterate_all()</code> around a list endpoint</h3>
+  <p>The platform list methods return the raw generated response model today. To use <code>iterate_all()</code>, build a small adapter:</p>
+<pre><code><span class="kw">from</span> kneo_client.core.pagination <span class="kw">import</span> PaginatedResult, iterate_all
+
+<span class="kw">async def</span> <span class="fn">all_audit_events</span>(client, **filters):
+    <span class="kw">async def</span> <span class="fn">fetch_page</span>(limit, offset):
+        resp = <span class="kw">await</span> client.platform.audit.list(limit=limit, offset=offset, **filters)
+        <span class="kw">return</span> PaginatedResult(
+            items=resp.events,
+            total=getattr(resp, <span class="st">"total"</span>, <span class="nm">0</span>) <span class="kw">or</span> <span class="nm">0</span>,
+            limit=limit, offset=offset,
+        )
+    <span class="kw">async for</span> event <span class="kw">in</span> iterate_all(fetch_page, page_size=<span class="nm">200</span>):
+        <span class="kw">yield</span> event</code></pre>
+
+  <h3 class="api-class">Bring your own httpx client</h3>
+  <p>For shared connection pools, custom transports, proxy configuration:</p>
+<pre><code><span class="kw">import</span> httpx
+<span class="kw">from</span> kneo_client.core.auth <span class="kw">import</span> ApiKeyAuth, AuthScheme
+<span class="kw">from</span> kneo_client.core.profiles <span class="kw">import</span> Profile
+<span class="kw">from</span> kneo_client.core.transport <span class="kw">import</span> Transport
+
+profile = Profile(name=<span class="st">"prod"</span>, url=<span class="st">"https://kneo"</span>, api_key=<span class="st">"…"</span>,
+                  auth_scheme=AuthScheme.BEARER, timeout=<span class="nm">30.0</span>)
+shared = httpx.AsyncClient(
+    base_url=profile.url,
+    auth=ApiKeyAuth(profile.api_key, profile.auth_scheme),
+    timeout=profile.timeout,
+    limits=httpx.Limits(max_keepalive_connections=<span class="nm">20</span>, max_connections=<span class="nm">100</span>),
+)
+<span class="kw">try</span>:
+    <span class="kw">async with</span> Transport(profile, http_client=shared) <span class="kw">as</span> t:
+        <span class="cm"># t.aclose() will NOT close `shared`.</span>
+        ...
+<span class="kw">finally</span>:
+    <span class="kw">await</span> shared.aclose()</code></pre>
+
+  <h3 class="api-class">Wait for a non-default terminal status</h3>
+  <p><code>wait_for_completion()</code> treats <code>{"completed", "failed", "cancelled"}</code> as terminal by default. To return as soon as the run pauses for human review:</p>
+<pre><code>terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(
+    run_id,
+    poll_interval=<span class="nm">2.0</span>,
+    timeout=<span class="nm">300</span>,
+    terminal_statuses={<span class="st">"completed"</span>, <span class="st">"failed"</span>, <span class="st">"cancelled"</span>, <span class="st">"paused_human_review"</span>},
+)</code></pre>
+
+  <h3 class="api-class">More recipes</h3>
+  <p>See <code>docs/dev/extending.md</code> on the repo for the full 10-recipe set: custom retry policy, custom auth scheme, wrapping a not-yet-adapter-covered endpoint, adding a new wrapped endpoint, custom logging, profile from a secrets manager, paginated iteration, custom terminal statuses, sync facade, and what NOT to extend.</p>
+</section>
+
+<div class="page-footer">
+  <p>Kneo Agent Client — API Reference Manual · v0.1.0 · 2026-05-25 · MIT license</p>
+  <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
+</div>
+
+</main>
+</body>
+</html>

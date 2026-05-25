@@ -1,0 +1,3390 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kneo Agent Client — typed Python SDK and adapter toolkit for the Kneo Agent Platform">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-client/pub/kneo_agent_client_guide/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../../examples/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Kneo Agent Client Guide - Kneo Agent Client</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kneo-agent-client-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-header__button md-logo" aria-label="Kneo Agent Client" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis"><a href="https://kneo-agent.github.io/kneo-client/" style="color:inherit;text-decoration:none">Kneo Agent Client</a></span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Kneo Agent Client Guide
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Kneo Agent Client
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-nav__button md-logo" aria-label="Kneo Agent Client" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    Kneo Agent Client
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Client
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../user/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/profiles_and_auth/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Profiles and auth
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/idempotency_and_retries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Idempotency and retries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/pagination/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pagination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/errors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/compatibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compatibility matrix
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Client Guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Client Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quickstart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-quickstart-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "quickstart" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-a-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ping-the-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ping the platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-your-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create your first run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-facade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sync facade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiles-and-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profiles and auth
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Profiles and auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-profile-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "profile" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toml-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-schemes-what-the-platform-accepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth schemes — what the platform accepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-profile-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-profile workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspecting-a-resolved-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a resolved profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profile-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-config-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default config path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idempotency-and-retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency and retries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Idempotency and retries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-idempotency-and-retries-mean-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "idempotency and retries" mean in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotency-keys-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency keys, by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-supply-your-own-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to supply your own key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catching-409-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching 409 mismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-retry-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The retry policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-retries-fire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When retries fire
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-the-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-surfaces-when-retries-exhaust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What surfaces when retries exhaust
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bypassing-the-auto-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bypassing the auto-injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together-a-robust-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting it together — a robust pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pagination">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-pagination-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "pagination" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walking-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking one page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walking-all-pages-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking all pages manually
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-iterate_all-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The iterate_all() helper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginatedresultt-the-typed-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedResult[T] — the typed wrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-page-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a page size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagination-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination + filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-on-the-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's not on the roadmap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-errors-mean-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "errors" mean in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-every-exception-carries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What every exception carries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-code-exception-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status code → exception mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catching-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#catch-broadly-log-richly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catch broadly, log richly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branch-on-specific-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch on specific status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-idempotency-key-mismatches-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle idempotency-key mismatches loudly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-catch-successful-status-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't catch successful-status branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-errors-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport errors specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-error-messages-for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building error messages for users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-typed-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a typed hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compatibility matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-compatibility-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "compatibility" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-pinning-works-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How pinning works in practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-compatibility-newer-kneo_serv-than-the-pin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward compatibility — newer kneo_serv than the pin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility-older-kneo_serv-than-the-pin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward compatibility — older kneo_serv than the pin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-compatibility-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying compatibility yourself
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-pin-does-not-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the pin does not guarantee
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quickstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quickstart
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quickstart">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-quickstart-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "quickstart" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-a-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ping-the-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ping the platform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-your-first-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create your first run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sync-facade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sync facade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to go next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profiles-and-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profiles and auth
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Profiles and auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-profile-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "profile" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#toml-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TOML format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-schemes-what-the-platform-accepts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth schemes — what the platform accepts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-profile-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-profile workflows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspecting-a-resolved-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting a resolved profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profile-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-config-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default config path
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idempotency-and-retries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency and retries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Idempotency and retries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-idempotency-and-retries-mean-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "idempotency and retries" mean in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotency-keys-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency keys, by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-supply-your-own-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to supply your own key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catching-409-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching 409 mismatch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-retry-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The retry policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-retries-fire" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When retries fire
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customizing-the-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-surfaces-when-retries-exhaust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What surfaces when retries exhaust
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bypassing-the-auto-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bypassing the auto-injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together-a-robust-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting it together — a robust pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pagination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pagination">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-pagination-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "pagination" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walking-one-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking one page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walking-all-pages-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking all pages manually
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-iterate_all-helper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The iterate_all() helper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginatedresultt-the-typed-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PaginatedResult[T] — the typed wrapper
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-a-page-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing a page size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagination-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination + filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-on-the-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's not on the roadmap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Error handling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-errors-mean-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "errors" mean in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-every-exception-carries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What every exception carries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-code-exception-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status code → exception mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#catching-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#catch-broadly-log-richly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catch broadly, log richly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branch-on-specific-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch on specific status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handle-idempotency-key-mismatches-loudly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handle idempotency-key mismatches loudly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-catch-successful-status-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't catch successful-status branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transport-errors-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transport errors specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#building-error-messages-for-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building error messages for users
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-typed-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a typed hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compatibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compatibility matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compatibility matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-compatibility-means-in-kneo-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What "compatibility" means in kneo-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#current-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-pinning-works-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How pinning works in practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#forward-compatibility-newer-kneo_serv-than-the-pin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forward compatibility — newer kneo_serv than the pin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backward-compatibility-older-kneo_serv-than-the-pin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backward compatibility — older kneo_serv than the pin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verifying-compatibility-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verifying compatibility yourself
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-pin-does-not-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the pin does not guarantee
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="kneo-agent-client-guide">Kneo Agent Client Guide<a class="headerlink" href="#kneo-agent-client-guide" title="Permanent link">&para;</a></h1>
+<p>A combined reading path through the kneo-client user documentation: quickstart, profiles and auth, idempotency and retries, pagination, error handling, and the compatibility matrix. The individual files under <a href="../../user/"><code>docs/user/</code></a> remain the authoritative single-page versions and are kept in sync by hand; this combined document is generated by <code>docs/script/generate_combined_docs.py</code>.</p>
+<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="#quickstart">Quickstart</a></li>
+<li><a href="#profiles-and-auth">Profiles and auth</a></li>
+<li><a href="#idempotency-and-retries">Idempotency and retries</a></li>
+<li><a href="#pagination">Pagination</a></li>
+<li><a href="#error-handling">Error handling</a></li>
+<li><a href="#compatibility-matrix">Compatibility matrix</a></li>
+</ul>
+<h2 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/quickstart/"><code>docs/user/quickstart.md</code></a></em></p>
+<p>This guide walks you from a fresh shell to your first authenticated call against a running Kneo Agent Platform instance, then to creating a run and inspecting its trace.</p>
+<h3 id="what-quickstart-means-in-kneo-client">What "quickstart" means in kneo-client<a class="headerlink" href="#what-quickstart-means-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p><code>kneo-client</code> is a typed Python SDK and adapter toolkit for the Kneo Agent Platform's <code>/v1</code> HTTP API. Two products use it as their shared client layer — Kneo Agent Dashboard for operations and Kneo Agent Studio for development — but you can use it directly from any Python 3.12+ codebase that needs to talk to a platform instance.</p>
+<p>A working setup needs three things:</p>
+<ol>
+<li>The <code>kneo-client</code> package installed.</li>
+<li>A <strong>profile</strong> — a <code>(url, api_key, auth_scheme, timeout)</code> tuple resolved from a TOML config file, environment variables, or explicit kwargs. See <a href="#profiles-and-auth">Profiles and auth</a> for the full resolution model.</li>
+<li>A reachable platform instance.</li>
+</ol>
+<p>The rest of this page assumes you have all three.</p>
+<h3 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>kneo-client
+</code></pre></div>
+<p>Requires Python ≥ 3.12. The runtime closure is small: <code>httpx</code>, <code>pydantic</code>, <code>anyio</code>, <code>platformdirs</code>, <code>attrs</code>. No CLI is installed — <code>kneo-client</code> is a library, not a service.</p>
+<p>Verify the install:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from kneo_client import KneoClient, __version__; print(__version__)&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.1.0</span>
+</code></pre></div>
+<h3 id="configure-a-profile">Configure a profile<a class="headerlink" href="#configure-a-profile" title="Permanent link">&para;</a></h3>
+<p>The client reads connection details in this order (later sources override earlier):</p>
+<ol>
+<li>A TOML config file at <code>~/.config/kneo/client.toml</code> (XDG-style location via <a href="https://pypi.org/project/platformdirs/"><code>platformdirs</code></a>).</li>
+<li>Environment variables: <code>KNEO_PROFILE</code>, <code>KNEO_URL</code>, <code>KNEO_API_KEY</code>, <code>KNEO_AUTH_SCHEME</code>, <code>KNEO_TIMEOUT</code>.</li>
+<li>Explicit keyword arguments to <code>KneoClient.from_profile()</code> (or the underlying <code>load_profile()</code>).</li>
+</ol>
+<p>The minimum-friction setup is env vars — useful for one-off scripts and CI:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://kneo.example.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>your-api-key
+</code></pre></div>
+<p>For named multi-profile setups (e.g. <code>default</code> for prod, <code>staging</code> for non-prod), use the TOML file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ~/.config/kneo/client.toml</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">[default]</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://kneo.example.com&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-key&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">auth_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">[staging]</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://staging-kneo.example.com&quot;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;staging-key&quot;</span>
+</code></pre></div>
+<p>Switch profiles by name (<code>KneoClient.from_profile("staging")</code>) or by env (<code>KNEO_PROFILE=staging</code>).</p>
+<p>See <a href="#profiles-and-auth">Profiles and auth</a> for the full resolution semantics, both auth schemes, and the multi-profile workflow.</p>
+<h3 id="ping-the-platform">Ping the platform<a class="headerlink" href="#ping-the-platform" title="Permanent link">&para;</a></h3>
+<p>The smallest possible script — verifies that auth flows correctly and the platform is reachable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="n">ready</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">health</span><span class="o">.</span><span class="n">readyz</span><span class="p">()</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;platform ready: ok=</span><span class="si">{</span><span class="n">ready</span><span class="o">.</span><span class="n">ok</span><span class="si">}</span><span class="s2"> version=</span><span class="si">{</span><span class="n">ready</span><span class="o">.</span><span class="n">service</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre></div>
+<p>What this exercises:</p>
+<ul>
+<li>Profile resolution (TOML / env / kwargs).</li>
+<li>API-key injection on the outgoing request (<code>Authorization: Bearer …</code> or <code>X-Kneo-Api-Key: …</code> depending on scheme).</li>
+<li>The transport's retry loop (will retry on transient network failures).</li>
+<li>Error mapping (a missing key surfaces as <code>KneoAuthError</code>, an unreachable URL as <code>KneoNetworkError</code>).</li>
+</ul>
+<p>If you get a <code>KneoAuthError</code>, your API key isn't reaching the platform — re-check the profile resolution chain. If you get a <code>KneoNetworkError</code>, the URL is unreachable. See <a href="#error-handling">Error handling</a> for the full hierarchy.</p>
+<h3 id="create-your-first-run">Create your first run<a class="headerlink" href="#create-your-first-run" title="Permanent link">&para;</a></h3>
+<p>A run is the unit of work the platform executes — it instantiates a spec (an agent definition) and tracks its lifecycle through <code>queued → running → terminal {completed, failed, cancelled}</code>. To create one:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;your-spec-id&quot;</span><span class="p">})</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run_id=</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> status=</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">terminal</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">wait_for_completion</span><span class="p">(</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="n">created</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">600</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="p">)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;final status: </span><span class="si">{</span><span class="n">terminal</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">trace</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">created</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</code></pre></div>
+<p>The interesting parts:</p>
+<ul>
+<li><strong><code>runs.create(...)</code></strong> auto-injects an <code>Idempotency-Key</code> header (UUID4). Re-running the same payload with the same key is safe — the platform replays the original response. See <a href="#idempotency-and-retries">Idempotency and retries</a>.</li>
+<li><strong><code>runs.wait_for_completion(...)</code></strong> polls <code>runs.get(run_id)</code> until the run reaches a terminal status. Default terminal set is <code>{"completed", "failed", "cancelled"}</code>; pass <code>terminal_statuses={"paused_human_review", …}</code> to treat additional states as terminal.</li>
+<li><strong><code>runs.trace(...)</code></strong> returns events the platform recorded during the run (tool calls, model calls, middleware decisions, policy checks, etc.).</li>
+</ul>
+<p>This is the operational core of the platform adapter. Every other endpoint follows the same shape: <code>client.platform.&lt;resource&gt;.&lt;method&gt;(...)</code> returning a typed model.</p>
+<h3 id="sync-facade">Sync facade<a class="headerlink" href="#sync-facade" title="Permanent link">&para;</a></h3>
+<p>If your caller can't run an event loop (a script, a notebook, a sync framework), wrap the transport with <code>SyncTransport</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">SyncTransport</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">with</span> <span class="n">SyncTransport</span><span class="p">(</span><span class="n">load_profile</span><span class="p">())</span> <span class="k">as</span> <span class="n">transport</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/healthz&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre></div>
+<p>Under the hood <code>SyncTransport</code> runs <code>Transport</code> inside an <code>anyio.from_thread.start_blocking_portal()</code> — same retry / idempotency / error flows, called synchronously. The async surface is the recommended path; the sync facade is for ergonomics.</p>
+<p><code>SyncTransport</code> does <strong>not</strong> mount <code>.platform</code> / <code>.agent</code> adapters — those are async-only. Sync consumers wanting wrapped endpoints either glue async-to-sync at the call site or drop to <code>transport.request(method, path, ...)</code> directly.</p>
+<h3 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h3>
+<p>By topic:</p>
+<ul>
+<li><strong><a href="#profiles-and-auth">Profiles and auth</a></strong> — multi-profile workflows, the two header schemes the platform supports, environment-variable precedence.</li>
+<li><strong><a href="#idempotency-and-retries">Idempotency and retries</a></strong> — when keys are auto-injected, how 409 mismatches surface, customizing the retry policy.</li>
+<li><strong><a href="#pagination">Pagination</a></strong> — walking large result sets across list endpoints.</li>
+<li><strong><a href="#error-handling">Error handling</a></strong> — the full exception hierarchy and what to catch.</li>
+<li><strong><a href="#compatibility-matrix">Compatibility matrix</a></strong> — which <code>kneo-client</code> releases support which <code>kneo_serv</code> versions.</li>
+</ul>
+<p>For the comprehensive API reference (every class, method, exception), see the <a href="../kneo_agent_client_api_reference.html">API Reference HTML</a> or the <a href="../kneo_agent_client_api_reference.pdf">PDF version</a>.</p>
+<p>For runnable end-to-end scripts: <code>examples/</code>.</p>
+<h2 id="profiles-and-auth">Profiles and auth<a class="headerlink" href="#profiles-and-auth" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/profiles_and_auth/"><code>docs/user/profiles_and_auth.md</code></a></em></p>
+<p>This guide explains how <code>kneo-client</code> resolves connection details (URL, API key, auth scheme, timeout) into a profile, what the two API-key header schemes mean, and how to set up multi-profile workflows for dev / staging / prod.</p>
+<h3 id="what-profile-means-in-kneo-client">What "profile" means in kneo-client<a class="headerlink" href="#what-profile-means-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p>A <strong>profile</strong> is a frozen dataclass bundling <code>(name, url, api_key, auth_scheme, timeout)</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Profile</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">auth_scheme</span><span class="p">:</span> <span class="n">AuthScheme</span> <span class="o">=</span> <span class="n">AuthScheme</span><span class="o">.</span><span class="n">BEARER</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">30.0</span>
+</code></pre></div>
+<p>Everything <code>Transport</code> needs to talk to one Kneo Agent Platform instance fits in those five fields. A <code>KneoClient</code> is built around exactly one profile; you construct one per platform instance you talk to.</p>
+<p>Profiles are typically named — <code>default</code>, <code>staging</code>, <code>prod</code>, <code>ci</code>, etc. The name is informational (it appears in log lines) but doubles as the section name in the TOML config file.</p>
+<h3 id="resolution-order">Resolution order<a class="headerlink" href="#resolution-order" title="Permanent link">&para;</a></h3>
+<p><code>load_profile()</code> and <code>KneoClient.from_profile()</code> merge values from three sources, with later sources overriding earlier ones:</p>
+<ol>
+<li><strong>TOML config file</strong>, by default <code>~/.config/kneo/client.toml</code> (XDG-style via <a href="https://pypi.org/project/platformdirs/"><code>platformdirs</code></a>). Pass <code>config_file=Path(...)</code> to point at a different file. If the file doesn't exist, it's skipped silently — env vars and explicit kwargs are still consulted.</li>
+<li><strong>Environment variables</strong>: <code>KNEO_URL</code>, <code>KNEO_API_KEY</code>, <code>KNEO_AUTH_SCHEME</code>, <code>KNEO_TIMEOUT</code>. (<code>KNEO_PROFILE</code> selects which TOML section to load — it does <em>not</em> override field values.)</li>
+<li><strong>Explicit keyword arguments</strong> to the function call.</li>
+</ol>
+<p>If <code>url</code> or <code>api_key</code> cannot be resolved from any source, a <code>ProfileError</code> is raised with details on which sources were checked. Bad TOML, an unknown <code>auth_scheme</code>, or a non-numeric <code>timeout</code> also surface as <code>ProfileError</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">p</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">()</span>                           <span class="c1"># &#39;default&#39; from TOML + env</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">p</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">(</span><span class="s2">&quot;staging&quot;</span><span class="p">)</span>                  <span class="c1"># explicit profile name</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">p</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://ad-hoc&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">token</span><span class="p">)</span>  <span class="c1"># explicit kwargs win</span>
+</code></pre></div>
+<h3 id="toml-format">TOML format<a class="headerlink" href="#toml-format" title="Permanent link">&para;</a></h3>
+<p>Each top-level table is one profile:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># ~/.config/kneo/client.toml</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">[default]</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://kneo.example.com&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;prod-key&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">auth_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;bearer&quot;</span><span class="w">        </span><span class="c1"># or &quot;kneo_api_key&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span><span class="w">                </span><span class="c1"># seconds</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">[staging]</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://staging-kneo.example.com&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;staging-key&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="k">[local]</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000&quot;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev-token&quot;</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="n">auth_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;kneo_api_key&quot;</span>
+</code></pre></div>
+<p><code>auth_scheme</code> and <code>timeout</code> are optional; their defaults are <code>"bearer"</code> and <code>30.0</code>.</p>
+<p>Picking a profile at call time:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span>           <span class="c1"># &#39;default&#39; (or $KNEO_PROFILE)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">(</span><span class="s2">&quot;staging&quot;</span><span class="p">)</span>  <span class="c1"># explicit</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>    <span class="c1"># explicit</span>
+</code></pre></div>
+<h3 id="environment-variables">Environment variables<a class="headerlink" href="#environment-variables" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KNEO_PROFILE</code></td>
+<td>Profile name to load. Falls back to <code>"default"</code> if unset.</td>
+</tr>
+<tr>
+<td><code>KNEO_URL</code></td>
+<td>Override the profile's URL.</td>
+</tr>
+<tr>
+<td><code>KNEO_API_KEY</code></td>
+<td>Override the profile's API key.</td>
+</tr>
+<tr>
+<td><code>KNEO_AUTH_SCHEME</code></td>
+<td>Override the scheme. Accepts <code>"bearer"</code> or <code>"kneo_api_key"</code>.</td>
+</tr>
+<tr>
+<td><code>KNEO_TIMEOUT</code></td>
+<td>Override the per-request timeout (float seconds).</td>
+</tr>
+</tbody>
+</table>
+<p>CI environments typically set just <code>KNEO_URL</code> and <code>KNEO_API_KEY</code> and skip the TOML file entirely. The lack of a config file is <em>not</em> an error — env vars + kwargs can satisfy resolution on their own.</p>
+<p>A bad value for <code>KNEO_TIMEOUT</code> (non-numeric) raises <code>ProfileError</code> with the variable name in the message — easier to debug than a silent fallback.</p>
+<h3 id="auth-schemes-what-the-platform-accepts">Auth schemes — what the platform accepts<a class="headerlink" href="#auth-schemes-what-the-platform-accepts" title="Permanent link">&para;</a></h3>
+<p>The platform accepts the API key in either of two header schemes. They are <em>semantically</em> equivalent — both end up at the same platform code path — but operationally they have different trade-offs:</p>
+<table>
+<thead>
+<tr>
+<th>Scheme</th>
+<th>Header sent</th>
+<th>When to choose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bearer</code> (default)</td>
+<td><code>Authorization: Bearer &lt;key&gt;</code></td>
+<td>Works with most reverse proxies. Easy to revoke at the gateway layer. Standard HTTP semantics.</td>
+</tr>
+<tr>
+<td><code>kneo_api_key</code></td>
+<td><code>X-Kneo-Api-Key: &lt;key&gt;</code></td>
+<td>Useful when your edge stack already uses the <code>Authorization</code> header for something else (mutual TLS auth, an upstream OAuth flow, etc.). Avoids the collision.</td>
+</tr>
+</tbody>
+</table>
+<p>When in doubt, start with <code>bearer</code>. You can switch schemes per-profile without code changes — just update the TOML or the env var.</p>
+<p>The two schemes are implemented by <code>kneo_client.core.auth.ApiKeyAuth</code>, an <code>httpx.Auth</code> subclass that injects whichever header the active profile selects. Internally the auth flow runs <em>inside</em> httpx's request flow (after <code>Transport</code> has added its other headers), so the API key reaches every redirect / retry attempt at the right layer.</p>
+<h3 id="multi-profile-workflows">Multi-profile workflows<a class="headerlink" href="#multi-profile-workflows" title="Permanent link">&para;</a></h3>
+<p>A common pattern in CI / local dev:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">profile_name</span> <span class="o">=</span> <span class="s2">&quot;ci&quot;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;CI&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">(</span><span class="n">profile_name</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="o">...</span>
+</code></pre></div>
+<p>Or override explicitly when the situation calls for an ad-hoc connection:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://ad-hoc.example.com&quot;</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="n">tok</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="o">...</span>
+</code></pre></div>
+<p>Explicit kwargs always win, so you can keep the TOML file as a baseline and override per-call.</p>
+<p>Programmatic profile construction (when secrets come from a vault / secrets manager) skips <code>load_profile()</code> entirely:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthScheme</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">Profile</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">profile_from_vault</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Profile</span><span class="p">:</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="n">secret</span> <span class="o">=</span> <span class="n">vault</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kneo/prod&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="k">return</span> <span class="n">Profile</span><span class="p">(</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;prod&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="n">url</span><span class="o">=</span><span class="n">secret</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">],</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        <span class="n">api_key</span><span class="o">=</span><span class="n">secret</span><span class="p">[</span><span class="s2">&quot;api_key&quot;</span><span class="p">],</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>        <span class="n">auth_scheme</span><span class="o">=</span><span class="n">AuthScheme</span><span class="o">.</span><span class="n">BEARER</span><span class="p">,</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="p">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile_from_vault</span><span class="p">())</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>    <span class="o">...</span>
+</code></pre></div>
+<p><code>Profile</code> is a frozen dataclass — pass it directly to <code>KneoClient(profile)</code>.</p>
+<h3 id="inspecting-a-resolved-profile">Inspecting a resolved profile<a class="headerlink" href="#inspecting-a-resolved-profile" title="Permanent link">&para;</a></h3>
+<p><code>KneoClient.profile</code> returns the <code>Profile</code> actually in use:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;connected to </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s2"> as profile </span><span class="si">{</span><span class="n">client</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>api_key</code> field is on the dataclass — handle it like any other secret. The redaction-aware logger in <code>kneo_client.core.logging</code> masks the key whenever it logs request / response headers, but <strong>the dataclass itself is not redacted</strong> when you print it directly.</p>
+<p>If you do want to log a profile safely:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;profile name=</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">!r}</span><span class="s2"> url=</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">url</span><span class="si">!r}</span><span class="s2"> scheme=</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">auth_scheme</span><span class="o">.</span><span class="n">value</span><span class="si">!r}</span><span class="s2"> timeout=</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>…just exclude <code>p.api_key</code> from anything that goes to a log sink.</p>
+<h3 id="profile-errors">Profile errors<a class="headerlink" href="#profile-errors" title="Permanent link">&para;</a></h3>
+<p><code>ProfileError</code> covers four failure modes:</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Message pattern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Missing <code>url</code> after all sources</td>
+<td><code>"profile 'X': 'url' is not set …"</code></td>
+</tr>
+<tr>
+<td>Missing <code>api_key</code> after all sources</td>
+<td><code>"profile 'X': 'api_key' is not set …"</code></td>
+</tr>
+<tr>
+<td>Malformed TOML</td>
+<td><code>"failed to parse &lt;path&gt;: …"</code></td>
+</tr>
+<tr>
+<td>Unknown auth scheme</td>
+<td><code>"unknown auth_scheme '…'; expected one of: bearer, kneo_api_key"</code></td>
+</tr>
+<tr>
+<td>Non-numeric <code>KNEO_TIMEOUT</code></td>
+<td><code>"$KNEO_TIMEOUT must be a float, got '…'"</code></td>
+</tr>
+</tbody>
+</table>
+<p>All five are explicit and name the offending source. Catch <code>ProfileError</code> (or <code>Exception</code> if you don't care which) at process startup to fail fast with a clear message rather than blowing up on the first call.</p>
+<h3 id="default-config-path">Default config path<a class="headerlink" href="#default-config-path" title="Permanent link">&para;</a></h3>
+<p><code>kneo_client.core.profiles.default_config_path()</code> returns the XDG-style default — <code>~/.config/kneo/client.toml</code> on Linux, <code>~/Library/Application Support/kneo/client.toml</code> on macOS, the appropriate <code>%APPDATA%\kneo\client.toml</code> on Windows. Resolved via <code>platformdirs.user_config_dir("kneo")</code>.</p>
+<p>If you want a project-local TOML (committed to a repo, picked up by CI without needing a user-config), pass it explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">(</span><span class="n">config_file</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.kneo.toml&quot;</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="idempotency-and-retries">Idempotency and retries<a class="headerlink" href="#idempotency-and-retries" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/idempotency_and_retries/"><code>docs/user/idempotency_and_retries.md</code></a></em></p>
+<p>This guide explains when <code>kneo-client</code> injects idempotency keys, how 409 mismatches surface, what the retry policy is, and how to customize either piece for non-default deployments.</p>
+<h3 id="what-idempotency-and-retries-mean-in-kneo-client">What "idempotency and retries" mean in kneo-client<a class="headerlink" href="#what-idempotency-and-retries-mean-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p>The Kneo Agent Platform's operational endpoints are designed for <em>safe retry</em>. The platform short-circuits a duplicate <code>POST</code> with the same <code>Idempotency-Key</code> header and identical payload — the second request replays the original response rather than re-executing the side effect.</p>
+<p><code>kneo-client</code> makes that safety automatic by:</p>
+<ol>
+<li>Auto-injecting a fresh UUID4 <code>Idempotency-Key</code> on every <code>POST</code> (unless the caller supplies their own).</li>
+<li>Retrying transient transport errors and the fixed set <code>{429, 502, 503, 504}</code> within a configurable <code>RetryPolicy</code>.</li>
+<li>Honoring <code>Retry-After</code> on 429 responses (server's hint overrides the policy's computed delay).</li>
+<li>Surfacing the platform's payload-mismatch behavior as <code>KneoIdempotencyMismatchError</code> so retry-with-wrong-payload bugs are loud, not silent.</li>
+</ol>
+<p>Both pieces work together: idempotency keys make it <em>safe</em> to retry a <code>POST</code>; the retry policy <em>decides</em> when to retry. The default settings work for most callers; you can override either independently.</p>
+<h3 id="idempotency-keys-by-default">Idempotency keys, by default<a class="headerlink" href="#idempotency-keys-by-default" title="Permanent link">&para;</a></h3>
+<p>On every <code>POST</code> the transport sends, it adds:</p>
+<ul>
+<li><code>Idempotency-Key: &lt;fresh UUID4&gt;</code> — unless the caller passes <code>idempotency_key=&lt;string&gt;</code> on the method call.</li>
+</ul>
+<p>The platform's contract:</p>
+<ul>
+<li><strong>Same key + identical payload</strong> → server short-circuits and returns the original response. The retry is effectively a replay.</li>
+<li><strong>Same key + different payload</strong> → server returns HTTP 409. The client surfaces this as <code>KneoIdempotencyMismatchError</code>.</li>
+<li><strong>Different key</strong> → server treats this as a new request and executes the side effect.</li>
+</ul>
+<p>The auto-generated key is a fresh UUID4 per request. Collisions are not a real concern (UUID4 has 122 bits of randomness), so by default each call is independent — retries beyond the transport's own loop won't be deduplicated by the server.</p>
+<h3 id="when-to-supply-your-own-key">When to supply your own key<a class="headerlink" href="#when-to-supply-your-own-key" title="Permanent link">&para;</a></h3>
+<p>The auto-generated key is fine for one-shot calls. Supply your own when:</p>
+<ul>
+<li><strong>You're retrying outside the transport's loop.</strong> The transport retries within <code>RetryPolicy.max_attempts</code> for transient failures, but if your <em>application</em> catches an error and retries (e.g. a job runner re-invoking after a process restart), pass the same key on both attempts so the platform dedupes. The transport's retries already share the key.</li>
+<li><strong>You want cross-process correlation.</strong> Two services submitting the same logical request can dedupe by agreeing on the key (e.g. derive it from a hash of the request payload + a request ID from your application).</li>
+<li><strong>You're testing.</strong> A stable key makes test fixtures deterministic.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.idempotency</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">key</span> <span class="o">=</span> <span class="n">new_idempotency_key</span><span class="p">()</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;my-spec&quot;</span><span class="p">}</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># First attempt — succeeds normally</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c1"># … later, retrying after a transient outage outside the transport&#39;s loop:</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c1"># → returns the first run (same response, no new side effect)</span>
+</code></pre></div>
+<p>Constraints on caller-supplied keys (validated by the client before sending):</p>
+<ul>
+<li><strong>Non-empty</strong> — an empty string raises <code>ValueError</code>.</li>
+<li><strong>At most 256 characters</strong> (<code>MAX_KEY_LENGTH</code>). The platform enforces this; the client validates locally to fail faster.</li>
+</ul>
+<h3 id="catching-409-mismatch">Catching 409 mismatch<a class="headerlink" href="#catching-409-mismatch" title="Permanent link">&para;</a></h3>
+<p>A 409 with an idempotency key set means the <em>same key was reused with a different payload</em> — almost always a caller bug. Surface it loudly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">except</span> <span class="n">KneoIdempotencyMismatchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>        <span class="sa">f</span><span class="s2">&quot;Idempotency-Key </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">!r}</span><span class="s2"> was reused with a different payload. &quot;</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>        <span class="sa">f</span><span class="s2">&quot;Either generate a new key for the new request or fix the payload drift.&quot;</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+</code></pre></div>
+<p>The exception carries the key as sent (<code>exc.idempotency_key</code>), the platform's error body (<code>exc.body</code>), the server-assigned request ID for log correlation (<code>exc.request_id</code>), and the HTTP status (<code>exc.status == 409</code>).</p>
+<p>Note that <code>KneoIdempotencyMismatchError</code> is a <em>subclass</em> of <code>KneoConflictError</code>, so a generic <code>except KneoConflictError</code> will also catch it. If you only care about non-mismatch conflicts (resource state collisions, optimistic-lock failures, etc.), catch <code>KneoIdempotencyMismatchError</code> first.</p>
+<h3 id="the-retry-policy">The retry policy<a class="headerlink" href="#the-retry-policy" title="Permanent link">&para;</a></h3>
+<p><code>RetryPolicy</code> is a frozen dataclass describing when and how long to wait between attempts. The transport applies it; the policy itself does no I/O.</p>
+<p>The default policy:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">RetryPolicy</span><span class="p">(</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    <span class="n">max_attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>    <span class="c1"># up to 3 total attempts</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">base_delay</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>    <span class="c1"># ~0.2s before attempt 2</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="n">max_delay</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>    <span class="c1"># cap on the computed delay</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">jitter</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>        <span class="c1"># 10% jitter applied to the computed delay</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">)</span>
+</code></pre></div>
+<p>Delay sequence (without jitter): attempt 1 → no delay, attempt 2 → <code>base_delay</code>, attempt 3 → <code>2 × base_delay</code>, …, capped at <code>max_delay</code>. With <code>jitter=0.1</code>, a 1-second delay becomes uniformly distributed in <code>[0.9, 1.1]</code>.</p>
+<p><code>Retry-After</code> from a 429 response overrides the computed delay verbatim. The server's hint is authoritative; no jitter is applied on top.</p>
+<h3 id="when-retries-fire">When retries fire<a class="headerlink" href="#when-retries-fire" title="Permanent link">&para;</a></h3>
+<p>The transport retries on:</p>
+<ul>
+<li>Transport-level errors from <code>httpx</code> — DNS resolution failures, connect failures, TLS handshakes, read timeouts.</li>
+<li>HTTP <strong>429</strong> (rate limited), <strong>502</strong> (bad gateway), <strong>503</strong> (service unavailable), <strong>504</strong> (gateway timeout). Other 4xx and 5xx status codes do <em>not</em> trigger a retry — those typically indicate caller errors or non-transient server problems that retrying won't fix.</li>
+</ul>
+<p>The retryable status set is <code>RETRYABLE_STATUS_CODES = frozenset({429, 502, 503, 504})</code> — a module constant, intentionally not configurable. If your platform deployment legitimately returns transient <code>500</code>s, fix the deployment; we'd rather diagnose the root cause than open the gate.</p>
+<p>Retries fire only for:</p>
+<ul>
+<li><strong>Idempotent verbs</strong>: <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, <code>DELETE</code>.</li>
+<li><strong><code>POST</code> <em>with</em> an <code>Idempotency-Key</code></strong> — i.e. always, since the transport auto-injects one on every <code>POST</code>.</li>
+</ul>
+<p>This is why auto-injection matters: it's what makes <code>POST</code> retries safe.</p>
+<h3 id="customizing-the-policy">Customizing the policy<a class="headerlink" href="#customizing-the-policy" title="Permanent link">&para;</a></h3>
+<p>Pass a custom policy when constructing the client:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.retries</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryPolicy</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="n">profile</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">()</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="c1"># Aggressive retries for a flaky network</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="n">policy</span> <span class="o">=</span> <span class="n">RetryPolicy</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">base_delay</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_delay</span><span class="o">=</span><span class="mf">60.0</span><span class="p">)</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">retry_policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="c1"># Flat delay (no exponential growth)</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="n">policy</span> <span class="o">=</span> <span class="n">RetryPolicy</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">base_delay</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">max_delay</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">retry_policy</span><span class="o">=</span><span class="n">policy</span><span class="p">)</span>
+</code></pre></div>
+<p>To disable retries entirely (useful in tests that want to see the first failure surface immediately):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">retry_policy</span><span class="o">=</span><span class="n">RetryPolicy</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+<p>Constraints on <code>RetryPolicy</code> parameters (validated at construction):</p>
+<ul>
+<li><code>max_attempts ≥ 1</code></li>
+<li><code>base_delay ≥ 0</code></li>
+<li><code>max_delay ≥ base_delay</code></li>
+<li><code>0 ≤ jitter ≤ 1</code></li>
+</ul>
+<p>Invalid values raise <code>ValueError</code> immediately — you find out at startup, not on the first retry.</p>
+<h3 id="what-surfaces-when-retries-exhaust">What surfaces when retries exhaust<a class="headerlink" href="#what-surfaces-when-retries-exhaust" title="Permanent link">&para;</a></h3>
+<p>If all retries fail, the client raises the appropriate typed exception based on the <em>final</em> attempt's outcome:</p>
+<table>
+<thead>
+<tr>
+<th>Final attempt failed because…</th>
+<th>Exception raised</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP 429</td>
+<td><code>KneoRateLimited</code> (carries <code>.retry_after</code>)</td>
+</tr>
+<tr>
+<td>HTTP 502 / 503 / 504</td>
+<td><code>KneoServerError</code></td>
+</tr>
+<tr>
+<td>Transport error (DNS, connect, TLS, read)</td>
+<td><code>KneoNetworkError</code></td>
+</tr>
+</tbody>
+</table>
+<p>Intermediate retry attempts are logged at <code>INFO</code> level under the <code>kneo_client.transport</code> logger:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>INFO:kneo_client.transport:status 503 on attempt 1; sleeping 0.20s
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>INFO:kneo_client.transport:status 503 on attempt 2; sleeping 0.40s
+</code></pre></div>
+<p>If you want to see the retry behavior in your application logs, set the logger level:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_client.transport&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="bypassing-the-auto-injection">Bypassing the auto-injection<a class="headerlink" href="#bypassing-the-auto-injection" title="Permanent link">&para;</a></h3>
+<p>The transport auto-injects an <code>Idempotency-Key</code> on every <code>POST</code> <em>unconditionally</em>. If for some reason you need to send a <code>POST</code> without one (very unusual — the platform's contract assumes the header is present), drop to the transport directly and supply explicit headers:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># Standard call — transport adds Idempotency-Key automatically</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># No-auto-inject path (you take responsibility for deduplication)</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">_transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;POST&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/runs&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">body</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Idempotency-Key&quot;</span><span class="p">:</span> <span class="s2">&quot;your-deterministic-key&quot;</span><span class="p">})</span>
+</code></pre></div>
+<p>You almost never want this. Auto-injection is the right default; this is documented mostly so you know the escape hatch exists.</p>
+<h3 id="putting-it-together-a-robust-pattern">Putting it together — a robust pattern<a class="headerlink" href="#putting-it-together-a-robust-pattern" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>    <span class="n">KneoIdempotencyMismatchError</span><span class="p">,</span> <span class="n">KneoNetworkError</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">,</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="p">)</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.idempotency</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_run_robust</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">KneoClient</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>    <span class="n">key</span> <span class="o">=</span> <span class="n">new_idempotency_key</span><span class="p">()</span>  <span class="c1"># one key, used across application-level retries</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>            <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>            <span class="k">return</span> <span class="n">run</span><span class="o">.</span><span class="n">run_id</span>
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>        <span class="k">except</span> <span class="n">KneoIdempotencyMismatchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>            <span class="c1"># Caller bug — body changed between attempts. Don&#39;t retry.</span>
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;payload drift on key </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>        <span class="k">except</span> <span class="p">(</span><span class="n">KneoNetworkError</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>            <span class="c1"># The transport already retried within its policy; we add an outer</span>
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>            <span class="c1"># guard for application-level recovery (e.g. across process restarts).</span>
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>            <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>                <span class="k">raise</span>
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span> <span class="o">**</span> <span class="n">attempt</span><span class="p">)</span>
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>    <span class="k">raise</span> <span class="ne">AssertionError</span><span class="p">(</span><span class="s2">&quot;unreachable&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>In practice the transport's built-in retries are sufficient for most use cases; the outer loop above is for the rare case where you want application-level retry behavior (e.g. survive a process restart while the platform is temporarily unreachable).</p>
+<h2 id="pagination">Pagination<a class="headerlink" href="#pagination" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/pagination/"><code>docs/user/pagination.md</code></a></em></p>
+<p>This guide explains the platform's <code>limit</code> / <code>offset</code> pagination protocol, how to walk one page or all pages, and how to use <code>iterate_all()</code> for streaming iteration across large result sets.</p>
+<h3 id="what-pagination-means-in-kneo-client">What "pagination" means in kneo-client<a class="headerlink" href="#what-pagination-means-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p>Every list endpoint the platform exposes — runs, audit events, human tasks, environment policies, traces, checkpoints — uses the same <code>limit</code> / <code>offset</code> pagination protocol. The client surfaces that protocol through:</p>
+<ul>
+<li>Uniform keyword arguments on every list method (<code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code>).</li>
+<li>A <code>PaginatedResult[T]</code> wrapper class in <code>kneo_client.core.pagination</code> for typed page-by-page handling.</li>
+<li>An <code>iterate_all()</code> async iterator that walks pages transparently given a <code>fetch_page(limit, offset)</code> callable.</li>
+</ul>
+<h3 id="the-protocol">The protocol<a class="headerlink" href="#the-protocol" title="Permanent link">&para;</a></h3>
+<p>Platform list endpoints accept:</p>
+<table>
+<thead>
+<tr>
+<th>Query parameter</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>limit</code></td>
+<td>int (1–1000)</td>
+<td>Page size. Default 100.</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>int</td>
+<td>Skip this many items.</td>
+</tr>
+<tr>
+<td><code>sort_by</code></td>
+<td>str</td>
+<td>Field to sort by. Defaults vary per endpoint (<code>updated_at</code> for runs, <code>timestamp</code> for audit, etc.).</td>
+</tr>
+<tr>
+<td><code>sort_order</code></td>
+<td><code>"asc"</code> or <code>"desc"</code></td>
+<td>Sort direction. Defaults vary per endpoint.</td>
+</tr>
+</tbody>
+</table>
+<p>Responses include:</p>
+<table>
+<thead>
+<tr>
+<th>Response field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>count</code></td>
+<td>Items on this page (<code>len(items)</code>).</td>
+</tr>
+<tr>
+<td><code>total</code></td>
+<td>Total items across all pages, as reported by the server.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>The page size the server actually applied (may equal the requested value).</td>
+</tr>
+<tr>
+<td><code>offset</code></td>
+<td>The offset of the first item on this page.</td>
+</tr>
+<tr>
+<td><code>sort_by</code>, <code>sort_order</code></td>
+<td>Echo of the sort parameters in effect.</td>
+</tr>
+<tr>
+<td>Items array</td>
+<td>Endpoint-specific name (<code>runs</code>, <code>events</code>, <code>tasks</code>, <code>checkpoints</code>, …).</td>
+</tr>
+</tbody>
+</table>
+<p>Concrete shapes vary per endpoint — the items array is named after the resource (<code>page.runs</code>, <code>page.events</code>, etc.). See the <a href="../kneo_agent_client_api_reference.html">API Reference</a> for each endpoint's exact response model.</p>
+<h3 id="walking-one-page">Walking one page<a class="headerlink" href="#walking-one-page" title="Permanent link">&para;</a></h3>
+<p>Every platform list method exposes the same kwargs:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">page</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">(</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="n">status</span><span class="o">=</span><span class="s2">&quot;running&quot;</span><span class="p">,</span>
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>    <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>    <span class="n">sort_by</span><span class="o">=</span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span>
+<a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>    <span class="n">sort_order</span><span class="o">=</span><span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+<a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="p">)</span>
+<a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;got </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">count</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">page</span><span class="o">.</span><span class="n">total</span><span class="si">}</span><span class="s2"> runs&quot;</span><span class="p">)</span>
+<a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">runs</span><span class="p">:</span>
+<a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+</code></pre></div>
+<p><code>None</code> for any keyword argument means <em>omit</em> — the platform's default kicks in. The client passes through whatever the server returns; it doesn't second-guess the page size or impose its own defaults beyond passing through your input.</p>
+<h3 id="walking-all-pages-manually">Walking all pages manually<a class="headerlink" href="#walking-all-pages-manually" title="Permanent link">&para;</a></h3>
+<p>The straightforward pattern works for any list endpoint:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">all_runs</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span><span class="p">):</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>    <span class="n">offset</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>    <span class="n">page_size</span> <span class="o">=</span> <span class="mi">200</span>
+<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>        <span class="n">page</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">(</span>
+<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>            <span class="n">limit</span><span class="o">=</span><span class="n">page_size</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span>
+<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>        <span class="p">)</span>
+<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>        <span class="k">for</span> <span class="n">run</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">runs</span><span class="p">:</span>
+<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>            <span class="k">yield</span> <span class="n">run</span>
+<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>        <span class="k">if</span> <span class="n">page</span><span class="o">.</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">page_size</span><span class="p">:</span>
+<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>            <span class="k">break</span>
+<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>        <span class="n">offset</span> <span class="o">+=</span> <span class="n">page</span><span class="o">.</span><span class="n">count</span>
+</code></pre></div>
+<p>This pattern uses <code>count &lt; page_size</code> as the end-of-iteration signal, which works whether or not the server returns a <code>total</code>. It's also robust to a server that returns fewer items than requested (e.g., quota / rate limiting on a per-page basis).</p>
+<p><code>examples/03_paginate_audit.py</code> does exactly this for audit events.</p>
+<h3 id="the-iterate_all-helper">The <code>iterate_all()</code> helper<a class="headerlink" href="#the-iterate_all-helper" title="Permanent link">&para;</a></h3>
+<p><code>kneo_client.core.pagination.iterate_all()</code> is an async iterator that walks pages given a <code>fetch_page(limit, offset)</code> callable returning a <code>PaginatedResult</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.pagination</span><span class="w"> </span><span class="kn">import</span> <span class="n">PaginatedResult</span><span class="p">,</span> <span class="n">iterate_all</span>
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">async</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">iterate_all</span><span class="p">(</span><span class="n">fetch_page</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>    <span class="n">process</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</code></pre></div>
+<p>The platform list methods don't yet return <code>PaginatedResult</code> directly — that integration is a known follow-up — so today you adapt the call site:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.pagination</span><span class="w"> </span><span class="kn">import</span> <span class="n">PaginatedResult</span><span class="p">,</span> <span class="n">iterate_all</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">all_audit_events</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span><span class="p">):</span>
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch_page</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PaginatedResult</span><span class="p">:</span>
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>        <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">audit</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="o">**</span><span class="n">filters</span><span class="p">)</span>
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>        <span class="k">return</span> <span class="n">PaginatedResult</span><span class="p">(</span>
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>            <span class="n">items</span><span class="o">=</span><span class="n">resp</span><span class="o">.</span><span class="n">events</span><span class="p">,</span>
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>            <span class="n">total</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="s2">&quot;total&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>            <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>        <span class="p">)</span>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">iterate_all</span><span class="p">(</span><span class="n">fetch_page</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>        <span class="k">yield</span> <span class="n">event</span>
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="c1"># Use it:</span>
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">all_audit_events</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">event_type</span><span class="o">=</span><span class="s2">&quot;run.created&quot;</span><span class="p">):</span>
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+</code></pre></div>
+<p><code>iterate_all()</code> does three things on your behalf:</p>
+<ol>
+<li><strong>Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code></strong> — the platform's hard upper bound. Asking for more than 1000 silently downsizes.</li>
+<li><strong>Walks <code>offset</code> automatically</strong> — each page's <code>offset</code> becomes the next page's starting position.</li>
+<li><strong>Stops when <code>has_more</code> is false</strong> — the <code>PaginatedResult.has_more</code> property is <code>offset + count &lt; total</code>, which works whenever the response includes a <code>total</code>. For responses that don't, build the <code>PaginatedResult</code> with <code>total=count</code> and the iteration stops after one page.</li>
+</ol>
+<h3 id="paginatedresultt-the-typed-wrapper"><code>PaginatedResult[T]</code> — the typed wrapper<a class="headerlink" href="#paginatedresultt-the-typed-wrapper" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">PaginatedResult</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>    <span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>    <span class="n">total</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>    <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>    <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>    <span class="n">sort_by</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>    <span class="n">sort_order</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>
+<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>    <span class="nd">@property</span>
+<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">)</span>
+<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>
+<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>    <span class="nd">@property</span>
+<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_more</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">total</span>
+</code></pre></div>
+<p>Use it when building your own page-walker (as above) or when you want a uniform shape across endpoints regardless of what the underlying response model is named.</p>
+<h3 id="choosing-a-page-size">Choosing a page size<a class="headerlink" href="#choosing-a-page-size" title="Permanent link">&para;</a></h3>
+<p>A few rules of thumb:</p>
+<ul>
+<li><strong>100–200</strong> for most interactive flows. Small enough to keep latency snappy; large enough to amortize request overhead.</li>
+<li><strong>500–1000</strong> for back-end export jobs that walk the whole list and don't care about first-byte latency. Larger pages reduce request count.</li>
+<li><strong>&lt; 50</strong> if downstream processing per item is slow and you want to start producing output sooner.</li>
+</ul>
+<p>Larger pages reduce per-request overhead but increase the cost of a failed page — everything in flight has to be re-fetched. If the platform deployment you're talking to is on a flaky network, prefer smaller pages.</p>
+<p>The maximum is <code>MAX_PAGE_SIZE = 1000</code> (the platform's enforced upper bound). Anything larger is silently clamped by <code>iterate_all()</code> and by the platform itself.</p>
+<h3 id="pagination-filters">Pagination + filters<a class="headerlink" href="#pagination-filters" title="Permanent link">&para;</a></h3>
+<p>All list methods accept resource-specific filter kwargs alongside the pagination args. Common patterns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Just the failures</span>
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="n">failed_runs</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s2">&quot;failed&quot;</span><span class="p">)</span>
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="c1"># Just audit events for one run</span>
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="n">audit_for_run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">audit</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">run_id</span><span class="o">=</span><span class="s2">&quot;r1&quot;</span><span class="p">)</span>
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="c1"># Just pending human tasks</span>
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="n">pending</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">human_tasks</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s2">&quot;pending&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Filters compose with pagination — <code>runs.list(status="failed", limit=50)</code> filters then paginates the filtered result.</p>
+<h3 id="whats-not-on-the-roadmap">What's <em>not</em> on the roadmap<a class="headerlink" href="#whats-not-on-the-roadmap" title="Permanent link">&para;</a></h3>
+<p>Auto-pagination at the adapter layer (e.g., <code>client.platform.runs.list_all()</code> returning an iterator) is <em>not</em> planned. The current shape — list methods return one page; <code>iterate_all()</code> walks pages explicitly — keeps the per-call cost transparent and lets callers decide when to stop. Auto-walking can mask runaway iteration if a filter accidentally matches a huge result set.</p>
+<p>If you want a one-liner for the common case, write a small helper in your application like <code>all_runs()</code> above. The pattern is identical for every endpoint.</p>
+<h2 id="error-handling">Error handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/errors/"><code>docs/user/errors.md</code></a></em></p>
+<p>This guide explains the typed exception hierarchy <code>kneo-client</code> raises, what each exception carries, and how to write robust catch blocks for the common operational shapes.</p>
+<h3 id="what-errors-mean-in-kneo-client">What "errors" mean in kneo-client<a class="headerlink" href="#what-errors-mean-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p>Every failure — at any layer — surfaces as a typed exception derived from <code>KneoError</code>. There is no <code>(ok, err)</code> tuple return, no <code>Response[T]</code> wrapper, no errno field. The standard Python <code>try</code> / <code>except</code> flow is the <em>only</em> error-handling shape.</p>
+<p>Each exception carries enough context to:</p>
+<ul>
+<li><strong>Log the failure with traceability</strong> — every exception has <code>.request_id</code> (the server-assigned correlation ID) and, for <code>POST</code> failures, <code>.idempotency_key</code>.</li>
+<li><strong>Branch on the operational meaning</strong> — the exception class encodes "what went wrong" (auth vs. permission vs. server outage vs. network).</li>
+<li><strong>Read the server's reason</strong> — <code>.body</code> is the parsed JSON the platform returned (or raw text when the response wasn't JSON).</li>
+<li><strong>Decide whether to retry, escalate, or surface</strong> — combined with <code>.status</code> and the exception type, you can route the failure programmatically.</li>
+</ul>
+<h3 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>KneoError
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>├── KneoNetworkError              # DNS / connect / TLS / read timeout — wrapped from httpx.HTTPError
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>├── KneoAuthError                 # HTTP 401 — missing or invalid API key
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>├── KneoPermissionError           # HTTP 403 — key valid but lacks the required scope
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>├── KneoNotFoundError             # HTTP 404 — resource does not exist
+<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>├── KneoConflictError             # HTTP 409 (generic)
+<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>│   └── KneoIdempotencyMismatchError   # HTTP 409 with payload mismatch on a replayed Idempotency-Key
+<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>├── KneoRateLimited               # HTTP 429 (carries .retry_after)
+<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>└── KneoServerError               # HTTP 5xx — server-side failure
+</code></pre></div>
+<p><code>KneoIdempotencyMismatchError</code> is a <em>subclass</em> of <code>KneoConflictError</code> (catching <code>KneoConflictError</code> also catches the mismatch case). Everything else is parallel.</p>
+<h3 id="what-every-exception-carries">What every exception carries<a class="headerlink" href="#what-every-exception-carries" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>    <span class="n">status</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>          <span class="c1"># HTTP status, or None for transport-level failures</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>    <span class="n">body</span><span class="p">:</span> <span class="n">Any</span>                   <span class="c1"># Parsed JSON dict, raw text, or None</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>    <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>      <span class="c1"># X-Request-ID echoed by the server</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>    <span class="n">idempotency_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="c1"># Idempotency-Key sent on the failing request (POSTs)</span>
+</code></pre></div>
+<p><code>KneoRateLimited</code> adds one field:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoRateLimited</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
+</code></pre></div>
+<p>All other subclasses inherit from <code>KneoError</code> without adding fields.</p>
+<h3 id="status-code-exception-mapping">Status code → exception mapping<a class="headerlink" href="#status-code-exception-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>HTTP status</th>
+<th>Exception</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>401</td>
+<td><code>KneoAuthError</code></td>
+<td>Missing or invalid API key. Re-check the profile resolution chain.</td>
+</tr>
+<tr>
+<td>403</td>
+<td><code>KneoPermissionError</code></td>
+<td>API key is valid but the platform won't authorize this operation. Check the key's scopes / role.</td>
+</tr>
+<tr>
+<td>404</td>
+<td><code>KneoNotFoundError</code></td>
+<td>The resource (run, spec, environment, etc.) doesn't exist. Often a stale ID.</td>
+</tr>
+<tr>
+<td>409</td>
+<td><code>KneoConflictError</code></td>
+<td>Generic conflict — resource state, optimistic-lock failure, etc.</td>
+</tr>
+<tr>
+<td>409 with idempotency key</td>
+<td><code>KneoIdempotencyMismatchError</code></td>
+<td>Same key reused with a different payload — see <a href="#idempotency-and-retries">idempotency</a>.</td>
+</tr>
+<tr>
+<td>429</td>
+<td><code>KneoRateLimited</code></td>
+<td>Rate limit hit. <code>.retry_after</code> carries the server's hint.</td>
+</tr>
+<tr>
+<td>5xx</td>
+<td><code>KneoServerError</code></td>
+<td>Server-side failure. The transport already retried within its policy (for 502/503/504); a <code>KneoServerError</code> reaching your code means retries exhausted.</td>
+</tr>
+<tr>
+<td>Other (1xx / 3xx / 4xx that aren't above)</td>
+<td><code>KneoError</code> (base)</td>
+<td>Catch-all for unmodeled statuses.</td>
+</tr>
+<tr>
+<td>Connection / DNS / TLS / read timeout</td>
+<td><code>KneoNetworkError</code></td>
+<td>Transport-level failure. The transport already retried for transient errors; a <code>KneoNetworkError</code> reaching your code means retries exhausted.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="catching-patterns">Catching patterns<a class="headerlink" href="#catching-patterns" title="Permanent link">&para;</a></h3>
+<h4 id="catch-broadly-log-richly">Catch broadly, log richly<a class="headerlink" href="#catch-broadly-log-richly" title="Permanent link">&para;</a></h4>
+<p>The most common pattern — log the full context, then decide whether to re-raise:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoError</span>
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>
+<a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="k">except</span> <span class="n">KneoError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+<a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>        <span class="s2">&quot;create_run failed status=</span><span class="si">%s</span><span class="s2"> request_id=</span><span class="si">%s</span><span class="s2"> idempotency_key=</span><span class="si">%s</span><span class="s2"> body=</span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+<a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a>        <span class="n">exc</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+<a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a>        <span class="n">exc</span><span class="o">.</span><span class="n">request_id</span><span class="p">,</span>
+<a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a>        <span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="p">,</span>
+<a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>        <span class="n">exc</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+<a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a>    <span class="p">)</span>
+<a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>    <span class="k">raise</span>
+</code></pre></div>
+<p>The <code>request_id</code> is the link to the platform's audit events — pass it along when reporting a problem to the platform operators.</p>
+<h4 id="branch-on-specific-status">Branch on specific status<a class="headerlink" href="#branch-on-specific-status" title="Permanent link">&para;</a></h4>
+<p>When the operational meaning matters (auth flow, retry decision, user-visible error message):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>    <span class="n">KneoAuthError</span><span class="p">,</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>    <span class="n">KneoNotFoundError</span><span class="p">,</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>    <span class="n">KneoRateLimited</span><span class="p">,</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>    <span class="n">KneoServerError</span><span class="p">,</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="p">)</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="k">except</span> <span class="n">KneoAuthError</span><span class="p">:</span>
+<a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;API key is missing, invalid, or revoked.&quot;</span><span class="p">)</span>
+<a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a>    <span class="k">raise</span>
+<a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="k">except</span> <span class="n">KneoNotFoundError</span><span class="p">:</span>
+<a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+<a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a>    <span class="k">return</span> <span class="kc">None</span>
+<a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="k">except</span> <span class="n">KneoRateLimited</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rate-limited; server suggests waiting </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a>    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a>    <span class="k">raise</span>
+<a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="k">except</span> <span class="n">KneoServerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a>    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;platform 5xx (after retries): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+<a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a>    <span class="k">raise</span>
+</code></pre></div>
+<p>Order matters: catch more specific exceptions first (<code>KneoNotFoundError</code> before <code>KneoError</code>).</p>
+<h4 id="handle-idempotency-key-mismatches-loudly">Handle idempotency-key mismatches loudly<a class="headerlink" href="#handle-idempotency-key-mismatches-loudly" title="Permanent link">&para;</a></h4>
+<p>A 409 with an idempotency key set means the <em>same key was reused with a different payload</em>. This is almost always a caller bug — surface it explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="k">except</span> <span class="n">KneoIdempotencyMismatchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a>        <span class="sa">f</span><span class="s2">&quot;Idempotency-Key </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">!r}</span><span class="s2"> was reused with a different payload. &quot;</span>
+<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a>        <span class="sa">f</span><span class="s2">&quot;Either generate a new key for the new request or fix the payload drift.&quot;</span>
+<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+</code></pre></div>
+<p>See <a href="#idempotency-and-retries">Idempotency and retries</a> for the full story on how / when this happens.</p>
+<h4 id="dont-catch-successful-status-branches">Don't catch successful-status branches<a class="headerlink" href="#dont-catch-successful-status-branches" title="Permanent link">&para;</a></h4>
+<p>Methods on the platform / agent clients return parsed response models on success and <em>raise</em> on failure. There is no "ok / err" branching at the call site. Wrap the <em>call</em> in <code>try</code> / <code>except</code>, not the return value:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="c1"># Right</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>    <span class="n">process</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="k">except</span> <span class="n">KneoError</span><span class="p">:</span>
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>    <span class="o">...</span>
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="c1"># Wrong — runs.create never returns None / False on failure; it raises</span>
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># never happens</span>
+<a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>    <span class="o">...</span>
+</code></pre></div>
+<h3 id="transport-errors-specifically">Transport errors specifically<a class="headerlink" href="#transport-errors-specifically" title="Permanent link">&para;</a></h3>
+<p><code>KneoNetworkError</code> covers everything below the HTTP layer: DNS resolution, TCP connect failures, TLS handshakes, read timeouts. It wraps the underlying <code>httpx.HTTPError</code> as the cause — <code>exc.__cause__</code> is the original httpx exception if you need to inspect it.</p>
+<p>The transport retries these automatically within <code>RetryPolicy.max_attempts</code> for transport errors and for HTTP 429 / 502 / 503 / 504. So a <code>KneoNetworkError</code> reaching your code means <strong>all retries exhausted</strong>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoNetworkError</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>    <span class="n">health</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">health</span><span class="o">.</span><span class="n">readyz</span><span class="p">()</span>
+<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="k">except</span> <span class="n">KneoNetworkError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not reach the platform: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>    <span class="c1"># Treat as a hard dependency outage; don&#39;t pretend the call succeeded.</span>
+<a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>    <span class="k">raise</span>
+</code></pre></div>
+<p>If you want to see the retry behavior in your logs, set the <code>kneo_client.transport</code> logger to <code>INFO</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_client.transport&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="c1"># → INFO kneo_client.transport: transport error on attempt 1; sleeping 0.20s: ...</span>
+</code></pre></div>
+<h3 id="building-error-messages-for-users">Building error messages for users<a class="headerlink" href="#building-error-messages-for-users" title="Permanent link">&para;</a></h3>
+<p>The exceptions are designed for <em>internal</em> error handling, not for user-facing messages. If you're surfacing platform errors to end users (in a dashboard UI, a CLI prompt, etc.), build a friendly message from the exception's attributes rather than printing <code>str(exc)</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">user_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="n">KneoError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoAuthError</span><span class="p">):</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>        <span class="k">return</span> <span class="s2">&quot;Your API key is invalid. Please check your credentials.&quot;</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoPermissionError</span><span class="p">):</span>
+<a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>        <span class="k">return</span> <span class="s2">&quot;You don&#39;t have permission to perform this action.&quot;</span>
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNotFoundError</span><span class="p">):</span>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>        <span class="k">return</span> <span class="s2">&quot;The requested item could not be found.&quot;</span>
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoRateLimited</span><span class="p">):</span>
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>        <span class="n">wait</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">60</span>
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Too many requests. Please try again in </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span><span class="si">}</span><span class="s2">s.&quot;</span>
+<a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">):</span>
+<a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Server error (request </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">request_id</span><span class="si">}</span><span class="s2">). Please report this.&quot;</span>
+<a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNetworkError</span><span class="p">):</span>
+<a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>        <span class="k">return</span> <span class="s2">&quot;Could not reach the server. Check your network connection.&quot;</span>
+<a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+<h3 id="why-a-typed-hierarchy">Why a typed hierarchy<a class="headerlink" href="#why-a-typed-hierarchy" title="Permanent link">&para;</a></h3>
+<p>A single <code>KneoError</code> would force callers to inspect <code>.status</code> everywhere they want to branch. A flat enum of error codes would lose the natural <code>isinstance</code> ergonomics. The hierarchy lets you catch broadly (<code>except KneoError</code>) for logging and narrowly (<code>except KneoAuthError</code>) for recovery — without losing the underlying response context, which stays attached to the exception instance.</p>
+<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 0.4.0.</p>
+<h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Helper</th>
+<th>Where</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from_response(response, *, idempotency_key=None)</code></td>
+<td><code>kneo_client.core.errors</code></td>
+<td>Maps an <code>httpx.Response</code> to the appropriate <code>KneoError</code> subclass. Used internally by <code>Transport</code>; rarely called directly.</td>
+</tr>
+<tr>
+<td><code>KneoError(message, *, status, body, request_id, idempotency_key)</code></td>
+<td><code>kneo_client.core.errors</code></td>
+<td>The base. All subclasses share this constructor signature (except <code>KneoRateLimited</code>, which adds <code>retry_after</code>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compatibility-matrix">Compatibility matrix<a class="headerlink" href="#compatibility-matrix" title="Permanent link">&para;</a></h2>
+<p><em>Source: <a href="../../user/compatibility/"><code>docs/user/compatibility.md</code></a></em></p>
+<p>This guide tells you which <code>kneo-client</code> release supports which <code>kneo_serv</code> platform version, what forward and backward compatibility mean in practice, and how to use the drop-to-transport escape hatch when you need access to an endpoint the current <code>kneo-client</code> release doesn't wrap yet.</p>
+<h3 id="what-compatibility-means-in-kneo-client">What "compatibility" means in kneo-client<a class="headerlink" href="#what-compatibility-means-in-kneo-client" title="Permanent link">&para;</a></h3>
+<p>The Kneo Agent Platform's <code>/v1</code> HTTP API is a stability boundary — a <code>kneo-client</code> release pinned to one <code>kneo_serv</code> minor works against any patch-level <code>kneo_serv</code> release on the same minor line, and against newer minors that don't break <code>/v1</code>.</p>
+<p>The pinning is <em>explicit</em> and <em>committed</em>: <code>schemas/openapi.json</code> is a <code>/v1</code>-filtered copy of one specific <code>kneo_serv</code> release's published OpenAPI spec. Bumping the pin is a deliberate PR (via <code>scripts/bump_schemas.py</code>), reviewed in isolation, and never happens automatically. See ADR-004 for the rationale.</p>
+<h3 id="current-matrix">Current matrix<a class="headerlink" href="#current-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th><code>kneo-client</code></th>
+<th>Pinned to <code>kneo_serv</code></th>
+<th>Tested against</th>
+<th>Python</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0.1.0</code></td>
+<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
+<td><code>&gt;=3.12</code></td>
+<td>First release</td>
+</tr>
+</tbody>
+</table>
+<p>The pinned <code>kneo_serv</code> version is recorded in <code>schemas/SOURCE.md</code> — that's the source of truth for which platform version generated the committed <code>_generated/</code> tree.</p>
+<h3 id="how-pinning-works-in-practice">How pinning works in practice<a class="headerlink" href="#how-pinning-works-in-practice" title="Permanent link">&para;</a></h3>
+<p>The pin is the input to the generated layer. When you bump it:</p>
+<ol>
+<li><code>scripts/bump_schemas.py</code> fetches the new <code>openapi.json</code> from the target <code>kneo_serv</code> ref (or a local checkout).</li>
+<li>The spec is filtered to <code>/v1</code> paths only — <code>kneo_serv</code> mounts every route at both <code>/v1/…</code> and <code>/…</code>; we drop the unprefixed mounts.</li>
+<li>The filtered spec replaces <code>schemas/openapi.json</code>, <code>schemas/SOURCE.md</code> is updated, and <code>_generated/</code> is regenerated.</li>
+<li>The hand-rolled adapter layer (<code>platform/</code>, <code>agent/</code>) may need updates if endpoints were added, renamed, or had their shapes change. The contract test <code>tests/contract/test_path_coverage.py</code> catches both sides of that drift.</li>
+</ol>
+<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. Patches don't change pins. A pin bump can land in any minor / patch — versioning is independent.</p>
+<h3 id="forward-compatibility-newer-kneo_serv-than-the-pin">Forward compatibility — newer <code>kneo_serv</code> than the pin<a class="headerlink" href="#forward-compatibility-newer-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h3>
+<p><code>kneo-client</code> ships an explicit list of every <code>(method, path)</code> it wraps. A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps — you just won't have wrappers for the new endpoints until the next <code>kneo-client</code> release.</p>
+<p>If you need access to a new endpoint before that release, drop to the raw transport:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>    <span class="c1"># Call an endpoint that doesn&#39;t have a wrapper yet:</span>
+<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">_transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/some/new/endpoint&quot;</span><span class="p">)</span>
+<a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</code></pre></div>
+<p>The <code>_transport</code> attribute is informally accessible (single-underscore prefix). It's not part of the documented stability surface, but the API has been stable since <code>0.1.0</code> and is unlikely to churn. The transport handles auth, retries, idempotency, request-ID injection, and error mapping just like the wrapped methods do — you just lose the typed response model.</p>
+<h3 id="backward-compatibility-older-kneo_serv-than-the-pin">Backward compatibility — older <code>kneo_serv</code> than the pin<a class="headerlink" href="#backward-compatibility-older-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h3>
+<p><code>kneo-client X.Y.Z</code> is <strong>not</strong> guaranteed against <code>kneo_serv</code> releases older than its pin. Wrappers may rely on response fields that older <code>kneo_serv</code> versions don't emit, and the client's error mapping assumes the current platform error shape. A <code>KeyError</code> on <code>from_dict()</code> is the typical symptom — the wrapper expects a field that wasn't in the older platform's response.</p>
+<p>If you have to talk to an older <code>kneo_serv</code>, pin to a matching <code>kneo-client</code> minor:</p>
+<table>
+<thead>
+<tr>
+<th>Need to talk to <code>kneo_serv</code>…</th>
+<th>Use <code>kneo-client</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0.4.x</code></td>
+<td><code>0.1.x</code></td>
+</tr>
+</tbody>
+</table>
+<p>(More rows added as the project ships.)</p>
+<h3 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>
+<p>A breaking change in either direction triggers a major bump:</p>
+<ul>
+<li><strong><code>kneo-client</code> major</strong> — the public Python API (<code>kneo_client.*</code> namespace) changes incompatibly. Very rare.</li>
+<li><strong><code>kneo_serv</code> major</strong> — i.e., introduction of <code>/v2</code>. <code>kneo-client</code> may need a major bump if <code>/v1</code> is sunset; otherwise it ships a new minor that supports both.</li>
+</ul>
+<p>Within a major, deprecated surfaces keep aliases for at least one minor. See <code>docs/dev/contributing.md</code> for the deprecation policy.</p>
+<h3 id="verifying-compatibility-yourself">Verifying compatibility yourself<a class="headerlink" href="#verifying-compatibility-yourself" title="Permanent link">&para;</a></h3>
+<p>The simplest smoke is the bundled examples:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="c1"># Install a specific kneo-client version</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kneo-client==X.Y.Z&quot;</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="c1"># Point it at your kneo_serv instance</span>
+<a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://your-kneo-serv.example.com
+<a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>...
+<a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>
+<a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
+<a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>python<span class="w"> </span>-m<span class="w"> </span>kneo_client.examples.01_basic_run<span class="w"> </span>YOUR_SPEC_ID
+</code></pre></div>
+<p>The five <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
+<p>For deeper validation, the integration test suite is env-gated; set <code>KNEO_TEST_URL</code> and <code>KNEO_TEST_API_KEY</code> and run <code>python -m pytest tests/integration -v</code>.</p>
+<h3 id="what-the-pin-does-not-guarantee">What the pin does <em>not</em> guarantee<a class="headerlink" href="#what-the-pin-does-not-guarantee" title="Permanent link">&para;</a></h3>
+<p>The pin guarantees the <em>wire format</em> and the <em>path set</em> of <code>/v1</code>. It does not guarantee:</p>
+<ul>
+<li><strong>Provider availability</strong> — whether your <code>kneo_serv</code> deployment has GPT-4 configured, an MCP server reachable, a specific runtime registered. The pin says nothing about deployment state.</li>
+<li><strong>Spec compatibility</strong> — a spec that works on one <code>kneo_serv</code> may fail on another if the spec relies on a specific provider, tool, or platform version. Validate specs against the target environment with <code>client.agent.specs.validate(...)</code>.</li>
+<li><strong>Policy outcomes</strong> — <code>policies.environment_*</code> queries return whatever policy is configured on the target deployment.</li>
+</ul>
+<p>These are platform-deployment concerns, not client-library concerns. The client gives you a clean wire to the platform; what the platform allows is a separate dimension.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
