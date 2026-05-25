@@ -945,6 +945,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#image-vulnerability-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image vulnerability scanning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image vulnerability scanning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-side-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator-side verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accepted-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accepted findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-kneo-serv-deliberately-does-not-provide" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1536,6 +1575,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#image-vulnerability-scanning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Image vulnerability scanning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Image vulnerability scanning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operator-side-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operator-side verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accepted-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accepted findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#what-kneo-serv-deliberately-does-not-provide" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1625,7 +1703,7 @@ no built-in role fits.</p>
 <li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
 </ul>
 <h3 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime<a class="headerlink" href="#3-rotate-keys-without-downtime" title="Permanent link">&para;</a></h3>
-<p><code>kneo-serv</code> has no in-place key rotation API in the 0.2.x line.
+<p><code>kneo-serv</code> has no in-place key rotation API in the 0.4.x line.
 Rotation is a config swap:</p>
 <ol>
 <li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
@@ -1673,8 +1751,8 @@ do not need to override it.
 <li>[ ] Container runs as the non-root <code>kneo</code> user (default).</li>
 <li>[ ] Image is pulled from a trusted registry; tags are pinned by digest
   in production manifests.</li>
-<li>[ ] CI scans the image (Trivy, Grype, or equivalent) for known CVEs;
-  releases blocked on critical findings.</li>
+<li>[ ] CI scans the image for known CVEs; releases blocked on
+  HIGH/CRITICAL findings (<a href="#image-vulnerability-scanning">§ Image vulnerability scanning</a>).</li>
 <li>[ ] Host or Kubernetes drops Linux capabilities the service doesn't
   need (no <code>NET_ADMIN</code>, no <code>SYS_ADMIN</code>).</li>
 <li>[ ] Egress is restricted at the network layer to the provider, MCP,
@@ -1708,6 +1786,52 @@ escape hatches both default to off:</p>
 <li>[ ] Custom tools and middleware do not log user inputs or provider
   responses without redaction.</li>
 </ul>
+<h2 id="image-vulnerability-scanning">Image vulnerability scanning<a class="headerlink" href="#image-vulnerability-scanning" title="Permanent link">&para;</a></h2>
+<p>The release pipeline scans every published GHCR image for known CVEs
+using <a href="https://github.com/aquasecurity/trivy">Trivy</a>. The scan runs
+against the <strong>pushed image digest</strong> (the same bytes cosign signed and
+SBOM attestation describes), so the four supply-chain artifacts —
+image, cosign signature, SBOM attestation, and scan report — all
+agree on what they describe.</p>
+<p><strong>Locked policy</strong> (0.4.0; recorded in
+plan/TODO-0.4.0.md):</p>
+<ul>
+<li><strong>Severity threshold:</strong> CVSS≥7 (HIGH and CRITICAL findings).</li>
+<li><strong>Release-tag scans (<code>v&lt;version&gt;</code> / <code>v&lt;version&gt;rcN</code>):</strong> blocking.
+  The Trivy step in <code>release.yml</code>
+  runs with <code>--exit-code 1</code>; HIGH/CRITICAL findings fail the step,
+  preventing the <code>Publish build artifact</code> and <code>Publish GitHub
+  release</code> steps from running. The publish is the irreversible step,
+  so the gate fires there.</li>
+<li><strong>PR-time scans:</strong> report-only via
+  <code>.github/workflows/image-scan.yml</code>.
+  The same scanner version + severity threshold runs against a
+  locally-built image but with <code>--exit-code 0</code>, so findings surface
+  in the PR's check summary without blocking merges. Dev velocity
+  isn't gated on un-fixable transient base-image CVEs; the release
+  gate catches anything that matters before publish.</li>
+<li><strong>Scan report retention:</strong> the JSON report is attached as a GitHub
+  Actions artifact (<code>trivy-report-&lt;version&gt;</code>) on every release-tag
+  build, retained for 90 days. The deployer can download it for
+  audit.</li>
+</ul>
+<h3 id="operator-side-verification">Operator-side verification<a class="headerlink" href="#operator-side-verification" title="Permanent link">&para;</a></h3>
+<p>Re-run the scan locally against any published tag:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>trivy<span class="w"> </span>image<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--severity<span class="w"> </span>HIGH,CRITICAL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--ignore-unfixed<span class="o">=</span><span class="nb">false</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-serv:&lt;tag&gt;
+</code></pre></div>
+<p>Cross-check against the release-time scan output by downloading the
+<code>trivy-report-&lt;version&gt;</code> artifact from the GitHub Release.</p>
+<h3 id="accepted-findings">Accepted findings<a class="headerlink" href="#accepted-findings" title="Permanent link">&para;</a></h3>
+<p>If an upstream CVE has no fix available, or the deployer's risk
+tolerance accepts a specific finding (e.g. low exploitability in
+your network posture), record the acceptance in
+<code>supply_chain_review.md § Current workspace result</code>
+using the same shape as the existing <code>pip-audit</code> remediation
+blocks. The release pipeline does not implement an inline-ignore
+mechanism — acceptances are deployer policy, not platform policy.</p>
 <h2 id="what-kneo-serv-deliberately-does-not-provide">What <code>kneo-serv</code> deliberately does not provide<a class="headerlink" href="#what-kneo-serv-deliberately-does-not-provide" title="Permanent link">&para;</a></h2>
 <p>Operators sometimes go looking for these; document the gap rather than
 inventing it:</p>

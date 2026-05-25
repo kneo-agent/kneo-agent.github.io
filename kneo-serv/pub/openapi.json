@@ -3,6 +3,7 @@
     "schemas": {
       "AuditEventListResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/audit response body.",
         "properties": {
           "count": {
             "title": "Count",
@@ -26,6 +27,7 @@
       },
       "CheckpointDiffResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs/{id}/checkpoints/diff response body.",
         "properties": {
           "added": {
             "items": {
@@ -86,6 +88,7 @@
       },
       "CheckpointListResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs/{id}/checkpoints response body.",
         "properties": {
           "checkpoints": {
             "items": {
@@ -149,6 +152,7 @@
       },
       "CredentialInventoryResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/security/credentials response body (redacted inventory).",
         "properties": {
           "inventory": {
             "additionalProperties": true,
@@ -164,6 +168,7 @@
       },
       "EnvironmentPolicyListResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/policies/environments response body.",
         "properties": {
           "count": {
             "title": "Count",
@@ -187,6 +192,7 @@
       },
       "EnvironmentPolicyRequest": {
         "additionalProperties": false,
+        "description": "PUT /v1/policies/environments/{name} request body.",
         "properties": {
           "blocked_diagnostic_codes": {
             "items": {
@@ -231,6 +237,7 @@
       },
       "EnvironmentPolicyResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/policies/environments/{name} response body.",
         "properties": {
           "environment": {
             "title": "Environment",
@@ -282,6 +289,7 @@
       },
       "HealthResponse": {
         "additionalProperties": false,
+        "description": "GET /healthz / /readyz / /v1/health response body.",
         "properties": {
           "metadata": {
             "additionalProperties": true,
@@ -310,6 +318,7 @@
       },
       "HumanResumeRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/human/tasks/{id}/resume request body.",
         "properties": {
           "content": {
             "anyOf": [
@@ -363,6 +372,7 @@
       },
       "HumanResumeResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/human/tasks/{id}/resume response body.",
         "properties": {
           "metadata": {
             "additionalProperties": true,
@@ -405,6 +415,7 @@
       },
       "HumanTaskListResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/human/tasks response body.",
         "properties": {
           "count": {
             "title": "Count",
@@ -463,6 +474,7 @@
       },
       "HumanTaskResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/human/tasks/{id} response body.",
         "properties": {
           "continuation_id": {
             "title": "Continuation Id",
@@ -490,6 +502,7 @@
       },
       "RunCreateRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/runs request body.",
         "properties": {
           "async_mode": {
             "default": false,
@@ -569,6 +582,7 @@
       },
       "RunCreateResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/runs response body.",
         "properties": {
           "continuation_id": {
             "anyOf": [
@@ -627,6 +641,7 @@
       },
       "RunListResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs response body.",
         "properties": {
           "count": {
             "title": "Count",
@@ -685,6 +700,7 @@
       },
       "RunRecoveryResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs/{id}/recovery response body.",
         "properties": {
           "checkpoint_count": {
             "default": 0,
@@ -807,6 +823,7 @@
       },
       "RunReplayResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/runs/{id}/replay response body.",
         "properties": {
           "agent_name": {
             "anyOf": [
@@ -877,6 +894,7 @@
       },
       "RunStatusResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs/{id} response body.",
         "properties": {
           "agent_name": {
             "anyOf": [
@@ -1032,6 +1050,7 @@
       },
       "SpecCompileRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/compile request body.",
         "properties": {
           "environment": {
             "anyOf": [
@@ -1090,6 +1109,7 @@
       },
       "SpecCompileResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/compile response body.",
         "properties": {
           "diagnostics": {
             "items": {
@@ -1117,6 +1137,7 @@
       },
       "SpecExplainRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/explain request body.",
         "properties": {
           "spec": {
             "anyOf": [
@@ -1147,6 +1168,7 @@
       },
       "SpecExplainResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/explain response body.",
         "properties": {
           "summary": {
             "additionalProperties": true,
@@ -1162,6 +1184,7 @@
       },
       "SpecPolicyReportRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/policy-report request body.",
         "properties": {
           "environment": {
             "anyOf": [
@@ -1215,6 +1238,7 @@
       },
       "SpecPolicyReportResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/policy-report response body.",
         "properties": {
           "report": {
             "additionalProperties": true,
@@ -1235,6 +1259,7 @@
       },
       "SpecValidateRequest": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/validate request body (also reused for compile / policy-report).",
         "properties": {
           "environment": {
             "anyOf": [
@@ -1288,6 +1313,7 @@
       },
       "SpecValidateResponse": {
         "additionalProperties": false,
+        "description": "POST /v1/specs/validate response body.",
         "properties": {
           "diagnostics": {
             "items": {
@@ -1310,6 +1336,7 @@
       },
       "TraceResponse": {
         "additionalProperties": false,
+        "description": "GET /v1/runs/{id}/trace response body.",
         "properties": {
           "count": {
             "default": 0,
@@ -1416,7 +1443,7 @@
   "info": {
     "description": "Platform service API for Kneo Agent runs, specs, traces, checkpoints, and human-in-the-loop tasks.",
     "title": "Kneo Agent Platform API",
-    "version": "0.3.0"
+    "version": "0.4.0"
   },
   "openapi": "3.1.0",
   "paths": {

@@ -2369,6 +2369,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="human_approval_workflow.yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timeout-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_with_timeoutpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_with_timeout.py
+      
+    </span>
+  </a>
+  
 </li>
         
           <li class="md-nav__item">
@@ -3831,6 +3859,34 @@
     <span class="md-ellipsis">
       
         human_approval_workflow.yaml
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="human_approval_workflow.yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timeout-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_with_timeoutpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_with_timeout.py
       
     </span>
   </a>
@@ -5786,11 +5842,66 @@ draft and publish. Use it to exercise the pause/resume API.</p>
 <p>The deeper human-task documentation is in
 <code>design.md § 8.5</code> and
 the <a href="#platform-service-api">HTTP API's <code>/human-tasks/...</code> endpoints</a>.</p>
+<h5 id="timeout-branches">Timeout branches<a class="headerlink" href="#timeout-branches" title="Permanent link">&para;</a></h5>
+<p>The <code>approval-reviewer</code> block in this spec declares a 24-hour timeout
+with <code>on_timeout: escalate</code>. Two other literals are available; the
+platform dispatches per <a href="../../user/human_in_the_loop/#9-timeouts-and-escalation"><code>human_in_the_loop.md § 9</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th><code>on_timeout</code></th>
+<th>Lifecycle</th>
+<th>Audit event(s)</th>
+<th>Continuation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fail</code> (default)</td>
+<td>Run transitions to <code>expired</code></td>
+<td><code>human.expired</code></td>
+<td>deleted</td>
+</tr>
+<tr>
+<td><code>continue</code></td>
+<td>Synthesizes an auto-approved <code>HumanResponse</code> and resumes the workflow</td>
+<td><code>human.continued</code>; <code>human.continue_failed</code> on resume error</td>
+<td>deleted on success or failure</td>
+</tr>
+<tr>
+<td><code>escalate</code></td>
+<td>Run stays <code>blocked</code>; <code>escalated_at</code> stamped on the continuation; subsequent prune calls skip it (escalation fires once)</td>
+<td><code>human.escalated</code></td>
+<td>preserved (operator reassigns + resumes via the normal <code>/continuations/{id}/resume</code> path)</td>
+</tr>
+</tbody>
+</table>
+<p>Auto-routing of an escalated task to a different reviewer is up to
+the operator's external workflow — the platform marks + audits the
+task as escalated, it does not auto-reassign. Operators call
+<code>PlatformManager.prune_expired_human_tasks()</code> (cron, scheduled run,
+manual sweep — same pattern as <code>prune_retention()</code>; there is no
+built-in scheduler) to dispatch the timeout branch.</p>
+<h4 id="run_with_timeoutpy"><a href="../../examples/run_with_timeout.py"><code>run_with_timeout.py</code></a><a class="headerlink" href="#run_with_timeoutpy" title="Permanent link">&para;</a></h4>
+<p>Worked walkthrough of the <strong>run-level</strong> timeout — distinct from the
+human-task timeout above. <code>start_run_from_spec(..., timeout_seconds=N)</code>
+schedules a run with a wall-clock deadline written to
+<code>RunState.deadline_at</code>; <code>prune_timed_out_runs()</code> is the
+operator-callable sweep that force-cancels every <code>running</code> or
+<code>blocked</code> run past its deadline, transitions the state to
+<code>timed_out</code>, deletes any associated continuation, and emits a
+<code>run.timed_out</code> audit event.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a>python<span class="w"> </span>examples/run_with_timeout.py
+</code></pre></div>
+<p>Whichever timeout fires first wins. The dispatch matrix between
+run-level and human-task deadlines is documented in
+<a href="../../user/human_in_the_loop/#9-timeouts-and-escalation"><code>human_in_the_loop.md § 9</code></a>
+under <em>Run-level timeouts vs. human-task timeouts</em>.</p>
 <h4 id="smoke_human_workflowyaml"><a href="../../examples/smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a><a class="headerlink" href="#smoke_human_workflowyaml" title="Permanent link">&para;</a></h4>
 <p>Lightweight human-in-the-loop spec that uses the <code>dummy</code> provider so it
 runs without real provider credentials. Used by the deployment smoke
 script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-105-1" name="__codelineno-105-1" href="#__codelineno-105-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
+<div class="highlight"><pre><span></span><code><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
 </code></pre></div>
 <p>See <a href="../../user/deployment_smoke/"><code>deployment_smoke.md</code></a> for the full smoke
 sequence.</p>
@@ -5799,8 +5910,8 @@ sequence.</p>
 <p>Reference <code>.kneo/config.yaml</code> content showing project metadata, service
 defaults, runtime defaults, and per-environment policy enforcement
 overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, or use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-106-1" name="__codelineno-106-1" href="#__codelineno-106-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
-<a id="__codelineno-106-2" name="__codelineno-106-2" href="#__codelineno-106-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
+<a id="__codelineno-107-2" name="__codelineno-107-2" href="#__codelineno-107-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <p>The schema and overlay rules are in
 <a href="#project-kneo-config"><code>project_config.md</code></a>.</p>
@@ -5822,13 +5933,13 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
    through <code>ToolRegistry</code> or MCP servers (see
    <code>extending.md</code>).</li>
 <li>Validate against your target environment:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-107-1" name="__codelineno-107-1" href="#__codelineno-107-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
 <li>Compile to confirm the workflow builds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 <li>Run locally before deploying:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../../user/deployment/"><code>deployment.md</code></a>.</p>
@@ -5838,11 +5949,11 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
 generated artifacts, and logs. This page covers the contents and the
 overlay/policy story; for the runtime variables read from the environment
 (rather than from project config), see <a href="#environment-variables">environment.md</a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a>.kneo/
-<a id="__codelineno-110-2" name="__codelineno-110-2" href="#__codelineno-110-2"></a>  config.yaml
-<a id="__codelineno-110-3" name="__codelineno-110-3" href="#__codelineno-110-3"></a>  README.md
-<a id="__codelineno-110-4" name="__codelineno-110-4" href="#__codelineno-110-4"></a>  artifacts/.gitkeep
-<a id="__codelineno-110-5" name="__codelineno-110-5" href="#__codelineno-110-5"></a>  logs/.gitkeep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a>.kneo/
+<a id="__codelineno-111-2" name="__codelineno-111-2" href="#__codelineno-111-2"></a>  config.yaml
+<a id="__codelineno-111-3" name="__codelineno-111-3" href="#__codelineno-111-3"></a>  README.md
+<a id="__codelineno-111-4" name="__codelineno-111-4" href="#__codelineno-111-4"></a>  artifacts/.gitkeep
+<a id="__codelineno-111-5" name="__codelineno-111-5" href="#__codelineno-111-5"></a>  logs/.gitkeep
 </code></pre></div>
 <p>The <code>.kneo/config.yaml</code> demonstrates:</p>
 <ul>
@@ -5859,21 +5970,21 @@ overlay/policy story; for the runtime variables read from the environment
 </ul>
 <p>Environment-specific policy enforcement can be configured under
 <code>environments.&lt;name&gt;.policy_enforcement</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a><span class="nt">environments</span><span class="p">:</span>
-<a id="__codelineno-111-2" name="__codelineno-111-2" href="#__codelineno-111-2"></a><span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
-<a id="__codelineno-111-3" name="__codelineno-111-3" href="#__codelineno-111-3"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-111-4" name="__codelineno-111-4" href="#__codelineno-111-4"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-111-5" name="__codelineno-111-5" href="#__codelineno-111-5"></a><span class="w">  </span><span class="nt">staging</span><span class="p">:</span>
-<a id="__codelineno-111-6" name="__codelineno-111-6" href="#__codelineno-111-6"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-111-7" name="__codelineno-111-7" href="#__codelineno-111-7"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-111-8" name="__codelineno-111-8" href="#__codelineno-111-8"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-111-9" name="__codelineno-111-9" href="#__codelineno-111-9"></a><span class="w">  </span><span class="nt">prod</span><span class="p">:</span>
-<a id="__codelineno-111-10" name="__codelineno-111-10" href="#__codelineno-111-10"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-111-11" name="__codelineno-111-11" href="#__codelineno-111-11"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-111-12" name="__codelineno-111-12" href="#__codelineno-111-12"></a><span class="w">      </span><span class="nt">deny_unrestricted_tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-111-13" name="__codelineno-111-13" href="#__codelineno-111-13"></a><span class="w">      </span><span class="nt">require_human_review</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-111-14" name="__codelineno-111-14" href="#__codelineno-111-14"></a><span class="w">      </span><span class="nt">require_guardrails</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-111-15" name="__codelineno-111-15" href="#__codelineno-111-15"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="nt">environments</span><span class="p">:</span>
+<a id="__codelineno-112-2" name="__codelineno-112-2" href="#__codelineno-112-2"></a><span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
+<a id="__codelineno-112-3" name="__codelineno-112-3" href="#__codelineno-112-3"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-112-4" name="__codelineno-112-4" href="#__codelineno-112-4"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-112-5" name="__codelineno-112-5" href="#__codelineno-112-5"></a><span class="w">  </span><span class="nt">staging</span><span class="p">:</span>
+<a id="__codelineno-112-6" name="__codelineno-112-6" href="#__codelineno-112-6"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-112-7" name="__codelineno-112-7" href="#__codelineno-112-7"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-112-8" name="__codelineno-112-8" href="#__codelineno-112-8"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-112-9" name="__codelineno-112-9" href="#__codelineno-112-9"></a><span class="w">  </span><span class="nt">prod</span><span class="p">:</span>
+<a id="__codelineno-112-10" name="__codelineno-112-10" href="#__codelineno-112-10"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-112-11" name="__codelineno-112-11" href="#__codelineno-112-11"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-112-12" name="__codelineno-112-12" href="#__codelineno-112-12"></a><span class="w">      </span><span class="nt">deny_unrestricted_tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-112-13" name="__codelineno-112-13" href="#__codelineno-112-13"></a><span class="w">      </span><span class="nt">require_human_review</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-112-14" name="__codelineno-112-14" href="#__codelineno-112-14"></a><span class="w">      </span><span class="nt">require_guardrails</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-112-15" name="__codelineno-112-15" href="#__codelineno-112-15"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p>Policy enforcement runs after spec overlays and project defaults are applied.
 <code>kneo spec validate --env prod</code>, <code>kneo spec compile --env prod</code>,
@@ -5884,13 +5995,13 @@ honor the resolved environment policy.</p>
 artifacts, and log files live in a top-level <code>retention:</code> block. Each
 field is a count of days to keep; unset fields disable pruning for that
 category. Values must be zero or greater.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="nt">retention</span><span class="p">:</span>
-<a id="__codelineno-112-2" name="__codelineno-112-2" href="#__codelineno-112-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<a id="__codelineno-112-3" name="__codelineno-112-3" href="#__codelineno-112-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
-<a id="__codelineno-112-4" name="__codelineno-112-4" href="#__codelineno-112-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
-<a id="__codelineno-112-5" name="__codelineno-112-5" href="#__codelineno-112-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
-<a id="__codelineno-112-6" name="__codelineno-112-6" href="#__codelineno-112-6"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<a id="__codelineno-112-7" name="__codelineno-112-7" href="#__codelineno-112-7"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="nt">retention</span><span class="p">:</span>
+<a id="__codelineno-113-2" name="__codelineno-113-2" href="#__codelineno-113-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-113-3" name="__codelineno-113-3" href="#__codelineno-113-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
+<a id="__codelineno-113-4" name="__codelineno-113-4" href="#__codelineno-113-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<a id="__codelineno-113-5" name="__codelineno-113-5" href="#__codelineno-113-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
+<a id="__codelineno-113-6" name="__codelineno-113-6" href="#__codelineno-113-6"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-113-7" name="__codelineno-113-7" href="#__codelineno-113-7"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 </code></pre></div>
 <p>The same six retention fields can be overridden per-host via env vars
 (<code>KNEO_SERV_RETENTION_RUNS_DAYS</code> and friends; see

@@ -1067,6 +1067,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#040" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1629,6 +1640,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#040" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1938,6 +1960,67 @@ persistence schemas. Full narrative in
 and <code>Checkpoint.iteration</code> fields default to <code>None</code> and <code>1</code>
 respectively in the dataclass, so existing rows round-trip cleanly
 through the JSON-payload SQLite / PostgreSQL stores.</p>
+<h3 id="040">0.4.0<a class="headerlink" href="#040" title="Permanent link">&para;</a></h3>
+<p>Next additive minor on the 0.3.x line. <strong>No breaking changes</strong> to
+spec syntax, HTTP API contracts, CLI command names, env-var names,
+or persistence schemas. Specs that validated under 0.3.x continue to
+validate under 0.4.0. The cut is a <strong>docs + tooling release</strong> —
+runtime semantics are identical to 0.3.0. Full narrative in
+<code>release_notes_0.4.0.md</code>.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.4.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.4.0</code> — <code>:0.4</code> and
+  <code>:latest</code> now resolve to the 0.4.0 digest. Image continues to be
+  signed (cosign keyless via Sigstore) and ships with a CycloneDX
+  SBOM attestation; the 0.4.0 cut adds a Trivy CVE scan report
+  attached to the GitHub Release. Verification commands are in
+  <code>supply_chain_review.md § Verification commands</code>.</p>
+<p><strong>SDK floor</strong>: unchanged. The <code>kneo-agent</code> floor stays at <code>&gt;=1.2.0</code>
+— same as 0.3.0. No operator action required for operators pinning
+the SDK separately.</p>
+<p><strong>New auto-generated API reference</strong>: the docs site at
+<code>kneo-agent.github.io/kneo-serv/</code> gains a new top-level <strong>API
+Reference</strong> nav section with 17 pages (16 subpackages + <code>sdk</code>),
+rendered at build time by <code>mkdocstrings</code> from the Python
+docstrings. Operator surface unchanged — the API ref is a
+<strong>developer lookup surface</strong>, not a runtime change. See
+<code>docs/api/README.md</code> for the index.</p>
+<p><strong>Image vulnerability scanning (Trivy)</strong>: the release pipeline now
+scans the pushed GHCR image with Trivy under the CVSS≥7 policy
+(HIGH/CRITICAL findings block the publish step). On every
+release-tag build, the JSON scan report is attached to the GitHub
+Release as the <code>trivy-report-&lt;version&gt;</code> artifact, 90-day
+retention. Deployers can re-run the scan locally with
+<code>trivy image ghcr.io/kneo-agent/kneo-serv:&lt;tag&gt;</code>; full policy +
+escape hatch documented in
+<a href="../security_hardening/#image-vulnerability-scanning"><code>security_hardening.md § Image vulnerability scanning</code></a>.</p>
+<p><strong>Developer-facing changes</strong> (no operator surface impact):
+- Ratcheting ruff D-rule gate (<code>D100</code>/<code>D101</code>/<code>D102</code>) now enforced
+  project-wide for <code>kneo_serv/**/*.py</code>. New public classes /
+  methods without docstrings fail CI. Forks adding code should
+  follow the Google docstring convention; the chain-reference
+  files are
+  <code>security/secrets.py</code> and
+  <code>platform/manager.py</code>.
+- Full mypy strict coverage across <code>kneo_serv/</code>. The
+  <code>[[tool.mypy.overrides]]</code> block in
+  <code>pyproject.toml</code> now covers every public
+  module. Forks that subclass or extend public types should expect
+  <code>disallow_untyped_defs</code> + <code>warn_return_any</code> + <code>strict_equality</code>.
+- <code>mkdocstrings[python]&gt;=0.27</code> added to the <code>docs</code> optional-dep
+  block. Operators using <code>pip install kneo-serv</code> (without
+  <code>[docs]</code>) are unaffected — the dep is build-time only for the
+  rendered site.</p>
+<p><strong>New 0.3.0-feature worked examples</strong>:
+- <a href="../examples/"><code>examples.md</code></a> picked up a <em>Timeout branches</em>
+  subsection on the <code>human_approval_workflow.yaml</code> entry covering
+  the <code>on_timeout: fail/continue/escalate</code> literals (all wired
+  since 0.3.0).
+- New <a href="../../examples/run_with_timeout.py"><code>examples/run_with_timeout.py</code></a>
+  walks through <code>start_run_from_spec(..., timeout_seconds=N)</code> +
+  <code>prune_timed_out_runs()</code>. Companion to the human-task timeout
+  example above.</p>
+<p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

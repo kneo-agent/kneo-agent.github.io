@@ -680,6 +680,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="human_approval_workflow.yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timeout-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_with_timeoutpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_with_timeout.py
+      
+    </span>
+  </a>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1540,6 +1568,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="human_approval_workflow.yaml">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#timeout-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout branches
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run_with_timeoutpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        run_with_timeout.py
+      
+    </span>
+  </a>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1718,11 +1774,66 @@ draft and publish. Use it to exercise the pause/resume API.</p>
 <p>The deeper human-task documentation is in
 <code>design.md § 8.5</code> and
 the <a href="../service_api/">HTTP API's <code>/human-tasks/...</code> endpoints</a>.</p>
+<h4 id="timeout-branches">Timeout branches<a class="headerlink" href="#timeout-branches" title="Permanent link">&para;</a></h4>
+<p>The <code>approval-reviewer</code> block in this spec declares a 24-hour timeout
+with <code>on_timeout: escalate</code>. Two other literals are available; the
+platform dispatches per <a href="../human_in_the_loop/#9-timeouts-and-escalation"><code>human_in_the_loop.md § 9</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th><code>on_timeout</code></th>
+<th>Lifecycle</th>
+<th>Audit event(s)</th>
+<th>Continuation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>fail</code> (default)</td>
+<td>Run transitions to <code>expired</code></td>
+<td><code>human.expired</code></td>
+<td>deleted</td>
+</tr>
+<tr>
+<td><code>continue</code></td>
+<td>Synthesizes an auto-approved <code>HumanResponse</code> and resumes the workflow</td>
+<td><code>human.continued</code>; <code>human.continue_failed</code> on resume error</td>
+<td>deleted on success or failure</td>
+</tr>
+<tr>
+<td><code>escalate</code></td>
+<td>Run stays <code>blocked</code>; <code>escalated_at</code> stamped on the continuation; subsequent prune calls skip it (escalation fires once)</td>
+<td><code>human.escalated</code></td>
+<td>preserved (operator reassigns + resumes via the normal <code>/continuations/{id}/resume</code> path)</td>
+</tr>
+</tbody>
+</table>
+<p>Auto-routing of an escalated task to a different reviewer is up to
+the operator's external workflow — the platform marks + audits the
+task as escalated, it does not auto-reassign. Operators call
+<code>PlatformManager.prune_expired_human_tasks()</code> (cron, scheduled run,
+manual sweep — same pattern as <code>prune_retention()</code>; there is no
+built-in scheduler) to dispatch the timeout branch.</p>
+<h3 id="run_with_timeoutpy"><a href="../../examples/run_with_timeout.py"><code>run_with_timeout.py</code></a><a class="headerlink" href="#run_with_timeoutpy" title="Permanent link">&para;</a></h3>
+<p>Worked walkthrough of the <strong>run-level</strong> timeout — distinct from the
+human-task timeout above. <code>start_run_from_spec(..., timeout_seconds=N)</code>
+schedules a run with a wall-clock deadline written to
+<code>RunState.deadline_at</code>; <code>prune_timed_out_runs()</code> is the
+operator-callable sweep that force-cancels every <code>running</code> or
+<code>blocked</code> run past its deadline, transitions the state to
+<code>timed_out</code>, deletes any associated continuation, and emits a
+<code>run.timed_out</code> audit event.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>examples/run_with_timeout.py
+</code></pre></div>
+<p>Whichever timeout fires first wins. The dispatch matrix between
+run-level and human-task deadlines is documented in
+<a href="../human_in_the_loop/#9-timeouts-and-escalation"><code>human_in_the_loop.md § 9</code></a>
+under <em>Run-level timeouts vs. human-task timeouts</em>.</p>
 <h3 id="smoke_human_workflowyaml"><a href="../../examples/smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a><a class="headerlink" href="#smoke_human_workflowyaml" title="Permanent link">&para;</a></h3>
 <p>Lightweight human-in-the-loop spec that uses the <code>dummy</code> provider so it
 runs without real provider credentials. Used by the deployment smoke
 script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://127.0.0.1:8000
 </code></pre></div>
 <p>See <a href="../deployment_smoke/"><code>deployment_smoke.md</code></a> for the full smoke
 sequence.</p>
@@ -1731,8 +1842,8 @@ sequence.</p>
 <p>Reference <code>.kneo/config.yaml</code> content showing project metadata, service
 defaults, runtime defaults, and per-environment policy enforcement
 overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, or use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <p>The schema and overlay rules are in
 <a href="../project_config/"><code>project_config.md</code></a>.</p>
@@ -1754,13 +1865,13 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
    through <code>ToolRegistry</code> or MCP servers (see
    <code>extending.md</code>).</li>
 <li>Validate against your target environment:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
 <li>Compile to confirm the workflow builds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 <li>Run locally before deploying:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../deployment/"><code>deployment.md</code></a>.</p>

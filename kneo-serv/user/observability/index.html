@@ -1654,7 +1654,7 @@ full env-var list, see
 </tr>
 </tbody>
 </table>
-<p>There is <strong>no metrics endpoint</strong> in the 0.2.x line. Scrape latency and
+<p>There is <strong>no metrics endpoint</strong> in the 0.4.x line. Scrape latency and
 error rate from your reverse-proxy access logs or from OTel span
 attributes.</p>
 <h2 id="structured-request-logs">Structured request logs<a class="headerlink" href="#structured-request-logs" title="Permanent link">&para;</a></h2>
@@ -1849,7 +1849,7 @@ aggregated logs; the service does not push its own alerts.</p>
 <ul>
 <li><strong>Per-IP rate limiting and traffic shaping.</strong> The reverse proxy's job
   (<a href="../tls_and_proxy/"><code>tls_and_proxy.md</code></a>).</li>
-<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in the 0.2.x line.
+<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in the 0.4.x line.
   Use OTel spans to derive request rate, error rate, and latency, or
   scrape the reverse proxy.</li>
 <li><strong>Tracing internals.</strong> For the design of the in-process tracer and
