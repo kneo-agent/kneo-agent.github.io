@@ -38,6 +38,7 @@
 .md-typeset .grid > .card {
   border: 1px solid var(--md-default-fg-color--lightest);
   border-radius: 0.5rem;
+  overflow: hidden;  /* keep the title block's rounded top corners clean */
   transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
@@ -46,6 +47,23 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   border-color: var(--md-primary-fg-color--light);
+}
+
+/* Highlight each card's title (the first <p><strong>…</strong></p>) with
+   the same indigo background as the site header. Negative horizontal /
+   top margins extend the title block to the card edges, replacing the
+   default top padding inside the card. */
+.md-typeset .grid.cards > ul > li > p:first-child {
+  background-color: var(--md-primary-fg-color);
+  color: var(--md-primary-bg-color);
+  margin: -0.8rem -0.8rem 1rem;
+  padding: 0.6rem 0.9rem;
+  font-size: 1.1rem;
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child strong {
+  color: inherit;
+  font-weight: 600;
 }
 
 /* Header logo: keep proportions reasonable for a wide wordmark. */
