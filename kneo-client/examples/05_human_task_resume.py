@@ -1,8 +1,10 @@
-"""List pending human-review tasks and resume them with a decision.
+"""Resume the first pending human-review task with a decision.
 
-Only resumes the first pending task; the same pattern extends to a
-batch. The actual ``HumanResumeRequest`` schema depends on the run that
-produced the task — adjust the payload to match.
+Uses ``resume_first_pending`` — the list-then-resume dance collapsed
+into one call. Returns ``None`` if no matching pending task exists.
+
+The actual ``HumanResumeRequest`` schema depends on the run that
+produced the task; adjust the payload to match.
 
 Run with::
 
@@ -22,23 +24,28 @@ from kneo_client import KneoClient
 async def main(decision: str) -> None:
     if decision not in {"approve", "reject"}:
         print(
-            f"decision must be 'approve' or 'reject', got {decision!r}", file=sys.stderr
+            f"decision must be 'approve' or 'reject', got {decision!r}",
+            file=sys.stderr,
         )
         sys.exit(2)
 
     async with KneoClient.from_profile() as client:
-        pending = await client.platform.human_tasks.list(status="pending", limit=10)
-        print(f"{pending.count} pending tasks")
-        if pending.count == 0:
+        response = await client.platform.human_tasks.resume_first_pending(
+            {"decision": decision},
+        )
+        if response is None:
+            print("no pending human tasks")
             return
+        print(f"resumed -> status={response.status!r}")
 
-        for task in pending.tasks:
-            print(f"resuming {task.continuation_id!r} with decision={decision!r}")
-            response = await client.platform.human_tasks.resume(
-                task.continuation_id,
-                {"decision": decision},
-            )
-            print(f"  -> status={response.status!r}")
+        # To loop over multiple pending tasks, fall back to the manual
+        # list-then-resume pattern (the helper only claims one):
+        #
+        # page = await client.platform.human_tasks.list(status="pending", limit=10)
+        # for task in page:
+        #     await client.platform.human_tasks.resume(
+        #         task["continuation_id"], {"decision": decision}
+        #     )
 
 
 if __name__ == "__main__":

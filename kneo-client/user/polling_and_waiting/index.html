@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://kneo-agent.github.io/kneo-client/user/compatibility/">
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-client/user/polling_and_waiting/">
       
       
-        <link rel="prev" href="../errors/">
+        <link rel="prev" href="../list_results/">
       
       
-        <link rel="next" href="../../pub/">
+        <link rel="next" href="../errors/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Compatibility matrix - Kneo Agent Client</title>
+        <title>Polling and waiting - Kneo Agent Client</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#compatibility-matrix" class="md-skip">
+        <a href="#polling-and-waiting" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Compatibility matrix
+              Polling and waiting
             
           </span>
         </div>
@@ -527,10 +527,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../polling_and_waiting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polling and waiting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -546,6 +573,92 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#wait_for_completion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        wait_for_completion()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tail_trace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tail_trace()
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-to-use-which" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to use which
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polling-cadence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polling cadence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-terminal-statuses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom terminal statuses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeouterror-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TimeoutError handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -583,37 +696,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Compatibility matrix
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../compatibility/" class="md-nav__link">
         
   
   
@@ -629,114 +715,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-compatibility-means-in-kneo-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What "compatibility" means in kneo-client
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-matrix" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current matrix
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-pinning-works-in-practice" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How pinning works in practice
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#forward-compatibility-newer-kneo_serv-than-the-pin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Forward compatibility — newer kneo_serv than the pin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#backward-compatibility-older-kneo_serv-than-the-pin" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backward compatibility — older kneo_serv than the pin
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Breaking changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verifying-compatibility-yourself" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verifying compatibility yourself
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-the-pin-does-not-guarantee" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the pin does not guarantee
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -953,10 +931,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-compatibility-means-in-kneo-client" class="md-nav__link">
+  <a href="#wait_for_completion" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What "compatibility" means in kneo-client
+        wait_for_completion()
       
     </span>
   </a>
@@ -964,10 +942,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-matrix" class="md-nav__link">
+  <a href="#tail_trace" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current matrix
+        tail_trace()
       
     </span>
   </a>
@@ -975,10 +953,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#how-pinning-works-in-practice" class="md-nav__link">
+  <a href="#when-to-use-which" class="md-nav__link">
     <span class="md-ellipsis">
       
-        How pinning works in practice
+        When to use which
       
     </span>
   </a>
@@ -986,10 +964,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#forward-compatibility-newer-kneo_serv-than-the-pin" class="md-nav__link">
+  <a href="#polling-cadence" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Forward compatibility — newer kneo_serv than the pin
+        Polling cadence
       
     </span>
   </a>
@@ -997,10 +975,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backward-compatibility-older-kneo_serv-than-the-pin" class="md-nav__link">
+  <a href="#custom-terminal-statuses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Backward compatibility — older kneo_serv than the pin
+        Custom terminal statuses
       
     </span>
   </a>
@@ -1008,32 +986,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#breaking-changes" class="md-nav__link">
+  <a href="#timeouterror-handling" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Breaking changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#verifying-compatibility-yourself" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Verifying compatibility yourself
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-the-pin-does-not-guarantee" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the pin does not guarantee
+        TimeoutError handling
       
     </span>
   </a>
@@ -1057,105 +1013,177 @@
 
 
 
-<h1 id="compatibility-matrix">Compatibility matrix<a class="headerlink" href="#compatibility-matrix" title="Permanent link">&para;</a></h1>
-<p>This guide tells you which <code>kneo-client</code> release supports which <code>kneo_serv</code> platform version, what forward and backward compatibility mean in practice, and how to use the drop-to-transport escape hatch when you need access to an endpoint the current <code>kneo-client</code> release doesn't wrap yet.</p>
-<h2 id="what-compatibility-means-in-kneo-client">What "compatibility" means in kneo-client<a class="headerlink" href="#what-compatibility-means-in-kneo-client" title="Permanent link">&para;</a></h2>
-<p>The Kneo Agent Platform's <code>/v1</code> HTTP API is a stability boundary — a <code>kneo-client</code> release pinned to one <code>kneo_serv</code> minor works against any patch-level <code>kneo_serv</code> release on the same minor line, and against newer minors that don't break <code>/v1</code>.</p>
-<p>The pinning is <em>explicit</em> and <em>committed</em>: <code>schemas/openapi.json</code> is a <code>/v1</code>-filtered copy of one specific <code>kneo_serv</code> release's published OpenAPI spec. Bumping the pin is a deliberate PR (via <code>scripts/bump_schemas.py</code>), reviewed in isolation, and never happens automatically. See ADR-004 for the rationale.</p>
-<h2 id="current-matrix">Current matrix<a class="headerlink" href="#current-matrix" title="Permanent link">&para;</a></h2>
+<h1 id="polling-and-waiting">Polling and waiting<a class="headerlink" href="#polling-and-waiting" title="Permanent link">&para;</a></h1>
+<p>Two helpers on <code>RunsClient</code> cover the two common run-lifecycle waiting
+patterns:</p>
+<ul>
+<li><strong><code>wait_for_completion()</code></strong> — block until a run reaches a terminal
+  status, returning the final status. Best when you only care about
+  the outcome and will inspect the trace afterwards.</li>
+<li><strong><code>tail_trace()</code></strong> — stream trace events as they arrive, returning
+  an async iterator. Best when you want to surface progress live
+  (Studio editors, CLIs, dashboards).</li>
+</ul>
+<p>Both follow the same polling-with-status-check pattern under the hood;
+they differ in what they yield to the caller.</p>
+<h2 id="wait_for_completion"><code>wait_for_completion()</code><a class="headerlink" href="#wait_for_completion" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">wait_for_completion</span><span class="p">(</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">run_id</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">poll_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>   <span class="c1"># seconds between GETs to /v1/runs/{run_id}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>         <span class="c1"># total budget; None to wait indefinitely</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>     <span class="c1"># &quot;completed&quot; | &quot;failed&quot; | &quot;cancelled&quot; | ...</span>
+</code></pre></div>
+<p>The default <code>terminal_statuses</code> set is <code>{"completed", "failed",
+"cancelled"}</code>. Pass a custom set to treat additional states as
+terminal:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Stop as soon as the run pauses for human review.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">wait_for_completion</span><span class="p">(</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">run_id</span><span class="p">,</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">terminal_statuses</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;paused_human_review&quot;</span><span class="p">},</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">)</span>
+</code></pre></div>
+<p>Raises <code>TimeoutError</code> if the deadline elapses before any terminal
+status is reached.</p>
+<h2 id="tail_trace"><code>tail_trace()</code><a class="headerlink" href="#tail_trace" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">tail_trace</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">poll_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;event_type&quot;</span><span class="p">],</span> <span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;payload&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p>Internally <code>tail_trace</code> walks <code>/v1/runs/{run_id}/trace</code> with ascending
+offset and yields each event as it lands. When the run reaches a
+terminal status (configurable, same defaults as <code>wait_for_completion</code>)
+the helper does one final drain pass to capture events emitted between
+the last poll and the status transition, then returns.</p>
+<p>Key arguments (all optional):</p>
 <table>
 <thead>
 <tr>
-<th><code>kneo-client</code></th>
-<th>Pinned to <code>kneo_serv</code></th>
-<th>Tested against</th>
-<th>Python</th>
-<th>Status</th>
+<th>Arg</th>
+<th>Default</th>
+<th>Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>0.2.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
-<td><code>&gt;=3.12</code></td>
-<td>Current</td>
+<td><code>start_offset</code></td>
+<td><code>0</code></td>
+<td>Resume tailing from a known position.</td>
 </tr>
 <tr>
-<td><code>0.1.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
-<td><code>&gt;=3.12</code></td>
-<td>Previous</td>
+<td><code>page_size</code></td>
+<td><code>100</code></td>
+<td><code>limit</code> per <code>/v1/runs/{run_id}/trace</code> fetch.</td>
+</tr>
+<tr>
+<td><code>poll_interval</code></td>
+<td><code>1.0</code></td>
+<td>Seconds to sleep when no new events arrived.</td>
+</tr>
+<tr>
+<td><code>timeout</code></td>
+<td><code>None</code></td>
+<td>Total budget for reaching terminal status. Does <strong>not</strong> apply during the post-terminal drain — that always runs to completion.</td>
+</tr>
+<tr>
+<td><code>terminal_statuses</code></td>
+<td><code>{"completed", "failed", "cancelled"}</code></td>
+<td>Override to treat other states as terminal.</td>
+</tr>
+<tr>
+<td><code>event_type</code></td>
+<td><code>None</code></td>
+<td>Filter passed through to <code>trace</code>.</td>
 </tr>
 </tbody>
 </table>
-<p>The pinned <code>kneo_serv</code> version is recorded in <code>schemas/SOURCE.md</code> — that's the source of truth for which platform version generated the committed <code>_generated/</code> tree.</p>
-<h2 id="how-pinning-works-in-practice">How pinning works in practice<a class="headerlink" href="#how-pinning-works-in-practice" title="Permanent link">&para;</a></h2>
-<p>The pin is the input to the generated layer. When you bump it:</p>
-<ol>
-<li><code>scripts/bump_schemas.py</code> fetches the new <code>openapi.json</code> from the target <code>kneo_serv</code> ref (or a local checkout).</li>
-<li>The spec is filtered to <code>/v1</code> paths only — <code>kneo_serv</code> mounts every route at both <code>/v1/…</code> and <code>/…</code>; we drop the unprefixed mounts.</li>
-<li>The filtered spec replaces <code>schemas/openapi.json</code>, <code>schemas/SOURCE.md</code> is updated, and <code>_generated/</code> is regenerated.</li>
-<li>The hand-rolled adapter layer (<code>platform/</code>, <code>agent/</code>) may need updates if endpoints were added, renamed, or had their shapes change. The contract test <code>tests/contract/test_path_coverage.py</code> catches both sides of that drift.</li>
-</ol>
-<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. Patches don't change pins. A pin bump can land in any minor / patch — versioning is independent.</p>
-<h2 id="forward-compatibility-newer-kneo_serv-than-the-pin">Forward compatibility — newer <code>kneo_serv</code> than the pin<a class="headerlink" href="#forward-compatibility-newer-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h2>
-<p><code>kneo-client</code> ships an explicit list of every <code>(method, path)</code> it wraps. A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps — you just won't have wrappers for the new endpoints until the next <code>kneo-client</code> release.</p>
-<p>If you need access to a new endpoint before that release, drop to the raw transport:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="c1"># Call an endpoint that doesn&#39;t have a wrapper yet:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">_transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/some/new/endpoint&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-</code></pre></div>
-<p>The <code>_transport</code> attribute is informally accessible (single-underscore prefix). It's not part of the documented stability surface, but the API has been stable since <code>0.1.0</code> and is unlikely to churn. The transport handles auth, retries, idempotency, request-ID injection, and error mapping just like the wrapped methods do — you just lose the typed response model.</p>
-<h2 id="backward-compatibility-older-kneo_serv-than-the-pin">Backward compatibility — older <code>kneo_serv</code> than the pin<a class="headerlink" href="#backward-compatibility-older-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h2>
-<p><code>kneo-client X.Y.Z</code> is <strong>not</strong> guaranteed against <code>kneo_serv</code> releases older than its pin. Wrappers may rely on response fields that older <code>kneo_serv</code> versions don't emit, and the client's error mapping assumes the current platform error shape. A <code>KeyError</code> on <code>from_dict()</code> is the typical symptom — the wrapper expects a field that wasn't in the older platform's response.</p>
-<p>If you have to talk to an older <code>kneo_serv</code>, pin to a matching <code>kneo-client</code> minor:</p>
+<p>Raises <code>TimeoutError</code> if the deadline elapses while waiting for a
+terminal status. Events yielded so far stay yielded — the caller has
+already consumed them.</p>
+<h2 id="when-to-use-which">When to use which<a class="headerlink" href="#when-to-use-which" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Need to talk to <code>kneo_serv</code>…</th>
-<th>Use <code>kneo-client</code></th>
+<th>Want</th>
+<th>Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>0.4.x</code></td>
-<td><code>0.1.x</code> or <code>0.2.x</code> (both pinned to <code>v0.4.0</code>; pick <code>0.2.x</code> for the <code>Page</code> + <code>Map</code> return-type ergonomics)</td>
+<td>Just the final outcome</td>
+<td><code>wait_for_completion()</code></td>
+</tr>
+<tr>
+<td>Final outcome + the full trace at the end</td>
+<td><code>wait_for_completion()</code> then <code>runs.trace()</code></td>
+</tr>
+<tr>
+<td>Events as they arrive (live UI / log tail)</td>
+<td><code>tail_trace()</code></td>
+</tr>
+<tr>
+<td>First N events of a finished run</td>
+<td><code>runs.trace(limit=N)</code> directly</td>
+</tr>
+<tr>
+<td>Resume an interrupted tail</td>
+<td><code>tail_trace(start_offset=...)</code></td>
 </tr>
 </tbody>
 </table>
-<p>(More rows added as the project ships.)</p>
-<h2 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
-<p>A breaking change in either direction triggers a major bump:</p>
+<h2 id="polling-cadence">Polling cadence<a class="headerlink" href="#polling-cadence" title="Permanent link">&para;</a></h2>
+<p>A rule of thumb: pick <code>poll_interval</code> so that <em>p99 perceived latency</em>
+roughly equals <code>poll_interval / 2</code>.</p>
 <ul>
-<li><strong><code>kneo-client</code> major</strong> — the public Python API (<code>kneo_client.*</code> namespace) changes incompatibly. Very rare.</li>
-<li><strong><code>kneo_serv</code> major</strong> — i.e., introduction of <code>/v2</code>. <code>kneo-client</code> may need a major bump if <code>/v1</code> is sunset; otherwise it ships a new minor that supports both.</li>
+<li><strong>Interactive UIs (Studio, dashboards)</strong> — <code>0.5</code> to <code>1.0</code> seconds.
+  Snappy enough for human attention.</li>
+<li><strong>Operational scripts (CI, scheduled jobs)</strong> — <code>2.0</code> to <code>5.0</code>
+  seconds. Reduces request volume for long-running jobs where snappy
+  feedback isn't needed.</li>
+<li><strong>Long-running background workers</strong> — <code>10.0</code>+ seconds. Pair with
+  a generous <code>timeout</code>.</li>
 </ul>
-<p>Within a major, deprecated surfaces keep aliases for at least one minor. See <code>docs/dev/contributing.md</code> for the deprecation policy.</p>
-<h2 id="verifying-compatibility-yourself">Verifying compatibility yourself<a class="headerlink" href="#verifying-compatibility-yourself" title="Permanent link">&para;</a></h2>
-<p>The simplest smoke is the bundled examples:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install a specific kneo-client version</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kneo-client==X.Y.Z&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Point it at your kneo_serv instance</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://your-kneo-serv.example.com
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>...
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>python<span class="w"> </span>-m<span class="w"> </span>kneo_client.examples.01_basic_run<span class="w"> </span>YOUR_SPEC_ID
+<p>Don't go below <code>0.5</code> seconds without a specific reason — at that rate
+you're spending more on request overhead than you save in latency,
+and the platform's retry / backoff machinery is also factoring in.</p>
+<h2 id="custom-terminal-statuses">Custom terminal statuses<a class="headerlink" href="#custom-terminal-statuses" title="Permanent link">&para;</a></h2>
+<p>The platform reports several non-final statuses (<code>running</code>, <code>queued</code>,
+<code>paused_human_review</code>) that the default terminal set excludes.</p>
+<p>The most common override is <strong>treating human-review pauses as
+terminal</strong> — useful when an operator-facing tool wants to surface
+"this run needs your attention" rather than continue polling:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">wait_for_completion</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">run_id</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="n">terminal_statuses</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;completed&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;cancelled&quot;</span><span class="p">,</span> <span class="s2">&quot;paused_human_review&quot;</span><span class="p">},</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">if</span> <span class="n">status</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;paused_human_review&quot;</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="c1"># Surface a UI prompt; resume via the human-tasks API.</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="o">...</span>
 </code></pre></div>
-<p>The five <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
-<p>For deeper validation, the integration test suite is env-gated; set <code>KNEO_TEST_URL</code> and <code>KNEO_TEST_API_KEY</code> and run <code>python -m pytest tests/integration -v</code>.</p>
-<h2 id="what-the-pin-does-not-guarantee">What the pin does <em>not</em> guarantee<a class="headerlink" href="#what-the-pin-does-not-guarantee" title="Permanent link">&para;</a></h2>
-<p>The pin guarantees the <em>wire format</em> and the <em>path set</em> of <code>/v1</code>. It does not guarantee:</p>
-<ul>
-<li><strong>Provider availability</strong> — whether your <code>kneo_serv</code> deployment has GPT-4 configured, an MCP server reachable, a specific runtime registered. The pin says nothing about deployment state.</li>
-<li><strong>Spec compatibility</strong> — a spec that works on one <code>kneo_serv</code> may fail on another if the spec relies on a specific provider, tool, or platform version. Validate specs against the target environment with <code>client.agent.specs.validate(...)</code>.</li>
-<li><strong>Policy outcomes</strong> — <code>policies.environment_*</code> queries return whatever policy is configured on the target deployment.</li>
-</ul>
-<p>These are platform-deployment concerns, not client-library concerns. The client gives you a clean wire to the platform; what the platform allows is a separate dimension.</p>
+<p><code>tail_trace()</code> accepts the same kwarg with the same semantics.</p>
+<h2 id="timeouterror-handling">TimeoutError handling<a class="headerlink" href="#timeouterror-handling" title="Permanent link">&para;</a></h2>
+<p>Both helpers raise <code>TimeoutError</code> rather than returning a partial
+result, because returning a "not yet terminal" status silently is
+easy to misuse. Pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="n">status</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">wait_for_completion</span><span class="p">(</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">run_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="c1"># Decide whether to cancel, escalate, or keep waiting with a fresh budget.</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">current</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">if</span> <span class="n">current</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;running&quot;</span><span class="p">:</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">cancel</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="k">raise</span>
+</code></pre></div>
+<p>For <code>tail_trace</code>, events yielded <em>before</em> the timeout stay consumed:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">seen</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">tail_trace</span><span class="p">(</span><span class="n">run_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="n">seen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">except</span> <span class="ne">TimeoutError</span><span class="p">:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;timed out with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seen</span><span class="p">)</span><span class="si">}</span><span class="s2"> events streamed&quot;</span><span class="p">)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="k">raise</span>
+</code></pre></div>
 
 
 

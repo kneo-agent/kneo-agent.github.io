@@ -1,8 +1,9 @@
-"""Create a run, wait for it to complete, then print its trace.
+"""Create a run and stream its trace events as they arrive.
 
 Demonstrates the bread-and-butter operational flow: submit work to the
-platform, poll until done, inspect what happened. Uses
-:meth:`RunsClient.wait_for_completion` for the polling loop.
+platform, watch what happens live, see the final status. Uses
+:meth:`RunsClient.tail_trace` to interleave the polling loop and the
+event stream into one async iterator — no separate wait + fetch pass.
 
 Run with::
 
@@ -32,14 +33,22 @@ async def main(spec_reference: str) -> None:
             print("server did not return a run_id; nothing more to do")
             return
 
-        terminal = await client.platform.runs.wait_for_completion(
+        # tail_trace yields each event as it lands on the server, then
+        # one final drain pass after the run reaches a terminal status.
+        async for event in client.platform.runs.tail_trace(
             run_id, poll_interval=2.0, timeout=600
-        )
+        ):
+            print(f"  {event}")
+
+        terminal = await client.platform.runs.get(run_id)
         print(f"terminal status: {terminal.status!r}")
 
-        trace = await client.platform.runs.trace(run_id, limit=20)
-        for event in trace.events:
-            print(f"  {event}")
+        # The pre-helper pattern, kept for reference:
+        #
+        # await client.platform.runs.wait_for_completion(run_id, poll_interval=2.0)
+        # trace = await client.platform.runs.trace(run_id, limit=200)
+        # for event in trace:
+        #     print(event)
 
 
 if __name__ == "__main__":

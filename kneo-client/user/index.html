@@ -352,6 +352,8 @@
       
         
       
+        
+      
     
     
     
@@ -500,14 +502,42 @@
   
   
     <li class="md-nav__item">
-      <a href="pagination/" class="md-nav__link">
+      <a href="list_results/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pagination
+    List-method results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="polling_and_waiting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polling and waiting
   
 
     
@@ -878,7 +908,8 @@
 <li><a href="quickstart/"><code>quickstart.md</code></a> — install, profile setup, first authenticated call, first run + trace, the sync facade for non-async callers. The minimal end-to-end.</li>
 <li><a href="profiles_and_auth/"><code>profiles_and_auth.md</code></a> — the TOML / env / kwargs resolution chain, both API-key header schemes the platform accepts (<code>Authorization: Bearer</code> vs <code>X-Kneo-Api-Key</code>), multi-profile workflows, programmatic profile construction from a secrets manager.</li>
 <li><a href="idempotency_and_retries/"><code>idempotency_and_retries.md</code></a> — the auto-injected <code>Idempotency-Key</code> on every <code>POST</code>, when the transport retries (transport errors + <code>{429, 502, 503, 504}</code>), how <code>Retry-After</code> is honored, how 409 mismatches surface as <code>KneoIdempotencyMismatchError</code>, customizing <code>RetryPolicy</code>.</li>
-<li><a href="pagination/"><code>pagination.md</code></a> — the platform's <code>limit</code> / <code>offset</code> protocol, walking pages manually, the <code>iterate_all()</code> async iterator + <code>PaginatedResult[T]</code> wrapper, choosing a page size.</li>
+<li><a href="list_results/"><code>list_results.md</code></a> — the two list-method wrappers (<code>Page[T]</code> for list-shaped responses, <code>Map[K, V]</code> for dict-keyed ones), per-method return-shape table, <code>iterate_all()</code> for page-walking, the audit graceful-degrade case, choosing a page size, drop-to-raw escape hatch.</li>
+<li><a href="polling_and_waiting/"><code>polling_and_waiting.md</code></a> — <code>wait_for_completion()</code> (final-status polling) vs <code>tail_trace()</code> (live event streaming), terminal-status overrides for <code>paused_human_review</code>, polling cadence rules of thumb, <code>TimeoutError</code> handling.</li>
 <li><a href="errors/"><code>errors.md</code></a> — the <code>KneoError</code> hierarchy (<code>KneoAuthError</code>, <code>KneoPermissionError</code>, <code>KneoNotFoundError</code>, <code>KneoConflictError</code>, <code>KneoIdempotencyMismatchError</code>, <code>KneoRateLimited</code>, <code>KneoServerError</code>, <code>KneoNetworkError</code>), what each exception carries (<code>.status</code>, <code>.body</code>, <code>.request_id</code>, <code>.idempotency_key</code>), recommended catch patterns.</li>
 </ol>
 <h2 id="operating-and-integrating">Operating and integrating<a class="headerlink" href="#operating-and-integrating" title="Permanent link">&para;</a></h2>
@@ -913,7 +944,7 @@
 </tr>
 <tr>
 <td><code>03_paginate_audit.py</code></td>
-<td>Manual page walking with <code>limit</code> / <code>offset</code>.</td>
+<td>List audit events via the <code>Page</code> wrapper; demonstrates the limit-only / no-<code>offset</code> server-side limitation.</td>
 </tr>
 <tr>
 <td><code>04_validate_spec.py</code></td>
@@ -937,7 +968,8 @@
 <li><a href="quickstart/">Quickstart</a></li>
 <li><a href="profiles_and_auth/">Profiles and auth</a></li>
 <li><a href="idempotency_and_retries/">Idempotency and retries</a></li>
-<li><a href="pagination/">Pagination</a></li>
+<li><a href="list_results/">List-method results</a></li>
+<li><a href="polling_and_waiting/">Polling and waiting</a></li>
 <li><a href="errors/">Error handling</a></li>
 <li><a href="compatibility/">Compatibility matrix</a></li>
 </ul>

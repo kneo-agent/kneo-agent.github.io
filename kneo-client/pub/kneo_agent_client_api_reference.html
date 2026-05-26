@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.1.0 · 2026-05-25</div>
+    <div class="version">v0.2.0 · 2026-05-25</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.1.0</a>
+    <a href="#whats-new">What's new in v0.2.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -594,7 +594,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <a href="#apikeyauth">ApiKeyAuth &amp; AuthScheme</a>
     <a href="#retrypolicy">RetryPolicy</a>
     <a href="#idempotency">Idempotency helpers</a>
-    <a href="#pagination">Pagination</a>
+    <a href="#list-results">List-method results</a>
     <a href="#request-id">Request-ID helpers</a>
     <a href="#logging">Logging helpers</a>
     <a href="#exceptions">Exceptions</a>
@@ -642,7 +642,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.1.0</div>
+      <div class="cover-card-value">v0.2.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
@@ -679,7 +679,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.1.0</a></li>
+        <li><a href="#whats-new">What's new in v0.2.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -694,7 +694,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
         <li><a href="#apikeyauth"><code>ApiKeyAuth</code> &amp; <code>AuthScheme</code></a></li>
         <li><a href="#retrypolicy"><code>RetryPolicy</code></a></li>
         <li><a href="#idempotency">Idempotency helpers</a></li>
-        <li><a href="#pagination">Pagination</a></li>
+        <li><a href="#list-results">List-method results</a></li>
         <li><a href="#request-id">Request-ID helpers</a></li>
         <li><a href="#logging">Logging helpers</a></li>
         <li><a href="#exceptions">Exceptions</a></li>
@@ -735,7 +735,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.1.0</span>
+    <span class="badge badge-blue">v0.2.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
     <span class="badge badge-purple">kneo_serv /v1 · 0.4.x</span>
   </div>
@@ -743,17 +743,17 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.1.0</h2>
-  <p>First public release. Everything in this document is new.</p>
+  <h2>What's new in v0.2.0</h2>
+  <p>Ergonomic follow-ups deferred from 0.1.0. Pinned <code>kneo_serv</code> spec is unchanged (still <code>v0.4.0</code>); the platform's <code>/v1</code> surface didn't move during the 0.2.0 window.</p>
   <p>Headline pieces:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong>Full <code>/v1</code> coverage.</strong> All 25 platform <code>/v1</code> endpoints have hand-rolled wrappers backed by <code>Transport</code>. The contract test in <code>tests/contract/test_path_coverage.py</code> verifies the wrap is exhaustive against the pinned spec.</li>
-    <li><strong>Async-first with a sync facade.</strong> <code>KneoClient</code> and every adapter method are <code>async def</code>. <code>SyncTransport</code> wraps the async transport in a background thread + event loop via <code>anyio.from_thread.start_blocking_portal()</code> for callers that cannot run an event loop.</li>
-    <li><strong>Typed throughout.</strong> Strict <code>mypy</code> on <code>kneo_client.{core, platform, agent}</code>; PEP&nbsp;561 <code>py.typed</code> marker ships in the wheel.</li>
-    <li><strong>Reproducible release.</strong> Sigstore cosign keyless signing on every artifact; CycloneDX SBOM attached to the GitHub release; PyPI Trusted Publishing.</li>
+    <li><strong><code>Page[T]</code> + <code>Map[K, V]</code> collection wrappers</strong> across every list-method return value. <code>Page</code> covers the five list-shaped endpoints with Optional metadata that lets <code>audit.list</code> surface its limit-only server-side constraint honestly. <code>Map</code> covers the two dict-keyed endpoints (<code>credentials.list</code>, <code>policies.environment_list</code>), eliminating the prior <code>.additional_properties</code> indirection.</li>
+    <li><strong>Convenience helpers.</strong> <code>RunsClient.tail_trace()</code> streams trace events as they arrive; <code>HumanTasksClient.resume_by_id()</code> + <code>resume_first_pending()</code> collapse the list-then-resume dance; <code>agent.specs.validate_then_compile()</code> and <code>dry_run()</code> bundle the Studio iterate-and-test loop into typed result dataclasses (<code>ValidateThenCompileResult</code>, <code>DryRunResult</code>).</li>
+    <li><strong>Breaking changes</strong> (pre-1.0 SemVer permits): <code>PaginatedResult[T]</code> → <code>Page[T]</code>; module <code>kneo_client.core.pagination</code> → <code>kneo_client.core.results</code>; seven list-method return types changed. The standalone <code>iterate_all()</code> call signature is unchanged.</li>
+    <li><strong>Doc rewrite.</strong> <code>docs/user/pagination.md</code> → <code>docs/user/list_results.md</code> rewritten around the <code>Page</code> + <code>Map</code> design; new <code>docs/user/polling_and_waiting.md</code> covers <code>wait_for_completion</code> vs <code>tail_trace</code> selection.</li>
   </ul>
   <p>
-    See the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.1.0.md">0.1.0 release notes</a> for the long-form summary.
+    See the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.2.0.md">0.2.0 release notes</a> for the long-form summary including per-method before/after upgrade snippets, and the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.1.0.md">0.1.0 release notes</a> for the original public-release surface.
   </p>
 </section>
 
@@ -1104,37 +1104,55 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <p>Validate an externally-supplied key. Raises <code>ValueError</code> if empty or longer than <code>MAX_KEY_LENGTH</code>.</p>
 </section>
 
-<!-- ── Pagination ─────────────────────────────────────────── -->
-<section class="section" id="pagination">
-  <h2>Pagination</h2>
-  <p>Platform list endpoints accept <code>limit</code> (1–1000, default 100), <code>offset</code>, <code>sort_by</code>, <code>sort_order</code>. Responses carry <code>count</code>, <code>total</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code> plus the items array.</p>
-  <p><code>PaginatedResult</code> is a generic wrapper; <code>iterate_all()</code> is an async iterator that walks pages transparently.</p>
+<!-- ── List-method results (Page + Map) ──────────────────── -->
+<section class="section" id="list-results">
+  <h2>List-method results</h2>
+  <p>Module <code>kneo_client.core.results</code> (renamed from <code>core.pagination</code> in 0.2.0). Hosts the two collection wrappers every list-method on <code>PlatformClient</code> returns, plus the page-walking <code>iterate_all()</code>.</p>
 
-  <h3 class="api-class">class PaginatedResult[T] <span class="tag tag-dataclass">dataclass</span></h3>
+  <div class="note">
+    <strong>0.2.0 reference status.</strong> The class signatures below are current; the full per-method narrative (every list method's mapping to <code>Page</code> or <code>Map</code>, the audit graceful-degrade case, the convenience helpers <code>tail_trace</code> / <code>resume_by_id</code> / <code>resume_first_pending</code> / <code>validate_then_compile</code> / <code>dry_run</code>) is in <a href="../releases/release_notes_0.2.0.html">release notes 0.2.0</a> and the new <a href="../user/list_results.html">list-method results guide</a>. A full expansion of these sections in this reference is tracked for 0.3.0.
+  </div>
+
+  <h3 class="api-class">class Page[T] <span class="tag tag-dataclass">dataclass</span></h3>
+  <p>Wrapper around list-shaped server responses. Metadata fields are all Optional — an endpoint that doesn't echo a field (notably <code>audit.list</code>, which is <code>limit</code>-only) leaves that field as <code>None</code> rather than carrying a synthesized value. Supports sequence ergonomics: <code>__iter__</code>, <code>__len__</code>, <code>__getitem__</code>.</p>
   <table class="param-table">
     <tr><th>Field</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">items</td><td class="param-type">list[T]</td><td class="param-desc">Items on this page.</td></tr>
-    <tr><td class="param-name">total</td><td class="param-type">int</td><td class="param-desc">Total items across all pages, as reported by the server.</td></tr>
-    <tr><td class="param-name">limit</td><td class="param-type">int</td><td class="param-desc">Page size requested.</td></tr>
-    <tr><td class="param-name">offset</td><td class="param-type">int</td><td class="param-desc">Offset of the first item on this page.</td></tr>
-    <tr><td class="param-name">sort_by</td><td class="param-type">str | None</td><td class="param-desc">Sort field, if specified by the server.</td></tr>
-    <tr><td class="param-name">sort_order</td><td class="param-type">str | None</td><td class="param-desc"><code>"asc"</code> or <code>"desc"</code>.</td></tr>
+    <tr><td class="param-name">total</td><td class="param-type">int | None</td><td class="param-desc">Total items across all pages, when the server echoes it.</td></tr>
+    <tr><td class="param-name">limit</td><td class="param-type">int | None</td><td class="param-desc">Page size the server applied, when echoed.</td></tr>
+    <tr><td class="param-name">offset</td><td class="param-type">int | None</td><td class="param-desc">Offset of the first item on this page, when echoed.</td></tr>
+    <tr><td class="param-name">sort_by</td><td class="param-type">str | None</td><td class="param-desc">Sort field in effect, when echoed.</td></tr>
+    <tr><td class="param-name">sort_order</td><td class="param-type">str | None</td><td class="param-desc"><code>"asc"</code> or <code>"desc"</code>, when echoed.</td></tr>
   </table>
   <p><strong>Properties</strong></p>
   <table class="param-table">
     <tr><th>Property</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">count</td><td class="param-type">int</td><td class="param-desc"><code>len(items)</code>.</td></tr>
-    <tr><td class="param-name">has_more</td><td class="param-type">bool</td><td class="param-desc"><code>offset + count &lt; total</code>.</td></tr>
+    <tr><td class="param-name">has_more</td><td class="param-type">bool</td><td class="param-desc"><code>offset + count &lt; total</code>; <code>False</code> when <code>offset</code> or <code>total</code> is <code>None</code> (server didn't tell us, so we don't speculate).</td></tr>
   </table>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">iterate_all</span>(<span class="param">fetch_page</span>: <span class="typ">Callable[[int, int], Awaitable[PaginatedResult[T]]]</span>, *, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>) <span class="ret">→ AsyncIterator[T]</span></h4>
-  <p>Walk all items across pages. <code>fetch_page(limit, offset)</code> must return a <code>PaginatedResult</code>. Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code>.</p>
+  <h3 class="api-class">class Map[K, V] <span class="tag tag-dataclass">dataclass</span></h3>
+  <p>Wrapper around dict-keyed server responses (<code>credentials.list</code>, <code>policies.environment_list</code>). The whole collection comes back in one call; there is no pagination. Exposes dict-style accessors.</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">items</td><td class="param-type">Mapping[K, V]</td><td class="param-desc">The underlying keyed collection.</td></tr>
+  </table>
+  <p><strong>Properties + methods</strong></p>
+  <table class="param-table">
+    <tr><th>Member</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">count</td><td class="param-type">int</td><td class="param-desc"><code>len(items)</code>.</td></tr>
+    <tr><td class="param-name">__getitem__</td><td class="param-type">(K) → V</td><td class="param-desc">Bracket lookup.</td></tr>
+    <tr><td class="param-name">__iter__</td><td class="param-type">→ Iterator[V]</td><td class="param-desc">Iterates <em>values</em> (consistent with <code>Page</code> iterating items).</td></tr>
+    <tr><td class="param-name">__contains__</td><td class="param-type">(object) → bool</td><td class="param-desc">Key-based membership.</td></tr>
+    <tr><td class="param-name">get</td><td class="param-type">(K, default=None) → V | None</td><td class="param-desc">Safe lookup.</td></tr>
+    <tr><td class="param-name">keys</td><td class="param-type">() → KeysView[K]</td><td class="param-desc">Keys view.</td></tr>
+    <tr><td class="param-name">values</td><td class="param-type">() → ValuesView[V]</td><td class="param-desc">Values view.</td></tr>
+  </table>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">iterate_all</span>(<span class="param">fetch_page</span>: <span class="typ">Callable[[int, int], Awaitable[Page[T]]]</span>, *, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>) <span class="ret">→ AsyncIterator[T]</span></h4>
+  <p>Walk all items across pages. <code>fetch_page(limit, offset)</code> must return a <code>Page</code>. Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code>. Stops when <code>Page.has_more</code> is <code>False</code> — either because the server signaled end-of-data or because metadata fields are <code>None</code> (audit endpoint case; one fetch then exit).</p>
 
   <p><strong>Constants:</strong> <code>DEFAULT_PAGE_SIZE = 100</code>, <code>MAX_PAGE_SIZE = 1000</code>.</p>
-
-  <div class="note">
-    <strong>Note.</strong> The list adapter methods on <code>PlatformClient</code> return the raw generated response model today (not a <code>PaginatedResult</code>). To use <code>iterate_all()</code>, wrap the adapter call with a small adapter that builds a <code>PaginatedResult</code> from the response. See the <a href="#guides">Pagination recipe</a> below.
-  </div>
 </section>
 
 <!-- ── Request-ID ─────────────────────────────────────────── -->
@@ -1468,7 +1486,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.1.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.2.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.1.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Previous</td></tr>
   </table>
 
   <p><strong>Forward compatibility</strong></p>
@@ -1485,20 +1504,16 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 <section class="section" id="guides">
   <h2>Guides</h2>
 
-  <h3 class="api-class">Wrapping <code>iterate_all()</code> around a list endpoint</h3>
-  <p>The platform list methods return the raw generated response model today. To use <code>iterate_all()</code>, build a small adapter:</p>
-<pre><code><span class="kw">from</span> kneo_client.core.pagination <span class="kw">import</span> PaginatedResult, iterate_all
+  <h3 class="api-class">Walking pages with <code>iterate_all()</code></h3>
+  <p>List methods return <code>Page</code> (or <code>Map</code> for the two dict-keyed endpoints) directly — no adapter needed. Pass the list method itself as the <code>fetch_page</code> callable:</p>
+<pre><code><span class="kw">from</span> kneo_client.core.results <span class="kw">import</span> iterate_all
 
-<span class="kw">async def</span> <span class="fn">all_audit_events</span>(client, **filters):
+<span class="kw">async def</span> <span class="fn">all_runs</span>(client, **filters):
     <span class="kw">async def</span> <span class="fn">fetch_page</span>(limit, offset):
-        resp = <span class="kw">await</span> client.platform.audit.list(limit=limit, offset=offset, **filters)
-        <span class="kw">return</span> PaginatedResult(
-            items=resp.events,
-            total=getattr(resp, <span class="st">"total"</span>, <span class="nm">0</span>) <span class="kw">or</span> <span class="nm">0</span>,
-            limit=limit, offset=offset,
-        )
-    <span class="kw">async for</span> event <span class="kw">in</span> iterate_all(fetch_page, page_size=<span class="nm">200</span>):
-        <span class="kw">yield</span> event</code></pre>
+        <span class="kw">return await</span> client.platform.runs.list(limit=limit, offset=offset, **filters)
+    <span class="kw">async for</span> run <span class="kw">in</span> iterate_all(fetch_page, page_size=<span class="nm">200</span>):
+        <span class="kw">yield</span> run</code></pre>
+  <p>For the audit endpoint, <code>iterate_all</code> does one fetch and exits because <code>has_more</code> is <code>False</code> (server returns only <code>count</code> + <code>events</code>; no offset to advance). For the two <code>Map</code>-returning endpoints, walk the values directly: <code>for cred in (await client.platform.credentials.list()):</code>.</p>
 
   <h3 class="api-class">Bring your own httpx client</h3>
   <p>For shared connection pools, custom transports, proxy configuration:</p>
@@ -1536,7 +1551,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.1.0 · 2026-05-25 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v0.2.0 · 2026-05-25 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 

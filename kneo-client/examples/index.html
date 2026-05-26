@@ -348,6 +348,8 @@
       
         
       
+        
+      
     
     
     
@@ -495,14 +497,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../user/pagination/" class="md-nav__link">
+      <a href="../user/list_results/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Pagination
+    List-method results
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/polling_and_waiting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polling and waiting
   
 
     
@@ -786,6 +816,72 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#running-an-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running an example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The scripts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-order-vs-running-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading order vs. running order
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pre-helper-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Pre-helper" patterns
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-docs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related docs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#combined-pdf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combined PDF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#files" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -814,44 +910,106 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>Runnable example scripts. Each one assumes you have a Kneo Agent Platform instance running and a profile configured at <code>~/.config/kneo/client.toml</code> (or env vars <code>KNEO_URL</code> / <code>KNEO_API_KEY</code>).</p>
+<p>Five end-to-end scripts demonstrating the operational and Studio
+surfaces of <code>kneo-client</code>. Each script is small (≤ 60 LOC) and
+self-contained — runs against a real Kneo Agent Platform instance, no
+mocks. Designed to be read top-to-bottom in order; later scripts assume
+the patterns from earlier ones.</p>
+<h2 id="running-an-example">Running an example<a class="headerlink" href="#running-an-example" title="Permanent link">&para;</a></h2>
+<p>Two ways to authenticate. Either set env vars per-call:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nv">KNEO_URL</span><span class="o">=</span>https://kneo.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">KNEO_API_KEY</span><span class="o">=</span>sk-...<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>examples/01_basic_run.py<span class="w"> </span>SPEC_REFERENCE
+</code></pre></div>
+<p>Or pre-configure a profile at <code>~/.config/kneo/client.toml</code> and drop
+the env vars. See <a href="../user/profiles_and_auth/"><code>docs/user/profiles_and_auth.md</code></a>
+for the full resolution chain.</p>
+<p>Each script's docstring documents its own arguments and any env vars it
+needs beyond the connection ones.</p>
+<h2 id="the-scripts">The scripts<a class="headerlink" href="#the-scripts" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Example</th>
+<th>#</th>
+<th>Script</th>
 <th>What it shows</th>
-<th>Phase</th>
+<th>0.2.0 helpers used</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>01_basic_run.py</code></td>
-<td>Create a run, wait for completion, fetch the trace.</td>
-<td>4</td>
+<td>1</td>
+<td><a href="01_basic_run.py"><code>01_basic_run.py</code></a></td>
+<td>Create a run, stream its trace events live as they arrive, print terminal status.</td>
+<td><code>runs.create</code>, <strong><code>runs.tail_trace</code></strong> (async iterator with drain-on-terminal), <code>runs.get</code></td>
 </tr>
 <tr>
-<td><code>02_idempotent_retry.py</code></td>
-<td>Re-submitting a POST with the same <code>Idempotency-Key</code>.</td>
-<td>4</td>
+<td>2</td>
+<td><a href="02_idempotent_retry.py"><code>02_idempotent_retry.py</code></a></td>
+<td>Re-submit a <code>POST</code> with a reused <code>Idempotency-Key</code>. Demonstrates safe retry on transient network failure without double-creation.</td>
+<td><code>runs.create</code> with explicit <code>idempotency_key=</code></td>
 </tr>
 <tr>
-<td><code>03_paginate_audit.py</code></td>
-<td>Iterating all audit events with <code>iterate_all()</code>.</td>
-<td>4</td>
+<td>3</td>
+<td><a href="03_paginate_audit.py"><code>03_paginate_audit.py</code></a></td>
+<td>List audit events through the <code>Page</code> wrapper. Documents the platform's <code>limit</code>-only / no-<code>offset</code> audit semantics — <code>Page</code> surfaces this as <code>None</code> metadata fields, <code>has_more=False</code>.</td>
+<td><code>audit.list</code> (returns <strong><code>Page[AuditEvent]</code></strong>), iteration over <code>Page</code></td>
 </tr>
 <tr>
-<td><code>04_validate_spec.py</code></td>
-<td>Validating, compiling, and explaining a spec file.</td>
+<td>4</td>
+<td><a href="04_validate_spec.py"><code>04_validate_spec.py</code></a></td>
+<td>The Studio iterate-and-test loop in one call: validate then (only on clean validate) compile. Mentions <code>dry_run</code> as the bundled-with-explain-and-policy_report alternative.</td>
+<td><strong><code>agent.specs.validate_then_compile</code></strong> (returns <code>ValidateThenCompileResult</code>); inline pointer to <strong><code>agent.specs.dry_run</code></strong></td>
+</tr>
+<tr>
 <td>5</td>
-</tr>
-<tr>
-<td><code>05_human_task_resume.py</code></td>
-<td>Listing human tasks, locking, and resuming.</td>
-<td>4</td>
+<td><a href="05_human_task_resume.py"><code>05_human_task_resume.py</code></a></td>
+<td>Resume the first pending human-review task with a decision. Replaces the prior list-then-resume dance with a single helper call; returns <code>None</code> when no matching task exists.</td>
+<td><strong><code>human_tasks.resume_first_pending</code></strong></td>
 </tr>
 </tbody>
 </table>
-<p>Phase 1 ships only this README — examples arrive alongside the adapter layers.</p>
+<h2 id="reading-order-vs-running-order">Reading order vs. running order<a class="headerlink" href="#reading-order-vs-running-order" title="Permanent link">&para;</a></h2>
+<p>Read them sequentially (01 → 05) — earlier scripts establish patterns
+(profile loading, async context-manager use, <code>runs.create()</code>) that
+later ones rely on without re-explaining.</p>
+<p>Run them in whatever order matches the surface you care about: the
+audit example doesn't depend on you having run anything first; the
+basic-run example creates a run you can then inspect with the audit
+example; the human-task example needs a paused human-review task,
+which usually means you've started a run that hit one.</p>
+<h2 id="pre-helper-patterns">"Pre-helper" patterns<a class="headerlink" href="#pre-helper-patterns" title="Permanent link">&para;</a></h2>
+<p>Each example that uses a new 0.2.0 helper keeps the <strong>pre-helper
+manual decomposition</strong> in a trailing comment block, so:</p>
+<ul>
+<li>You can see what the helper bundles (and copy the manual version
+  if you want different semantics).</li>
+<li>A reader on 0.1.0 has a reference for what their version of the
+  code looks like alongside the recommended 0.2.0 path.</li>
+</ul>
+<h2 id="related-docs">Related docs<a class="headerlink" href="#related-docs" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../user/quickstart/"><code>docs/user/quickstart.md</code></a> — the
+  shortest path from <code>pip install</code> to a first authenticated call.
+  Read this before the examples if you've never used <code>kneo-client</code>.</li>
+<li><a href="../user/list_results/"><code>docs/user/list_results.md</code></a> —
+  background for example 03 (<code>Page</code> + <code>Map</code> design, per-method
+  return-shape table, <code>iterate_all()</code> walk semantics).</li>
+<li><a href="../user/polling_and_waiting/"><code>docs/user/polling_and_waiting.md</code></a>
+  — background for example 01 (<code>tail_trace</code> vs <code>wait_for_completion</code>,
+  polling-cadence rules, <code>TimeoutError</code> handling).</li>
+<li><a href="../user/idempotency_and_retries/"><code>docs/user/idempotency_and_retries.md</code></a>
+  — background for example 02 (<code>Idempotency-Key</code> generation, the
+  retry policy, 409 mismatch handling).</li>
+<li><a href="../user/errors/"><code>docs/user/errors.md</code></a> — the <code>KneoError</code>
+  hierarchy that every example relies on.</li>
+</ul>
+<h2 id="combined-pdf">Combined PDF<a class="headerlink" href="#combined-pdf" title="Permanent link">&para;</a></h2>
+<p>These five scripts ship inline in the user-guide PDF
+(<a href="../pub/kneo_agent_client_guide.pdf"><code>docs/pub/kneo_agent_client_guide.pdf</code></a>)
+alongside the user-doc prose. The combined PDF is regenerated at every
+release; see <code>docs/script/README.md</code> for
+the render pipeline.</p>
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="01_basic_run.py"><code>01_basic_run.py</code></a></li>

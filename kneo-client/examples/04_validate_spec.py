@@ -1,7 +1,13 @@
-"""Validate, then compile, then explain a spec.
+"""Validate, then compile a spec — one call via the combined helper.
 
-The Studio iterate-and-test loop. Each call returns server-side
-diagnostics; stop on the first failure rather than chaining.
+The Studio iterate-and-test loop. ``validate_then_compile`` runs both
+calls and returns a single result; ``compile`` is skipped automatically
+when validation fails so you don't waste a round-trip on a known-bad
+spec.
+
+For a fuller preview that also surfaces the explain summary and policy
+report in one call, see ``client.agent.specs.dry_run(payload)`` —
+mentioned at the bottom of this example.
 
 Run with::
 
@@ -24,22 +30,38 @@ async def main(spec_path: Path) -> None:
     payload = {"spec": spec_text}
 
     async with KneoClient.from_profile() as client:
-        validated = await client.agent.specs.validate(payload)
-        print(f"validate: valid={validated.valid}")
-        if not validated.valid:
-            for diag in validated.diagnostics or []:
+        result = await client.agent.specs.validate_then_compile(payload)
+        print(f"validate: valid={result.validate.valid}")
+        if not result.validate.valid:
+            for diag in result.validate.diagnostics or []:
                 print(f"  {diag}")
             return
 
-        compiled = await client.agent.specs.compile(payload)
-        print(f"compile: ok={compiled.ok}")
-        if not compiled.ok:
-            for diag in compiled.diagnostics or []:
+        # validate succeeded → compile ran.
+        assert result.compile is not None
+        print(f"compile: ok={result.compile.ok}")
+        if not result.compile.ok:
+            for diag in result.compile.diagnostics or []:
                 print(f"  {diag}")
             return
 
+        # Optional: get a human-readable summary too.
         explained = await client.agent.specs.explain(payload)
         print(f"explain: {explained.summary}")
+
+        # Alternative one-call path that bundles validate + explain +
+        # policy_report into a DryRunResult:
+        #
+        # dry = await client.agent.specs.dry_run(payload)
+        # if dry.ok:
+        #     print(dry.explain.summary, dry.policy_report.report)
+
+        # Pre-helper pattern, kept for reference:
+        #
+        # validated = await client.agent.specs.validate(payload)
+        # if not validated.valid: ...
+        # compiled = await client.agent.specs.compile(payload)
+        # if not compiled.ok: ...
 
 
 if __name__ == "__main__":
