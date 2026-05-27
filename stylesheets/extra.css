@@ -36,7 +36,7 @@
 /* Card polish: subtle lift on hover, softer borders, whole-card clickable. */
 .md-typeset .grid.cards > ul > li,
 .md-typeset .grid > .card {
-  border: 1px solid var(--md-default-fg-color--lightest);
+  border: 1px solid var(--md-primary-fg-color);  /* blue, matching the title bar */
   border-radius: 0.5rem;
   overflow: hidden;  /* keep the title block's rounded top corners clean */
   position: relative; /* anchor for the click-overlay pseudo-element below */
