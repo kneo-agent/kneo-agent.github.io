@@ -947,7 +947,7 @@
 <p><code>kneo-client</code> is the shared client layer that powers Kneo Agent Studio
 (development) and Kneo Agent Dashboard (operations). It owns the operational
 semantics of talking to a Kneo Agent Platform instance — auth, profiles,
-retries, idempotency, pagination, request IDs, and consistent error
+retries, idempotency, typed result pages, request IDs, and consistent error
 normalization — so downstream UIs do not each reinvent them.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>Three layers:</p>
@@ -958,8 +958,8 @@ normalization — so downstream UIs do not each reinvent them.</p>
 <li><strong><code>kneo_client.core</code></strong> — handwritten cross-cutting client: auth
    (<code>Bearer</code> / <code>X-Kneo-Api-Key</code>), profile resolution, <code>httpx</code>-based
    transport, retry / backoff / timeout policy, idempotency-key support,
-   request-ID propagation, pagination helpers, normalized errors, and
-   redaction-aware logging.</li>
+   request-ID propagation, list-method result wrappers (<code>Page[T]</code> +
+   <code>Map[K, V]</code>), normalized errors, and redaction-aware logging.</li>
 <li><strong>Domain adapters</strong>:<ul>
 <li><strong><code>kneo_client.platform</code></strong> — operational surface for the dashboard:
   health, runs, traces, checkpoints, replay, human tasks, audit,
