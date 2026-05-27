@@ -1251,8 +1251,8 @@ not <code>limit</code>, <code>offset</code>, <code>total</code>, or sort metadat
 </code></pre></div>
 <p><code>iterate_all()</code> on audit fetches once and exits because <code>has_more</code> is
 False — gracefully degraded, not lying. There are no further pages the
-client can reach via this endpoint; use the <code>event_type</code> / <code>run_id</code> /
-<code>principal</code> filters to narrow the result set.</p>
+client can reach via this endpoint; use the <code>event_type</code> / <code>run_id</code>
+filters to narrow the result set.</p>
 <h3 id="choosing-a-page_size">Choosing a <code>page_size</code><a class="headerlink" href="#choosing-a-page_size" title="Permanent link">&para;</a></h3>
 <p>Rules of thumb for the fully-paginating endpoints:</p>
 <ul>

@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.2.0 · 2026-05-25</div>
+    <div class="version">v0.4.0 · 2026-05-27</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.2.0</a>
+    <a href="#whats-new">What's new in v0.4.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -615,6 +615,8 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="nav-section-label">Agent adapter</div>
     <a href="#agentclient">AgentClient</a>
     <a href="#specsclient" class="sub">SpecsClient</a>
+    <a href="#validatethencompileresult" class="sub">ValidateThenCompileResult</a>
+    <a href="#dryrunresult" class="sub">DryRunResult</a>
   </div>
 
   <div class="nav-section">
@@ -642,7 +644,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.2.0</div>
+      <div class="cover-card-value">v0.4.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
@@ -679,7 +681,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.2.0</a></li>
+        <li><a href="#whats-new">What's new in v0.4.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -716,6 +718,8 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
       <ul class="toc-list">
         <li><a href="#agentclient"><code>AgentClient</code></a></li>
         <li class="toc-sub"><a href="#specsclient"><code>SpecsClient</code></a></li>
+        <li class="toc-sub"><a href="#validatethencompileresult"><code>ValidateThenCompileResult</code></a></li>
+        <li class="toc-sub"><a href="#dryrunresult"><code>DryRunResult</code></a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Reference</h3>
       <ul class="toc-list">
@@ -735,7 +739,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.2.0</span>
+    <span class="badge badge-blue">v0.4.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
     <span class="badge badge-purple">kneo_serv /v1 · 0.4.x</span>
   </div>
@@ -743,17 +747,16 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.2.0</h2>
-  <p>Ergonomic follow-ups deferred from 0.1.0. Pinned <code>kneo_serv</code> spec is unchanged (still <code>v0.4.0</code>); the platform's <code>/v1</code> surface didn't move during the 0.2.0 window.</p>
+  <h2>What's new in v0.4.0</h2>
+  <p>A deliberately small debt-resolution cut. Pinned <code>kneo_serv</code> spec is unchanged (still <code>v0.4.0</code>; the platform's <code>/v1</code> surface didn't move during the 0.4.0 window). No public-API breaking changes — the one notable change is a deprecation.</p>
   <p>Headline pieces:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong><code>Page[T]</code> + <code>Map[K, V]</code> collection wrappers</strong> across every list-method return value. <code>Page</code> covers the five list-shaped endpoints with Optional metadata that lets <code>audit.list</code> surface its limit-only server-side constraint honestly. <code>Map</code> covers the two dict-keyed endpoints (<code>credentials.list</code>, <code>policies.environment_list</code>), eliminating the prior <code>.additional_properties</code> indirection.</li>
-    <li><strong>Convenience helpers.</strong> <code>RunsClient.tail_trace()</code> streams trace events as they arrive; <code>HumanTasksClient.resume_by_id()</code> + <code>resume_first_pending()</code> collapse the list-then-resume dance; <code>agent.specs.validate_then_compile()</code> and <code>dry_run()</code> bundle the Studio iterate-and-test loop into typed result dataclasses (<code>ValidateThenCompileResult</code>, <code>DryRunResult</code>).</li>
-    <li><strong>Breaking changes</strong> (pre-1.0 SemVer permits): <code>PaginatedResult[T]</code> → <code>Page[T]</code>; module <code>kneo_client.core.pagination</code> → <code>kneo_client.core.results</code>; seven list-method return types changed. The standalone <code>iterate_all()</code> call signature is unchanged.</li>
-    <li><strong>Doc rewrite.</strong> <code>docs/user/pagination.md</code> → <code>docs/user/list_results.md</code> rewritten around the <code>Page</code> + <code>Map</code> design; new <code>docs/user/polling_and_waiting.md</code> covers <code>wait_for_completion</code> vs <code>tail_trace</code> selection.</li>
+    <li><strong><code>audit.list</code> dead-kwarg deprecation.</strong> <code>principal</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code> were never honored by the <code>/v1/audit-events</code> endpoint (it accepts only <code>event_type</code> / <code>run_id</code> / <code>limit</code>). Passing any now emits a <code>DeprecationWarning</code> and they are no longer forwarded; they remain on the signature for one minor and are <strong>removed in 0.5.0</strong>. Migration: drop them from your call.</li>
+    <li><strong>Integration-smoke template fix.</strong> The smoke suite — the documented template downstream consumers copy for their own integration tests — asserted <code>page.runs</code>, which <code>Page</code> never exposed. Corrected to <code>page.items</code>.</li>
+    <li><strong>Doc + supply-chain housekeeping.</strong> A full codebase / docs / tests audit sweep: dropped the deprecated <code>principal</code> from the audit-filter docs, rewrote <code>SECURITY.md</code> supported-versions to a version-agnostic policy, and refreshed the supply-chain review (runtime deps unchanged from 0.3.0).</li>
   </ul>
   <p>
-    See the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.2.0.md">0.2.0 release notes</a> for the long-form summary including per-method before/after upgrade snippets, and the <a href="https://github.com/kneo-agent/kneo-client/blob/main/docs/releases/release_notes_0.1.0.md">0.1.0 release notes</a> for the original public-release surface.
+    See the 0.4.0 release notes for the full summary including the public-API delta, the deprecation migration, and known gaps. The 0.3.0 release notes cover the prior cut's drift gates and the cosign <code>--bundle</code> migration.
   </p>
 </section>
 
@@ -1109,10 +1112,6 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h2>List-method results</h2>
   <p>Module <code>kneo_client.core.results</code> (renamed from <code>core.pagination</code> in 0.2.0). Hosts the two collection wrappers every list-method on <code>PlatformClient</code> returns, plus the page-walking <code>iterate_all()</code>.</p>
 
-  <div class="note">
-    <strong>0.2.0 reference status.</strong> The class signatures below are current; the full per-method narrative (every list method's mapping to <code>Page</code> or <code>Map</code>, the audit graceful-degrade case, the convenience helpers <code>tail_trace</code> / <code>resume_by_id</code> / <code>resume_first_pending</code> / <code>validate_then_compile</code> / <code>dry_run</code>) is in <a href="../releases/release_notes_0.2.0.html">release notes 0.2.0</a> and the new <a href="../user/list_results.html">list-method results guide</a>. A full expansion of these sections in this reference is tracked for 0.3.0.
-  </div>
-
   <h3 class="api-class">class Page[T] <span class="tag tag-dataclass">dataclass</span></h3>
   <p>Wrapper around list-shaped server responses. Metadata fields are all Optional — an endpoint that doesn't echo a field (notably <code>audit.list</code>, which is <code>limit</code>-only) leaves that field as <code>None</code> rather than carrying a synthesized value. Supports sequence ergonomics: <code>__iter__</code>, <code>__len__</code>, <code>__getitem__</code>.</p>
   <table class="param-table">
@@ -1314,7 +1313,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">create</span>(<span class="param">body</span>: <span class="typ">RunCreateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
   <p>POST <code>/v1/runs</code> — start a new run. Idempotency key is auto-generated unless caller supplies one.</p>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"updated_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ RunListResponse</span></h4>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"updated_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ Page[RunListResponseRunsItem]</span></h4>
   <p>GET <code>/v1/runs</code> — list runs with limit/offset pagination.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunStatusResponse</span></h4>
@@ -1329,10 +1328,10 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">replay</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunReplayResponse</span></h4>
   <p>GET <code>/v1/runs/{run_id}/replay</code> — fetch a deterministic replay view derived from the run's checkpoints + trace.</p>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ TraceResponse</span></h4>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ Page[TraceResponseEventsItem]</span></h4>
   <p>GET <code>/v1/runs/{run_id}/trace</code> — fetch the event trace for a run (tool calls, model calls, middleware decisions, etc.).</p>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">checkpoints</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"sequence"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ CheckpointListResponse</span></h4>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">checkpoints</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"sequence"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ Page[CheckpointListResponseCheckpointsItem]</span></h4>
   <p>GET <code>/v1/runs/{run_id}/checkpoints</code> — list a run's serialized state snapshots.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">checkpoints_diff</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">from_sequence</span>: <span class="typ">int | None</span> = <span class="nm">None</span>, <span class="param">to_sequence</span>: <span class="typ">int | None</span> = <span class="nm">None</span>) <span class="ret">→ CheckpointDiffResponse</span></h4>
@@ -1359,17 +1358,29 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <p><strong>Module constant:</strong> <code>DEFAULT_TERMINAL_STATUSES = frozenset({"completed", "failed", "cancelled"})</code>.</p>
 
-  <p><strong>Example: end-to-end run</strong></p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">tail_trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">poll_interval</span>: <span class="typ">float</span> = <span class="nm">1.0</span>, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>, <span class="param">terminal_statuses</span>: <span class="typ">Iterable[str] | None</span> = <span class="nm">None</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>) <span class="ret">→ AsyncIterator[TraceResponseEventsItem]</span></h4>
+  <p>Stream trace events as they arrive. Polls <code>trace(run_id)</code> with ascending offset, yields each new event as the page arrives, then performs one final drain pass after the run reaches a terminal status to capture any events emitted between the last poll and the status transition. Returns when the drain pass finds no new events. Convenience helper; not a separate platform endpoint.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">poll_interval</td><td class="param-type">float</td><td class="param-default">1.0</td><td class="param-desc">Seconds to sleep between polls.</td></tr>
+    <tr><td class="param-name">timeout</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Total time budget. <code>None</code> means wait indefinitely.</td></tr>
+    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Status set that ends streaming. Defaults to <code>{"completed", "failed", "cancelled"}</code>.</td></tr>
+    <tr><td class="param-name">start_offset</td><td class="param-type">int</td><td class="param-default">0</td><td class="param-desc">Offset to start from. Use a saved checkpoint to resume mid-trace.</td></tr>
+    <tr><td class="param-name">page_size</td><td class="param-type">int</td><td class="param-default">100</td><td class="param-desc">Per-poll page size; clamped server-side to 1000.</td></tr>
+  </table>
+  <div class="raises-label">Raises</div>
+  <p class="desc"><code>TimeoutError</code> if <code>timeout</code> elapses before a terminal status is reached.</p>
+
+  <p><strong>When to pick this over <code>wait_for_completion</code></strong> — see polling and waiting guide. Short version: <code>wait_for_completion</code> when you only need the final status; <code>tail_trace</code> when you need to display, log, or react to events as they arrive (typically interactive UIs and dev tooling).</p>
+
+  <p><strong>Example: end-to-end run with live trace</strong></p>
 <pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
     created = <span class="kw">await</span> client.platform.runs.create({<span class="st">"spec_id"</span>: <span class="st">"my-spec"</span>})
-    terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(
-        created.run_id, poll_interval=<span class="nm">2.0</span>, timeout=<span class="nm">600</span>
-    )
-    print(<span class="st">f"final={terminal.status}"</span>)
-
-    trace = <span class="kw">await</span> client.platform.runs.trace(created.run_id, limit=<span class="nm">20</span>)
-    <span class="kw">for</span> ev <span class="kw">in</span> trace.events:
-        print(ev)</code></pre>
+    <span class="kw">async for</span> ev <span class="kw">in</span> client.platform.runs.tail_trace(created.run_id, timeout=<span class="nm">600</span>):
+        print(<span class="st">f"{ev['sequence']}: {ev['event_type']}"</span>)
+    <span class="cm"># tail_trace returned → the run reached a terminal status and the drain pass found no more events.</span>
+    terminal = <span class="kw">await</span> client.platform.runs.get(created.run_id)
+    print(<span class="st">f"final={terminal.status}"</span>)</code></pre>
 </section>
 
 <!-- ── HumanTasksClient ───────────────────────────────────── -->
@@ -1379,14 +1390,26 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class HumanTasksClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"created_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ HumanTaskListResponse</span></h4>
-  <p>GET <code>/v1/human-tasks</code> — list pending and recent human tasks.</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_kind</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"created_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ Page[HumanTaskListResponseTasksItem]</span></h4>
+  <p>GET <code>/v1/human-tasks</code> — list pending and recent human tasks as a <code>Page</code>. <code>run_id</code> and <code>workflow_kind</code> are server-side filters (added in 0.2.0). <code>status</code> is honored by the server but is a wrapper-side kwarg per a documented spec-side omission (see TODO-0.3.0 § parameter-drift gate).</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>) <span class="ret">→ HumanTaskResponse</span></h4>
   <p>GET <code>/v1/human-tasks/{continuation_id}</code> — fetch a single human task.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">resume</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">HumanResumeRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ HumanResumeResponse</span></h4>
   <p>POST <code>/v1/human-tasks/{continuation_id}/resume</code> — resume a paused run with a decision.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">resume_by_id</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">HumanResumeRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ HumanResumeResponse</span></h4>
+  <p>Fetch a task by ID, then resume it. Calls <code>get(continuation_id)</code> first so a stale <code>continuation_id</code> surfaces as <a href="#exceptions"><code>KneoNotFoundError</code></a> from the <code>GET</code> rather than a conflict from the <code>POST</code>. Use this when distinguishing "the task is gone" from "the resume payload conflicts" matters; call <code>resume()</code> directly otherwise.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">resume_first_pending</span>(<span class="param">body</span>: <span class="typ">HumanResumeRequest | dict</span>, *, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_kind</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ HumanResumeResponse | None</span></h4>
+  <p>List pending tasks matching the filters and resume the first match; returns <code>None</code> if no matching pending task exists. Worker-pattern convenience: collapses the list-then-resume dance into one call. The list call uses <code>limit=1</code> and <code>status="pending"</code>.</p>
+  <table class="param-table">
+    <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">run_id</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Filter — only consider tasks for this run.</td></tr>
+    <tr><td class="param-name">workflow_kind</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Filter — only consider tasks of this workflow kind.</td></tr>
+    <tr><td class="param-name">idempotency_key</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Optional caller-supplied key for the <code>POST</code>; transport generates a fresh UUID4 by default.</td></tr>
+  </table>
 </section>
 
 <!-- ── AuditClient ────────────────────────────────────────── -->
@@ -1396,8 +1419,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class AuditClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">principal</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ AuditEventListResponse</span></h4>
-  <p>GET <code>/v1/audit-events</code> — list audit events with three optional filters (event type, run, principal).</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">principal</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">offset</span>: <span class="typ">int | None</span> = <span class="nm">None</span>, <span class="param">sort_by</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">sort_order</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ Page[AuditEventListResponseEventsItem]</span></h4>
+  <p>GET <code>/v1/audit-events</code> — list audit events as a <code>Page</code>. The platform endpoint accepts only <code>event_type</code> / <code>run_id</code> / <code>limit</code> server-side; the <code>Page</code> returned has <code>offset</code> / <code>total</code> / <code>sort_*</code> as <code>None</code> (server-side limit-only, honestly surfaced rather than synthesized). <strong>Deprecated (0.4.0):</strong> <code>principal</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code> are ignored by the platform — passing any emits a <code>DeprecationWarning</code> and they are no longer forwarded. They remain on the signature for one minor and are <strong>removed in 0.5.0</strong>.</p>
 </section>
 
 <!-- ── CredentialsClient ──────────────────────────────────── -->
@@ -1407,8 +1430,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class CredentialsClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>() <span class="ret">→ CredentialInventoryResponse</span></h4>
-  <p>GET <code>/v1/security/credentials</code> — list known credential references.</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">providers</span>: <span class="typ">list[str] | None</span> = <span class="nm">None</span>, <span class="param">extras</span>: <span class="typ">list[str] | None</span> = <span class="nm">None</span>, <span class="param">include_service_tokens</span>: <span class="typ">bool</span> = <span class="nm">True</span>) <span class="ret">→ Map[str, Any]</span></h4>
+  <p>GET <code>/v1/security/credentials</code> — list known credential references as a <code>Map</code> keyed by credential ID. Credential body is open-shaped in the pinned spec, so values are <code>Any</code>. The whole inventory is returned in one call (no pagination). Filter via <code>providers=["aws", "gcp"]</code>, <code>extras=["scope"]</code>, or <code>include_service_tokens=False</code>; the three kwargs were added in 0.3.0.</p>
 </section>
 
 <!-- ── PoliciesClient ─────────────────────────────────────── -->
@@ -1418,8 +1441,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class PoliciesClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_list</span>() <span class="ret">→ EnvironmentPolicyListResponse</span></h4>
-  <p>GET <code>/v1/policies/environment</code> — list policies for every environment.</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_list</span>() <span class="ret">→ Map[str, EnvironmentPolicyListResponsePoliciesAdditionalProperty]</span></h4>
+  <p>GET <code>/v1/policies/environment</code> — list policies for every environment as a <code>Map</code> keyed by environment name. The whole inventory is returned in one call (no pagination).</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_get</span>(<span class="param">environment</span>: <span class="typ">str</span>) <span class="ret">→ EnvironmentPolicyResponse</span></h4>
   <p>GET <code>/v1/policies/environment/{environment}</code> — fetch one environment's policy.</p>
@@ -1465,18 +1488,61 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">run</span>(<span class="param">body</span>: <span class="typ">RunCreateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
   <p>POST <code>/v1/specs/run</code> — ad-hoc dry-run of a spec. Distinct from <a href="#runsclient"><code>RunsClient.create</code></a>: <code>specs.run</code> accepts an inline spec rather than a spec reference, and is intended for Studio's iterate-and-test flow.</p>
 
-  <p><strong>Example: validate-then-compile</strong></p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">validate_then_compile</span>(<span class="param">body</span>: <span class="typ">SpecValidateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ <a href="#validatethencompileresult">ValidateThenCompileResult</a></span></h4>
+  <p>Validate first, then compile only if validate succeeded. Skips the compile call on validate failure to avoid a wasted round-trip on a known-bad spec; <code>result.compile</code> is <code>None</code> in that case and <code>result.ok</code> returns <code>False</code>. Same <code>body</code> shape as <code>validate</code> / <code>compile</code>; the helper passes the same payload to both calls.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">dry_run</span>(<span class="param">body</span>: <span class="typ">SpecValidateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ <a href="#dryrunresult">DryRunResult</a></span></h4>
+  <p>Validate, then run <code>explain</code> + <code>policy_report</code> in parallel via <code>asyncio.gather</code> once validate succeeds. Skips both downstream calls on validate failure. Returns a frozen <a href="#dryrunresult"><code>DryRunResult</code></a> with the validate result, the (optional) explain and policy-report responses, and an <code>.ok</code> property.</p>
+
+  <p><strong>Example: validate-then-compile via the helper</strong></p>
 <pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
     payload = {<span class="st">"spec"</span>: spec_text}
-    validated = <span class="kw">await</span> client.agent.specs.validate(payload)
-    <span class="kw">if not</span> validated.valid:
-        <span class="kw">for</span> d <span class="kw">in</span> validated.diagnostics <span class="kw">or</span> []:
-            print(d)
+    result = <span class="kw">await</span> client.agent.specs.validate_then_compile(payload)
+    <span class="kw">if not</span> result.ok:
+        <span class="kw">for</span> d <span class="kw">in</span> (result.validate.diagnostics <span class="kw">or</span> []):
+            print(<span class="st">f"validate: {d}"</span>)
+        <span class="kw">if</span> result.compile <span class="kw">is not None</span>:
+            <span class="kw">for</span> d <span class="kw">in</span> (result.compile.diagnostics <span class="kw">or</span> []):
+                print(<span class="st">f"compile:  {d}"</span>)
         <span class="kw">return</span>
-    compiled = <span class="kw">await</span> client.agent.specs.compile(payload)
-    <span class="kw">if not</span> compiled.ok:
-        <span class="kw">for</span> d <span class="kw">in</span> compiled.diagnostics <span class="kw">or</span> []:
-            print(d)</code></pre>
+    <span class="cm"># result.compile is the compiled spec; ship it.</span></code></pre>
+</section>
+
+<!-- ── ValidateThenCompileResult ─────────────────────────── -->
+<section class="section" id="validatethencompileresult">
+  <h2>ValidateThenCompileResult</h2>
+  <p>Frozen dataclass returned by <a href="#specsclient"><code>SpecsClient.validate_then_compile</code></a>. Bundles the validate and (optional) compile responses with a single boolean for the common <code>"is the spec shippable?"</code> question.</p>
+
+  <h3 class="api-class">class ValidateThenCompileResult <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">validate</td><td class="param-type">SpecValidateResponse</td><td class="param-desc">Always populated.</td></tr>
+    <tr><td class="param-name">compile</td><td class="param-type">SpecCompileResponse | None</td><td class="param-desc"><code>None</code> when validate failed (the helper skipped the compile call).</td></tr>
+  </table>
+  <p><strong>Properties</strong></p>
+  <table class="param-table">
+    <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">ok</td><td class="param-type">bool</td><td class="param-desc"><code>True</code> iff <code>validate.valid</code> AND <code>compile</code> is not None AND <code>compile.ok</code>.</td></tr>
+  </table>
+</section>
+
+<!-- ── DryRunResult ───────────────────────────────────────── -->
+<section class="section" id="dryrunresult">
+  <h2>DryRunResult</h2>
+  <p>Frozen dataclass returned by <a href="#specsclient"><code>SpecsClient.dry_run</code></a>. Bundles validate + explain + policy-report into a single object for Studio's pre-ship dashboard.</p>
+
+  <h3 class="api-class">class DryRunResult <span class="tag tag-dataclass">dataclass</span></h3>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">validate</td><td class="param-type">SpecValidateResponse</td><td class="param-desc">Always populated.</td></tr>
+    <tr><td class="param-name">explain</td><td class="param-type">SpecExplainResponse | None</td><td class="param-desc"><code>None</code> when validate failed.</td></tr>
+    <tr><td class="param-name">policy_report</td><td class="param-type">SpecPolicyReportResponse | None</td><td class="param-desc"><code>None</code> when validate failed.</td></tr>
+  </table>
+  <p><strong>Properties</strong></p>
+  <table class="param-table">
+    <tr><th>Property</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">ok</td><td class="param-type">bool</td><td class="param-desc"><code>True</code> iff validate succeeded AND <code>policy_report</code> is not None AND <code>policy_report.valid</code> is not <code>False</code>. The <code>UNSET</code> case for <code>policy_report.valid</code> is treated as "no objection" (returns <code>True</code>) — absence is not failure.</td></tr>
+  </table>
 </section>
 
 <!-- ── Compatibility ──────────────────────────────────────── -->
@@ -1486,8 +1552,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.2.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.1.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.4.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.3.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.2.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Older</td></tr>
   </table>
 
   <p><strong>Forward compatibility</strong></p>
@@ -1551,7 +1618,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.2.0 · 2026-05-25 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v0.4.0 · 2026-05-27 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 
