@@ -2737,7 +2737,7 @@
 <p>Requires Python ≥ 3.12 (3.12 / 3.13 / 3.14 tested in CI). The runtime closure is small: <code>httpx</code>, <code>pydantic</code>, <code>anyio</code>, <code>platformdirs</code>, <code>attrs</code>. No CLI is installed — <code>kneo-client</code> is a library, not a service.</p>
 <p>Verify the install:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from kneo_client import KneoClient, __version__; print(__version__)&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.4.0</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.5.0</span>
 </code></pre></div>
 <h3 id="configure-a-profile">Configure a profile<a class="headerlink" href="#configure-a-profile" title="Permanent link">&para;</a></h3>
 <p>The client reads connection details in this order (later sources override earlier):</p>
@@ -3060,7 +3060,7 @@
 <ol>
 <li>Auto-injecting a fresh UUID4 <code>Idempotency-Key</code> on every <code>POST</code> (unless the caller supplies their own).</li>
 <li>Retrying transient transport errors and the fixed set <code>{429, 502, 503, 504}</code> within a configurable <code>RetryPolicy</code>.</li>
-<li>Honoring <code>Retry-After</code> on 429 responses (server's hint overrides the policy's computed delay).</li>
+<li>Honoring <code>Retry-After</code> on 429 and 503 responses (server's hint overrides the policy's computed delay). 503 is <code>kneo_serv</code>'s run-queue backpressure signal on <code>POST /v1/runs</code>; because POSTs carry an auto-injected idempotency key, those are retry-safe and retried automatically.</li>
 <li>Surfacing the platform's payload-mismatch behavior as <code>KneoIdempotencyMismatchError</code> so retry-with-wrong-payload bugs are loud, not silent.</li>
 </ol>
 <p>Both pieces work together: idempotency keys make it <em>safe</em> to retry a <code>POST</code>; the retry policy <em>decides</em> when to retry. The default settings work for most callers; you can override either independently.</p>
@@ -3125,7 +3125,7 @@
 <a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="p">)</span>
 </code></pre></div>
 <p>Delay sequence (without jitter): attempt 1 → no delay, attempt 2 → <code>base_delay</code>, attempt 3 → <code>2 × base_delay</code>, …, capped at <code>max_delay</code>. With <code>jitter=0.1</code>, a 1-second delay becomes uniformly distributed in <code>[0.9, 1.1]</code>.</p>
-<p><code>Retry-After</code> from a 429 response overrides the computed delay verbatim. The server's hint is authoritative; no jitter is applied on top.</p>
+<p><code>Retry-After</code> from a 429 or 503 response overrides the computed delay verbatim. The server's hint is authoritative; no jitter is applied on top.</p>
 <h3 id="when-retries-fire">When retries fire<a class="headerlink" href="#when-retries-fire" title="Permanent link">&para;</a></h3>
 <p>The transport retries on:</p>
 <ul>
@@ -3181,7 +3181,11 @@
 <td><code>KneoRateLimited</code> (carries <code>.retry_after</code>)</td>
 </tr>
 <tr>
-<td>HTTP 502 / 503 / 504</td>
+<td>HTTP 503</td>
+<td><code>KneoServiceUnavailable</code> (a <code>KneoServerError</code> subclass; carries <code>.retry_after</code>)</td>
+</tr>
+<tr>
+<td>HTTP 502 / 504</td>
 <td><code>KneoServerError</code></td>
 </tr>
 <tr>
@@ -3664,6 +3668,7 @@ easy to misuse. Pattern:</p>
 <a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>│   └── KneoIdempotencyMismatchError   # HTTP 409 with payload mismatch on a replayed Idempotency-Key
 <a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>├── KneoRateLimited               # HTTP 429 (carries .retry_after)
 <a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>└── KneoServerError               # HTTP 5xx — server-side failure
+<a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a>    └── KneoServiceUnavailable    # HTTP 503 — overloaded / backpressure (carries .retry_after)
 </code></pre></div>
 <p><code>KneoIdempotencyMismatchError</code> is a <em>subclass</em> of <code>KneoConflictError</code> (catching <code>KneoConflictError</code> also catches the mismatch case). Everything else is parallel.</p>
 <h3 id="what-every-exception-carries">What every exception carries<a class="headerlink" href="#what-every-exception-carries" title="Permanent link">&para;</a></h3>
@@ -3673,11 +3678,14 @@ easy to misuse. Pattern:</p>
 <a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a>    <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>      <span class="c1"># X-Request-ID echoed by the server</span>
 <a id="__codelineno-44-5" name="__codelineno-44-5" href="#__codelineno-44-5"></a>    <span class="n">idempotency_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="c1"># Idempotency-Key sent on the failing request (POSTs)</span>
 </code></pre></div>
-<p><code>KneoRateLimited</code> adds one field:</p>
+<p><code>KneoRateLimited</code> (429) and <code>KneoServiceUnavailable</code> (503) each add a <code>retry_after</code> field:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoRateLimited</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
 <a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
+<a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a>
+<a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoServiceUnavailable</span><span class="p">(</span><span class="n">KneoServerError</span><span class="p">):</span>
+<a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
 </code></pre></div>
-<p>All other subclasses inherit from <code>KneoError</code> without adding fields.</p>
+<p><code>KneoServiceUnavailable</code> is a <em>subclass</em> of <code>KneoServerError</code> (catching <code>KneoServerError</code> also catches the 503 case). All other subclasses inherit from <code>KneoError</code> without adding fields.</p>
 <h3 id="status-code-exception-mapping">Status code → exception mapping<a class="headerlink" href="#status-code-exception-mapping" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3719,7 +3727,12 @@ easy to misuse. Pattern:</p>
 <td>Rate limit hit. <code>.retry_after</code> carries the server's hint.</td>
 </tr>
 <tr>
-<td>5xx</td>
+<td>503</td>
+<td><code>KneoServiceUnavailable</code></td>
+<td>Platform overloaded / shedding load (e.g. <code>kneo_serv</code>'s run-queue backpressure on <code>POST /v1/runs</code>). A <code>KneoServerError</code> subclass that also carries <code>.retry_after</code>. The transport already retried within its policy honoring <code>Retry-After</code>; one reaching your code means retries exhausted — use <code>.retry_after</code> for longer caller-side back-off.</td>
+</tr>
+<tr>
+<td>5xx (other)</td>
 <td><code>KneoServerError</code></td>
 <td>Server-side failure. The transport already retried within its policy (for 502/503/504); a <code>KneoServerError</code> reaching your code means retries exhausted.</td>
 </tr>
@@ -3760,23 +3773,30 @@ easy to misuse. Pattern:</p>
 <a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a>    <span class="n">KneoNotFoundError</span><span class="p">,</span>
 <a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a>    <span class="n">KneoRateLimited</span><span class="p">,</span>
 <a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a>    <span class="n">KneoServerError</span><span class="p">,</span>
-<a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a><span class="p">)</span>
-<a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>
-<a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
-<a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a><span class="k">except</span> <span class="n">KneoAuthError</span><span class="p">:</span>
-<a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;API key is missing, invalid, or revoked.&quot;</span><span class="p">)</span>
-<a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a>    <span class="k">raise</span>
-<a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a><span class="k">except</span> <span class="n">KneoNotFoundError</span><span class="p">:</span>
-<a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-<a id="__codelineno-47-15" name="__codelineno-47-15" href="#__codelineno-47-15"></a>    <span class="k">return</span> <span class="kc">None</span>
-<a id="__codelineno-47-16" name="__codelineno-47-16" href="#__codelineno-47-16"></a><span class="k">except</span> <span class="n">KneoRateLimited</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-47-17" name="__codelineno-47-17" href="#__codelineno-47-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rate-limited; server suggests waiting </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
-<a id="__codelineno-47-18" name="__codelineno-47-18" href="#__codelineno-47-18"></a>    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">10</span><span class="p">)</span>
-<a id="__codelineno-47-19" name="__codelineno-47-19" href="#__codelineno-47-19"></a>    <span class="k">raise</span>
-<a id="__codelineno-47-20" name="__codelineno-47-20" href="#__codelineno-47-20"></a><span class="k">except</span> <span class="n">KneoServerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-47-21" name="__codelineno-47-21" href="#__codelineno-47-21"></a>    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;platform 5xx (after retries): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
-<a id="__codelineno-47-22" name="__codelineno-47-22" href="#__codelineno-47-22"></a>    <span class="k">raise</span>
+<a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>    <span class="n">KneoServiceUnavailable</span><span class="p">,</span>
+<a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a><span class="p">)</span>
+<a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a>
+<a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a><span class="k">except</span> <span class="n">KneoAuthError</span><span class="p">:</span>
+<a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;API key is missing, invalid, or revoked.&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a>    <span class="k">raise</span>
+<a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a><span class="k">except</span> <span class="n">KneoNotFoundError</span><span class="p">:</span>
+<a id="__codelineno-47-15" name="__codelineno-47-15" href="#__codelineno-47-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run </span><span class="si">{</span><span class="n">run_id</span><span class="si">!r}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-16" name="__codelineno-47-16" href="#__codelineno-47-16"></a>    <span class="k">return</span> <span class="kc">None</span>
+<a id="__codelineno-47-17" name="__codelineno-47-17" href="#__codelineno-47-17"></a><span class="k">except</span> <span class="n">KneoRateLimited</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-47-18" name="__codelineno-47-18" href="#__codelineno-47-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;rate-limited; server suggests waiting </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-19" name="__codelineno-47-19" href="#__codelineno-47-19"></a>    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">10</span><span class="p">)</span>
+<a id="__codelineno-47-20" name="__codelineno-47-20" href="#__codelineno-47-20"></a>    <span class="k">raise</span>
+<a id="__codelineno-47-21" name="__codelineno-47-21" href="#__codelineno-47-21"></a><span class="k">except</span> <span class="n">KneoServiceUnavailable</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-47-22" name="__codelineno-47-22" href="#__codelineno-47-22"></a>    <span class="c1"># Backpressure / overload — back off for the server&#39;s suggested window.</span>
+<a id="__codelineno-47-23" name="__codelineno-47-23" href="#__codelineno-47-23"></a>    <span class="c1"># Must precede `except KneoServerError`, since it&#39;s a subclass.</span>
+<a id="__codelineno-47-24" name="__codelineno-47-24" href="#__codelineno-47-24"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;platform overloaded; backing off </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+<a id="__codelineno-47-25" name="__codelineno-47-25" href="#__codelineno-47-25"></a>    <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-47-26" name="__codelineno-47-26" href="#__codelineno-47-26"></a>    <span class="k">raise</span>
+<a id="__codelineno-47-27" name="__codelineno-47-27" href="#__codelineno-47-27"></a><span class="k">except</span> <span class="n">KneoServerError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-47-28" name="__codelineno-47-28" href="#__codelineno-47-28"></a>    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;platform 5xx (after retries): </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+<a id="__codelineno-47-29" name="__codelineno-47-29" href="#__codelineno-47-29"></a>    <span class="k">raise</span>
 </code></pre></div>
 <p>Order matters: catch more specific exceptions first (<code>KneoNotFoundError</code> before <code>KneoError</code>).</p>
 <h4 id="handle-idempotency-key-mismatches-loudly">Handle idempotency-key mismatches loudly<a class="headerlink" href="#handle-idempotency-key-mismatches-loudly" title="Permanent link">&para;</a></h4>
@@ -3893,7 +3913,7 @@ easy to misuse. Pattern:</p>
 </code></pre></div>
 <h3 id="why-a-typed-hierarchy">Why a typed hierarchy<a class="headerlink" href="#why-a-typed-hierarchy" title="Permanent link">&para;</a></h3>
 <p>A single <code>KneoError</code> would force callers to inspect <code>.status</code> everywhere they want to branch. A flat enum of error codes would lose the natural <code>isinstance</code> ergonomics. The hierarchy lets you catch broadly (<code>except KneoError</code>) for logging and narrowly (<code>except KneoAuthError</code>) for recovery — without losing the underlying response context, which stays attached to the exception instance.</p>
-<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 0.4.0.</p>
+<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 0.5.0 — which added run-queue backpressure (<code>503</code> + <code>Retry-After</code> on <code>POST /v1/runs</code>), now surfaced as <code>KneoServiceUnavailable</code>.</p>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3912,7 +3932,7 @@ easy to misuse. Pattern:</p>
 <tr>
 <td><code>KneoError(message, *, status, body, request_id, idempotency_key)</code></td>
 <td><code>kneo_client.core.errors</code></td>
-<td>The base. All subclasses share this constructor signature (except <code>KneoRateLimited</code>, which adds <code>retry_after</code>).</td>
+<td>The base. All subclasses share this constructor signature (except <code>KneoRateLimited</code> and <code>KneoServiceUnavailable</code>, which add <code>retry_after</code>).</td>
 </tr>
 </tbody>
 </table>
@@ -3935,24 +3955,24 @@ easy to misuse. Pattern:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>0.4.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
+<td><code>0.5.0</code></td>
+<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Current</td>
 </tr>
 <tr>
-<td><code>0.3.0</code></td>
+<td><code>0.4.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Previous</td>
 </tr>
 <tr>
-<td><code>0.2.0</code></td>
+<td><code>0.3.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
-<td><code>&gt;=3.12</code></td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Older</td>
 </tr>
 </tbody>
@@ -3988,8 +4008,12 @@ easy to misuse. Pattern:</p>
 </thead>
 <tbody>
 <tr>
+<td><code>0.5.x</code></td>
+<td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailable</code> for the new <code>503</code> backpressure path.</td>
+</tr>
+<tr>
 <td><code>0.4.x</code></td>
-<td><code>0.1.x</code>, <code>0.2.x</code>, or <code>0.3.x</code> (all pinned to <code>v0.4.0</code>; pick <code>0.3.x</code> for the additive filter kwargs on <code>runs.checkpoints</code> / <code>credentials.list</code>, <code>0.2.x</code> for the <code>Page</code> + <code>Map</code> return-type ergonomics)</td>
+<td><code>0.1.x</code>, <code>0.2.x</code>, <code>0.3.x</code>, or <code>0.4.x</code> (all pinned to <code>v0.4.0</code>; pick <code>0.4.x</code> to drop the long-deprecated <code>audit.list</code> kwargs, <code>0.3.x</code> for the additive filter kwargs on <code>runs.checkpoints</code> / <code>credentials.list</code>, <code>0.2.x</code> for the <code>Page</code> + <code>Map</code> return-type ergonomics)</td>
 </tr>
 </tbody>
 </table>

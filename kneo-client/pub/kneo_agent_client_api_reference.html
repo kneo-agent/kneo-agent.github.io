@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.4.0 · 2026-05-27</div>
+    <div class="version">v0.5.0 · 2026-05-29</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.4.0</a>
+    <a href="#whats-new">What's new in v0.5.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -644,11 +644,11 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.4.0</div>
+      <div class="cover-card-value">v0.5.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
-      <div class="cover-card-value">v0.4.0 (/v1 only)</div>
+      <div class="cover-card-value">v0.5.0 (/v1 only)</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Python</div>
@@ -681,7 +681,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.4.0</a></li>
+        <li><a href="#whats-new">What's new in v0.5.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -739,7 +739,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.4.0</span>
+    <span class="badge badge-blue">v0.5.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
     <span class="badge badge-purple">kneo_serv /v1 · 0.4.x</span>
   </div>
@@ -747,16 +747,16 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.4.0</h2>
-  <p>A deliberately small debt-resolution cut. Pinned <code>kneo_serv</code> spec is unchanged (still <code>v0.4.0</code>; the platform's <code>/v1</code> surface didn't move during the 0.4.0 window). No public-API breaking changes — the one notable change is a deprecation.</p>
+  <h2>What's new in v0.5.0</h2>
+  <p>A small, focused cut that closes the <code>audit.list</code> deprecation window, refreshes the pinned <code>kneo_serv</code> spec to <code>v0.5.0</code>, and adds a typed error for the platform's new backpressure signal. The pin moves but the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code> — only <code>info.version</code> changes — so the generated client is unchanged.</p>
   <p>Headline pieces:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong><code>audit.list</code> dead-kwarg deprecation.</strong> <code>principal</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code> were never honored by the <code>/v1/audit-events</code> endpoint (it accepts only <code>event_type</code> / <code>run_id</code> / <code>limit</code>). Passing any now emits a <code>DeprecationWarning</code> and they are no longer forwarded; they remain on the signature for one minor and are <strong>removed in 0.5.0</strong>. Migration: drop them from your call.</li>
-    <li><strong>Integration-smoke template fix.</strong> The smoke suite — the documented template downstream consumers copy for their own integration tests — asserted <code>page.runs</code>, which <code>Page</code> never exposed. Corrected to <code>page.items</code>.</li>
-    <li><strong>Doc + supply-chain housekeeping.</strong> A full codebase / docs / tests audit sweep: dropped the deprecated <code>principal</code> from the audit-filter docs, rewrote <code>SECURITY.md</code> supported-versions to a version-agnostic policy, and refreshed the supply-chain review (runtime deps unchanged from 0.3.0).</li>
+    <li><strong><code>audit.list</code> dead kwargs removed (breaking).</strong> <code>principal</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code> — deprecated in 0.4.0, never honored by <code>/v1/audit-events</code> (which accepts only <code>event_type</code> / <code>run_id</code> / <code>limit</code>) — are now <strong>removed</strong> from the signature. Passing any is a <code>TypeError</code>. Migration: drop them from your call (the platform never used them, so there is no behavior change beyond the call no longer accepting the argument).</li>
+    <li><strong>Spec pin refreshed to <code>kneo_serv v0.5.0</code>.</strong> <code>v0.5.0</code> is an operability minor (worker-pool concurrency, a root <code>/metrics</code> endpoint, dead-lettering); its <code>/v1</code> surface is identical to <code>v0.4.0</code>, so no wrappers changed. The compatibility matrix gains the <code>0.5.0</code> row.</li>
+    <li><strong>New <code>KneoServiceUnavailable</code> (HTTP 503).</strong> <code>kneo_serv v0.5.0</code> sheds load on <code>POST /v1/runs</code> with <code>503</code> + <code>Retry-After</code> once its run queue is saturated. The transport already auto-retries 503 (honoring <code>Retry-After</code>); once retries are exhausted the caller now gets a typed <code>KneoServiceUnavailable</code> (a <code>KneoServerError</code> subclass) carrying <code>.retry_after</code> for longer caller-side back-off.</li>
   </ul>
   <p>
-    See the 0.4.0 release notes for the full summary including the public-API delta, the deprecation migration, and known gaps. The 0.3.0 release notes cover the prior cut's drift gates and the cosign <code>--bundle</code> migration.
+    See the 0.5.0 release notes for the full summary including the breaking-change upgrade note, the spec-pin refresh, and the new error type. The 0.4.0 release notes cover the prior cut's <code>audit.list</code> deprecation and smoke-template fix.
   </p>
 </section>
 
@@ -1205,6 +1205,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 │   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 on idempotency-key replay with different payload</span>
 ├── <span class="exc-child">KneoRateLimited</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
 └── <span class="exc-child">KneoServerError</span>           <span class="exc-sub"># HTTP 5xx</span>
+    └── <span class="exc-child">KneoServiceUnavailable</span> <span class="exc-sub"># HTTP 503 — backpressure / overload (carries .retry_after)</span>
   </div>
 
   <h3 class="api-class">class KneoError <span class="tag tag-exception">exception</span></h3>
@@ -1224,6 +1225,13 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-desc">Seconds parsed from the <code>Retry-After</code> header.</td></tr>
   </table>
 
+  <h3 class="api-class">class KneoServiceUnavailable <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 503 — the platform is temporarily unavailable or shedding load (notably <code>kneo_serv</code>'s run-queue backpressure on <code>POST /v1/runs</code>). A <strong>subclass of <code>KneoServerError</code></strong>, so <code>except KneoServerError</code> still catches it. The transport already auto-retries 503 (honoring <code>Retry-After</code>); this surfaces only once retries are exhausted. Adds one attribute on top of <code>KneoError</code>:</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-desc">Seconds parsed from the <code>Retry-After</code> header, or <code>None</code> when the server did not provide the hint.</td></tr>
+  </table>
+
   <h3 class="api-class">from_response() <span class="tag tag-function">function</span></h3>
 
   <h4 class="api-method"><span class="kw">def</span> <span class="fn">from_response</span>(<span class="param">response</span>: <span class="typ">httpx.Response</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ KneoError</span></h4>
@@ -1236,7 +1244,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="col-dim">409 (with key)</td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload.</td></tr>
     <tr><td class="col-dim">409 (no key)</td><td><code>KneoConflictError</code></td><td>Generic conflict.</td></tr>
     <tr><td class="col-dim">429</td><td><code>KneoRateLimited</code></td><td>Carries <code>retry_after</code>.</td></tr>
-    <tr><td class="col-dim">5xx</td><td><code>KneoServerError</code></td><td>Server-side failure.</td></tr>
+    <tr><td class="col-dim">503</td><td><code>KneoServiceUnavailable</code></td><td>Backpressure / overload. <code>KneoServerError</code> subclass; carries <code>retry_after</code>.</td></tr>
+    <tr><td class="col-dim">5xx (other)</td><td><code>KneoServerError</code></td><td>Server-side failure.</td></tr>
     <tr><td class="col-dim">Other</td><td><code>KneoError</code></td><td>Catch-all.</td></tr>
     <tr><td class="col-dim">Transport</td><td><code>KneoNetworkError</code></td><td>Wrapped from <code>httpx.HTTPError</code>.</td></tr>
   </table>
@@ -1419,8 +1428,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class AuditClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">principal</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">offset</span>: <span class="typ">int | None</span> = <span class="nm">None</span>, <span class="param">sort_by</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">sort_order</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ Page[AuditEventListResponseEventsItem]</span></h4>
-  <p>GET <code>/v1/audit-events</code> — list audit events as a <code>Page</code>. The platform endpoint accepts only <code>event_type</code> / <code>run_id</code> / <code>limit</code> server-side; the <code>Page</code> returned has <code>offset</code> / <code>total</code> / <code>sort_*</code> as <code>None</code> (server-side limit-only, honestly surfaced rather than synthesized). <strong>Deprecated (0.4.0):</strong> <code>principal</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code> are ignored by the platform — passing any emits a <code>DeprecationWarning</code> and they are no longer forwarded. They remain on the signature for one minor and are <strong>removed in 0.5.0</strong>.</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>) <span class="ret">→ Page[AuditEventListResponseEventsItem]</span></h4>
+  <p>GET <code>/v1/audit-events</code> — list audit events as a <code>Page</code>. The endpoint is <code>limit</code>-only: it accepts solely <code>event_type</code> / <code>run_id</code> / <code>limit</code> server-side, and the <code>Page</code> returned has <code>offset</code> / <code>total</code> / <code>sort_*</code> as <code>None</code> (server-side limit-only, honestly surfaced rather than synthesized). <em>(The <code>principal</code> / <code>offset</code> / <code>sort_by</code> / <code>sort_order</code> kwargs — deprecated in 0.4.0, never honored by the platform — were removed in 0.5.0.)</em></p>
 </section>
 
 <!-- ── CredentialsClient ──────────────────────────────────── -->
@@ -1552,9 +1561,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.4.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.3.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
-    <tr><td class="col-dim">0.2.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12</td><td>Older</td></tr>
+    <tr><td class="col-dim">0.5.0</td><td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td><td><code>kneo_serv</code> <code>0.5.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.4.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.3.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
   </table>
 
   <p><strong>Forward compatibility</strong></p>
@@ -1618,7 +1627,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.4.0 · 2026-05-27 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v0.5.0 · 2026-05-29 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 

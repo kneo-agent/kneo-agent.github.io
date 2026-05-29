@@ -1109,7 +1109,7 @@
 <ol>
 <li>Auto-injecting a fresh UUID4 <code>Idempotency-Key</code> on every <code>POST</code> (unless the caller supplies their own).</li>
 <li>Retrying transient transport errors and the fixed set <code>{429, 502, 503, 504}</code> within a configurable <code>RetryPolicy</code>.</li>
-<li>Honoring <code>Retry-After</code> on 429 responses (server's hint overrides the policy's computed delay).</li>
+<li>Honoring <code>Retry-After</code> on 429 and 503 responses (server's hint overrides the policy's computed delay). 503 is <code>kneo_serv</code>'s run-queue backpressure signal on <code>POST /v1/runs</code>; because POSTs carry an auto-injected idempotency key, those are retry-safe and retried automatically.</li>
 <li>Surfacing the platform's payload-mismatch behavior as <code>KneoIdempotencyMismatchError</code> so retry-with-wrong-payload bugs are loud, not silent.</li>
 </ol>
 <p>Both pieces work together: idempotency keys make it <em>safe</em> to retry a <code>POST</code>; the retry policy <em>decides</em> when to retry. The default settings work for most callers; you can override either independently.</p>
@@ -1174,7 +1174,7 @@
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
 </code></pre></div>
 <p>Delay sequence (without jitter): attempt 1 → no delay, attempt 2 → <code>base_delay</code>, attempt 3 → <code>2 × base_delay</code>, …, capped at <code>max_delay</code>. With <code>jitter=0.1</code>, a 1-second delay becomes uniformly distributed in <code>[0.9, 1.1]</code>.</p>
-<p><code>Retry-After</code> from a 429 response overrides the computed delay verbatim. The server's hint is authoritative; no jitter is applied on top.</p>
+<p><code>Retry-After</code> from a 429 or 503 response overrides the computed delay verbatim. The server's hint is authoritative; no jitter is applied on top.</p>
 <h2 id="when-retries-fire">When retries fire<a class="headerlink" href="#when-retries-fire" title="Permanent link">&para;</a></h2>
 <p>The transport retries on:</p>
 <ul>
@@ -1230,7 +1230,11 @@
 <td><code>KneoRateLimited</code> (carries <code>.retry_after</code>)</td>
 </tr>
 <tr>
-<td>HTTP 502 / 503 / 504</td>
+<td>HTTP 503</td>
+<td><code>KneoServiceUnavailable</code> (a <code>KneoServerError</code> subclass; carries <code>.retry_after</code>)</td>
+</tr>
+<tr>
+<td>HTTP 502 / 504</td>
 <td><code>KneoServerError</code></td>
 </tr>
 <tr>

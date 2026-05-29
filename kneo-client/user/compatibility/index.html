@@ -1075,24 +1075,24 @@
 </thead>
 <tbody>
 <tr>
-<td><code>0.4.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
+<td><code>0.5.0</code></td>
+<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Current</td>
 </tr>
 <tr>
-<td><code>0.3.0</code></td>
+<td><code>0.4.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Previous</td>
 </tr>
 <tr>
-<td><code>0.2.0</code></td>
+<td><code>0.3.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
-<td><code>&gt;=3.12</code></td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Older</td>
 </tr>
 </tbody>
@@ -1128,8 +1128,12 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.5.x</code></td>
+<td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailable</code> for the new <code>503</code> backpressure path.</td>
+</tr>
+<tr>
 <td><code>0.4.x</code></td>
-<td><code>0.1.x</code>, <code>0.2.x</code>, or <code>0.3.x</code> (all pinned to <code>v0.4.0</code>; pick <code>0.3.x</code> for the additive filter kwargs on <code>runs.checkpoints</code> / <code>credentials.list</code>, <code>0.2.x</code> for the <code>Page</code> + <code>Map</code> return-type ergonomics)</td>
+<td><code>0.1.x</code>, <code>0.2.x</code>, <code>0.3.x</code>, or <code>0.4.x</code> (all pinned to <code>v0.4.0</code>; pick <code>0.4.x</code> to drop the long-deprecated <code>audit.list</code> kwargs, <code>0.3.x</code> for the additive filter kwargs on <code>runs.checkpoints</code> / <code>credentials.list</code>, <code>0.2.x</code> for the <code>Page</code> + <code>Map</code> return-type ergonomics)</td>
 </tr>
 </tbody>
 </table>
