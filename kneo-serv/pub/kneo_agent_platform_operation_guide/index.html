@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -813,6 +815,34 @@
     
   
     Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and capacity
   
 
     
@@ -1279,6 +1309,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workers, scaling, and graceful shutdown
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1606,6 +1647,17 @@
     <span class="md-ellipsis">
       
         Three signals, three surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus /metrics
       
     </span>
   </a>
@@ -2066,6 +2118,17 @@
     <span class="md-ellipsis">
       
         0.4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.0
       
     </span>
   </a>
@@ -2922,6 +2985,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workers, scaling, and graceful shutdown
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3249,6 +3323,17 @@
     <span class="md-ellipsis">
       
         Three signals, three surfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus /metrics
       
     </span>
   </a>
@@ -3709,6 +3794,17 @@
     <span class="md-ellipsis">
       
         0.4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.0
       
     </span>
   </a>
@@ -4424,8 +4520,8 @@ every environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.4.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.4</code>),
-and <code>latest</code>. amd64-only for the 0.4.x line; arm64 is deferred to
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.5.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.5</code>),
+and <code>latest</code>. amd64-only for the 0.5.x line; arm64 is deferred to
 1.0. From 0.3.0 onward the image
 is keyless-signed via cosign and ships with a CycloneDX SBOM
 attestation; from 0.4.0 onward the release pipeline also runs a
@@ -4493,6 +4589,10 @@ and workflow continuations. Without it, the service falls back to SQLite for
 state and file-backed continuations.</p>
 <p>Multi-process SQLite is not a supported topology; see
 <a href="#23-sqlite-database-is-locked-errors">troubleshooting.md § 2.3</a>.</p>
+<p>For the throughput and latency trade-offs between the two backends — including
+why SQLite write throughput does not scale with concurrency — and a bench
+harness to size your own deployment, see
+<a href="../../user/performance/">performance.md</a>.</p>
 <h3 id="readiness-and-liveness">Readiness and liveness<a class="headerlink" href="#readiness-and-liveness" title="Permanent link">&para;</a></h3>
 <p>Wire these endpoints into your supervisor or load balancer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">GET /livez      # process liveness</span>
@@ -4504,6 +4604,23 @@ integration. <code>/readyz</code> returns <code>503</code> with a structured <co
 when any dependency check fails — see
 <a href="#12-readyz-returns-503">troubleshooting.md § 1.2</a> for the
 failure shape.</p>
+<p>The Prometheus scrape endpoint <code>GET /metrics</code> (since 0.5.0) is also
+unauthenticated — restrict it to your monitoring network or disable it with
+<code>KNEO_SERV_METRICS_ENABLED=false</code>. See
+<a href="#prometheus-metrics">observability.md § Prometheus <code>/metrics</code></a>.</p>
+<h3 id="workers-scaling-and-graceful-shutdown">Workers, scaling, and graceful shutdown<a class="headerlink" href="#workers-scaling-and-graceful-shutdown" title="Permanent link">&para;</a></h3>
+<p>A single process runs a pool of <code>KNEO_SERV_WORKER_CONCURRENCY</code> worker threads
+(default <code>1</code>) draining the run queue. Raise it for provider-bound workloads;
+for write-concurrent scale on PostgreSQL, run <strong>multiple service processes</strong> —
+each leases queued runs safely via <code>FOR UPDATE SKIP LOCKED</code>. Sizing guidance and
+the SQLite single-writer caveat are in <a href="../../user/performance/">performance.md</a>.</p>
+<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains gracefully: workers
+finish their in-flight run and stop claiming new work before the process exits,
+so no run is interrupted mid-flight. Give your orchestrator a termination grace
+period at least as long as your longest expected run step. Set
+<code>KNEO_SERV_MAX_QUEUE_DEPTH</code> to shed load with <code>503</code> under overload, and
+<code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) to dead-letter poison runs rather
+than retry them forever.</p>
 <h2 id="tls-and-reverse-proxy_1">TLS and reverse proxy<a class="headerlink" href="#tls-and-reverse-proxy_1" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/tls_and_proxy/"><code>docs/user/tls_and_proxy.md</code></a></em></p>
 <p>The Kneo Agent Platform service speaks plain HTTP. It does not terminate TLS, parse
@@ -4711,7 +4828,7 @@ no built-in role fits.</p>
 <li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
 </ul>
 <h4 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime<a class="headerlink" href="#3-rotate-keys-without-downtime" title="Permanent link">&para;</a></h4>
-<p><code>kneo-serv</code> has no in-place key rotation API in the 0.4.x line.
+<p><code>kneo-serv</code> has no in-place key rotation API in the 0.5.x line.
 Rotation is a config swap:</p>
 <ol>
 <li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
@@ -4894,11 +5011,70 @@ full env-var list, see
 <td>Distributed-tracing spans across SDK-driven agent / tool calls <strong>and</strong> platform-side operations (queue dispatch, worker lease, continuation lock)</td>
 <td><code>kneo_agent.observability.OpenTelemetryMiddleware</code> + <code>kneo_serv.observability.platform_tracer</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
 </tr>
+<tr>
+<td>Prometheus metrics</td>
+<td>Run-queue gauges + per-process run counters</td>
+<td><code>GET /metrics</code> (since 0.5.0), opt-out via <code>KNEO_SERV_METRICS_ENABLED</code></td>
+</tr>
 </tbody>
 </table>
-<p>There is <strong>no metrics endpoint</strong> in the 0.4.x line. Scrape latency and
-error rate from your reverse-proxy access logs or from OTel span
-attributes.</p>
+<h3 id="prometheus-metrics">Prometheus <code>/metrics</code><a class="headerlink" href="#prometheus-metrics" title="Permanent link">&para;</a></h3>
+<p>Since 0.5.0 the service exposes a Prometheus scrape endpoint at <code>GET /metrics</code>
+(root path only — not under <code>/v1</code>). It is <strong>unauthenticated</strong>, like <code>/healthz</code>:
+it carries operational counts, not run content or secrets. Mount it only on a
+network your monitoring stack can reach (bind the service behind a reverse proxy
+that does not expose <code>/metrics</code> publicly), or disable it with
+<code>KNEO_SERV_METRICS_ENABLED=false</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kneo_runs_started_total</code></td>
+<td>counter</td>
+<td>Runs that began execution.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_completed_total</code></td>
+<td>counter</td>
+<td>Runs that completed successfully.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_failed_total</code></td>
+<td>counter</td>
+<td>Runs that failed / timed out / hit max-iterations.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_dead_lettered_total</code></td>
+<td>counter</td>
+<td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_queued</code></td>
+<td>gauge</td>
+<td>Runs queued and awaiting a worker (your backlog / backpressure signal).</td>
+</tr>
+<tr>
+<td><code>kneo_runs_running</code></td>
+<td>gauge</td>
+<td>Runs currently leased by a worker.</td>
+</tr>
+<tr>
+<td><code>kneo_worker_count</code></td>
+<td>gauge</td>
+<td>Live worker threads in this process.</td>
+</tr>
+</tbody>
+</table>
+<p>Counters are <strong>per-process</strong> and reset on restart — use <code>rate()</code> in Prometheus.
+In a multi-process deployment each instance exposes its own counters; aggregate
+across instances with <code>sum()</code>. Latency percentiles are not exported here; read
+them from the OTel spans or your reverse-proxy access logs.</p>
 <h3 id="structured-request-logs">Structured request logs<a class="headerlink" href="#structured-request-logs" title="Permanent link">&para;</a></h3>
 <h4 id="shape">Shape<a class="headerlink" href="#shape" title="Permanent link">&para;</a></h4>
 <p>Each request emits a single JSON record on the <code>kneo_serv.service</code> logger:</p>
@@ -5091,9 +5267,10 @@ aggregated logs; the service does not push its own alerts.</p>
 <ul>
 <li><strong>Per-IP rate limiting and traffic shaping.</strong> The reverse proxy's job
   (<a href="#tls-and-reverse-proxy"><code>tls_and_proxy.md</code></a>).</li>
-<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in the 0.4.x line.
-  Use OTel spans to derive request rate, error rate, and latency, or
-  scrape the reverse proxy.</li>
+<li><strong>Request-level latency histograms on <code>/metrics</code>.</strong> The <code>/metrics</code>
+  endpoint (since 0.5.0) exports run-queue gauges and run counters, not
+  per-request latency percentiles. Derive request latency from OTel spans
+  or the reverse-proxy access logs.</li>
 <li><strong>Tracing internals.</strong> For the design of the in-process tracer and
   checkpoint events, see
   <code>docs/dev/design.md</code> and
@@ -5338,9 +5515,9 @@ through at least one business cycle.</p>
 </table>
 <h3 id="what-this-page-does-not-cover_1">What this page does not cover<a class="headerlink" href="#what-this-page-does-not-cover_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>Performance and capacity sizing.</strong> Deferred until the benchmark
-  suite ships — see
-  <code>TODO-docs.md § Performance and capacity guide</code>.</li>
+<li><strong>Performance and capacity sizing.</strong> Covered in its own guide:
+  <a href="../../user/performance/"><code>performance.md</code></a> — throughput, latency, store choice,
+  and the bench harness for reproducing numbers on your own hardware.</li>
 <li><strong>The Python backup API surface.</strong> Stays in
   <a href="../../user/service_api/#backup-and-restore"><code>service_api.md § Backup and restore</code></a>.</li>
 <li><strong>Release-team verification gates</strong> for the GA cut. Those live in
@@ -5672,6 +5849,55 @@ escape hatch documented in
   walks through <code>start_run_from_spec(..., timeout_seconds=N)</code> +
   <code>prune_timed_out_runs()</code>. Companion to the human-task timeout
   example above.</p>
+<p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
+<h4 id="050">0.5.0<a class="headerlink" href="#050" title="Permanent link">&para;</a></h4>
+<p>Next additive minor on the 0.4.x line. <strong>No breaking changes</strong> to spec
+syntax, HTTP API contracts, CLI command names, env-var names, or
+persistence schemas. Specs that validated under 0.4.x continue to
+validate under 0.5.0.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.5.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.5.0</code> — <code>:0.5</code> and <code>:latest</code>
+  resolve to the 0.5.0 digest; image signing, SBOM attestation, and the
+  Trivy scan gate are unchanged from 0.4.0.</p>
+<p><strong>SDK floor</strong>: unchanged. The <code>kneo-agent</code> floor stays at <code>&gt;=1.2.0</code>.</p>
+<p><strong>Bug fix — checkpoint-callback metadata now survives on the final run
+record</strong>: in 0.4.x and earlier, <code>execute_run</code> and <code>continue_run</code> saved a
+stale in-memory <code>RunState</code> at the end of a run, overwriting the
+<code>step_iteration_counts</code> and <code>execution_context</code> that the checkpoint
+callback had written to <code>RunState.metadata</code> during the run. The values
+survived on the <em>checkpoints</em> but were missing from the <em>run record</em>.
+0.5.0 re-reads the persisted run before the final save. <strong>Operator
+impact</strong>: if you read per-step iteration metadata off the final
+<code>RunState</code> (via <code>GET /v1/runs/{id}</code> metadata or the <code>PlatformManager</code>
+API) and worked around its absence, that metadata is now present.
+Checkpoint contents are unchanged. No migration or data backfill — the
+fix only affects runs executed under 0.5.0 onward.</p>
+<p><strong>New performance and capacity guide</strong>: <a href="../../user/performance/"><code>performance.md</code></a>
+documents throughput, latency, the SQLite-vs-PostgreSQL capacity
+trade-off, and the tuning knobs, with a reproducible bench harness
+(<code>scripts/bench</code>). No runtime change — guidance
+and tooling only.</p>
+<p><strong>Single-team on-prem operability</strong> (all additive; defaults preserve 0.4.x
+behaviour):
+- <strong>Worker concurrency.</strong> <code>KNEO_SERV_WORKER_CONCURRENCY</code> (default <code>1</code>) runs a
+  pool of in-process worker threads; <code>KNEO_SERV_WORKER_LEASE_SECONDS</code>
+  (default <code>300</code>) sets the queue lease. Default <code>1</code> reproduces the prior
+  single-worker behaviour. Sizing guidance in <a href="../../user/performance/">performance.md</a>.
+- <strong>Prometheus <code>/metrics</code>.</strong> New unauthenticated <code>GET /metrics</code> (root path only),
+  opt-out via <code>KNEO_SERV_METRICS_ENABLED=false</code>. <strong>Operator action</strong>: restrict it
+  to your monitoring network (reverse proxy or the env flag). See
+  <a href="#prometheus-metrics">observability.md § Prometheus <code>/metrics</code></a>.
+- <strong>Overload backpressure.</strong> <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> (default <code>0</code> = unlimited,
+  i.e. unchanged). When set, <code>POST /v1/runs</code> (async) returns <code>503</code> with
+  <code>Retry-After: 5</code> once the queue is full — make async callers retry on <code>503</code>.
+- <strong>Poison-run dead-letter.</strong> <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) fails a
+  run re-leased past the cap with a <code>dead_letter</code> error + <code>run.dead_lettered</code>
+  audit event. <strong>Behaviour change</strong>: before 0.5.0 a run that repeatedly crashed
+  its worker was re-leased indefinitely; it is now dead-lettered after 5
+  attempts. Set <code>0</code> to restore unbounded retries.
+- <strong>Graceful drain.</strong> On SIGTERM the worker pool finishes in-flight runs and
+  stops claiming new ones, so container rollouts no longer interrupt a run.</p>
 <p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
 <h3 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h3>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only

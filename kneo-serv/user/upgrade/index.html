@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -836,6 +838,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and capacity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../backup_and_recovery/" class="md-nav__link">
         
   
@@ -1072,6 +1102,17 @@
     <span class="md-ellipsis">
       
         0.4.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.0
       
     </span>
   </a>
@@ -1651,6 +1692,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#050" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2020,6 +2072,55 @@ escape hatch documented in
   walks through <code>start_run_from_spec(..., timeout_seconds=N)</code> +
   <code>prune_timed_out_runs()</code>. Companion to the human-task timeout
   example above.</p>
+<p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
+<h3 id="050">0.5.0<a class="headerlink" href="#050" title="Permanent link">&para;</a></h3>
+<p>Next additive minor on the 0.4.x line. <strong>No breaking changes</strong> to spec
+syntax, HTTP API contracts, CLI command names, env-var names, or
+persistence schemas. Specs that validated under 0.4.x continue to
+validate under 0.5.0.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.5.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.5.0</code> — <code>:0.5</code> and <code>:latest</code>
+  resolve to the 0.5.0 digest; image signing, SBOM attestation, and the
+  Trivy scan gate are unchanged from 0.4.0.</p>
+<p><strong>SDK floor</strong>: unchanged. The <code>kneo-agent</code> floor stays at <code>&gt;=1.2.0</code>.</p>
+<p><strong>Bug fix — checkpoint-callback metadata now survives on the final run
+record</strong>: in 0.4.x and earlier, <code>execute_run</code> and <code>continue_run</code> saved a
+stale in-memory <code>RunState</code> at the end of a run, overwriting the
+<code>step_iteration_counts</code> and <code>execution_context</code> that the checkpoint
+callback had written to <code>RunState.metadata</code> during the run. The values
+survived on the <em>checkpoints</em> but were missing from the <em>run record</em>.
+0.5.0 re-reads the persisted run before the final save. <strong>Operator
+impact</strong>: if you read per-step iteration metadata off the final
+<code>RunState</code> (via <code>GET /v1/runs/{id}</code> metadata or the <code>PlatformManager</code>
+API) and worked around its absence, that metadata is now present.
+Checkpoint contents are unchanged. No migration or data backfill — the
+fix only affects runs executed under 0.5.0 onward.</p>
+<p><strong>New performance and capacity guide</strong>: <a href="../performance/"><code>performance.md</code></a>
+documents throughput, latency, the SQLite-vs-PostgreSQL capacity
+trade-off, and the tuning knobs, with a reproducible bench harness
+(<code>scripts/bench</code>). No runtime change — guidance
+and tooling only.</p>
+<p><strong>Single-team on-prem operability</strong> (all additive; defaults preserve 0.4.x
+behaviour):
+- <strong>Worker concurrency.</strong> <code>KNEO_SERV_WORKER_CONCURRENCY</code> (default <code>1</code>) runs a
+  pool of in-process worker threads; <code>KNEO_SERV_WORKER_LEASE_SECONDS</code>
+  (default <code>300</code>) sets the queue lease. Default <code>1</code> reproduces the prior
+  single-worker behaviour. Sizing guidance in <a href="../performance/">performance.md</a>.
+- <strong>Prometheus <code>/metrics</code>.</strong> New unauthenticated <code>GET /metrics</code> (root path only),
+  opt-out via <code>KNEO_SERV_METRICS_ENABLED=false</code>. <strong>Operator action</strong>: restrict it
+  to your monitoring network (reverse proxy or the env flag). See
+  <a href="../observability/#prometheus-metrics">observability.md § Prometheus <code>/metrics</code></a>.
+- <strong>Overload backpressure.</strong> <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> (default <code>0</code> = unlimited,
+  i.e. unchanged). When set, <code>POST /v1/runs</code> (async) returns <code>503</code> with
+  <code>Retry-After: 5</code> once the queue is full — make async callers retry on <code>503</code>.
+- <strong>Poison-run dead-letter.</strong> <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) fails a
+  run re-leased past the cap with a <code>dead_letter</code> error + <code>run.dead_lettered</code>
+  audit event. <strong>Behaviour change</strong>: before 0.5.0 a run that repeatedly crashed
+  its worker was re-leased indefinitely; it is now dead-lettered after 5
+  attempts. Set <code>0</code> to restore unbounded retries.
+- <strong>Graceful drain.</strong> On SIGTERM the worker pool finishes in-flight runs and
+  stops claiming new ones, so container rollouts no longer interrupt a run.</p>
 <p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only

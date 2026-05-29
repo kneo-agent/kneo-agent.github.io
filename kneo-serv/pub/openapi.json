@@ -1443,7 +1443,7 @@
   "info": {
     "description": "Platform service API for Kneo Agent runs, specs, traces, checkpoints, and human-in-the-loop tasks.",
     "title": "Kneo Agent Platform API",
-    "version": "0.4.0"
+    "version": "0.5.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -1786,6 +1786,27 @@
         "summary": "Livez",
         "tags": [
           "health"
+        ]
+      }
+    },
+    "/metrics": {
+      "get": {
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Metrics",
+        "tags": [
+          "metrics"
         ]
       }
     },

@@ -1,6 +1,7 @@
 """Worked example: run-level deadlines + the prune_timed_out_runs sweep.
 
-Demonstrates the 0.3.0 run-level timeout surface end-to-end:
+Demonstrates the run-level timeout surface end-to-end (added in 0.3.0,
+unchanged through 0.5.0):
 
 1. `start_run_from_spec(..., timeout_seconds=N)` schedules a run with a
    wall-clock deadline written to `RunState.deadline_at`.

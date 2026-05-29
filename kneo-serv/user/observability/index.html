@@ -16,7 +16,7 @@
         <link rel="prev" href="../security_hardening/">
       
       
-        <link rel="next" href="../backup_and_recovery/">
+        <link rel="next" href="../performance/">
       
       
         
@@ -338,6 +338,8 @@
       
         
           
+        
+      
         
       
         
@@ -879,6 +881,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus /metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#structured-request-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1015,6 +1028,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and capacity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1470,6 +1511,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prometheus-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prometheus /metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#structured-request-logs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1652,11 +1704,70 @@ full env-var list, see
 <td>Distributed-tracing spans across SDK-driven agent / tool calls <strong>and</strong> platform-side operations (queue dispatch, worker lease, continuation lock)</td>
 <td><code>kneo_agent.observability.OpenTelemetryMiddleware</code> + <code>kneo_serv.observability.platform_tracer</code>, opt-in via <code>KNEO_SERV_OTEL_ENABLED</code></td>
 </tr>
+<tr>
+<td>Prometheus metrics</td>
+<td>Run-queue gauges + per-process run counters</td>
+<td><code>GET /metrics</code> (since 0.5.0), opt-out via <code>KNEO_SERV_METRICS_ENABLED</code></td>
+</tr>
 </tbody>
 </table>
-<p>There is <strong>no metrics endpoint</strong> in the 0.4.x line. Scrape latency and
-error rate from your reverse-proxy access logs or from OTel span
-attributes.</p>
+<h2 id="prometheus-metrics">Prometheus <code>/metrics</code><a class="headerlink" href="#prometheus-metrics" title="Permanent link">&para;</a></h2>
+<p>Since 0.5.0 the service exposes a Prometheus scrape endpoint at <code>GET /metrics</code>
+(root path only — not under <code>/v1</code>). It is <strong>unauthenticated</strong>, like <code>/healthz</code>:
+it carries operational counts, not run content or secrets. Mount it only on a
+network your monitoring stack can reach (bind the service behind a reverse proxy
+that does not expose <code>/metrics</code> publicly), or disable it with
+<code>KNEO_SERV_METRICS_ENABLED=false</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kneo_runs_started_total</code></td>
+<td>counter</td>
+<td>Runs that began execution.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_completed_total</code></td>
+<td>counter</td>
+<td>Runs that completed successfully.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_failed_total</code></td>
+<td>counter</td>
+<td>Runs that failed / timed out / hit max-iterations.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_dead_lettered_total</code></td>
+<td>counter</td>
+<td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
+</tr>
+<tr>
+<td><code>kneo_runs_queued</code></td>
+<td>gauge</td>
+<td>Runs queued and awaiting a worker (your backlog / backpressure signal).</td>
+</tr>
+<tr>
+<td><code>kneo_runs_running</code></td>
+<td>gauge</td>
+<td>Runs currently leased by a worker.</td>
+</tr>
+<tr>
+<td><code>kneo_worker_count</code></td>
+<td>gauge</td>
+<td>Live worker threads in this process.</td>
+</tr>
+</tbody>
+</table>
+<p>Counters are <strong>per-process</strong> and reset on restart — use <code>rate()</code> in Prometheus.
+In a multi-process deployment each instance exposes its own counters; aggregate
+across instances with <code>sum()</code>. Latency percentiles are not exported here; read
+them from the OTel spans or your reverse-proxy access logs.</p>
 <h2 id="structured-request-logs">Structured request logs<a class="headerlink" href="#structured-request-logs" title="Permanent link">&para;</a></h2>
 <h3 id="shape">Shape<a class="headerlink" href="#shape" title="Permanent link">&para;</a></h3>
 <p>Each request emits a single JSON record on the <code>kneo_serv.service</code> logger:</p>
@@ -1849,9 +1960,10 @@ aggregated logs; the service does not push its own alerts.</p>
 <ul>
 <li><strong>Per-IP rate limiting and traffic shaping.</strong> The reverse proxy's job
   (<a href="../tls_and_proxy/"><code>tls_and_proxy.md</code></a>).</li>
-<li><strong>A Prometheus <code>/metrics</code> endpoint.</strong> Not provided in the 0.4.x line.
-  Use OTel spans to derive request rate, error rate, and latency, or
-  scrape the reverse proxy.</li>
+<li><strong>Request-level latency histograms on <code>/metrics</code>.</strong> The <code>/metrics</code>
+  endpoint (since 0.5.0) exports run-queue gauges and run counters, not
+  per-request latency percentiles. Derive request latency from OTel spans
+  or the reverse-proxy access logs.</li>
 <li><strong>Tracing internals.</strong> For the design of the in-process tracer and
   checkpoint events, see
   <code>docs/dev/design.md</code> and

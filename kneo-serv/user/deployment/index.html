@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -810,6 +812,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workers, scaling, and graceful shutdown
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -918,6 +931,34 @@
     
   
     Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and capacity
   
 
     
@@ -1424,6 +1465,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workers, scaling, and graceful shutdown
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1459,8 +1511,8 @@ every environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.4.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.4</code>),
-and <code>latest</code>. amd64-only for the 0.4.x line; arm64 is deferred to
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.5.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.5</code>),
+and <code>latest</code>. amd64-only for the 0.5.x line; arm64 is deferred to
 1.0. From 0.3.0 onward the image
 is keyless-signed via cosign and ships with a CycloneDX SBOM
 attestation; from 0.4.0 onward the release pipeline also runs a
@@ -1528,6 +1580,10 @@ and workflow continuations. Without it, the service falls back to SQLite for
 state and file-backed continuations.</p>
 <p>Multi-process SQLite is not a supported topology; see
 <a href="../troubleshooting/#23-sqlite-database-is-locked-errors">troubleshooting.md § 2.3</a>.</p>
+<p>For the throughput and latency trade-offs between the two backends — including
+why SQLite write throughput does not scale with concurrency — and a bench
+harness to size your own deployment, see
+<a href="../performance/">performance.md</a>.</p>
 <h2 id="readiness-and-liveness">Readiness and liveness<a class="headerlink" href="#readiness-and-liveness" title="Permanent link">&para;</a></h2>
 <p>Wire these endpoints into your supervisor or load balancer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">GET /livez      # process liveness</span>
@@ -1539,6 +1595,23 @@ integration. <code>/readyz</code> returns <code>503</code> with a structured <co
 when any dependency check fails — see
 <a href="../troubleshooting/#12-readyz-returns-503">troubleshooting.md § 1.2</a> for the
 failure shape.</p>
+<p>The Prometheus scrape endpoint <code>GET /metrics</code> (since 0.5.0) is also
+unauthenticated — restrict it to your monitoring network or disable it with
+<code>KNEO_SERV_METRICS_ENABLED=false</code>. See
+<a href="../observability/#prometheus-metrics">observability.md § Prometheus <code>/metrics</code></a>.</p>
+<h2 id="workers-scaling-and-graceful-shutdown">Workers, scaling, and graceful shutdown<a class="headerlink" href="#workers-scaling-and-graceful-shutdown" title="Permanent link">&para;</a></h2>
+<p>A single process runs a pool of <code>KNEO_SERV_WORKER_CONCURRENCY</code> worker threads
+(default <code>1</code>) draining the run queue. Raise it for provider-bound workloads;
+for write-concurrent scale on PostgreSQL, run <strong>multiple service processes</strong> —
+each leases queued runs safely via <code>FOR UPDATE SKIP LOCKED</code>. Sizing guidance and
+the SQLite single-writer caveat are in <a href="../performance/">performance.md</a>.</p>
+<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains gracefully: workers
+finish their in-flight run and stop claiming new work before the process exits,
+so no run is interrupted mid-flight. Give your orchestrator a termination grace
+period at least as long as your longest expected run step. Set
+<code>KNEO_SERV_MAX_QUEUE_DEPTH</code> to shed load with <code>503</code> under overload, and
+<code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) to dead-letter poison runs rather
+than retry them forever.</p>
 
 
 

@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -813,6 +815,34 @@
     
   
     Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance and capacity
   
 
     
@@ -2226,6 +2256,17 @@
     <span class="md-ellipsis">
       
         Service limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-queue-and-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run queue and workers
       
     </span>
   </a>
@@ -3720,6 +3761,17 @@
     <span class="md-ellipsis">
       
         Service limits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#run-queue-and-workers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run queue and workers
       
     </span>
   </a>
@@ -5555,6 +5607,38 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="run-queue-and-workers">Run queue and workers<a class="headerlink" href="#run-queue-and-workers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KNEO_SERV_WORKER_CONCURRENCY</code></td>
+<td><code>1</code></td>
+<td>In-process worker threads draining the run queue. Raise for provider-bound workloads so runs overlap on provider I/O. See <a href="../../user/performance/">performance.md</a>.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_WORKER_LEASE_SECONDS</code></td>
+<td><code>300</code></td>
+<td>Queue-lease TTL per claimed run. A worker that dies mid-run has its run re-claimed once the lease expires.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code></td>
+<td><code>5</code></td>
+<td>Dead-letter cap. A run re-leased more than this many times (e.g. one that repeatedly crashes its worker) is failed with a <code>dead_letter</code> reason instead of retried forever. <code>0</code> disables the cap.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_MAX_QUEUE_DEPTH</code></td>
+<td><code>0</code></td>
+<td>Overload backpressure: <code>POST /v1/runs</code> (async) returns <code>503</code> once this many runs are queued. <code>0</code> disables backpressure (unbounded queue).</td>
+</tr>
+</tbody>
+</table>
 <h3 id="runtime-reliability">Runtime reliability<a class="headerlink" href="#runtime-reliability" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5688,6 +5772,11 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_HEALTH_MCP_SECRETS</code></td>
 <td>empty</td>
 <td>Comma-separated MCP secret names to include in readiness checks.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_METRICS_ENABLED</code></td>
+<td><code>true</code></td>
+<td>Mount the unauthenticated Prometheus <code>/metrics</code> endpoint. Restrict it to your monitoring network — see <a href="../../user/observability/">observability.md</a>.</td>
 </tr>
 </tbody>
 </table>
