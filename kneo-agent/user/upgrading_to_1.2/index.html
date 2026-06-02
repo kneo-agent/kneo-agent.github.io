@@ -1801,10 +1801,11 @@ docs but did <strong>not</strong> land in the SDK code:</p>
 <ul>
 <li><strong>Usage population</strong> for LangChain / Google ADK / Bridge runtimes.
   Documented in the <code>RunResult</code> docstring as not-yet-populated;
-  apps that need this should populate via custom middleware.</li>
-<li><strong>Enterprise data-source tool recipes</strong> (SQL / object store /
-  REST / search). The cookbook structure is in place; the recipes
-  themselves are tracked for a follow-up release.</li>
+  apps that need this should populate via custom middleware.
+  <em>(Update: 1.3.0 added usage population for the </em><em>Bridge</em><em> runtimes and
+  OpenAI native; 1.4.0 added the </em><em>Google ADK</em><em> and </em><em>LangChain Adapter</em><em>
+  paths; the </em><em>OpenAI Agents Adapter</em><em> path followed — so every built-in
+  runtime now populates usage when the provider reports it. See the CHANGELOG.)</em></li>
 </ul>
 <h2 id="changelog-and-policy">CHANGELOG and policy<a class="headerlink" href="#changelog-and-policy" title="Permanent link">&para;</a></h2>
 <p>Full diff: <code>CHANGELOG.md</code>. Public API stability

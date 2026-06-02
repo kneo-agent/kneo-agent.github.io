@@ -96,7 +96,7 @@ async def main() -> None:
         "What is the weather in Tokyo?",
         run_config=RunConfig(
             tools=registry.definitions,
-            extra={"tool_handlers": {name: registry._tools[name][1] for name in registry.names}},
+            extra={"tool_handlers": registry.handlers},
         ),
     )
 

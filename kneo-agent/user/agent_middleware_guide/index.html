@@ -1648,27 +1648,42 @@ built on the framework above. Use them as drop-ins:</p>
 <tr>
 <th>Middleware</th>
 <th>What it does</th>
+<th>Pattern support</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>RetryMiddleware</code></td>
 <td>Retries <code>wrap_model_call</code> and <code>wrap_tool_call</code> with exponential backoff + jitter. Configurable <code>retry_on</code>; never retries <code>asyncio.CancelledError</code>.</td>
+<td><strong>Bridge only.</strong> Uses the inner hooks, so under Adapter / Native it is a silent no-op — the provider SDK owns the loop and its own retries.</td>
 </tr>
 <tr>
 <td><code>RateLimitMiddleware</code></td>
 <td>Token-bucket throttle. <code>scope="run"</code> (default) limits whole runs; <code>scope="model_call"</code> limits Bridge model calls.</td>
+<td>All patterns with <code>scope="run"</code> (default); <code>scope="model_call"</code> is <strong>Bridge only</strong>.</td>
 </tr>
 <tr>
 <td><code>TokenBudgetMiddleware</code></td>
 <td>Enforces per-run and / or cumulative token caps from <code>RunResult.metadata["usage"]</code>. Raises <code>TokenBudgetExceeded</code>.</td>
+<td>All patterns — every built-in runtime populates <code>metadata["usage"]</code> when the provider reports it (OpenAI native + the three Bridge executors + all three Adapter paths).</td>
 </tr>
 <tr>
 <td><code>RedactionMiddleware</code></td>
 <td>Regex scrubbing of secrets in inputs, tool args, tool results, the final result, and streamed chunks. Ships a <code>COMMON_PATTERNS</code> starter pack (Bearer / JWT / AWS / OpenAI / connection-string shapes).</td>
+<td>Input / final-result / streamed-chunk scrubbing: all patterns. <strong>Tool-argument scrubbing: Bridge only</strong> (it rides <code>wrap_tool_call</code>).</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>Pattern matters.</strong> Because <code>wrap_model_call</code> / <code>wrap_tool_call</code> fire
+only under the Bridge pattern (see above), middleware that relies on them
+behaves differently across runtime styles. The clearest footgun:
+<code>RetryMiddleware</code> does <strong>nothing</strong> under an Adapter or Native runtime
+(e.g. any OpenAI agent, which is Native-only) — and does so silently.
+<code>OpenTelemetryMiddleware</code> is affected too: the outer <code>chat &lt;agent&gt;</code> run
+span is emitted everywhere, but the per-iteration <code>chat iter=&lt;n&gt;</code> and
+per-tool <code>execute_tool &lt;name&gt;</code> child spans appear only under Bridge.</p>
+</blockquote>
 <p>Recommended ordering when combined with observability:</p>
 <ol>
 <li><code>RedactionMiddleware</code> — registered first (outer) so input is scrubbed

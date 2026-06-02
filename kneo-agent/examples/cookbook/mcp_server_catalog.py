@@ -99,6 +99,9 @@ def _entry_to_config(entry: dict[str, Any]) -> MCPServerConfig:
             ca_bundle=entry.get("ca_bundle"),
             client_cert=entry.get("client_cert"),
             client_key=entry.get("client_key"),
+            # Response-safety caps (1.4.0): bound an oversized body / idle SSE.
+            max_response_bytes=entry.get("max_response_bytes", 10 * 1024 * 1024),
+            sse_read_timeout=entry.get("sse_read_timeout"),
         )
     if transport == "sse":
         return MCPServerConfig.sse(
@@ -111,6 +114,9 @@ def _entry_to_config(entry: dict[str, Any]) -> MCPServerConfig:
             ca_bundle=entry.get("ca_bundle"),
             client_cert=entry.get("client_cert"),
             client_key=entry.get("client_key"),
+            # Response-safety caps (1.4.0): bound an oversized body / idle SSE.
+            max_response_bytes=entry.get("max_response_bytes", 10 * 1024 * 1024),
+            sse_read_timeout=entry.get("sse_read_timeout"),
         )
     raise ValueError(f"Unknown MCP transport {transport!r}")
 

@@ -780,12 +780,12 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent</div>
     <h1>API Reference</h1>
-    <div class="version">v1.2.0 · Python 3.12+</div>
+    <div class="version">v1.4.0 · Python 3.12+</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Overview</div>
-    <a href="#whats-new-1-2-0">What's new in v1.2.0</a>
+    <a href="#whats-new-1-4-0">What's new in v1.4.0</a>
     <a href="#overview">Introduction</a>
     <a href="#patterns">Design Patterns</a>
     <a href="#quickstart">Quick Start</a>
@@ -905,7 +905,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="cover-meta">
       <div class="cover-card">
         <div class="cover-card-label">Version</div>
-        <div class="cover-card-value">v1.2.0</div>
+        <div class="cover-card-value">v1.4.0</div>
       </div>
       <div class="cover-card">
         <div class="cover-card-label">Runtime</div>
@@ -953,6 +953,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
         <li class="toc-sub"><a href="#agent-as-tool">as_tool()</a></li>
         <li><a href="#agentbuilder">AgentBuilder</a></li>
         <li><a href="#middleware-api">Middleware APIs</a></li>
+        <li class="toc-sub"><a href="#production-middleware">Production middleware</a></li>
         <li><a href="#observability-api">Observability</a></li>
         <li class="toc-sub"><a href="#opentelemetry-middleware">OpenTelemetryMiddleware</a></li>
       </ul>
@@ -969,6 +970,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
         <li class="toc-sub"><a href="#concurrent-workflow">ConcurrentWorkflow</a></li>
         <li class="toc-sub"><a href="#handoff-workflow">HandoffWorkflow</a></li>
         <li class="toc-sub"><a href="#groupchat-workflow">GroupChatWorkflow</a></li>
+        <li class="toc-sub"><a href="#retry-step">RetryStep</a></li>
         <li class="toc-sub"><a href="#workflow-builder">WorkflowBuilder</a></li>
       </ul>
     </div>
@@ -1004,6 +1006,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
         <li><a href="#google-adk-impl">Providers</a></li>
         <li><a href="#skills-api">Skill APIs</a></li>
         <li><a href="#tool-registry">ToolRegistry</a></li>
+        <li><a href="#secret-providers">Secret Providers</a></li>
         <li><a href="#mcp-api">MCP</a></li>
         <li><a href="#messages-utils">Messages Utilities</a></li>
         <li><a href="#logging-utils">Logging Utilities</a></li>
@@ -1039,7 +1042,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <h1>API Reference Manual</h1>
   <p class="subtitle">Complete reference for all public classes, methods, protocols, and utilities.</p>
   <div class="badge-row">
-    <span class="badge badge-blue">v1.2.0</span>
+    <span class="badge badge-blue">v1.4.0</span>
     <span class="badge badge-green">Python 3.12+</span>
     <span class="badge badge-purple">MIT License</span>
     <span class="badge badge-blue">asyncio</span>
@@ -1049,95 +1052,65 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 
 <!-- ════════════════════════════════════════════════════════════
-     v1.2.0 RELEASE CALLOUT
+     v1.4.0 RELEASE CALLOUT
      ════════════════════════════════════════════════════════════ -->
-<div class="section" id="whats-new-1-2-0">
-  <h2>What's new in v1.2.0</h2>
-  <p>Released <strong>2026-05-07</strong>. Fully backwards-compatible
-  with 1.1.x — every public name from 1.1.x still works the same way.
-  This callout is a quick index to the new public surface; the
-  authoritative spec for each item lives in its dedicated section
-  below.</p>
+<div class="section" id="whats-new-1-4-0">
+  <h2>What's new in v1.4.0</h2>
+  <p>Released <strong>2026-06-01</strong>. A <strong>minor</strong> release —
+  additive public surface plus correctness fixes, fully backwards-compatible
+  (nothing breaking; breaking changes are reserved for 2.0). Full detail in the
+  CHANGELOG.</p>
 
-  <h3 class="api-class">New public surface <span class="tag tag-class">added</span></h3>
+  <h3 class="api-class">Added <span class="tag tag-class">added</span></h3>
   <ul>
-    <li><strong>Local-LLM support.</strong> New <code>base_url=</code>
-    and <code>api_key=</code> keyword arguments on
-    <code>OpenAIAgentsImpl</code>,
-    <code>NativeRuntimeFactory.for_openai</code>,
-    <code>BridgeAgentFactory.for_openai</code>,
-    <code>kneo_agent.simple.build_agent</code>, and
-    <code>build_sync_agent</code>. Point at any OpenAI-compatible
-    HTTP endpoint (Ollama, vLLM, llama.cpp, LocalAI) to run on-prem.</li>
-    <li><strong>Middleware bundle</strong> — new
-    <code>kneo_agent.middleware</code> subpackage with
-    <code>RetryMiddleware</code>, <code>RateLimitMiddleware</code>,
-    <code>TokenBudgetMiddleware</code> (+
-    <code>TokenBudgetExceeded</code>),
-    <code>RedactionMiddleware</code> (+ <code>COMMON_PATTERNS</code>).
-    Built on the existing <code>AgentMiddleware</code> framework;
-    framework types re-exported from the same module.</li>
-    <li><strong>Secret plumbing</strong> — new
-    <code>SecretProvider</code> Protocol in
-    <code>kneo_agent.utils</code>, plus three reference
-    implementations: <code>EnvSecretProvider</code>,
-    <code>FileSecretProvider</code>,
-    <code>MappingSecretProvider</code>. Pair with
-    <code>SecretNotFound</code>.</li>
-    <li><strong>Workflow retry</strong> — new
-    <code>kneo_agent.workflows.RetryStep</code> wraps any
-    <code>WorkflowComponent</code> with retry-on-failure semantics,
-    mirroring the middleware-side knobs.</li>
-    <li><strong>MCP TLS / mTLS</strong> — new <code>verify=</code>,
-    <code>ca_bundle=</code>, <code>client_cert=</code>,
-    <code>client_key=</code> parameters on
-    <code>MCPServerConfig.http()</code> and
-    <code>MCPServerConfig.sse()</code>. New
-    <code>MCPServerConfig.build_ssl_context()</code> method.</li>
-    <li><strong>Formal <code>RunResult.metadata["usage"]</code>
-    schema</strong> — keys <code>input_tokens</code>,
-    <code>output_tokens</code>, <code>total_tokens</code> (with
-    <code>prompt_tokens</code> / <code>completion_tokens</code>
-    accepted as aliases). Populated automatically by the OpenAI
-    Agents native runtime; spec on <code>RunResult</code>.</li>
-    <li><strong>Python 3.13</strong> classifier added; CI matrix
-    already exercised 3.13 in 1.1.x.</li>
+    <li><strong>Token usage on the Adapter runtimes.</strong> The Google ADK
+    and LangChain <em>Adapter</em> runtimes now populate
+    <code>RunResult.metadata["usage"]</code>, so <code>TokenBudgetMiddleware</code>
+    and the OpenTelemetry middleware see usage on those paths too (only the
+    OpenAI Agents <em>Adapter</em> path remains unpopulated).</li>
+    <li><strong>MCP response-size cap + SSE inactivity timeout.</strong>
+    <code>MCPServerConfig</code> gains <code>max_response_bytes</code>
+    (default 10&nbsp;MiB) and <code>sse_read_timeout</code> — bounding an
+    unbounded server body and an idle SSE stream that would otherwise exhaust
+    memory or hang the reader.</li>
   </ul>
 
-  <h3 class="api-class">New documentation <span class="tag tag-class">guides</span></h3>
+  <h3 class="api-class">Changed <span class="tag tag-class">changed</span></h3>
   <ul>
-    <li><code>docs/user/api_stability.md</code> — public-surface
-    definition and deprecation policy.</li>
-    <li><code>docs/user/upgrading_to_1.2.md</code> — practical
-    "should I upgrade?" walkthrough with code examples for each
-    user-visible change.</li>
-    <li><code>docs/user/self_hosted_observability.md</code> —
-    end-to-end recipes wiring <code>OpenTelemetryMiddleware</code> to
-    a user-run OTLP collector / Jaeger / Grafana Tempo / SigNoz.</li>
-    <li><code>docs/user/offline_install.md</code> — air-gapped install
-    via <code>pip download</code> +
-    <code>--no-index --find-links</code>; documented no-phone-home
-    audit.</li>
+    <li><strong>Google ADK 2.x supported.</strong> The <code>[google-adk]</code>
+    extra is widened to <code>&gt;=1.0.0,&lt;3.0.0</code> (validated against
+    google-adk 2.1.0; the SDK is consumed by duck-typed contract).</li>
   </ul>
 
-  <h3 class="api-class">New cookbook recipes <span class="tag tag-class">examples</span></h3>
+  <h3 class="api-class">Fixed <span class="tag tag-class">fixed</span></h3>
   <ul>
-    <li><code>examples/cookbook/local_ollama.py</code></li>
-    <li><code>examples/cookbook/workflow_branching_and_retry.py</code></li>
-    <li><code>examples/cookbook/mcp_server_catalog.py</code></li>
-    <li><code>examples/cookbook/sql_query_tool.py</code></li>
-    <li><code>examples/cookbook/rest_api_tool.py</code></li>
-    <li><code>examples/cookbook/object_store_tool.py</code></li>
-    <li><code>examples/cookbook/search_index_tool.py</code></li>
+    <li><strong>The Google ADK <em>Adapter</em> now drives a real ADK
+    <code>Runner</code>.</strong> It no longer passes a non-existent
+    <code>app_name</code> to <code>run_async</code> nor treats pydantic
+    <code>Event</code> / <code>Content</code> objects as dicts, and it creates
+    the ADK session lazily via the runner's <code>session_service</code>.</li>
+    <li><strong>Google ADK / LangChain Bridge tool calls.</strong>
+    <code>GoogleADKImpl.complete</code> no longer <code>KeyError</code>s on a
+    tool call missing <code>id</code> / <code>args</code>; the LangChain path is
+    hardened the same way.</li>
+    <li><strong>Multi-skill <code>tool_handlers</code> no longer
+    cross-contaminate</strong> — <code>merge_run_extras</code> stops mutating a
+    long-lived skill's source <code>extra</code> dict.</li>
+    <li><strong>OpenTelemetry stream spans</strong> end exactly once via a
+    guarded context detach — no more "Failed to detach context" when a stream is
+    iterated across asyncio tasks.</li>
   </ul>
 
-  <p class="note"><strong>Population status for
-  <code>RunResult.metadata["usage"]</code>:</strong> the OpenAI
-  Agents native runtime populates the documented keys today.
-  LangChain, Google ADK, and Bridge runtimes do not yet populate
-  them; apps that need usage on those paths can populate via custom
-  middleware. Per-runtime rollout is tracked for a follow-up
-  release.</p>
+  <h3 class="api-class">Docs &amp; examples <span class="tag tag-class">docs</span></h3>
+  <ul>
+    <li>The API reference now documents 16 previously-omitted public symbols —
+    the production middleware bundle, the handler type aliases, the
+    <code>SecretProvider</code> family, and <code>RetryStep</code>.</li>
+    <li>Two new cookbook recipes: an enterprise <em>inside-the-firewall</em>
+    composition (local LLM + internal MCP + read-only SQL + object store +
+    <code>SecretProvider</code>) and an OTLP-collector export companion to the
+    self-hosted observability guide.</li>
+  </ul>
 </div>
 
 
@@ -1462,6 +1435,39 @@ agent = (
   </table>
 
   <div class="note"><strong>Ordering:</strong> Static middleware from <code>AgentBuilder</code> is applied first. Per-run middleware from <code>RunConfig(middlewares=[...])</code> is appended after it, so it executes deeper in the chain.</div>
+
+  <div id="middleware-handlers"></div>
+  <h3 class="api-class">Handler type aliases <span class="tag tag-type">types</span></h3>
+  <p class="desc">The <code>handler</code> argument each <code>wrap_*</code> hook receives — call it to delegate to the next middleware (or the runtime). Exported from <code>kneo_agent.middleware</code> for typing custom middleware.</p>
+  <table class="param-table">
+    <tr><th>Alias</th><th>Signature</th></tr>
+    <tr><td class="param-name">AgentRunHandler</td><td class="param-type"><code>Callable[[AgentRunContext], Awaitable[RunResult]]</code></td></tr>
+    <tr><td class="param-name">StreamHandler</td><td class="param-type"><code>Callable[[StreamContext], Awaitable[AsyncGenerator[StreamChunk, None]]]</code></td></tr>
+    <tr><td class="param-name">ModelCallHandler</td><td class="param-type"><code>Callable[[ModelCallContext], Awaitable[ModelResponse]]</code></td></tr>
+    <tr><td class="param-name">ToolCallHandler</td><td class="param-type"><code>Callable[[ToolCallContext], Awaitable[ToolResult]]</code></td></tr>
+  </table>
+
+  <div id="production-middleware"></div>
+  <h3 class="api-class">Production middleware bundle <span class="tag tag-class">middleware</span></h3>
+  <p class="desc">Ready-to-use middleware implementations, all exported from <code>kneo_agent.middleware</code> and subclassing <code>BaseAgentMiddleware</code>. The model/tool-call hooks apply only on Bridge runtimes (where Kneo owns the inner loop); the run hook applies everywhere.</p>
+
+  <h4 class="api-method"><span class="fn">RetryMiddleware</span>(<span class="param">*</span>, <span class="param">max_attempts</span>=3, <span class="param">initial_delay</span>=0.5, <span class="param">backoff_factor</span>=2.0, <span class="param">max_delay</span>=30.0, <span class="param">jitter</span>=0.1, <span class="param">retry_on</span>=(Exception,), <span class="param">retry_model_calls</span>=True, <span class="param">retry_tool_calls</span>=True)</h4>
+  <p class="desc">Retries failed Bridge model calls and/or tool calls with exponential backoff + jitter. <code>retry_on</code> selects which exception types are retried.</p>
+
+  <h4 class="api-method"><span class="fn">RateLimitMiddleware</span>(<span class="param">*</span>, <span class="param">rate</span>: float, <span class="param">burst</span>: float | None = None, <span class="param">scope</span>: str = "run")</h4>
+  <p class="desc">Token-bucket rate limiter. <code>rate</code> is permits per second; <code>burst</code> is the bucket capacity (defaults to <code>max(rate, 1)</code>). <code>scope</code> is <code>"run"</code> or <code>"model_call"</code>.</p>
+
+  <h4 class="api-method"><span class="fn">TokenBudgetMiddleware</span>(<span class="param">*</span>, <span class="param">per_run</span>: int | None = None, <span class="param">cumulative</span>: int | None = None, <span class="param">on_missing</span>: str = "ignore")</h4>
+  <p class="desc">Enforces token budgets from <code>RunResult.metadata["usage"]</code>. At least one of <code>per_run</code> / <code>cumulative</code> is required. <code>on_missing</code> (<code>"ignore"</code> / <code>"warn"</code> / <code>"raise"</code>) controls behaviour when a run reports no usage. Exposes <code>cumulative_used</code> and <code>reset()</code> for billing periods. Raises <code>TokenBudgetExceeded</code> when a budget is crossed.</p>
+
+  <h4 class="api-method"><span class="fn">RedactionMiddleware</span>(<span class="param">patterns</span>: Iterable[str], <span class="param">*</span>, <span class="param">replacement</span>="[REDACTED]", <span class="param">redact_input</span>=True, <span class="param">redact_output</span>=True, <span class="param">redact_tool_args</span>=True, <span class="param">redact_tool_results</span>=True)</h4>
+  <p class="desc">Regex-redacts sensitive strings on the input, output, tool arguments, and/or tool results. Requires at least one pattern — pass <code>COMMON_PATTERNS</code> to start.</p>
+
+  <table class="param-table">
+    <tr><th>Symbol</th><th>Kind</th><th>Description</th></tr>
+    <tr><td class="param-name">TokenBudgetExceeded</td><td class="param-type"><code>RuntimeError</code></td><td class="param-desc">Raised by <code>TokenBudgetMiddleware</code> when the per-run or cumulative budget is exceeded; carries <code>used</code>, <code>limit</code>, and <code>scope</code>.</td></tr>
+    <tr><td class="param-name">COMMON_PATTERNS</td><td class="param-type"><code>tuple[str, ...]</code></td><td class="param-desc">A starter set of redaction regexes (common secret/PII shapes) for <code>RedactionMiddleware</code>; combine with your own.</td></tr>
+  </table>
 </div>
 
 
@@ -1630,6 +1636,20 @@ agent = (
   <h3 class="api-class">HumanInterventionRequest <span class="tag tag-dataclass">dataclass</span></h3>
   <p class="desc">Structured request object passed to human-step resolvers and surfaced in pause exceptions.</p>
 
+  <div id="retry-step"></div>
+  <h3 class="api-class">RetryStep <span class="tag tag-class">workflow leaf</span></h3>
+  <p class="desc">Wraps any <code>WorkflowComponent</code> with retry-on-failure. Parameters mirror <code>RetryMiddleware</code> minus the per-hook flags (a workflow step has a single <code>run</code> entry point).</p>
+  <table class="param-table">
+    <tr><th>Field</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">component</td><td class="param-type">WorkflowComponent</td><td class="param-default">—</td><td class="param-desc">The step to wrap.</td></tr>
+    <tr><td class="param-name">max_attempts</td><td class="param-type">int</td><td class="param-default">3</td><td class="param-desc">Total attempts before giving up.</td></tr>
+    <tr><td class="param-name">initial_delay</td><td class="param-type">float</td><td class="param-default">0.5</td><td class="param-desc">Delay before the first retry (seconds).</td></tr>
+    <tr><td class="param-name">backoff_factor</td><td class="param-type">float</td><td class="param-default">2.0</td><td class="param-desc">Multiplier applied to the delay each retry.</td></tr>
+    <tr><td class="param-name">max_delay</td><td class="param-type">float</td><td class="param-default">30.0</td><td class="param-desc">Upper bound on any single backoff delay.</td></tr>
+    <tr><td class="param-name">jitter</td><td class="param-type">float</td><td class="param-default">0.1</td><td class="param-desc">Random jitter fraction added to each delay.</td></tr>
+    <tr><td class="param-name">retry_on</td><td class="param-type">tuple[type[BaseException], ...]</td><td class="param-default">(Exception,)</td><td class="param-desc">Exception types that trigger a retry.</td></tr>
+  </table>
+
   <div id="workflow-builder"></div>
   <h3 class="api-class">WorkflowBuilder <span class="tag tag-class">factory</span></h3>
   <p class="desc">Builder for graph workflows plus convenience helpers for workflow leaves and common orchestration patterns.</p>
@@ -1795,6 +1815,10 @@ print(<span class="st">f"Tools used: {[r.name for r in result.tool_calls_perform
     <tr><td class="param-name">supports_streaming()</td><td class="param-type">bool</td><td class="param-desc">Whether <code>stream()</code> is supported.</td></tr>
     <tr><td class="param-name">supports_tools()</td><td class="param-type">bool</td><td class="param-desc">Whether the runtime dispatches tool calls.</td></tr>
   </table>
+
+  <div id="role"></div>
+  <h3 class="api-class">Role <span class="tag">type alias</span></h3>
+  <p class="desc"><code>kneo_agent.Role</code> — <code>Literal["user", "assistant", "system", "tool"]</code>. The set of allowed values for <code>Message.role</code>.</p>
 </div>
 
 
@@ -2092,6 +2116,10 @@ runtime = <span class="tp">ReActAgentExecutor</span>(impl)</code></pre>
   <h2>Skill APIs</h2>
   <p>Skills are reusable capability bundles that compile into <code>RunConfig</code>. Kneo Agent supports in-memory skills, Agent Skills-compatible <code>SKILL.md</code> directories, skill discovery, and on-demand loading of progressive-disclosure resources such as <code>references/</code>, <code>scripts/</code>, and <code>assets/</code>.</p>
 
+  <div id="skill-standard-url"></div>
+  <h3 class="api-class">SKILL_STANDARD_URL <span class="tag">constant</span></h3>
+  <p class="desc"><code>kneo_agent.SKILL_STANDARD_URL</code> — <code>"https://agentskills.io/specification"</code>. The Agent Skills specification URL the <code>SKILL.md</code> loader/format follows.</p>
+
   <div id="skill-class"></div>
   <h3 class="api-class">Skill <span class="tag tag-dataclass">dataclass</span></h3>
   <p class="desc"><code>kneo_agent.core.skills</code> — reusable skill definition plus loader and resource helpers.</p>
@@ -2238,6 +2266,28 @@ tc = <span class="tp">ToolCall</span>(id=<span class="st">"1"</span>, name=<span
 result = <span class="kw">await</span> registry.call(tc)   <span class="cm"># → '{"city": "Tokyo", "temp_c": 22}'</span></code></pre>
 </div>
 
+<!-- ════════════════════════════════════════════════════════════
+     SECRET PROVIDERS
+     ════════════════════════════════════════════════════════════ -->
+<div class="section" id="secret-providers">
+  <h2>Secret providers</h2>
+  <p class="desc"><code>kneo_agent.utils</code> exposes a small <code>SecretProvider</code> family for sourcing credentials (API keys, tokens) without hardcoding them — pass the resolved value into a runtime/provider factory. All providers share one method.</p>
+
+  <h3 class="api-class">SecretProvider <span class="tag tag-protocol">protocol</span></h3>
+  <p class="desc">Structural protocol implemented by every provider below.</p>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">get</span>(<span class="param">name</span>: str, <span class="param">*</span>, <span class="param">default</span>: str | None = None) <span class="ret">→ str</span></h4>
+  <p class="desc">Return the secret for <code>name</code>. Raises <code>SecretNotFound</code> when it is absent and no <code>default</code> is given.</p>
+
+  <table class="param-table">
+    <tr><th>Provider</th><th>Constructor</th><th>Description</th></tr>
+    <tr><td class="param-name">EnvSecretProvider</td><td class="param-type"><code>EnvSecretProvider(*, prefix="")</code></td><td class="param-desc">Reads from environment variables. The logical name is upper-cased and the optional <code>prefix</code> prepended (e.g. <code>prefix="MYAPP_"</code> → <code>get("api_token")</code> reads <code>MYAPP_API_TOKEN</code>).</td></tr>
+    <tr><td class="param-name">FileSecretProvider</td><td class="param-type"><code>FileSecretProvider(base_path, *, encoding="utf-8", strip_whitespace=True)</code></td><td class="param-desc">Reads each secret from a file under <code>base_path</code>. Name resolution is confined to the base dir — traversal (<code>..</code>, absolute paths, escaping symlinks) raises <code>ValueError</code>.</td></tr>
+    <tr><td class="param-name">MappingSecretProvider</td><td class="param-type"><code>MappingSecretProvider(secrets)</code></td><td class="param-desc">Reads from an in-memory <code>Mapping[str, str]</code> — handy for tests.</td></tr>
+  </table>
+  <p class="desc"><code>SecretNotFound</code> (a <code>KeyError</code> subclass) is raised by <code>get(...)</code> when a secret is missing and no default is supplied.</p>
+</div>
+
+
 <div class="section" id="mcp-api">
   <h2>MCP</h2>
   <p class="desc"><code>kneo_agent.mcp</code> exposes lightweight MCP helpers for importing remote tools into the existing tool and skill pipeline.</p>
@@ -2245,8 +2295,16 @@ result = <span class="kw">await</span> registry.call(tc)   <span class="cm"># �
   <h3 class="api-class">MCPServerConfig <span class="tag tag-dataclass">dataclass</span></h3>
   <p class="desc">Connection description for one MCP server. Supported transports are <code>stdio</code>, <code>http</code>, and <code>sse</code>.</p>
   <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">stdio</span>(*, <span class="param">name</span>, <span class="param">command</span>, <span class="param">args</span> = (), <span class="param">env</span> = {}, <span class="param">cwd</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
-  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">http</span>(*, <span class="param">name</span>, <span class="param">url</span>, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0, <span class="param">sse_url</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
-  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">sse</span>(*, <span class="param">name</span>, <span class="param">sse_url</span>, <span class="param">message_url</span> = None, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0) <span class="ret">→ MCPServerConfig</span></h4>
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">http</span>(*, <span class="param">name</span>, <span class="param">url</span>, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0, <span class="param">sse_url</span> = None, <span class="param">max_response_bytes</span> = 10485760, <span class="param">sse_read_timeout</span> = None, <span class="param">verify</span> = True, <span class="param">ca_bundle</span> = None, <span class="param">client_cert</span> = None, <span class="param">client_key</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
+  <h4 class="api-method"><span class="kw">classmethod</span> <span class="fn">sse</span>(*, <span class="param">name</span>, <span class="param">sse_url</span>, <span class="param">message_url</span> = None, <span class="param">headers</span> = {}, <span class="param">timeout</span> = 30.0, <span class="param">max_response_bytes</span> = 10485760, <span class="param">sse_read_timeout</span> = None, <span class="param">verify</span> = True, <span class="param">ca_bundle</span> = None, <span class="param">client_cert</span> = None, <span class="param">client_key</span> = None) <span class="ret">→ MCPServerConfig</span></h4>
+  <table class="param-table">
+    <tr><th>Field (http / sse)</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">max_response_bytes</td><td class="param-default">10&nbsp;MiB</td><td class="param-desc">Cap on bytes read from one server response (HTTP body / accumulated SSE event) — over the cap aborts the read rather than exhausting memory.</td></tr>
+    <tr><td class="param-name">sse_read_timeout</td><td class="param-default">None</td><td class="param-desc">Inactivity timeout (s) for an established SSE stream; <code>None</code> falls back to <code>timeout</code>. Bounds idleness so a silent server can't hang the reader.</td></tr>
+    <tr><td class="param-name">verify</td><td class="param-default">True</td><td class="param-desc">Verify the server's TLS certificate. Set <code>False</code> only for dev against a known-bad self-signed cert.</td></tr>
+    <tr><td class="param-name">ca_bundle</td><td class="param-default">None</td><td class="param-desc">Path to a PEM CA bundle for corporate / internal CAs.</td></tr>
+    <tr><td class="param-name">client_cert / client_key</td><td class="param-default">None</td><td class="param-desc">PEM client certificate + key for mTLS.</td></tr>
+  </table>
 
   <h3 class="api-class">MCPClientSession <span class="tag tag-class">client</span></h3>
   <p class="desc">Async MCP client session used by <code>ToolRegistry.register_mcp_server(...)</code>. Supports initialization, <code>tools/list</code>, and <code>tools/call</code>.</p>
@@ -2637,7 +2695,7 @@ review = <span class="tp">WorkflowBuilder</span>.human_step(
 
 <!-- ── Footer ─────────────────────────────────────────────── -->
 <div class="page-footer">
-  <p>Kneo Agent v1.2.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
+  <p>Kneo Agent v1.4.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
   <p style="margin-top:0.3rem">Run the test suite: <code>pytest -q tests</code> &nbsp;·&nbsp; Or: <code>make test</code></p>
 </div>
 

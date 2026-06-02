@@ -1448,7 +1448,7 @@ several of these examples, see <a href="../user/"><code>../docs/user/</code></a>
 <tr>
 <td><strong>Bridge</strong></td>
 <td>Kneo owns the reasoning loop; you pick <code>simple</code> / <code>react</code> / <code>plan-act</code></td>
-<td><a href="01_bridge_google_adk.py"><code>01</code></a> Google ADK · <a href="02_bridge_openai.py"><code>02</code></a> OpenAI · <a href="03_bridge_langchain.py"><code>03</code></a> LangChain</td>
+<td><a href="01_bridge_google_adk.py"><code>01</code></a> Google ADK · <a href="03_bridge_langchain.py"><code>03</code></a> LangChain</td>
 </tr>
 <tr>
 <td><strong>Adapter</strong></td>
@@ -1458,7 +1458,7 @@ several of these examples, see <a href="../user/"><code>../docs/user/</code></a>
 <tr>
 <td><strong>Native</strong></td>
 <td>The provider SDK exposes its own runtime (used via factory)</td>
-<td><a href="05_adapter_openai_agents.py"><code>05</code></a>, <a href="18_opentelemetry_middleware.py"><code>18</code></a></td>
+<td><a href="02_bridge_openai.py"><code>02</code></a> OpenAI · <a href="12_mcp_stdio_filesystem.py"><code>12</code></a> MCP stdio · <a href="13_mcp_http_sse.py"><code>13</code></a> MCP HTTP/SSE · <a href="cookbook/local_ollama.py"><code>local_ollama</code></a></td>
 </tr>
 <tr>
 <td><strong>Builder shortcut</strong></td>
@@ -1483,7 +1483,7 @@ several of these examples, see <a href="../user/"><code>../docs/user/</code></a>
   (concurrent / handoff / group chat).</li>
 <li><strong>Agent-as-tool</strong> —
   <a href="11_agent_as_tool.py"><code>11_agent_as_tool.py</code></a> exposes one agent to
-  another via <code>agent.as_tool(...)</code>.</li>
+  another via <code>registry.add_agent(...)</code>.</li>
 <li><strong>MCP tool servers</strong> —
   <a href="12_mcp_stdio_filesystem.py"><code>12_mcp_stdio_filesystem.py</code></a> (stdio
   transport),
@@ -1516,6 +1516,10 @@ sequence.</p>
 </thead>
 <tbody>
 <tr>
+<td><a href="cookbook/production_middleware.py"><code>production_middleware.py</code></a></td>
+<td>Compose the four production middlewares (<code>Retry</code> / <code>RateLimit</code> / <code>TokenBudget</code> / <code>Redaction</code> + <code>COMMON_PATTERNS</code>) on a Bridge agent, with cumulative-budget tracking and a billing-period <code>reset()</code>.</td>
+</tr>
+<tr>
 <td><a href="cookbook/local_ollama.py"><code>local_ollama.py</code></a></td>
 <td>Point the OpenAI runtime at a local Ollama / vLLM / llama.cpp / LocalAI server via <code>base_url=</code>.</td>
 </tr>
@@ -1542,6 +1546,14 @@ sequence.</p>
 <tr>
 <td><a href="cookbook/search_index_tool.py"><code>search_index_tool.py</code></a></td>
 <td>Elasticsearch / OpenSearch query tool with a query-type allow-list.</td>
+</tr>
+<tr>
+<td><a href="cookbook/enterprise_inside_the_firewall.py"><code>enterprise_inside_the_firewall.py</code></a></td>
+<td>Compose a local LLM + internal MCP + read-only SQL + object store + <code>SecretProvider</code> into one agent that never leaves the network.</td>
+</tr>
+<tr>
+<td><a href="cookbook/otlp_collector_export.py"><code>otlp_collector_export.py</code></a></td>
+<td>Export agent traces to an OTLP collector (Jaeger / Tempo / SigNoz); runnable companion to <a href="../user/self_hosted_observability/"><code>docs/user/self_hosted_observability.md</code></a>.</td>
 </tr>
 </tbody>
 </table>

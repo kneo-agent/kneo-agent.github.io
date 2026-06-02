@@ -30,7 +30,7 @@ class ExistingOAIRunner:
             ],
         }
 
-    async def stream(self, agent: dict, input: str):
+    async def stream(self, agent: dict, input: str, max_turns: int = 10):
         for token in ["OpenAI ", "Agents ", "stream ", "reply."]:
             yield {"type": "raw_response_event", "delta": token}
 

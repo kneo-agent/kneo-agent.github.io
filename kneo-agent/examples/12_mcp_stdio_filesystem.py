@@ -19,6 +19,7 @@ Requirements:
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 from pathlib import Path
 
@@ -32,6 +33,13 @@ from kneo_agent.utils import ToolRegistry
 
 
 async def main() -> None:
+    if not os.getenv("OPENAI_API_KEY"):
+        raise SystemExit(
+            "Set OPENAI_API_KEY before running this example (it drives the "
+            "OpenAI runtime below). Guarding here avoids spawning the MCP "
+            "subprocess only to fail mid-run with a noisy teardown."
+        )
+
     registry = ToolRegistry()
     try:
         tools = await registry.register_mcp_server(

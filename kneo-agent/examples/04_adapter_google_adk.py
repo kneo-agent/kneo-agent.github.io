@@ -19,9 +19,11 @@ class ExistingADKRunner:
     """
     Represents a pre-existing google.adk runner your app already has.
     Its run_async interface cannot be changed — the Adapter wraps it.
+    (Real ADK: keyword-only, no ``app_name`` — that's a session-creation
+    parameter, which the adapter handles via the runner's session_service.)
     """
 
-    async def run_async(self, app_name, user_id, session_id, new_message):
+    async def run_async(self, *, user_id, session_id, new_message, **kwargs):
         # ADK yields typed Event objects; we simulate text + function call events
         yield {
             "author": "weather-agent",

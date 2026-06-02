@@ -58,9 +58,7 @@ async def main() -> None:
     catalog = discover_skills([skills_root])
     skill_path = skills_root / "weather"
     file_skill = load_skill(skill_path)
-    bound_skill = file_skill.with_tool_handlers(
-        {name: registry._tools[name][1] for name in registry.names}
-    )
+    bound_skill = file_skill.with_tool_handlers(registry.handlers)
 
     runtime = BridgeAgentFactory.for_langchain(MockChatModel(), strategy="react")
     agent = (

@@ -41,6 +41,23 @@ Or against the explicit factory if you want fine-grained control::
         .build()
     )
 
+Config-file / env-var alternative
+---------------------------------
+If you'd rather not pass ``base_url=`` in code, the underlying
+``openai.AsyncOpenAI`` client honours the ``OPENAI_BASE_URL`` (and
+``OPENAI_API_KEY``) environment variables. Construct the factory *without*
+``base_url`` / ``api_key`` and export them in the environment instead::
+
+    export OPENAI_BASE_URL=http://localhost:11434/v1
+    export OPENAI_API_KEY=kneo-local-llm   # any non-empty value for most local servers
+
+    runtime = NativeRuntimeFactory.for_openai(model="llama3.1")  # picks up the env vars
+
+This needs no kneo-agent code change — the SDK only sets ``base_url`` on the
+client when you pass it explicitly, so an unset ``base_url`` defers to the
+OpenAI client's own env-var resolution. (Passing ``base_url=`` to the factory
+takes precedence over the env var.)
+
 This script uses a mock OpenAI-Agents runner so it runs offline in CI.
 Replace the mock with no ``runner=`` argument to talk to your live
 local server.

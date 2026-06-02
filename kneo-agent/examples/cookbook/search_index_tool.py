@@ -28,7 +28,6 @@ Run::
 """
 
 import json
-import re
 from typing import Any
 
 from kneo_agent import ToolDefinition
@@ -199,9 +198,6 @@ def main() -> None:
     # Confirm the password never landed in any tool result.
     out = handler({"query": {"match_all": {}}})
     assert "REDACTED-PASSWORD" not in out
-
-    # Silence unused-import noise.
-    _ = re
 
 
 if __name__ == "__main__":

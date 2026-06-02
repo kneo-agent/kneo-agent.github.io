@@ -64,11 +64,7 @@ class _FakeS3:
 
     def list_objects_v2(self, *, Bucket: str, Prefix: str = "", MaxKeys: int = 100):
         objs = sorted(
-            
-                k
-                for k in self.storage.get(Bucket, {})
-                if k.startswith(Prefix)
-            
+            k for k in self.storage.get(Bucket, {}) if k.startswith(Prefix)
         )[:MaxKeys]
         return {
             "Contents": [

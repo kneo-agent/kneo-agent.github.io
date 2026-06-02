@@ -4,6 +4,12 @@ Example 01 — Bridge pattern with Google ADK
 Demonstrates how to use three different loop strategies (simple, react,
 plan-act) against a single Google ADK runner object.
 
+Note: ``BridgeAgentFactory.for_google_adk`` is a Kneo compatibility bridge
+over ADK-shaped payloads (Kneo owns the loop). It emits an advisory
+``UserWarning`` on purpose — the bridge is fully supported, but if you want
+Google ADK to own the loop natively, prefer ``AdapterAgentFactory.for_google_adk``
+(see example 04). This example deliberately demonstrates the Bridge path.
+
 Run::
 
     python examples/01_bridge_google_adk.py

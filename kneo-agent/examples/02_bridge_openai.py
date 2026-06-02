@@ -1,9 +1,15 @@
 """
-Example 02 — Bridge pattern with OpenAI Agents SDK
+Example 02 — OpenAI Agents SDK (native runtime)
 ========================================
 Shows the OpenAI Agents SDK-backed runtime executing a tool call and
 returning a final answer. Uses a mock runner to avoid network access.
 Demonstrates skill-based tool wiring via ``ToolRegistry.to_skill()``.
+
+Note: OpenAI is a **native** provider — the OpenAI Agents SDK owns its own
+runtime, so there is no distinct "bridge" implementation. Use
+``NativeRuntimeFactory.for_openai(...)`` (the canonical entry point); the
+``BridgeAgentFactory.for_openai`` alias just forwards here and emits an
+advisory ``UserWarning``.
 
 Run::
 
@@ -15,7 +21,7 @@ import json
 from types import SimpleNamespace
 
 from kneo_agent import AgentBuilder
-from kneo_agent.patterns import BridgeAgentFactory
+from kneo_agent.patterns import NativeRuntimeFactory
 from kneo_agent.utils import ToolRegistry
 
 # ── Tool registry ─────────────────────────────────────────────
@@ -67,14 +73,14 @@ async def main() -> None:
         tags=["domain:weather"],
     )
 
-    runtime = BridgeAgentFactory.for_openai(
+    runtime = NativeRuntimeFactory.for_openai(
         model="gpt-4o", strategy="react", runner=MockOpenAIRunner()
     )
     agent = (
         AgentBuilder()
         .with_name("OpenAI Weather Agent")
         .with_skills([weather_skill])
-        .use_bridge(runtime)
+        .use_runtime(runtime)
         .build()
     )
 
