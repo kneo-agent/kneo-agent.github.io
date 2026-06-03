@@ -17,22 +17,32 @@ from kneo_agent.patterns import AdapterAgentFactory
 
 class ExistingOAIRunner:
     """
-    Represents a pre-existing @openai/agents Runner.
-    Its run / stream interface cannot be changed.
+    Represents a pre-existing openai-agents ``Runner``.
+    Its interface mirrors the real SDK: ``Runner.run(starting_agent=...)`` and
+    ``Runner.run_streamed(...)`` whose ``.stream_events()`` yields events.
     """
 
-    async def run(self, agent: dict, input: str, max_turns: int = 10) -> dict:
+    async def run(self, *, starting_agent: dict, input: str, max_turns: int = 10) -> dict:
         return {
             "final_output": f"OpenAI Agents SDK answered: '{input[:30]}...' → 22 °C in Tokyo.",
             "new_items": [
                 {"type": "tool_call_output_item", "call_id": "c-1", "tool_name": "get_weather"},
                 {"type": "message_output_item"},
             ],
+            # The real Runner result carries per-response usage; the adapter
+            # aggregates raw_responses[*].usage into metadata["usage"].
+            "raw_responses": [
+                {"usage": {"input_tokens": 42, "output_tokens": 18}},
+            ],
         }
 
-    async def stream(self, agent: dict, input: str, max_turns: int = 10):
-        for token in ["OpenAI ", "Agents ", "stream ", "reply."]:
-            yield {"type": "raw_response_event", "delta": token}
+    def run_streamed(self, *, starting_agent: dict, input: str, max_turns: int = 10):
+        class _Streamed:
+            async def stream_events(self_inner):
+                for token in ["OpenAI ", "Agents ", "stream ", "reply."]:
+                    yield {"type": "raw_response_event", "delta": token}
+
+        return _Streamed()
 
 
 async def main() -> None:
@@ -56,6 +66,9 @@ async def main() -> None:
     print(f"Runtime:       {agent.runtime_name}")
     print(f"Answer:        {result.final_message}")
     print(f"Tool events:   {len(result.tool_calls_performed)}")
+    # Every built-in runtime (incl. this Adapter) reports token usage when the
+    # provider does — read it from RunResult.metadata["usage"].
+    print(f"Usage:         {result.metadata.get('usage')}")
 
     # Streaming
     agent.clear_history()

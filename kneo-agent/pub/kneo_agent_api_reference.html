@@ -780,12 +780,12 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent</div>
     <h1>API Reference</h1>
-    <div class="version">v1.4.0 · Python 3.12+</div>
+    <div class="version">v2.0.0 · Python 3.12+</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Overview</div>
-    <a href="#whats-new-1-4-0">What's new in v1.4.0</a>
+    <a href="#whats-new-2-0-0">What's new in v2.0.0</a>
     <a href="#overview">Introduction</a>
     <a href="#patterns">Design Patterns</a>
     <a href="#quickstart">Quick Start</a>
@@ -905,7 +905,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="cover-meta">
       <div class="cover-card">
         <div class="cover-card-label">Version</div>
-        <div class="cover-card-value">v1.4.0</div>
+        <div class="cover-card-value">v2.0.0</div>
       </div>
       <div class="cover-card">
         <div class="cover-card-label">Runtime</div>
@@ -1042,7 +1042,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <h1>API Reference Manual</h1>
   <p class="subtitle">Complete reference for all public classes, methods, protocols, and utilities.</p>
   <div class="badge-row">
-    <span class="badge badge-blue">v1.4.0</span>
+    <span class="badge badge-blue">v2.0.0</span>
     <span class="badge badge-green">Python 3.12+</span>
     <span class="badge badge-purple">MIT License</span>
     <span class="badge badge-blue">asyncio</span>
@@ -1052,64 +1052,89 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 
 <!-- ════════════════════════════════════════════════════════════
-     v1.4.0 RELEASE CALLOUT
+     v2.0.0 RELEASE CALLOUT
      ════════════════════════════════════════════════════════════ -->
-<div class="section" id="whats-new-1-4-0">
-  <h2>What's new in v1.4.0</h2>
-  <p>Released <strong>2026-06-01</strong>. A <strong>minor</strong> release —
-  additive public surface plus correctness fixes, fully backwards-compatible
-  (nothing breaking; breaking changes are reserved for 2.0). Full detail in the
+<div class="section" id="whats-new-2-0-0">
+  <h2>What's new in v2.0.0</h2>
+  <p>Released <strong>2026-06-03</strong>. A <strong>major</strong> release —
+  the first behaviour-breaking cut since 1.0. It bundles the deferred
+  <code>RunConfig</code> / middleware / adapter break-set with the post-1.5.0
+  audit fixes, so callers adapt once. <strong>Read the
+  migration guide
+  before upgrading</strong> — <code>pip install --upgrade</code> may change
+  behaviour without a code change. Full detail in the
   CHANGELOG.</p>
 
-  <h3 class="api-class">Added <span class="tag tag-class">added</span></h3>
+  <h3 class="api-class">Changed — breaking <span class="tag tag-class">breaking</span></h3>
   <ul>
-    <li><strong>Token usage on the Adapter runtimes.</strong> The Google ADK
-    and LangChain <em>Adapter</em> runtimes now populate
-    <code>RunResult.metadata["usage"]</code>, so <code>TokenBudgetMiddleware</code>
-    and the OpenTelemetry middleware see usage on those paths too (only the
-    OpenAI Agents <em>Adapter</em> path remains unpopulated).</li>
-    <li><strong>MCP response-size cap + SSE inactivity timeout.</strong>
-    <code>MCPServerConfig</code> gains <code>max_response_bytes</code>
-    (default 10&nbsp;MiB) and <code>sse_read_timeout</code> — bounding an
-    unbounded server body and an idle SSE stream that would otherwise exhaust
-    memory or hang the reader.</li>
-  </ul>
-
-  <h3 class="api-class">Changed <span class="tag tag-class">changed</span></h3>
-  <ul>
-    <li><strong>Google ADK 2.x supported.</strong> The <code>[google-adk]</code>
-    extra is widened to <code>&gt;=1.0.0,&lt;3.0.0</code> (validated against
-    google-adk 2.1.0; the SDK is consumed by duck-typed contract).</li>
+    <li><strong><code>RetryMiddleware.retry_tool_calls</code> now defaults to
+    <code>False</code></strong> (was <code>True</code>). Tool calls are not
+    retried unless you opt in, so non-idempotent tools aren't silently
+    re-executed on a transient failure. Pass <code>retry_tool_calls=True</code>
+    to restore the prior behaviour. Model-call retries are unchanged.</li>
+    <li><strong>A partial <code>RunConfig</code> override now merges with
+    agent / skill defaults</strong> instead of replacing
+    <code>max_iterations</code> / <code>temperature</code> / <code>tools</code>
+    wholesale — fields you don't set keep the agent's configured value. Set a
+    field explicitly to override it. Merged agent / skill defaults are now
+    revalidated, so a bad value raises <code>ValueError</code> at build time
+    (a non-numeric value raises <code>ValueError</code>, not
+    <code>TypeError</code>).</li>
+    <li><strong>OpenAI Agents <em>Adapter</em> call interface aligned to the
+    <code>openai-agents</code> <code>Runner</code></strong> — it now calls
+    <code>Runner.run(starting_agent=…)</code> /
+    <code>run_streamed(…).stream_events()</code> (was an invented
+    <code>run(agent=…)</code> / <code>stream()</code> shape) and reads object-
+    or dict-shaped results. Update a custom runner that matched the old shape.
+    The Google ADK and LangChain adapters are <strong>pass-through</strong> (no
+    per-call <code>RunConfig</code> injection — the wrapped object owns its
+    config); <code>temperature</code> is uninjected on every adapter. These
+    remain <em>demonstration</em> adapters — for a production OpenAI path use
+    the native runtime (<code>NativeRuntimeFactory.for_openai</code>).</li>
+    <li><strong>Workflow <code>.stream()</code> raises
+    <code>StreamingNotSupportedError</code></strong> on
+    <code>ConcurrentWorkflow</code> / <code>HandoffWorkflow</code> /
+    <code>GroupChatWorkflow</code> / the graph <code>Workflow</code> — they
+    cannot stream incrementally, and <code>supports_streaming()</code> already
+    reports <code>False</code>. <code>SequentialWorkflow.stream()</code> now
+    raises <code>StreamingNotSupportedError</code> (not
+    <code>NotImplementedError</code>) when a participant can't stream.</li>
   </ul>
 
   <h3 class="api-class">Fixed <span class="tag tag-class">fixed</span></h3>
   <ul>
-    <li><strong>The Google ADK <em>Adapter</em> now drives a real ADK
-    <code>Runner</code>.</strong> It no longer passes a non-existent
-    <code>app_name</code> to <code>run_async</code> nor treats pydantic
-    <code>Event</code> / <code>Content</code> objects as dicts, and it creates
-    the ADK session lazily via the runner's <code>session_service</code>.</li>
-    <li><strong>Google ADK / LangChain Bridge tool calls.</strong>
-    <code>GoogleADKImpl.complete</code> no longer <code>KeyError</code>s on a
-    tool call missing <code>id</code> / <code>args</code>; the LangChain path is
-    hardened the same way.</li>
-    <li><strong>Multi-skill <code>tool_handlers</code> no longer
-    cross-contaminate</strong> — <code>merge_run_extras</code> stops mutating a
-    long-lived skill's source <code>extra</code> dict.</li>
-    <li><strong>OpenTelemetry stream spans</strong> end exactly once via a
-    guarded context detach — no more "Failed to detach context" when a stream is
-    iterated across asyncio tasks.</li>
+    <li><strong>ADK Bridge no longer crashes on an empty
+    <code>candidates</code> list</strong> — Gemini safety blocks /
+    <code>MAX_TOKENS</code>-with-no-content / recitation stops return
+    <code>{"candidates": []}</code>, which raised <code>IndexError</code> (also
+    through <code>stream_tokens</code>); it now degrades to empty text.</li>
+    <li><strong>OpenAI Agents <em>Adapter</em> reads object- or dict-shaped
+    results/usage</strong> — normalisation for <code>final_output</code> /
+    <code>new_items</code> / <code>usage</code> (including object-shaped
+    <code>prompt_tokens</code> / <code>completion_tokens</code> aliases) and the
+    nested <code>response.output_text.delta</code> stream shape.</li>
+    <li><strong>LangChain adapter preserves conversation history</strong> on
+    non-alternating roles (a leading assistant turn no longer drops the whole
+    <code>chat_history</code>).</li>
+    <li><strong>Bridge usage backfills <code>total_tokens</code></strong> so a
+    custom <code>RuntimeImpl</code> reporting only input / output no longer
+    yields <code>total_tokens=0</code>; native Google ADK OTel
+    <code>gen_ai.system</code> normalises to the GenAI enum; duplicate workflow
+    participant / executor names are detected instead of silently collapsing.</li>
   </ul>
 
   <h3 class="api-class">Docs &amp; examples <span class="tag tag-class">docs</span></h3>
   <ul>
-    <li>The API reference now documents 16 previously-omitted public symbols —
-    the production middleware bundle, the handler type aliases, the
-    <code>SecretProvider</code> family, and <code>RetryStep</code>.</li>
-    <li>Two new cookbook recipes: an enterprise <em>inside-the-firewall</em>
-    composition (local LLM + internal MCP + read-only SQL + object store +
-    <code>SecretProvider</code>) and an OTLP-collector export companion to the
-    self-hosted observability guide.</li>
+    <li>New migration guide
+    (<code>docs/user/upgrading_to_2.0.md</code>); the API reference documents
+    <code>for_openai</code> <code>base_url</code> / <code>api_key</code>, the
+    <code>human_step</code> <code>metadata</code> kwarg, and the
+    <code>HumanInTheLoopStep</code> <code>description</code> /
+    <code>metadata</code> fields.</li>
+    <li>README-dev package layout adds the <code>middleware/</code> subpackage,
+    <code>workflows/retry.py</code>, and <code>utils/secrets.py</code>; the
+    architecture-summary workflow matrix adds <code>RetryStep</code>; stale
+    post-1.4 / 1.5 usage comments are reworded.</li>
   </ul>
 </div>
 
@@ -1451,7 +1476,7 @@ agent = (
   <h3 class="api-class">Production middleware bundle <span class="tag tag-class">middleware</span></h3>
   <p class="desc">Ready-to-use middleware implementations, all exported from <code>kneo_agent.middleware</code> and subclassing <code>BaseAgentMiddleware</code>. The model/tool-call hooks apply only on Bridge runtimes (where Kneo owns the inner loop); the run hook applies everywhere.</p>
 
-  <h4 class="api-method"><span class="fn">RetryMiddleware</span>(<span class="param">*</span>, <span class="param">max_attempts</span>=3, <span class="param">initial_delay</span>=0.5, <span class="param">backoff_factor</span>=2.0, <span class="param">max_delay</span>=30.0, <span class="param">jitter</span>=0.1, <span class="param">retry_on</span>=(Exception,), <span class="param">retry_model_calls</span>=True, <span class="param">retry_tool_calls</span>=True)</h4>
+  <h4 class="api-method"><span class="fn">RetryMiddleware</span>(<span class="param">*</span>, <span class="param">max_attempts</span>=3, <span class="param">initial_delay</span>=0.5, <span class="param">backoff_factor</span>=2.0, <span class="param">max_delay</span>=30.0, <span class="param">jitter</span>=0.1, <span class="param">retry_on</span>=(Exception,), <span class="param">retry_model_calls</span>=True, <span class="param">retry_tool_calls</span>=False)</h4>
   <p class="desc">Retries failed Bridge model calls and/or tool calls with exponential backoff + jitter. <code>retry_on</code> selects which exception types are retried.</p>
 
   <h4 class="api-method"><span class="fn">RateLimitMiddleware</span>(<span class="param">*</span>, <span class="param">rate</span>: float, <span class="param">burst</span>: float | None = None, <span class="param">scope</span>: str = "run")</h4>
@@ -1630,7 +1655,9 @@ agent = (
     <tr><td class="param-name">step_name</td><td class="param-type">str</td><td class="param-desc">Workflow step name.</td></tr>
     <tr><td class="param-name">prompt</td><td class="param-type">str | callable</td><td class="param-desc">Prompt shown to the human reviewer. May be computed from the current messages and run config.</td></tr>
     <tr><td class="param-name">resolver</td><td class="param-type">callable | None</td><td class="param-desc">Optional callback that returns the human response inline.</td></tr>
+    <tr><td class="param-name">description</td><td class="param-type">str</td><td class="param-desc">Human-readable step description. Default: <code>""</code>.</td></tr>
     <tr><td class="param-name">response_role</td><td class="param-type">str</td><td class="param-desc">Message role used when the human response is appended. Default: <code>"user"</code>.</td></tr>
+    <tr><td class="param-name">metadata</td><td class="param-type">dict</td><td class="param-desc">Arbitrary key/value metadata carried on the step and surfaced in pause payloads. Default: <code>{}</code>.</td></tr>
   </table>
 
   <h3 class="api-class">HumanInterventionRequest <span class="tag tag-dataclass">dataclass</span></h3>
@@ -1660,7 +1687,7 @@ agent = (
     <tr><td class="param-name">.add_edge(source, target, *, condition=None, label="")</td><td class="param-type">WorkflowBuilder</td><td class="param-desc">Add a routing edge between executors.</td></tr>
     <tr><td class="param-name">.build()</td><td class="param-type">Workflow</td><td class="param-desc">Build the graph workflow.</td></tr>
     <tr><td class="param-name">.step(name, handler, *, description="")</td><td class="param-type">FunctionStep</td><td class="param-desc">Create a custom function-based workflow participant.</td></tr>
-    <tr><td class="param-name">.human_step(name, prompt, *, resolver=None, description="", response_role="user")</td><td class="param-type">HumanInTheLoopStep</td><td class="param-desc">Create a workflow participant that requests explicit human input.</td></tr>
+    <tr><td class="param-name">.human_step(name, prompt, *, resolver=None, description="", response_role="user", metadata=None)</td><td class="param-type">HumanInTheLoopStep</td><td class="param-desc">Create a workflow participant that requests explicit human input.</td></tr>
     <tr><td class="param-name">.sequential(participants, ...)</td><td class="param-type">SequentialWorkflow</td><td class="param-desc">Convenience helper for the default linear orchestration runtime.</td></tr>
     <tr><td class="param-name">.concurrent(participants, ...)</td><td class="param-type">ConcurrentWorkflow</td><td class="param-desc">Convenience helper for fan-out composition.</td></tr>
   </table>
@@ -1841,7 +1868,7 @@ print(<span class="st">f"Tools used: {[r.name for r in result.tool_calls_perform
   </table>
   <p class="desc">Warning: this is a compatibility bridge over ADK-shaped payloads. For native Google ADK loop ownership, prefer <code>NativeRuntimeFactory.for_google_adk(...)</code> or <code>AdapterAgentFactory.for_google_adk(...)</code>.</p>
 
-  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>) <span class="ret">→ AgentRuntime</span></h4>
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>, <span class="param">*</span>, <span class="param">base_url</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">api_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ AgentRuntime</span></h4>
   <table class="param-table">
     <tr><th>Parameter</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">openai_client</td><td class="param-type">Any | None</td><td class="param-desc">Optional <code>AsyncOpenAI</code> client used by the OpenAI Agents SDK chat-completions model wrapper.</td></tr>
@@ -1884,7 +1911,7 @@ print(lc_react_rt.name) <span class="cm"># "react@langchain"</span></code></pre>
   <h3 class="api-class">class NativeRuntimeFactory <span class="tag tag-class">factory</span></h3>
   <p class="desc">Constructs platform-owned runtimes. Use this when the underlying SDK/runtime should own the loop instead of Kneo.</p>
 
-  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>) <span class="ret">→ OpenAIAgentsRuntime</span></h4>
+  <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">openai_client</span> = <span class="nm">None</span>, <span class="param">model</span>: <span class="typ">str</span> = <span class="nm">"gpt-4o"</span>, <span class="param">strategy</span>: <span class="typ">BridgeStrategy</span> = <span class="nm">"react"</span>, <span class="param">runner</span> = <span class="nm">None</span>, <span class="param">*</span>, <span class="param">base_url</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">api_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ OpenAIAgentsRuntime</span></h4>
   <p class="desc">Returns the OpenAI Agents SDK-backed runtime. The SDK owns the loop; the strategy is preserved in the runtime name and for Plan-Act behavior.</p>
 
   <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_google_adk</span>(<span class="param">adk_runner</span>, <span class="param">app_name</span>: <span class="typ">str</span>, <span class="param">user_id</span>: <span class="typ">str</span>, <span class="param">session_id</span>: <span class="typ">str</span>) <span class="ret">→ GoogleADKRuntime</span></h4>
@@ -2695,7 +2722,7 @@ review = <span class="tp">WorkflowBuilder</span>.human_step(
 
 <!-- ── Footer ─────────────────────────────────────────────── -->
 <div class="page-footer">
-  <p>Kneo Agent v1.4.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
+  <p>Kneo Agent v2.0.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
   <p style="margin-top:0.3rem">Run the test suite: <code>pytest -q tests</code> &nbsp;·&nbsp; Or: <code>make test</code></p>
 </div>
 
