@@ -780,12 +780,12 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent</div>
     <h1>API Reference</h1>
-    <div class="version">v2.0.0 · Python 3.12+</div>
+    <div class="version">v2.2.0 · Python 3.12+</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Overview</div>
-    <a href="#whats-new-2-0-0">What's new in v2.0.0</a>
+    <a href="#whats-new-2-2-0">What's new in v2.2.0</a>
     <a href="#overview">Introduction</a>
     <a href="#patterns">Design Patterns</a>
     <a href="#quickstart">Quick Start</a>
@@ -905,7 +905,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="cover-meta">
       <div class="cover-card">
         <div class="cover-card-label">Version</div>
-        <div class="cover-card-value">v2.0.0</div>
+        <div class="cover-card-value">v2.2.0</div>
       </div>
       <div class="cover-card">
         <div class="cover-card-label">Runtime</div>
@@ -1042,7 +1042,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <h1>API Reference Manual</h1>
   <p class="subtitle">Complete reference for all public classes, methods, protocols, and utilities.</p>
   <div class="badge-row">
-    <span class="badge badge-blue">v2.0.0</span>
+    <span class="badge badge-blue">v2.2.0</span>
     <span class="badge badge-green">Python 3.12+</span>
     <span class="badge badge-purple">MIT License</span>
     <span class="badge badge-blue">asyncio</span>
@@ -1052,89 +1052,71 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 
 <!-- ════════════════════════════════════════════════════════════
-     v2.0.0 RELEASE CALLOUT
+     v2.2.0 RELEASE CALLOUT
      ════════════════════════════════════════════════════════════ -->
-<div class="section" id="whats-new-2-0-0">
-  <h2>What's new in v2.0.0</h2>
-  <p>Released <strong>2026-06-03</strong>. A <strong>major</strong> release —
-  the first behaviour-breaking cut since 1.0. It bundles the deferred
-  <code>RunConfig</code> / middleware / adapter break-set with the post-1.5.0
-  audit fixes, so callers adapt once. <strong>Read the
-  migration guide
-  before upgrading</strong> — <code>pip install --upgrade</code> may change
-  behaviour without a code change. Full detail in the
+<div class="section" id="whats-new-2-2-0">
+  <h2>What's new in v2.2.0</h2>
+  <p>Released <strong>2026-06-05</strong>. A <strong>minor</strong>,
+  backwards-compatible cut with two workstreams — <strong>adapter ↔ real-SDK
+  fidelity</strong> (additive) and the <strong>post-2.1.0 deep-audit fixes</strong>
+  (correctness / security plus additive API cleanups). New public surface is
+  purely additive; <code>pip install --upgrade kneo-agent</code> is a drop-in
+  update from 2.1.x. Full detail in the
   CHANGELOG.</p>
 
-  <h3 class="api-class">Changed — breaking <span class="tag tag-class">breaking</span></h3>
+  <h3 class="api-class">Adapter fidelity <span class="tag tag-class">adapter</span></h3>
   <ul>
-    <li><strong><code>RetryMiddleware.retry_tool_calls</code> now defaults to
-    <code>False</code></strong> (was <code>True</code>). Tool calls are not
-    retried unless you opt in, so non-idempotent tools aren't silently
-    re-executed on a transient failure. Pass <code>retry_tool_calls=True</code>
-    to restore the prior behaviour. Model-call retries are unchanged.</li>
-    <li><strong>A partial <code>RunConfig</code> override now merges with
-    agent / skill defaults</strong> instead of replacing
-    <code>max_iterations</code> / <code>temperature</code> / <code>tools</code>
-    wholesale — fields you don't set keep the agent's configured value. Set a
-    field explicitly to override it. Merged agent / skill defaults are now
-    revalidated, so a bad value raises <code>ValueError</code> at build time
-    (a non-numeric value raises <code>ValueError</code>, not
-    <code>TypeError</code>).</li>
-    <li><strong>OpenAI Agents <em>Adapter</em> call interface aligned to the
-    <code>openai-agents</code> <code>Runner</code></strong> — it now calls
-    <code>Runner.run(starting_agent=…)</code> /
-    <code>run_streamed(…).stream_events()</code> (was an invented
-    <code>run(agent=…)</code> / <code>stream()</code> shape) and reads object-
-    or dict-shaped results. Update a custom runner that matched the old shape.
-    The Google ADK and LangChain adapters are <strong>pass-through</strong> (no
-    per-call <code>RunConfig</code> injection — the wrapped object owns its
-    config); <code>temperature</code> is uninjected on every adapter. These
-    remain <em>demonstration</em> adapters — for a production OpenAI path use
-    the native runtime (<code>NativeRuntimeFactory.for_openai</code>).</li>
-    <li><strong>Workflow <code>.stream()</code> raises
-    <code>StreamingNotSupportedError</code></strong> on
-    <code>ConcurrentWorkflow</code> / <code>HandoffWorkflow</code> /
-    <code>GroupChatWorkflow</code> / the graph <code>Workflow</code> — they
-    cannot stream incrementally, and <code>supports_streaming()</code> already
-    reports <code>False</code>. <code>SequentialWorkflow.stream()</code> now
-    raises <code>StreamingNotSupportedError</code> (not
-    <code>NotImplementedError</code>) when a participant can't stream.</li>
+    <li>The <strong><code>OpenAIAgentsAdapter</code> builds a real
+    <code>agents.Agent</code></strong> per call (from <code>agent_definition</code>
+    + the run's tools + <code>RunConfig.extra["tool_handlers"]</code>), passes it
+    as <code>Runner.run(starting_agent=)</code>, and reads tool metadata from
+    <code>item.raw_item</code>. No <code>for_openai</code> signature change.</li>
+    <li>The <strong><code>LangChainAdapter</code> auto-detects</strong> and
+    translates either a LangGraph <code>create_agent</code> graph
+    (messages-in/out — what LangChain 1.x ships) or a legacy
+    <code>AgentExecutor</code>.</li>
+    <li>The <strong>Google ADK adapter reports real tool results</strong>
+    (consumes <code>functionResponse</code>); all three adapter streams now speak
+    a uniform <code>tool_call</code> → <code>tool_result</code> vocabulary.</li>
+  </ul>
+
+  <h3 class="api-class">Security <span class="tag tag-class">security</span></h3>
+  <ul>
+    <li><strong>MCP client refuses cross-origin HTTP redirects</strong> (no
+    Authorization / API-key exfiltration via <code>Location:</code>) and
+    validates that <code>url</code> / <code>sse_url</code> are
+    <code>http(s)</code>.</li>
+    <li><strong>Redaction catches modern credentials</strong> — the
+    <code>sk-</code> pattern now matches hyphenated keys
+    (<code>sk-proj-…</code>, <code>sk-ant-api03-…</code>) it used to miss, and
+    <code>Authorization</code> values are scrubbed in full (no cleartext
+    <code>Basic</code> / <code>Digest</code> credentials).</li>
+  </ul>
+
+  <h3 class="api-class">Added <span class="tag tag-class">added</span></h3>
+  <ul>
+    <li><code>WorkflowParticipant</code> (one canonical builder participant
+    type); <code>Provider</code> / <code>Strategy</code> re-exported from the
+    package root; <code>SyncAgent</code> config-method parity; an additive
+    <code>RetryMiddleware(retry_if=…)</code> predicate;
+    <code>RunConfig(raise_on_max_iterations=True)</code>; and an explicit
+    <code>Agent.chat()</code> signature.</li>
   </ul>
 
   <h3 class="api-class">Fixed <span class="tag tag-class">fixed</span></h3>
   <ul>
-    <li><strong>ADK Bridge no longer crashes on an empty
-    <code>candidates</code> list</strong> — Gemini safety blocks /
-    <code>MAX_TOKENS</code>-with-no-content / recitation stops return
-    <code>{"candidates": []}</code>, which raised <code>IndexError</code> (also
-    through <code>stream_tokens</code>); it now degrades to empty text.</li>
-    <li><strong>OpenAI Agents <em>Adapter</em> reads object- or dict-shaped
-    results/usage</strong> — normalisation for <code>final_output</code> /
-    <code>new_items</code> / <code>usage</code> (including object-shaped
-    <code>prompt_tokens</code> / <code>completion_tokens</code> aliases) and the
-    nested <code>response.output_text.delta</code> stream shape.</li>
-    <li><strong>LangChain adapter preserves conversation history</strong> on
-    non-alternating roles (a leading assistant turn no longer drops the whole
-    <code>chat_history</code>).</li>
-    <li><strong>Bridge usage backfills <code>total_tokens</code></strong> so a
-    custom <code>RuntimeImpl</code> reporting only input / output no longer
-    yields <code>total_tokens=0</code>; native Google ADK OTel
-    <code>gen_ai.system</code> normalises to the GenAI enum; duplicate workflow
-    participant / executor names are detected instead of silently collapsing.</li>
-  </ul>
-
-  <h3 class="api-class">Docs &amp; examples <span class="tag tag-class">docs</span></h3>
-  <ul>
-    <li>New migration guide
-    (<code>docs/user/upgrading_to_2.0.md</code>); the API reference documents
-    <code>for_openai</code> <code>base_url</code> / <code>api_key</code>, the
-    <code>human_step</code> <code>metadata</code> kwarg, and the
-    <code>HumanInTheLoopStep</code> <code>description</code> /
-    <code>metadata</code> fields.</li>
-    <li>README-dev package layout adds the <code>middleware/</code> subpackage,
-    <code>workflows/retry.py</code>, and <code>utils/secrets.py</code>; the
-    architecture-summary workflow matrix adds <code>RetryStep</code>; stale
-    post-1.4 / 1.5 usage comments are reworded.</li>
+    <li><strong>Skill/agent <code>defaults</code> can't silently misconfigure a
+    run</strong> (the audit's one high-severity finding) — a default named
+    <code>system_prompt</code> / <code>tools</code> used to overwrite the
+    resolved values (wrong prompt, no tools) and a default <code>extra</code> was
+    dropped; the merge is now typed and allowlisted.</li>
+    <li><strong>Workflows don't stall or orphan</strong> — blocking sync
+    callbacks run off the event loop, and the graph fan-out settles every
+    sibling before surfacing a failure.</li>
+    <li><strong>Friendlier failure modes</strong> — a missing <code>[openai]</code>
+    extra raises an actionable <code>ImportError</code>; the
+    <code>LangChainAdapter</code> stream forwards <code>chat_history</code>; plus
+    a bundle of middleware/runtime robustness fixes.</li>
   </ul>
 </div>
 
@@ -1173,7 +1155,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
   <div id="quickstart"></div>
   <h3 class="api-class">Quick Start</h3>
-  <p class="desc">Two convenience builders cover the common cases. <code>build_sync_agent</code> is the friction-free starting point — a blocking wrapper that hides <code>asyncio</code> entirely, ideal for scripts and prototypes. <code>build_agent</code> is the async equivalent for code already inside an event loop; it accepts the same parameters and returns a regular <code>Agent</code> you <code>await</code>. The parameter table below applies to both.</p>
+  <p class="desc">Two convenience builders cover the common cases. <code>build_sync_agent</code> is the friction-free starting point — a blocking wrapper that hides <code>asyncio</code> entirely, ideal for scripts and prototypes. <code>build_agent</code> is the async-friendly choice for code already inside an event loop; it accepts the same parameters and returns a regular <code>Agent</code> whose <code>run</code> / <code>chat</code> / <code>stream</code> you <code>await</code> (the builder itself is synchronous). The parameter table below applies to both.</p>
 
   <div id="build-sync-agent-shortcut"></div>
   <h4 class="api-method"><span class="fn">build_sync_agent</span>(<span class="param">provider</span>: <span class="typ">"openai" | "langchain" | "google-adk"</span>, <span class="param">**kwargs</span>) <span class="ret">→ SyncAgent</span></h4>
@@ -1414,7 +1396,7 @@ agent = (
     <span class="tp">AgentBuilder</span>()
     .with_name(<span class="st">"Research Agent"</span>)
     .with_description(<span class="st">"Searches the web and summarises findings."</span>)
-    .with_version(<span class="st">"2.1.0"</span>)
+    .with_version(<span class="st">"2.2.0"</span>)
     .with_tags(<span class="st">"prod"</span>, <span class="st">"research"</span>)
     .with_system_prompt(<span class="st">"You are a thorough research assistant."</span>)
     .with_tools([search_tool])
@@ -1933,13 +1915,13 @@ adk_runtime = <span class="tp">NativeRuntimeFactory</span>.for_google_adk(runner
   <p class="desc">Constructs Adapter-pattern runtimes that wrap existing platform objects. The platform manages its own loop; no strategy choice is needed or possible.</p>
 
   <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_google_adk</span>(<span class="param">adk_runner</span>, <span class="param">app_name</span>: <span class="typ">str</span>, <span class="param">user_id</span>: <span class="typ">str</span>, <span class="param">session_id</span>: <span class="typ">str</span>) <span class="ret">→ GoogleADKAdapter</span></h4>
-  <p class="desc">Wraps an ADK runner that exposes <code>run_async(app_name, user_id, session_id, new_message)</code> as an async generator.</p>
+  <p class="desc">Wraps an ADK runner that exposes <code>run_async(*, user_id, session_id, new_message)</code> as an async generator. <code>app_name</code> identifies the ADK session (used with <code>user_id</code> / <code>session_id</code> at construction), not a <code>run_async</code> argument.</p>
 
   <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_openai</span>(<span class="param">runner</span>, <span class="param">agent_definition</span>: <span class="typ">dict</span>) <span class="ret">→ OpenAIAgentsAdapter</span></h4>
-  <p class="desc">Wraps an <code>@openai/agents</code> Runner. <code>agent_definition</code> requires at minimum <code>{"name": ..., "instructions": ...}</code>.</p>
+  <p class="desc">Wraps an <code>openai-agents</code> Runner. <code>agent_definition</code> requires at minimum <code>{"name": ..., "instructions": ...}</code> (optionally <code>model</code>). As of 2.2.0 the adapter builds a real <code>agents.Agent</code> from it plus the run's tools and <code>RunConfig.extra["tool_handlers"]</code>, passes it as <code>Runner.run(starting_agent=…)</code>, and reads tool metadata from <code>item.raw_item</code> — requires the <code>[openai]</code> extra.</p>
 
   <h4 class="api-method"><span class="kw">@staticmethod</span> <span class="fn">for_langchain</span>(<span class="param">agent_executor</span>) <span class="ret">→ LangChainAdapter</span></h4>
-  <p class="desc">Wraps a LangChain <code>AgentExecutor</code> (or <code>CompiledGraph</code>) with <code>ainvoke</code> and optionally <code>astream</code>.</p>
+  <p class="desc">Wraps a LangChain agent — either shape, auto-detected (2.2.0): a LangGraph graph from LangChain 1.x <code>create_agent</code> (messages-in/out, the recommended target) or a legacy 0.x <code>AgentExecutor</code> (<code>ainvoke({"input"})</code> / <code>intermediate_steps</code>). The adapter translates each on both <code>run</code> and <code>stream</code>.</p>
 
 <pre><code><span class="kw">from</span> kneo_agent.patterns <span class="kw">import</span> <span class="tp">AdapterAgentFactory</span>
 
@@ -2031,8 +2013,8 @@ agent = <span class="tp">AgentBuilder</span>().use_adapter(adapter).build()</cod
 
   <div id="oai-adapter"></div>
   <h3 class="api-class">OpenAIAgentsAdapter <span class="tag tag-class">adapter</span></h3>
-  <p class="desc">Wraps an <code>@openai/agents</code> Runner. Translates the SDK's <code>list[Message]</code> into the runner's single <code>input: str</code> and maps <code>new_items</code> back to <code>ToolResult[]</code>. <code>name</code> → <code>"openai-agents-adapter"</code>.</p>
-<pre><code><span class="kw">from</span> agents <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">Runner</span>    <span class="cm"># @openai/agents</span>
+  <p class="desc">Wraps an <code>openai-agents</code> Runner. Builds a real <code>agents.Agent</code> per call (2.2.0), translates the SDK's <code>list[Message]</code> into the runner's single <code>input: str</code>, and maps <code>new_items</code> (via <code>item.raw_item</code>) back to <code>ToolResult[]</code>. <code>name</code> → <code>"openai-agents-adapter"</code>.</p>
+<pre><code><span class="kw">from</span> agents <span class="kw">import</span> <span class="tp">Agent</span>, <span class="tp">Runner</span>    <span class="cm"># openai-agents</span>
 <span class="kw">from</span> kneo_agent.runtime.adapters <span class="kw">import</span> <span class="tp">OpenAIAgentsAdapter</span>
 
 oai_agent = <span class="tp">Agent</span>(name=<span class="st">"helper"</span>, instructions=<span class="st">"Be helpful."</span>, tools=[...])
@@ -2722,7 +2704,7 @@ review = <span class="tp">WorkflowBuilder</span>.human_step(
 
 <!-- ── Footer ─────────────────────────────────────────────── -->
 <div class="page-footer">
-  <p>Kneo Agent v2.0.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
+  <p>Kneo Agent v2.2.0 · MIT License · Python 3.12+ · <code>pip install kneo-agent</code></p>
   <p style="margin-top:0.3rem">Run the test suite: <code>pytest -q tests</code> &nbsp;·&nbsp; Or: <code>make test</code></p>
 </div>
 

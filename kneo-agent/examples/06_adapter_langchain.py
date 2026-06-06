@@ -1,8 +1,16 @@
 """
-Example 06 — Adapter pattern with LangChain AgentExecutor
-==========================================================
-Wraps an existing LangChain AgentExecutor (or CompiledGraph).
-The Adapter translates the (input, chat_history) interface to AgentRuntime.
+Example 06 — Adapter pattern with LangChain
+============================================
+Wraps an existing LangChain agent — either shape, auto-detected:
+
+- a **LangGraph** graph from LangChain 1.x ``create_agent`` (messages-in /
+  messages-out), or
+- a legacy 0.x ``AgentExecutor`` (the ``(input, chat_history)`` →
+  ``(output, intermediate_steps)`` contract shown here).
+
+This example uses a BYO executor matching the legacy contract so it runs
+offline with no extra; point ``for_langchain`` at a real ``create_agent``
+graph and the adapter translates the messages contract instead.
 
 Run::
 

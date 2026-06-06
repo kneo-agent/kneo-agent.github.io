@@ -1666,14 +1666,15 @@ dict-shaped results.</p>
 <code>run(agent=…)</code> / <code>stream()</code> shape, update it to <code>run(starting_agent=…)</code> /
 <code>run_streamed(…).stream_events()</code>.</p>
 <blockquote>
-<p><strong>Note — adapters are demonstration adapters.</strong> The <code>OpenAIAgentsAdapter</code>
-and <code>LangChainAdapter</code> illustrate the Adapter pattern and are validated
-against SDK-shaped fakes; they are <strong>not fully wired to the live SDKs</strong> (e.g.
-the OpenAI adapter reads tool-call metadata directly off the run item, but
-the real SDK nests it in <code>item.raw_item</code>). <strong>For a production OpenAI path
-against the real SDK, use the native runtime</strong> —
-<code>NativeRuntimeFactory.for_openai(...)</code>. Closing this gap is tracked as a
-follow-up.</p>
+<p><strong>Note — adapter fidelity (2.0–2.1 vs 2.2.0).</strong> In 2.0–2.1 the
+<code>OpenAIAgentsAdapter</code> / <code>LangChainAdapter</code> were <em>demonstration</em> adapters,
+validated against SDK-shaped fakes and not fully wired to the live SDKs.
+<strong>Resolved in 2.2.0</strong> (additive, no signature change): the OpenAI adapter
+builds a real <code>agents.Agent</code> and reads tool metadata from <code>item.raw_item</code>,
+and the LangChain adapter handles both a LangGraph <code>create_agent</code> graph and a
+legacy <code>AgentExecutor</code>. The native runtime
+(<code>NativeRuntimeFactory.for_openai(...)</code>) remains a fine choice for the OpenAI
+path. See the 2.2.0 release notes.</p>
 </blockquote>
 <p>The <strong>Google ADK</strong> and <strong>LangChain</strong> <em>Adapters</em> are <strong>pass-through</strong>: the
 wrapped runner / executor owns its own configuration, and <code>RunConfig</code>
