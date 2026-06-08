@@ -2798,7 +2798,7 @@
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;final status: </span><span class="si">{</span><span class="n">terminal</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">trace</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">created</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">trace</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">trace</span><span class="p">:</span>  <span class="c1"># trace is a Page — iterate it directly (or use trace.items)</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
 </code></pre></div>
 <p>The interesting parts:</p>
@@ -3955,21 +3955,21 @@ easy to misuse. Pattern:</p>
 </thead>
 <tbody>
 <tr>
-<td><code>0.5.0</code></td>
-<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
+<td><code>0.6.0</code></td>
+<td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.7.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Current</td>
 </tr>
 <tr>
-<td><code>0.4.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
+<td><code>0.5.0</code></td>
+<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Previous</td>
 </tr>
 <tr>
-<td><code>0.3.0</code></td>
+<td><code>0.4.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
@@ -4007,6 +4007,10 @@ easy to misuse. Pattern:</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>0.6.x</code> / <code>0.7.x</code></td>
+<td><code>0.6.0</code> (pinned to <code>v0.7.0</code>). Adds the audit-events pagination + sorting kwargs (<code>offset</code> / <code>sort_by</code> / <code>sort_order</code>, server-honored since <code>kneo_serv 0.6.0</code>), the standardized error envelope, and the <code>HumanTaskResponse.messages</code> thread projection. A <code>v0.5.0</code>-pinned client (<code>0.5.x</code>) still works against <code>0.6.x</code>/<code>0.7.x</code> for everything it wraps — it just won't expose those additions.</td>
+</tr>
 <tr>
 <td><code>0.5.x</code></td>
 <td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailable</code> for the new <code>503</code> backpressure path.</td>

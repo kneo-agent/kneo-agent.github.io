@@ -1075,21 +1075,21 @@
 </thead>
 <tbody>
 <tr>
-<td><code>0.5.0</code></td>
-<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
+<td><code>0.6.0</code></td>
+<td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.7.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Current</td>
 </tr>
 <tr>
-<td><code>0.4.0</code></td>
-<td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
-<td><code>kneo_serv</code> <code>0.4.x</code> line</td>
+<td><code>0.5.0</code></td>
+<td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.5.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Previous</td>
 </tr>
 <tr>
-<td><code>0.3.0</code></td>
+<td><code>0.4.0</code></td>
 <td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.4.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
@@ -1127,6 +1127,10 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>0.6.x</code> / <code>0.7.x</code></td>
+<td><code>0.6.0</code> (pinned to <code>v0.7.0</code>). Adds the audit-events pagination + sorting kwargs (<code>offset</code> / <code>sort_by</code> / <code>sort_order</code>, server-honored since <code>kneo_serv 0.6.0</code>), the standardized error envelope, and the <code>HumanTaskResponse.messages</code> thread projection. A <code>v0.5.0</code>-pinned client (<code>0.5.x</code>) still works against <code>0.6.x</code>/<code>0.7.x</code> for everything it wraps — it just won't expose those additions.</td>
+</tr>
 <tr>
 <td><code>0.5.x</code></td>
 <td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailable</code> for the new <code>503</code> backpressure path.</td>
