@@ -1737,6 +1737,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#audit-event-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-event export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#opentelemetry-spans" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2129,6 +2140,28 @@
     <span class="md-ellipsis">
       
         0.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#060" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#070" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.0
       
     </span>
   </a>
@@ -3413,6 +3446,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#audit-event-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-event export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#opentelemetry-spans" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3805,6 +3849,28 @@
     <span class="md-ellipsis">
       
         0.5.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#060" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.6.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#070" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.7.0
       
     </span>
   </a>
@@ -4614,10 +4680,15 @@ unauthenticated — restrict it to your monitoring network or disable it with
 for write-concurrent scale on PostgreSQL, run <strong>multiple service processes</strong> —
 each leases queued runs safely via <code>FOR UPDATE SKIP LOCKED</code>. Sizing guidance and
 the SQLite single-writer caveat are in <a href="../../user/performance/">performance.md</a>.</p>
-<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains gracefully: workers
-finish their in-flight run and stop claiming new work before the process exits,
-so no run is interrupted mid-flight. Give your orchestrator a termination grace
-period at least as long as your longest expected run step. Set
+<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains the worker pool: workers
+stop claiming new work and finish the run they are currently executing, and the
+service waits up to <code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (default <code>30</code>) for them
+to exit. A run <em>still executing</em> when that timeout elapses is interrupted by
+process exit — but it stays claimed and is automatically re-leased and retried
+by another worker once its <code>KNEO_SERV_WORKER_LEASE_SECONDS</code> lease expires, so it
+is not lost, only restarted. To drain in-flight runs without that restart, set
+<code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (and your orchestrator's termination grace
+period) at least as long as your longest expected run step. Set
 <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> to shed load with <code>503</code> under overload, and
 <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) to dead-letter poison runs rather
 than retry them forever.</p>
@@ -4828,7 +4899,7 @@ no built-in role fits.</p>
 <li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
 </ul>
 <h4 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime<a class="headerlink" href="#3-rotate-keys-without-downtime" title="Permanent link">&para;</a></h4>
-<p><code>kneo-serv</code> has no in-place key rotation API in the 0.5.x line.
+<p><code>kneo-serv</code> has no in-place key rotation API in the 0.x (pre-1.0) line.
 Rotation is a config swap:</p>
 <ol>
 <li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
@@ -4919,7 +4990,7 @@ SBOM attestation describes), so the four supply-chain artifacts —
 image, cosign signature, SBOM attestation, and scan report — all
 agree on what they describe.</p>
 <p><strong>Locked policy</strong> (0.4.0; recorded in
-plan/TODO-0.4.0.md):</p>
+archive_TODO-0.4.0.md):</p>
 <ul>
 <li><strong>Severity threshold:</strong> CVSS≥7 (HIGH and CRITICAL findings).</li>
 <li><strong>Release-tag scans (<code>v&lt;version&gt;</code> / <code>v&lt;version&gt;rcN</code>):</strong> blocking.
@@ -4955,8 +5026,10 @@ tolerance accepts a specific finding (e.g. low exploitability in
 your network posture), record the acceptance in
 <code>supply_chain_review.md § Current workspace result</code>
 using the same shape as the existing <code>pip-audit</code> remediation
-blocks. The release pipeline does not implement an inline-ignore
-mechanism — acceptances are deployer policy, not platform policy.</p>
+blocks. For <em>dependency</em> (<code>pip-audit</code>) findings the release pipeline has
+no inline-ignore mechanism — those acceptances are deployer policy. For
+<em>image</em> CVEs, the blocking Trivy gate (since 0.4.0) reads acceptances from
+<code>.trivyignore</code> in the repo root, the active image-CVE-acceptance policy.</p>
 <h3 id="what-kneo-serv-deliberately-does-not-provide">What <code>kneo-serv</code> deliberately does not provide<a class="headerlink" href="#what-kneo-serv-deliberately-does-not-provide" title="Permanent link">&para;</a></h3>
 <p>Operators sometimes go looking for these; document the gap rather than
 inventing it:</p>
@@ -5013,7 +5086,7 @@ full env-var list, see
 </tr>
 <tr>
 <td>Prometheus metrics</td>
-<td>Run-queue gauges + per-process run counters</td>
+<td>Run-queue gauges + per-process run &amp; token counters</td>
 <td><code>GET /metrics</code> (since 0.5.0), opt-out via <code>KNEO_SERV_METRICS_ENABLED</code></td>
 </tr>
 </tbody>
@@ -5053,6 +5126,21 @@ that does not expose <code>/metrics</code> publicly), or disable it with
 <td><code>kneo_runs_dead_lettered_total</code></td>
 <td>counter</td>
 <td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_input_total</code></td>
+<td>counter</td>
+<td>Input/prompt tokens consumed across runs (from each run's <code>metadata["usage"]</code>, when the runtime reports it).</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_output_total</code></td>
+<td>counter</td>
+<td>Output/completion tokens produced across runs.</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_total</code></td>
+<td>counter</td>
+<td>Total tokens (input + output) across runs.</td>
 </tr>
 <tr>
 <td><code>kneo_runs_queued</code></td>
@@ -5115,7 +5203,7 @@ Redaction is applied to every payload before it reaches the log line.
 <tr>
 <td><code>KNEO_SERV_LOG_LEVEL</code></td>
 <td><code>INFO</code></td>
-<td>Service logger level.</td>
+<td>Stack-wide level: <code>kneo_serv.service</code> + <code>kneo_serv.platform</code> + <code>kneo_agent</code> SDK.</td>
 </tr>
 </tbody>
 </table>
@@ -5126,7 +5214,10 @@ header.</p>
 <ul>
 <li>Keep <code>KNEO_SERV_LOG_LEVEL=INFO</code> in production. <code>DEBUG</code> doubles log
   volume and can leak diagnostic payloads from middleware that wraps the
-  request logger.</li>
+  request logger. Note it is <strong>stack-wide</strong>: it sets the request logger,
+  the platform worker / lease / drain logger (<code>kneo_serv.platform</code>), and
+  the <code>kneo_agent</code> SDK logger together, so <code>DEBUG</code> turns all three up at
+  once — useful for diagnosing a stuck run end-to-end, noisy as a default.</li>
 <li>Configure your container runtime's log driver (Docker <code>json-file</code> with
   rotation, Kubernetes <code>kubectl logs</code> rotation, journald) — the service
   writes to stdout and relies on the runtime to rotate.</li>
@@ -5156,6 +5247,24 @@ they are always available even without OpenTelemetry.</p>
 <a href="../../user/service_api/#audit-events"><code>service_api.md § Audit events</code></a> and
 <a href="../../user/service_api/#replay-and-checkpoint-diff"><code>service_api.md § Replay and checkpoint diff</code></a>
 for the contract.</p>
+<h3 id="audit-event-export">Audit-event export<a class="headerlink" href="#audit-event-export" title="Permanent link">&para;</a></h3>
+<p>Audit events are always queryable via <code>GET /v1/audit-events</code> and stored in the
+run-state store. For compliance retention you can additionally <strong>stream them
+out</strong>: set <code>KNEO_SERV_AUDIT_EXPORT_ENABLED=true</code> and each persisted event is
+emitted as a JSON line on the dedicated <code>kneo_serv.audit</code> logger, from the same
+<code>record_audit_event</code> chokepoint (so the payload is already redacted).</p>
+<p>It is <strong>off by default</strong> — enabling it is a zero-behavior-change opt-in. The
+transport is plain stdlib logging, so wire it to your sink the usual way:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">logging.handlers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SysLogHandler</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="n">audit</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_serv.audit&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="n">audit</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">SysLogHandler</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;siem.internal&quot;</span><span class="p">,</span> <span class="mi">514</span><span class="p">)))</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="n">audit</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</code></pre></div>
+<p>With no dedicated handler the events propagate to the root logger and land in
+your normal JSON logs alongside the request logs. This is the v1 sink; a direct
+SIEM/OTLP-logs exporter may follow.</p>
 <h3 id="opentelemetry-spans">OpenTelemetry spans<a class="headerlink" href="#opentelemetry-spans" title="Permanent link">&para;</a></h3>
 <p>When the deployment includes the SDK telemetry support (the <code>[telemetry]</code>
 or <code>[deploy]</code> extras), set <code>KNEO_SERV_OTEL_ENABLED=true</code> to attach
@@ -5209,17 +5318,17 @@ shown in <a href="#81-lockacquisitionerror-on-resume">troubleshooting.md § 8.1<
 configured with standard <code>OTEL_*</code> environment variables that the OTel
 SDK reads. Example for OTLP/HTTP to any compatible backend (Honeycomb,
 Grafana Tempo, Tempo Cloud, Datadog, an OTel Collector):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_OTEL_ENABLED</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/protobuf
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>https://api.honeycomb.io
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_HEADERS</span><span class="o">=</span><span class="s2">&quot;x-honeycomb-team=</span><span class="nv">$HONEYCOMB_API_KEY</span><span class="s2">&quot;</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_SERVICE_NAME</span><span class="o">=</span>kneo-serv
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;deployment.environment=prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_OTEL_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/protobuf
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>https://api.honeycomb.io
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_HEADERS</span><span class="o">=</span><span class="s2">&quot;x-honeycomb-team=</span><span class="nv">$HONEYCOMB_API_KEY</span><span class="s2">&quot;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_SERVICE_NAME</span><span class="o">=</span>kneo-serv
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;deployment.environment=prod&quot;</span>
 </code></pre></div>
 <p>For a self-hosted OTel Collector running as a sidecar:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
 </code></pre></div>
 <p>If OTel does not appear to be exporting, see
 <a href="#72-opentelemetry-not-exporting"><code>troubleshooting.md § 7.2</code></a>.</p>
@@ -5331,24 +5440,24 @@ continuations and artifacts when PostgreSQL is not configured.</p>
 <code>KNEO_SERV_DATABASE_URL</code>. In that mode all state above (except artifacts)
 lives in PostgreSQL.</p>
 <h4 id="take-a-backup">Take a backup<a class="headerlink" href="#take-a-backup" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;kneo_serv-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">.sql.gz&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;kneo_serv-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">.sql.gz&quot;</span>
 </code></pre></div>
 <p>For a host-level Postgres install, run <code>pg_dump</code> directly as the
 <code>postgres</code> user; the data shape is the same.</p>
 <h4 id="restore-from-a-backup-destructive-wipes-current-state">Restore from a backup <em>(destructive — wipes current state)</em><a class="headerlink" href="#restore-from-a-backup-destructive-wipes-current-state" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Restore replaces every row in the database. Stop the API container first
 so no in-flight write races the restore:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>stop<span class="w"> </span>api
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>start<span class="w"> </span>api
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>stop<span class="w"> </span>api
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>start<span class="w"> </span>api
 </code></pre></div>
 <h4 id="off-site-rotation">Off-site rotation<a class="headerlink" href="#off-site-rotation" title="Permanent link">&para;</a></h4>
 <p>Local backups protect against operator error, not host loss. After each
@@ -5365,23 +5474,23 @@ dump, copy the gzip off the host:</p>
 volume, the service handles schema migrations on startup. Capture a
 data-only dump and exclude the <code>schema_migrations</code> rows so the new
 volume's migration state isn't overwritten:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span>--data-only<span class="w"> </span>--inserts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data.sql
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>docker<span class="w"> </span>cp<span class="w"> </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data.sql<span class="w"> </span>/tmp/kneo_serv_data.sql
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;INSERT INTO public.schema_migrations&quot;</span><span class="w"> </span>/tmp/kneo_serv_data.sql<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span>--data-only<span class="w"> </span>--inserts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data.sql
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>docker<span class="w"> </span>cp<span class="w"> </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data.sql<span class="w"> </span>/tmp/kneo_serv_data.sql
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;INSERT INTO public.schema_migrations&quot;</span><span class="w"> </span>/tmp/kneo_serv_data.sql<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
 </code></pre></div>
 <p>Restore into a clean volume after the API has come up at least once (so
 migrations have run):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down<span class="w"> </span>-v
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>docker<span class="w"> </span>cp<span class="w"> </span>/tmp/kneo_serv_data_restore.sql<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data_restore.sql
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">  </span>psql<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>restart<span class="w"> </span>api
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down<span class="w"> </span>-v
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>docker<span class="w"> </span>cp<span class="w"> </span>/tmp/kneo_serv_data_restore.sql<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data_restore.sql
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="w">  </span>psql<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>restart<span class="w"> </span>api
 </code></pre></div>
 <p><code>ON_ERROR_STOP=1</code> aborts the restore on the first failing INSERT so you
 don't end up with partial state.</p>
@@ -5389,19 +5498,19 @@ don't end up with partial state.</p>
 <p>When <code>KNEO_SERV_DATABASE_URL</code> is unset, run state lives in
 <code>.kneo/kneo_runs.sqlite</code> and continuations in <code>.kneo/continuations/</code>. The
 service ships an online backup helper:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.maintenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">backup_sqlite_database</span><span class="p">,</span> <span class="n">restore_sqlite_database</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Online — safe while the service is running</span>
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="n">backup_sqlite_database</span><span class="p">(</span>
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="s2">&quot;.kneo/kneo_runs.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="p">)</span>
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="c1"># Restore into a new location, then swap into place during a window</span>
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">restore_sqlite_database</span><span class="p">(</span>
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>    <span class="s2">&quot;.kneo/kneo_runs.restored.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_serv.maintenance</span><span class="w"> </span><span class="kn">import</span> <span class="n">backup_sqlite_database</span><span class="p">,</span> <span class="n">restore_sqlite_database</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="c1"># Online — safe while the service is running</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="n">backup_sqlite_database</span><span class="p">(</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>    <span class="s2">&quot;.kneo/kneo_runs.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="p">)</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="c1"># Restore into a new location, then swap into place during a window</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="n">restore_sqlite_database</span><span class="p">(</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>    <span class="s2">&quot;.kneo/kneo_runs.restored.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="p">)</span>
 </code></pre></div>
 <p><code>backup_sqlite_database</code> uses SQLite's <code>backup()</code> API and is safe to run
 against a live database. <code>restore_sqlite_database</code> is a plain file copy —
@@ -5445,18 +5554,18 @@ schedule below, not after a real incident.</p>
 <li>Provision a scratch host or namespace and restore the backup into it.</li>
 <li>Start <code>kneo-serv</code> against the restored database.</li>
 <li>Verify dependencies:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.ready&#39;</span><span class="w">   </span><span class="c1"># → true</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.ready&#39;</span><span class="w">   </span><span class="c1"># → true</span>
 </code></pre></div></li>
 <li>Verify a known run survived:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/runs?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runs[].run_id&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/runs?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runs[].run_id&#39;</span>
 </code></pre></div></li>
 <li>Run the deployment smoke against the restored stack
    (<a href="#deployment-smoke-test"><code>deployment_smoke.md</code></a>). It exercises
    run create → fetch → cancel and confirms checkpoints persist.</li>
 <li>Verify audit events from before the backup are present:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/audit-events?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.events[].event_type&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/audit-events?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.events[].event_type&#39;</span>
 </code></pre></div></li>
 </ol>
 <p>Recommended cadence: monthly restore drill into a scratch environment,
@@ -5467,7 +5576,7 @@ new release misbehaves and the issue can't be patched forward:</p>
 <ol>
 <li><strong>Stop the service.</strong> Quiesce writers; the proxy can keep returning
    <code>503</code> from <code>/readyz</code> until step 5.
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>stop<span class="w"> </span>api
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>stop<span class="w"> </span>api
 </code></pre></div></li>
 <li><strong>Restore persistence</strong> from the pre-upgrade backup using the
    PostgreSQL or SQLite procedure above.</li>
@@ -5475,7 +5584,7 @@ new release misbehaves and the issue can't be patched forward:</p>
    the pip package at the prior version. Update Compose / Kubernetes
    manifests accordingly.</li>
 <li><strong>Restart the service.</strong>
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>start<span class="w"> </span>api
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>start<span class="w"> </span>api
 </code></pre></div></li>
 <li><strong>Verify</strong> with <code>curl /readyz</code> and the deployment smoke
    (<a href="#deployment-smoke-test"><code>deployment_smoke.md</code></a>).</li>
@@ -5552,7 +5661,7 @@ design.md § 13.</p>
    notes. Notes for the current release are at
    release_notes_0.1.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>kneo-serv[deploy]==X.Y.Z
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
 <li><strong>Stop traffic</strong> to the service (or drain via a load balancer). Background
    runs that are queued will be reclaimed by the worker after restart;
@@ -5567,7 +5676,7 @@ design.md § 13.</p>
    Watch the structured log for <code>migration</code> events and any
    <code>migration_failed</code> errors.</li>
 <li><strong>Verify</strong> with <code>GET /readyz</code> and the deployment smoke script:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--base-url<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;
 </code></pre></div></li>
 <li><strong>Resume traffic.</strong></li>
 </ol>
@@ -5591,8 +5700,8 @@ portability rules, the test patterns), see
 <p>The YAML spec format is versioned at <code>version: v1</code>. The compiler accepts
 older shapes through automatic normalization, but for clarity the CLI can
 write upgraded specs to disk:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>migrate<span class="w"> </span>legacy_agent.yaml<span class="w"> </span>--output<span class="w"> </span>migrated_agent.yaml
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>migrate<span class="w"> </span>migrated_agent.yaml<span class="w"> </span>--check<span class="w"> </span>--json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>migrate<span class="w"> </span>legacy_agent.yaml<span class="w"> </span>--output<span class="w"> </span>migrated_agent.yaml
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>migrate<span class="w"> </span>migrated_agent.yaml<span class="w"> </span>--check<span class="w"> </span>--json
 </code></pre></div>
 <p>Specs that pass <code>kneo spec validate</code> on the source version will
 continue to compile after upgrading; specs that hit deprecation warnings
@@ -5899,6 +6008,153 @@ behaviour):
 - <strong>Graceful drain.</strong> On SIGTERM the worker pool finishes in-flight runs and
   stops claiming new ones, so container rollouts no longer interrupt a run.</p>
 <p><strong>Persistence schemas</strong>: unchanged. No new fields, no migrations.</p>
+<h4 id="060">0.6.0<a class="headerlink" href="#060" title="Permanent link">&para;</a></h4>
+<p>Multi-process PostgreSQL hardening + uptake of the Kneo Agent SDK 2.x line.
+<strong>Additive persistence migrations only</strong> (a new checkpoint uniqueness index);
+no breaking spec-syntax, CLI, or env-var-removal changes. Two intentional
+<em>observable</em> changes (error codes, <code>RunConfig</code> defaults) are called out below.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.6.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.6.0</code> — <code>:0.6</code> and <code>:latest</code>
+  resolve to the 0.6.0 digest; image signing, SBOM attestation, and the Trivy
+  scan gate are unchanged.</p>
+<p><strong>SDK floor bumped to <code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code></strong> (from <code>&gt;=1.2.0,&lt;2.0.0</code>). The
+service installs this for you; if you pin <code>kneo-agent</code> yourself, move your pin
+onto the 2.x line. The bump picks up SDK security fixes (MCP cross-origin
+redirect refusal + URL-scheme validation; broader secret redaction). Two SDK
+2.x behaviour deltas a deployer may notice:
+- <strong>The SDK no longer auto-retries tool calls.</strong> kneo-serv's own retry knobs
+  (<code>KNEO_SERV_PROVIDER_RETRIES</code>, <code>KNEO_SERV_MCP_RETRIES</code>, …) are unchanged and
+  still apply; only the SDK's internal per-tool retry default flipped off.
+- <strong>Spec/agent <code>with_defaults</code> for <code>temperature</code> / <code>max_iterations</code> now actually
+  apply</strong> — see the <code>RunConfig</code> change below.</p>
+<p><strong>Observable change — error-code remap (action may be required).</strong> The public
+<code>error</code> field in error responses is now a stable, snake_case code decoupled from
+internal Python class names:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Old <code>error</code></th>
+<th>New <code>error</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>404</td>
+<td><code>KeyError</code></td>
+<td><code>not_found</code></td>
+</tr>
+<tr>
+<td>400</td>
+<td><code>ValueError</code> / <code>FileNotFoundError</code></td>
+<td><code>invalid_request</code></td>
+</tr>
+<tr>
+<td>500</td>
+<td><code>&lt;ExceptionClassName&gt;</code> (+ raw message)</td>
+<td><code>internal_error</code> (generic message)</td>
+</tr>
+</tbody>
+</table>
+<p><code>queue_full</code>, <code>resource_locked</code>, <code>unauthorized</code>, <code>forbidden</code>, and the
+idempotency codes are unchanged. If a client matched on the old class-name codes
+(<code>KeyError</code>, <code>ValueError</code>, …), update it to the new codes. The error envelope —
+<code>{"detail": {"error": "...", "message": "..."}}</code> — is otherwise unchanged and is
+now published in the OpenAPI schema as <code>ErrorResponse</code> / <code>ErrorDetail</code>. 500
+responses no longer echo the exception message, and <code>/readyz</code> probe failures no
+longer leak the underlying error detail (both are logged server-side instead).</p>
+<p><strong>Observable change — <code>RunConfig</code> defaults now merge.</strong> Before 0.6.0, a run that
+didn't specify <code>max_iterations</code> / <code>temperature</code> had them force-set to <code>10</code> /
+<code>0.7</code>, silently overriding a spec author's <code>with_defaults(...)</code>. 0.6.0 leaves
+them unspecified so the agent/skill defaults apply (SDK 2.x merge semantics). If
+a spec set <code>temperature: 0.2</code> (or a custom <code>max_iterations</code>) and you relied on
+the run <em>ignoring</em> it, the spec value now takes effect. To force a value
+regardless of the spec, set it explicitly on the run config. A malformed
+<code>temperature</code> (non-numeric / <code>bool</code> / <code>NaN</code> / <code>inf</code>) now returns <code>400
+invalid_request</code> instead of a 500.</p>
+<p><strong>New operator knobs</strong> (all additive; defaults preserve 0.5.x behaviour):
+- <strong><code>KNEO_SERV_RETENTION_AUDIT_DAYS</code></strong> (and project-config <code>retention.audit_days</code>)
+  — prune audit events older than N days. The audit table is otherwise unbounded;
+  set this on long-lived deployments.
+- <strong><code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code></strong> (default <code>30</code>) — how long SIGTERM
+  shutdown waits for in-flight runs to finish. A run still executing past the
+  timeout is interrupted by process exit but stays claimed and is re-leased /
+  retried (not lost); set this <strong>and</strong> your orchestrator's termination grace
+  period ≥ your longest run step to drain without a restart.
+- <strong>Token-usage metrics.</strong> <code>/metrics</code> now exposes <code>kneo_tokens_input_total</code>,
+  <code>kneo_tokens_output_total</code>, and <code>kneo_tokens_total</code> counters; usage is also on
+  the run record and <code>run.created</code> audit metadata when the runtime reports it.
+- <strong>Idempotency in-progress.</strong> A duplicate <code>POST</code> arriving while the first
+  same-key request is still in flight now returns <code>409 idempotency_key_in_progress</code>
+  (previously the two could race). Treat <code>409</code> as "retry shortly".</p>
+<p><strong>Persistence schemas</strong>: one <strong>additive</strong> migration — a <code>UNIQUE(run_id, sequence)</code>
+index on <code>checkpoints</code> (migration v3), which de-duplicates any pre-existing
+duplicate <code>(run_id, sequence)</code> rows on first start. PostgreSQL queue/lease
+timestamp columns are widened <code>REAL → DOUBLE PRECISION</code> in place (a precision
+fix). No data backfill or operator action required; both apply automatically on
+the first start under 0.6.0.</p>
+<h4 id="070">0.7.0<a class="headerlink" href="#070" title="Permanent link">&para;</a></h4>
+<p>Finishing the 0.6.0 lease-liveness story plus an on-prem operability cluster.
+<strong>No breaking changes, no persistence migration, no SDK-floor change</strong> — the
+schema version is unchanged from 0.6.0 and the SDK floor stays
+<code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>. Two <em>behaviour</em> notes below are worth reading before
+you upgrade; everything else is additive and default-off / default-unset.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.7.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.7.0</code> — <code>:0.7</code> and <code>:latest</code>
+  resolve to the 0.7.0 digest. The release pipeline now runs an <strong>in-pipeline
+  cosign verify self-check</strong> (<code>cosign verify</code> + <code>verify-attestation</code> against the
+  pushed digest); image signing, SBOM attestation, and the Trivy gate are
+  otherwise unchanged.</p>
+<p><strong>Behaviour note — <code>worker_lease_seconds</code> is now a liveness window, not a
+run-time cap.</strong> A worker now renews its queue lease for the life of a run (a
+heartbeat renewing at ~<code>worker_lease_seconds / 3</code>), so a healthy long run never
+lets its lease lapse and get reclaimed mid-flight. The lease therefore no longer
+bounds how long a run may take — it bounds how long a <em>crashed</em> worker's run
+stays unreclaimable. If you raised <code>worker_lease_seconds</code> in 0.5.x/0.6.x to "fit"
+your longest run, you can lower it back toward your crash-detection latency. No
+action is required; the default is unchanged and shorter leases are now safe.</p>
+<p><strong>Behaviour note — the per-run token ceiling is a post-run boundary check, not a
+mid-flight kill.</strong> A run can be capped at a maximum input+output token budget via
+the SDK's <code>TokenBudgetMiddleware</code>, configured per agent with <code>model.token_budget</code>
+in the spec (a <strong>positive</strong> integer — a non-positive value is rejected at spec
+validation, not silently ignored) or deployment-wide with
+<code>KNEO_SERV_TOKEN_BUDGET</code> (the spec field wins). The middleware checks reported
+usage <strong>after</strong> each run and then raises
+<code>TokenBudgetExceeded</code>, surfaced as <code>400 token_budget_exceeded</code>. Consequences:
+- A run that overshoots within a single step finishes that step before failing —
+  size the ceiling as a spend <strong>backstop</strong>, not a precise hard stop.
+- <code>on_missing="ignore"</code>: a runtime that doesn't report <code>metadata["usage"]</code> never
+  spuriously fails the ceiling. Unset (the default) means no ceiling.</p>
+<p><strong>New operator knobs</strong> (all additive; defaults preserve 0.6.x behaviour):
+- <strong><code>KNEO_SERV_AUDIT_EXPORT_ENABLED</code></strong> — when set, every persisted (already
+  redacted) audit event is also emitted as a JSON line on the dedicated
+  <code>kneo_serv.audit</code> logger, from the single <code>record_audit_event</code> chokepoint.
+  Attach a logging handler to forward to a file / syslog / SIEM. Off by default;
+  export failures never break the run path.
+- <strong><code>KNEO_SERV_TOKEN_BUDGET</code></strong> — deployment-wide per-run token ceiling (see the
+  behaviour note above). A spec's <code>model.token_budget</code> overrides it.
+- <strong>Local / self-hosted LLM endpoints.</strong> The native (<code>openai</code>) runtime now reads
+  <code>model.extra.base_url</code> and an API key — <code>model.extra.api_key_ref</code> resolved
+  through the <code>SecretResolver</code>, or a literal <code>api_key</code> escape hatch — and threads
+  them into the OpenAI-compatible client, so a spec can target Ollama / vLLM /
+  llama.cpp / LocalAI. Unset fields preserve the hosted-OpenAI default; a literal
+  <code>api_key</code> is redacted from audit / list surfaces.</p>
+<p><strong>New spec fields</strong> (optional, additive — old specs are unaffected):
+- <strong>Human-request taxonomy.</strong> <code>components.humans.*</code> accepts <code>request_type</code>
+  (<code>approval</code> / <code>review</code> / <code>correction</code> / <code>selection</code> / <code>freeform</code>), <code>options</code>,
+  <code>default_option</code>, <code>context</code>, and <code>response_role</code>. <code>validate_semantics</code> rejects
+  a <code>default_option</code> outside <code>options</code> and a <code>selection</code> without <code>options</code>. When
+  <code>response_role</code> is set, the reviewer's reply folds into the resumed run's
+  message thread with that role. <code>GET /v1/human-tasks/{id}</code> now also returns the
+  paused run's <strong>redacted <code>messages</code> thread</strong> alongside the pending <code>request</code>
+  (same auth scope; no new route). A client that only reads the existing
+  <code>request</code> field is unaffected.</p>
+<p><strong>Persistence schemas</strong>: <strong>no migration.</strong> The store schema version is unchanged
+from 0.6.0; <code>RunStateStore</code> gains a <code>schema_version</code> / <code>close</code> Protocol surface
+(behaviourally a no-op on the schema-less stores), but no on-disk change applies
+on upgrade.</p>
 <h3 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h3>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then
@@ -5929,32 +6185,32 @@ sends you there.</p>
 definition of the health endpoints, see
 <a href="../../user/service_api/#health-checks"><code>service_api.md § Health checks</code></a>.</p>
 <h3 id="triage-tree">Triage tree<a class="headerlink" href="#triage-tree" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>   ┌── /healthz returns 200 ───── service process is alive
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>   │                              ─ check /readyz next
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>   │
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>1. │── /healthz times out ─────── process is down or unreachable
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>   │                              ─ check the container / supervisor
-<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>   │                              ─ check the reverse proxy upstream
-<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>   │
-<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>   └── /healthz 5xx ──────────────  application crashed mid-request
-<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>                                   ─ check stderr / container logs
-<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>                                   ─ see troubleshooting.md § 1
-<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>
-<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>   ┌── /readyz returns 200 ────── dependencies healthy
-<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>   │                              ─ problem is in a specific run/spec
-<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>   │                              ─ check the run path below
-<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>   │
-<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>2. │── /readyz returns 503 ──────  read the `metadata.checks` payload
-<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>   │                              ─ use the matrix below to find the
-<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>   │                                failing dependency, then jump to
-<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>   │                                the matching troubleshooting § n
-<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>   │
-<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>   └── /readyz times out ────────  same path as /healthz timeout above
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>   ┌── /healthz returns 200 ───── service process is alive
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>   │                              ─ check /readyz next
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>   │
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>1. │── /healthz times out ─────── process is down or unreachable
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>   │                              ─ check the container / supervisor
+<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a>   │                              ─ check the reverse proxy upstream
+<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a>   │
+<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>   └── /healthz 5xx ──────────────  application crashed mid-request
+<a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a>                                   ─ check stderr / container logs
+<a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a>                                   ─ see troubleshooting.md § 1
+<a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>
+<a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a>   ┌── /readyz returns 200 ────── dependencies healthy
+<a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>   │                              ─ problem is in a specific run/spec
+<a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a>   │                              ─ check the run path below
+<a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a>   │
+<a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a>2. │── /readyz returns 503 ──────  read the `metadata.checks` payload
+<a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a>   │                              ─ use the matrix below to find the
+<a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a>   │                                failing dependency, then jump to
+<a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a>   │                                the matching troubleshooting § n
+<a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>   │
+<a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a>   └── /readyz times out ────────  same path as /healthz timeout above
 </code></pre></div>
 <p><code>/healthz</code> and <code>/readyz</code> are unauthenticated by design — you can probe
 them from anywhere you can reach the service port.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/healthz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/readyz<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.checks&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/healthz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/readyz<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.checks&#39;</span>
 </code></pre></div>
 <h3 id="readyz-failure-matrix"><code>/readyz</code> failure matrix<a class="headerlink" href="#readyz-failure-matrix" title="Permanent link">&para;</a></h3>
 <p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code> with
@@ -6449,36 +6705,36 @@ creation, human resume, audit listing, credential inventory, and environment
 policy updates.</p>
 <h3 id="compose-stack">Compose stack<a class="headerlink" href="#compose-stack" title="Permanent link">&para;</a></h3>
 <p>Prepare a production env file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
 </code></pre></div>
 <p><code>deploy/production.env</code> is intentionally ignored by source control. Replace
 all placeholder tokens and passwords before binding a deployment to a real
 network. For local CI/smoke runs, the documented placeholder values are used
 only to exercise the auth path.</p>
 <p>Start the API and PostgreSQL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
 </code></pre></div>
 <p>Run the smoke test against the unversioned routes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span>--base-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="w">  </span>--api-key<span class="w"> </span>replace-admin-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="w">  </span>--operator-api-key<span class="w"> </span>replace-operator-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span>replace-reviewer-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span>replace-viewer-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="w">  </span>--expect-auth
-</code></pre></div>
-<p>Run the same smoke test against the versioned routes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">  </span>--base-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>--api-prefix<span class="w"> </span>/v1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>--api-key<span class="w"> </span>replace-admin-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span>--operator-api-key<span class="w"> </span>replace-operator-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span>replace-reviewer-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span>replace-viewer-token<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">  </span>--expect-auth
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span>--api-key<span class="w"> </span>replace-admin-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span>--operator-api-key<span class="w"> </span>replace-operator-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span>replace-reviewer-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span>replace-viewer-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span>--expect-auth
+</code></pre></div>
+<p>Run the same smoke test against the versioned routes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>--base-url<span class="w"> </span>http://127.0.0.1:8000<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span>--api-prefix<span class="w"> </span>/v1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="w">  </span>--api-key<span class="w"> </span>replace-admin-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a><span class="w">  </span>--operator-api-key<span class="w"> </span>replace-operator-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span>replace-reviewer-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span>replace-viewer-token<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="w">  </span>--expect-auth
 </code></pre></div>
 <p>Shut the stack down when finished:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>down
 </code></pre></div>
 <h3 id="postgresql-coverage">PostgreSQL coverage<a class="headerlink" href="#postgresql-coverage" title="Permanent link">&para;</a></h3>
 <p>The compose stack uses PostgreSQL by default through
@@ -6490,38 +6746,38 @@ records, locks, audit events, and project metadata.</p>
 commands against that service URL.</p>
 <h3 id="staging-and-remote-smoke">Staging and remote smoke<a class="headerlink" href="#staging-and-remote-smoke" title="Permanent link">&para;</a></h3>
 <p>Prepare a staging env file from the example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>cp<span class="w"> </span>deploy/staging.env.example<span class="w"> </span>deploy/staging.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>cp<span class="w"> </span>deploy/staging.env.example<span class="w"> </span>deploy/staging.env
 </code></pre></div>
 <p>Replace every placeholder token, database password, provider key, and telemetry
 endpoint before use. For compose-based staging rehearsals, set
 <code>KNEO_SERV_ENV_FILE</code> so the API container reads the staging file:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>python<span class="w"> </span>scripts/validate_staging_env.py<span class="w"> </span>deploy/staging.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>python<span class="w"> </span>scripts/validate_staging_env.py<span class="w"> </span>deploy/staging.env
 </code></pre></div>
 <p>The validator fails if required staging settings are missing, scoped API roles
 are incomplete, payload telemetry capture is enabled, provider secret checks
 are disabled, or placeholder values remain.</p>
 <p>For repeatable staging gates, render the local file from secret-backed
 environment variables instead of editing it by hand:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_API_KEYS</span><span class="o">=</span><span class="s2">&quot;operator:&lt;operator-token&gt;:operator;reviewer:&lt;reviewer-token&gt;:reviewer;viewer:&lt;viewer-token&gt;:viewer&quot;</span>
-<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_ADMIN_API_KEY</span><span class="o">=</span>&lt;admin-token&gt;
-<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_SPEC_SIGNING_KEY</span><span class="o">=</span>&lt;signing-key&gt;
-<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_DATABASE_URL</span><span class="o">=</span>&lt;postgresql-dsn&gt;
-<a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_POSTGRES_PASSWORD</span><span class="o">=</span>&lt;compose-db-password&gt;
-<a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>&lt;otel-endpoint&gt;
-<a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OPENAI_API_KEY</span><span class="o">=</span>&lt;openai-key&gt;
-<a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_MCP_API_KEY</span><span class="o">=</span>&lt;mcp-key&gt;
-<a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a>python<span class="w"> </span>scripts/render_staging_env.py<span class="w"> </span>--output<span class="w"> </span>deploy/staging.env
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_API_KEYS</span><span class="o">=</span><span class="s2">&quot;operator:&lt;operator-token&gt;:operator;reviewer:&lt;reviewer-token&gt;:reviewer;viewer:&lt;viewer-token&gt;:viewer&quot;</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_ADMIN_API_KEY</span><span class="o">=</span>&lt;admin-token&gt;
+<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_SPEC_SIGNING_KEY</span><span class="o">=</span>&lt;signing-key&gt;
+<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_DATABASE_URL</span><span class="o">=</span>&lt;postgresql-dsn&gt;
+<a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_POSTGRES_PASSWORD</span><span class="o">=</span>&lt;compose-db-password&gt;
+<a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>&lt;otel-endpoint&gt;
+<a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OPENAI_API_KEY</span><span class="o">=</span>&lt;openai-key&gt;
+<a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_MCP_API_KEY</span><span class="o">=</span>&lt;mcp-key&gt;
+<a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>python<span class="w"> </span>scripts/render_staging_env.py<span class="w"> </span>--output<span class="w"> </span>deploy/staging.env
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>--build<span class="w"> </span>-d
 </code></pre></div>
 <p>For a remote staging deployment, run the smoke script against the public
 staging URL with scoped keys:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_BASE_URL</span><span class="o">=</span>https://staging.example.com
-<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OPERATOR_TOKEN</span><span class="o">=</span>&lt;operator-token&gt;
-<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_REVIEWER_TOKEN</span><span class="o">=</span>&lt;reviewer-token&gt;
-<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_VIEWER_TOKEN</span><span class="o">=</span>&lt;viewer-token&gt;
-<a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--api-prefix<span class="w"> </span>/v1<span class="w"> </span>--expect-auth
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_BASE_URL</span><span class="o">=</span>https://staging.example.com
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_OPERATOR_TOKEN</span><span class="o">=</span>&lt;operator-token&gt;
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_REVIEWER_TOKEN</span><span class="o">=</span>&lt;reviewer-token&gt;
+<a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_VIEWER_TOKEN</span><span class="o">=</span>&lt;viewer-token&gt;
+<a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span>--api-prefix<span class="w"> </span>/v1<span class="w"> </span>--expect-auth
 </code></pre></div>
 <p>The operator key validates specs, creates runs, reads audit and credential
 inventory, and updates policy state. The reviewer key resumes the human task.
@@ -6529,9 +6785,9 @@ The viewer key is optional; when supplied, the smoke verifies that policy writes
 are rejected with <code>403</code>.</p>
 <p>The full staging release gate validates <code>deploy/staging.env</code>, derives the
 scoped smoke tokens from <code>KNEO_SERV_API_KEYS</code>, and runs the <code>/v1</code> remote smoke:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>python<span class="w"> </span>scripts/staging_release_gate.py<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span>--base-url<span class="w"> </span>https://staging.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>python<span class="w"> </span>scripts/staging_release_gate.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span>--base-url<span class="w"> </span>https://staging.example.com
 </code></pre></div>
 <p>The GitHub Actions <code>Staging Gate</code> workflow runs the same renderer and release
 gate from the <code>staging</code> environment secrets. Dispatch it with the deployed

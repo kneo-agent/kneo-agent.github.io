@@ -964,6 +964,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#audit-event-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-event export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#opentelemetry-spans" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1594,6 +1605,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#audit-event-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audit-event export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#opentelemetry-spans" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1706,7 +1728,7 @@ full env-var list, see
 </tr>
 <tr>
 <td>Prometheus metrics</td>
-<td>Run-queue gauges + per-process run counters</td>
+<td>Run-queue gauges + per-process run &amp; token counters</td>
 <td><code>GET /metrics</code> (since 0.5.0), opt-out via <code>KNEO_SERV_METRICS_ENABLED</code></td>
 </tr>
 </tbody>
@@ -1746,6 +1768,21 @@ that does not expose <code>/metrics</code> publicly), or disable it with
 <td><code>kneo_runs_dead_lettered_total</code></td>
 <td>counter</td>
 <td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_input_total</code></td>
+<td>counter</td>
+<td>Input/prompt tokens consumed across runs (from each run's <code>metadata["usage"]</code>, when the runtime reports it).</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_output_total</code></td>
+<td>counter</td>
+<td>Output/completion tokens produced across runs.</td>
+</tr>
+<tr>
+<td><code>kneo_tokens_total</code></td>
+<td>counter</td>
+<td>Total tokens (input + output) across runs.</td>
 </tr>
 <tr>
 <td><code>kneo_runs_queued</code></td>
@@ -1808,7 +1845,7 @@ Redaction is applied to every payload before it reaches the log line.
 <tr>
 <td><code>KNEO_SERV_LOG_LEVEL</code></td>
 <td><code>INFO</code></td>
-<td>Service logger level.</td>
+<td>Stack-wide level: <code>kneo_serv.service</code> + <code>kneo_serv.platform</code> + <code>kneo_agent</code> SDK.</td>
 </tr>
 </tbody>
 </table>
@@ -1819,7 +1856,10 @@ header.</p>
 <ul>
 <li>Keep <code>KNEO_SERV_LOG_LEVEL=INFO</code> in production. <code>DEBUG</code> doubles log
   volume and can leak diagnostic payloads from middleware that wraps the
-  request logger.</li>
+  request logger. Note it is <strong>stack-wide</strong>: it sets the request logger,
+  the platform worker / lease / drain logger (<code>kneo_serv.platform</code>), and
+  the <code>kneo_agent</code> SDK logger together, so <code>DEBUG</code> turns all three up at
+  once — useful for diagnosing a stuck run end-to-end, noisy as a default.</li>
 <li>Configure your container runtime's log driver (Docker <code>json-file</code> with
   rotation, Kubernetes <code>kubectl logs</code> rotation, journald) — the service
   writes to stdout and relies on the runtime to rotate.</li>
@@ -1849,6 +1889,24 @@ they are always available even without OpenTelemetry.</p>
 <a href="../service_api/#audit-events"><code>service_api.md § Audit events</code></a> and
 <a href="../service_api/#replay-and-checkpoint-diff"><code>service_api.md § Replay and checkpoint diff</code></a>
 for the contract.</p>
+<h2 id="audit-event-export">Audit-event export<a class="headerlink" href="#audit-event-export" title="Permanent link">&para;</a></h2>
+<p>Audit events are always queryable via <code>GET /v1/audit-events</code> and stored in the
+run-state store. For compliance retention you can additionally <strong>stream them
+out</strong>: set <code>KNEO_SERV_AUDIT_EXPORT_ENABLED=true</code> and each persisted event is
+emitted as a JSON line on the dedicated <code>kneo_serv.audit</code> logger, from the same
+<code>record_audit_event</code> chokepoint (so the payload is already redacted).</p>
+<p>It is <strong>off by default</strong> — enabling it is a zero-behavior-change opt-in. The
+transport is plain stdlib logging, so wire it to your sink the usual way:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">logging.handlers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SysLogHandler</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">audit</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_serv.audit&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">audit</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">SysLogHandler</span><span class="p">(</span><span class="n">address</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;siem.internal&quot;</span><span class="p">,</span> <span class="mi">514</span><span class="p">)))</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">audit</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</code></pre></div>
+<p>With no dedicated handler the events propagate to the root logger and land in
+your normal JSON logs alongside the request logs. This is the v1 sink; a direct
+SIEM/OTLP-logs exporter may follow.</p>
 <h2 id="opentelemetry-spans">OpenTelemetry spans<a class="headerlink" href="#opentelemetry-spans" title="Permanent link">&para;</a></h2>
 <p>When the deployment includes the SDK telemetry support (the <code>[telemetry]</code>
 or <code>[deploy]</code> extras), set <code>KNEO_SERV_OTEL_ENABLED=true</code> to attach
@@ -1902,17 +1960,17 @@ shown in <a href="../troubleshooting/#81-lockacquisitionerror-on-resume">trouble
 configured with standard <code>OTEL_*</code> environment variables that the OTel
 SDK reads. Example for OTLP/HTTP to any compatible backend (Honeycomb,
 Grafana Tempo, Tempo Cloud, Datadog, an OTel Collector):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_OTEL_ENABLED</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/protobuf
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>https://api.honeycomb.io
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_HEADERS</span><span class="o">=</span><span class="s2">&quot;x-honeycomb-team=</span><span class="nv">$HONEYCOMB_API_KEY</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_SERVICE_NAME</span><span class="o">=</span>kneo-serv
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;deployment.environment=prod&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_OTEL_ENABLED</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>http/protobuf
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>https://api.honeycomb.io
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_HEADERS</span><span class="o">=</span><span class="s2">&quot;x-honeycomb-team=</span><span class="nv">$HONEYCOMB_API_KEY</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_SERVICE_NAME</span><span class="o">=</span>kneo-serv
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_RESOURCE_ATTRIBUTES</span><span class="o">=</span><span class="s2">&quot;deployment.environment=prod&quot;</span>
 </code></pre></div>
 <p>For a self-hosted OTel Collector running as a sidecar:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_ENDPOINT</span><span class="o">=</span>http://localhost:4317
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">OTEL_EXPORTER_OTLP_PROTOCOL</span><span class="o">=</span>grpc
 </code></pre></div>
 <p>If OTel does not appear to be exporting, see
 <a href="../troubleshooting/#72-opentelemetry-not-exporting"><code>troubleshooting.md § 7.2</code></a>.</p>

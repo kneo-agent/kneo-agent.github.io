@@ -1076,6 +1076,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local / self-hosted LLM endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1366,6 +1377,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local / self-hosted LLM endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1431,18 +1453,22 @@ overlay/policy story; for the runtime variables read from the environment
 honor the resolved environment policy.</p>
 <h2 id="retention">Retention<a class="headerlink" href="#retention" title="Permanent link">&para;</a></h2>
 <p>Retention windows for runs, checkpoints, queue records, continuations,
-artifacts, and log files live in a top-level <code>retention:</code> block. Each
-field is a count of days to keep; unset fields disable pruning for that
-category. Values must be zero or greater.</p>
+audit events, artifacts, and log files live in a top-level <code>retention:</code>
+block. Each field is a count of days to keep; unset fields disable
+pruning for that category. Values must be zero or greater.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">retention</span><span class="p">:</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">audit_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 </code></pre></div>
-<p>The same six retention fields can be overridden per-host via env vars
+<p><code>audit_days</code> prunes the audit-event log purely by age (it reaps events
+with no associated run too); the audit table grows unbounded otherwise,
+so it is the table most likely to exhaust disk on a long-lived deployment.</p>
+<p>The same seven retention fields can be overridden per-host via env vars
 (<code>KNEO_SERV_RETENTION_RUNS_DAYS</code> and friends; see
 <a href="../environment/#retention">environment.md § Retention</a>). <strong>Precedence
 is env var &gt; project config &gt; unset.</strong> Set the project-config field for
@@ -1453,6 +1479,36 @@ the per-project default; set the env var to deviate on a specific host
 which the operator can pass to <code>PlatformManager.prune_retention(policy=...)</code>
 on whatever cadence makes sense for the deployment (cron, scheduled
 workflow, manual operator action).</p>
+<h2 id="local-self-hosted-llm-endpoints">Local / self-hosted LLM endpoints<a class="headerlink" href="#local-self-hosted-llm-endpoints" title="Permanent link">&para;</a></h2>
+<p>The native (<code>openai</code>) runtime can target any OpenAI-compatible server —
+<strong>Ollama, vLLM, llama.cpp, LocalAI</strong> — by setting <code>base_url</code> (and, if the
+server requires one, an API key) under the agent spec's <code>model.extra</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">agent</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-prem-assistant</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">native_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span><span class="w">            </span><span class="c1"># the model the local server serves</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">extra</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434/v1</span><span class="w">   </span><span class="c1"># e.g. Ollama</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">api_key_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOCAL_LLM_KEY</span><span class="w">            </span><span class="c1"># resolved from the env (see below)</span>
+</code></pre></div>
+<ul>
+<li><strong><code>base_url</code></strong> — the OpenAI-compatible endpoint. Omit it to use the hosted
+  OpenAI API as before; this field is purely additive.</li>
+<li><strong><code>api_key_ref</code></strong> — the <em>name of a secret reference</em>, resolved at runtime
+  through the <code>SecretResolver</code> (it reads the project <code>extra_env</code> map, falling
+  back to an env var of the same name). Prefer this over a literal so the key
+  is never baked into a persisted or signed spec bundle.</li>
+<li><strong><code>api_key</code></strong> — a literal-key escape hatch for throwaway/local use. It is a
+  <a href="../security_hardening/">sensitive key</a>, so it is redacted from audit events
+  and list responses — but it still lives in the stored spec, so <code>api_key_ref</code>
+  is the recommended path.</li>
+</ul>
+<p>If neither key field is set, the runtime falls back to the provider's normal
+env var (<code>OPENAI_API_KEY</code>), which is fine for a keyless local server.</p>
 
 
 

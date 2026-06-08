@@ -1605,10 +1605,15 @@ unauthenticated — restrict it to your monitoring network or disable it with
 for write-concurrent scale on PostgreSQL, run <strong>multiple service processes</strong> —
 each leases queued runs safely via <code>FOR UPDATE SKIP LOCKED</code>. Sizing guidance and
 the SQLite single-writer caveat are in <a href="../performance/">performance.md</a>.</p>
-<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains gracefully: workers
-finish their in-flight run and stop claiming new work before the process exits,
-so no run is interrupted mid-flight. Give your orchestrator a termination grace
-period at least as long as your longest expected run step. Set
+<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains the worker pool: workers
+stop claiming new work and finish the run they are currently executing, and the
+service waits up to <code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (default <code>30</code>) for them
+to exit. A run <em>still executing</em> when that timeout elapses is interrupted by
+process exit — but it stays claimed and is automatically re-leased and retried
+by another worker once its <code>KNEO_SERV_WORKER_LEASE_SECONDS</code> lease expires, so it
+is not lost, only restarted. To drain in-flight runs without that restart, set
+<code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (and your orchestrator's termination grace
+period) at least as long as your longest expected run step. Set
 <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> to shed load with <code>503</code> under overload, and
 <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) to dead-letter poison runs rather
 than retry them forever.</p>

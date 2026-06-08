@@ -1940,6 +1940,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Audit events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2556,6 +2573,17 @@
     <span class="md-ellipsis">
       
         Retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local / self-hosted LLM endpoints
       
     </span>
   </a>
@@ -3445,6 +3473,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Audit events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -4061,6 +4106,17 @@
     <span class="md-ellipsis">
       
         Retention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local / self-hosted LLM endpoints
       
     </span>
   </a>
@@ -5040,10 +5096,24 @@ spec-run execution, and human-in-the-loop decisions.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="err">GET /audit-events</span>
 <a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a><span class="err">GET /audit-events?event_type=run.created</span>
 <a id="__codelineno-69-3" name="__codelineno-69-3" href="#__codelineno-69-3"></a><span class="err">GET /audit-events?run_id=&lt;run_id&gt;</span>
+<a id="__codelineno-69-4" name="__codelineno-69-4" href="#__codelineno-69-4"></a><span class="err">GET /audit-events?limit=50&amp;offset=50&amp;sort_by=created_at&amp;sort_order=desc</span>
 </code></pre></div>
 <p>The audit list endpoint requires <code>audit:read</code> and returns events newest first.
 Each event includes <code>event_type</code>, <code>actor</code>, optional <code>run_id</code> and
-<code>continuation_id</code>, redacted metadata, and <code>created_at</code>.</p>
+<code>continuation_id</code>, redacted metadata, and <code>created_at</code>. The response carries the
+same pagination metadata block as the other list endpoints — <code>count</code> (items on
+this page), <code>total</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code>
+(<code>limit</code> 1–1000, default 100; <code>sort_order</code> defaults to <code>desc</code>).</p>
+<h4 id="error-responses">Error responses<a class="headerlink" href="#error-responses" title="Permanent link">&para;</a></h4>
+<p>Every 4xx/5xx response uses the envelope <code>{"detail": {"error": "&lt;code&gt;",
+"message": "&lt;human-readable&gt;", ...}}</code>, where <code>error</code> is a stable, snake_case
+machine code (e.g. <code>not_found</code>, <code>invalid_request</code>, <code>internal_error</code>,
+<code>queue_full</code>, <code>resource_locked</code>, <code>unauthorized</code>, <code>forbidden</code>) decoupled from
+internal exception names. Some errors carry extra context keys (e.g.
+<code>resource</code>, <code>queue_depth</code>, <code>required_scope</code>). <code>500</code> responses are opaque
+(<code>internal_error</code> with a generic message); the real cause is logged
+server-side, never returned to the client. These shapes are published in the
+OpenAPI schema as <code>ErrorResponse</code> / <code>ErrorDetail</code>.</p>
 <h3 id="sqlite-migrations">SQLite migrations<a class="headerlink" href="#sqlite-migrations" title="Permanent link">&para;</a></h3>
 <p>SQLite state stores apply versioned migrations on startup. The migration table
 is <code>schema_migrations</code>, and the current schema covers run state, checkpoints,
@@ -5058,14 +5128,15 @@ reload policy metadata after migrations have applied.</p>
 <h3 id="retention-and-pruning">Retention and pruning<a class="headerlink" href="#retention-and-pruning" title="Permanent link">&para;</a></h3>
 <p><code>RetentionManager</code> provides an operator-callable pruning job for run state,
 checkpoints, completed or failed queue records, file-backed continuations,
-artifacts, and logs. It can be configured directly or through environment
-variables:</p>
+audit events, artifacts, and logs. It can be configured directly or through
+environment variables:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_RUNS_DAYS</span><span class="o">=</span><span class="m">30</span>
 <a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_CHECKPOINTS_DAYS</span><span class="o">=</span><span class="m">30</span>
 <a id="__codelineno-70-3" name="__codelineno-70-3" href="#__codelineno-70-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_QUEUE_DAYS</span><span class="o">=</span><span class="m">14</span>
 <a id="__codelineno-70-4" name="__codelineno-70-4" href="#__codelineno-70-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_CONTINUATIONS_DAYS</span><span class="o">=</span><span class="m">30</span>
-<a id="__codelineno-70-5" name="__codelineno-70-5" href="#__codelineno-70-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_ARTIFACTS_DAYS</span><span class="o">=</span><span class="m">30</span>
-<a id="__codelineno-70-6" name="__codelineno-70-6" href="#__codelineno-70-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_LOGS_DAYS</span><span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-70-5" name="__codelineno-70-5" href="#__codelineno-70-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_AUDIT_DAYS</span><span class="o">=</span><span class="m">90</span>
+<a id="__codelineno-70-6" name="__codelineno-70-6" href="#__codelineno-70-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_ARTIFACTS_DAYS</span><span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-70-7" name="__codelineno-70-7" href="#__codelineno-70-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_LOGS_DAYS</span><span class="o">=</span><span class="m">30</span>
 </code></pre></div>
 <p>The platform manager exposes <code>prune_retention()</code> for embedded operators and
 future scheduled jobs.</p>
@@ -5625,7 +5696,7 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <tr>
 <td><code>KNEO_SERV_WORKER_LEASE_SECONDS</code></td>
 <td><code>300</code></td>
-<td>Queue-lease TTL per claimed run. A worker that dies mid-run has its run re-claimed once the lease expires.</td>
+<td>Queue-lease <strong>liveness window</strong> per claimed run (not a run-time cap). A running worker renews its lease every ~<code>1/3</code> of this interval (the lease heartbeat), so a healthy long run keeps its lease; only a dead or starved worker lets it expire, after which the run is re-claimed. Set it above a single step's wall-clock, not the whole run.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code></td>
@@ -5636,6 +5707,11 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_MAX_QUEUE_DEPTH</code></td>
 <td><code>0</code></td>
 <td>Overload backpressure: <code>POST /v1/runs</code> (async) returns <code>503</code> once this many runs are queued. <code>0</code> disables backpressure (unbounded queue).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code></td>
+<td><code>30</code></td>
+<td>How long <code>SIGTERM</code> shutdown waits for workers to finish their in-flight run. A run still executing past this is interrupted by process exit, then re-leased/retried after <code>KNEO_SERV_WORKER_LEASE_SECONDS</code> (not lost). Set this — and the orchestrator grace period — &gt;= your longest run step to drain without a restart.</td>
 </tr>
 </tbody>
 </table>
@@ -5649,6 +5725,11 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>KNEO_SERV_TOKEN_BUDGET</code></td>
+<td>unset</td>
+<td>Deployment-wide <strong>per-run token ceiling</strong> (input + output across a run). A run that crosses it is failed with a <code>token_budget_exceeded</code> 4xx. This is a <strong>post-run / boundary</strong> check, not a mid-flight hard stop — the run completes the in-flight step, then fails. A spec's <code>model.token_budget</code> overrides this default per agent; unset disables the ceiling.</td>
+</tr>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_RETRIES</code></td>
 <td><code>0</code></td>
@@ -5746,7 +5827,12 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <tr>
 <td><code>KNEO_SERV_LOG_LEVEL</code></td>
 <td><code>INFO</code></td>
-<td>Structured logging level.</td>
+<td>Logging level for the whole stack — the <code>kneo_serv.service</code> (request), <code>kneo_serv.platform</code> (worker / lease / drain), and <code>kneo_agent</code> SDK loggers are all set from this one value at startup.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_AUDIT_EXPORT_ENABLED</code></td>
+<td><code>false</code></td>
+<td>When <code>true</code>, every persisted (already-redacted) audit event is also emitted as a JSON line on the <code>kneo_serv.audit</code> logger — attach a handler to forward it to a file / syslog / SIEM. Off = zero behavior change. See <a href="../../user/observability/#audit-event-export">observability.md § Audit-event export</a>.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_OTEL_ENABLED</code></td>
@@ -5809,6 +5895,11 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_RETENTION_CONTINUATIONS_DAYS</code></td>
 <td>unset</td>
 <td>Delete old continuations.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_AUDIT_DAYS</code></td>
+<td>unset</td>
+<td>Delete audit events older than this many days. The audit table grows unbounded otherwise — set this on long-lived deployments.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_RETENTION_ARTIFACTS_DAYS</code></td>
@@ -6081,18 +6172,22 @@ overlay/policy story; for the runtime variables read from the environment
 honor the resolved environment policy.</p>
 <h3 id="retention_1">Retention<a class="headerlink" href="#retention_1" title="Permanent link">&para;</a></h3>
 <p>Retention windows for runs, checkpoints, queue records, continuations,
-artifacts, and log files live in a top-level <code>retention:</code> block. Each
-field is a count of days to keep; unset fields disable pruning for that
-category. Values must be zero or greater.</p>
+audit events, artifacts, and log files live in a top-level <code>retention:</code>
+block. Each field is a count of days to keep; unset fields disable
+pruning for that category. Values must be zero or greater.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="nt">retention</span><span class="p">:</span>
 <a id="__codelineno-113-2" name="__codelineno-113-2" href="#__codelineno-113-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
 <a id="__codelineno-113-3" name="__codelineno-113-3" href="#__codelineno-113-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
 <a id="__codelineno-113-4" name="__codelineno-113-4" href="#__codelineno-113-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
 <a id="__codelineno-113-5" name="__codelineno-113-5" href="#__codelineno-113-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
-<a id="__codelineno-113-6" name="__codelineno-113-6" href="#__codelineno-113-6"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<a id="__codelineno-113-7" name="__codelineno-113-7" href="#__codelineno-113-7"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<a id="__codelineno-113-6" name="__codelineno-113-6" href="#__codelineno-113-6"></a><span class="w">  </span><span class="nt">audit_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<a id="__codelineno-113-7" name="__codelineno-113-7" href="#__codelineno-113-7"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-113-8" name="__codelineno-113-8" href="#__codelineno-113-8"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 </code></pre></div>
-<p>The same six retention fields can be overridden per-host via env vars
+<p><code>audit_days</code> prunes the audit-event log purely by age (it reaps events
+with no associated run too); the audit table grows unbounded otherwise,
+so it is the table most likely to exhaust disk on a long-lived deployment.</p>
+<p>The same seven retention fields can be overridden per-host via env vars
 (<code>KNEO_SERV_RETENTION_RUNS_DAYS</code> and friends; see
 <a href="#retention">environment.md § Retention</a>). <strong>Precedence
 is env var &gt; project config &gt; unset.</strong> Set the project-config field for
@@ -6103,6 +6198,36 @@ the per-project default; set the env var to deviate on a specific host
 which the operator can pass to <code>PlatformManager.prune_retention(policy=...)</code>
 on whatever cadence makes sense for the deployment (cron, scheduled
 workflow, manual operator action).</p>
+<h3 id="local-self-hosted-llm-endpoints">Local / self-hosted LLM endpoints<a class="headerlink" href="#local-self-hosted-llm-endpoints" title="Permanent link">&para;</a></h3>
+<p>The native (<code>openai</code>) runtime can target any OpenAI-compatible server —
+<strong>Ollama, vLLM, llama.cpp, LocalAI</strong> — by setting <code>base_url</code> (and, if the
+server requires one, an API key) under the agent spec's <code>model.extra</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="nt">agent</span><span class="p">:</span>
+<a id="__codelineno-114-2" name="__codelineno-114-2" href="#__codelineno-114-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-prem-assistant</span>
+<a id="__codelineno-114-3" name="__codelineno-114-3" href="#__codelineno-114-3"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
+<a id="__codelineno-114-4" name="__codelineno-114-4" href="#__codelineno-114-4"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<a id="__codelineno-114-5" name="__codelineno-114-5" href="#__codelineno-114-5"></a><span class="w">    </span><span class="nt">native_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-114-6" name="__codelineno-114-6" href="#__codelineno-114-6"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<a id="__codelineno-114-7" name="__codelineno-114-7" href="#__codelineno-114-7"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-114-8" name="__codelineno-114-8" href="#__codelineno-114-8"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span><span class="w">            </span><span class="c1"># the model the local server serves</span>
+<a id="__codelineno-114-9" name="__codelineno-114-9" href="#__codelineno-114-9"></a><span class="w">    </span><span class="nt">extra</span><span class="p">:</span>
+<a id="__codelineno-114-10" name="__codelineno-114-10" href="#__codelineno-114-10"></a><span class="w">      </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434/v1</span><span class="w">   </span><span class="c1"># e.g. Ollama</span>
+<a id="__codelineno-114-11" name="__codelineno-114-11" href="#__codelineno-114-11"></a><span class="w">      </span><span class="nt">api_key_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOCAL_LLM_KEY</span><span class="w">            </span><span class="c1"># resolved from the env (see below)</span>
+</code></pre></div>
+<ul>
+<li><strong><code>base_url</code></strong> — the OpenAI-compatible endpoint. Omit it to use the hosted
+  OpenAI API as before; this field is purely additive.</li>
+<li><strong><code>api_key_ref</code></strong> — the <em>name of a secret reference</em>, resolved at runtime
+  through the <code>SecretResolver</code> (it reads the project <code>extra_env</code> map, falling
+  back to an env var of the same name). Prefer this over a literal so the key
+  is never baked into a persisted or signed spec bundle.</li>
+<li><strong><code>api_key</code></strong> — a literal-key escape hatch for throwaway/local use. It is a
+  <a href="../../user/security_hardening/">sensitive key</a>, so it is redacted from audit events
+  and list responses — but it still lives in the stored spec, so <code>api_key_ref</code>
+  is the recommended path.</li>
+</ul>
+<p>If neither key field is set, the runtime falls back to the provider's normal
+env var (<code>OPENAI_API_KEY</code>), which is fine for a keyless local server.</p>
 
 
 

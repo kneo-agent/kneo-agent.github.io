@@ -729,6 +729,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Audit events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1997,6 +2014,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Audit events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -2604,10 +2638,24 @@ spec-run execution, and human-in-the-loop decisions.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="err">GET /audit-events</span>
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="err">GET /audit-events?event_type=run.created</span>
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="err">GET /audit-events?run_id=&lt;run_id&gt;</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="err">GET /audit-events?limit=50&amp;offset=50&amp;sort_by=created_at&amp;sort_order=desc</span>
 </code></pre></div>
 <p>The audit list endpoint requires <code>audit:read</code> and returns events newest first.
 Each event includes <code>event_type</code>, <code>actor</code>, optional <code>run_id</code> and
-<code>continuation_id</code>, redacted metadata, and <code>created_at</code>.</p>
+<code>continuation_id</code>, redacted metadata, and <code>created_at</code>. The response carries the
+same pagination metadata block as the other list endpoints — <code>count</code> (items on
+this page), <code>total</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, and <code>sort_order</code>
+(<code>limit</code> 1–1000, default 100; <code>sort_order</code> defaults to <code>desc</code>).</p>
+<h3 id="error-responses">Error responses<a class="headerlink" href="#error-responses" title="Permanent link">&para;</a></h3>
+<p>Every 4xx/5xx response uses the envelope <code>{"detail": {"error": "&lt;code&gt;",
+"message": "&lt;human-readable&gt;", ...}}</code>, where <code>error</code> is a stable, snake_case
+machine code (e.g. <code>not_found</code>, <code>invalid_request</code>, <code>internal_error</code>,
+<code>queue_full</code>, <code>resource_locked</code>, <code>unauthorized</code>, <code>forbidden</code>) decoupled from
+internal exception names. Some errors carry extra context keys (e.g.
+<code>resource</code>, <code>queue_depth</code>, <code>required_scope</code>). <code>500</code> responses are opaque
+(<code>internal_error</code> with a generic message); the real cause is logged
+server-side, never returned to the client. These shapes are published in the
+OpenAPI schema as <code>ErrorResponse</code> / <code>ErrorDetail</code>.</p>
 <h2 id="sqlite-migrations">SQLite migrations<a class="headerlink" href="#sqlite-migrations" title="Permanent link">&para;</a></h2>
 <p>SQLite state stores apply versioned migrations on startup. The migration table
 is <code>schema_migrations</code>, and the current schema covers run state, checkpoints,
@@ -2622,14 +2670,15 @@ reload policy metadata after migrations have applied.</p>
 <h2 id="retention-and-pruning">Retention and pruning<a class="headerlink" href="#retention-and-pruning" title="Permanent link">&para;</a></h2>
 <p><code>RetentionManager</code> provides an operator-callable pruning job for run state,
 checkpoints, completed or failed queue records, file-backed continuations,
-artifacts, and logs. It can be configured directly or through environment
-variables:</p>
+audit events, artifacts, and logs. It can be configured directly or through
+environment variables:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_RUNS_DAYS</span><span class="o">=</span><span class="m">30</span>
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_CHECKPOINTS_DAYS</span><span class="o">=</span><span class="m">30</span>
 <a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_QUEUE_DAYS</span><span class="o">=</span><span class="m">14</span>
 <a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_CONTINUATIONS_DAYS</span><span class="o">=</span><span class="m">30</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_ARTIFACTS_DAYS</span><span class="o">=</span><span class="m">30</span>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_LOGS_DAYS</span><span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_AUDIT_DAYS</span><span class="o">=</span><span class="m">90</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_ARTIFACTS_DAYS</span><span class="o">=</span><span class="m">30</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_RETENTION_LOGS_DAYS</span><span class="o">=</span><span class="m">30</span>
 </code></pre></div>
 <p>The platform manager exposes <code>prune_retention()</code> for embedded operators and
 future scheduled jobs.</p>

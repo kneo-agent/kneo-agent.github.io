@@ -1733,7 +1733,7 @@ no built-in role fits.</p>
 <li>[ ] Read-only consumers are on <code>viewer</code>, not <code>operator</code>.</li>
 </ul>
 <h3 id="3-rotate-keys-without-downtime">3. Rotate keys without downtime<a class="headerlink" href="#3-rotate-keys-without-downtime" title="Permanent link">&para;</a></h3>
-<p><code>kneo-serv</code> has no in-place key rotation API in the 0.5.x line.
+<p><code>kneo-serv</code> has no in-place key rotation API in the 0.x (pre-1.0) line.
 Rotation is a config swap:</p>
 <ol>
 <li>Add the new key to <code>KNEO_SERV_API_KEYS</code> alongside the old key
@@ -1824,7 +1824,7 @@ SBOM attestation describes), so the four supply-chain artifacts —
 image, cosign signature, SBOM attestation, and scan report — all
 agree on what they describe.</p>
 <p><strong>Locked policy</strong> (0.4.0; recorded in
-plan/TODO-0.4.0.md):</p>
+archive_TODO-0.4.0.md):</p>
 <ul>
 <li><strong>Severity threshold:</strong> CVSS≥7 (HIGH and CRITICAL findings).</li>
 <li><strong>Release-tag scans (<code>v&lt;version&gt;</code> / <code>v&lt;version&gt;rcN</code>):</strong> blocking.
@@ -1860,8 +1860,10 @@ tolerance accepts a specific finding (e.g. low exploitability in
 your network posture), record the acceptance in
 <code>supply_chain_review.md § Current workspace result</code>
 using the same shape as the existing <code>pip-audit</code> remediation
-blocks. The release pipeline does not implement an inline-ignore
-mechanism — acceptances are deployer policy, not platform policy.</p>
+blocks. For <em>dependency</em> (<code>pip-audit</code>) findings the release pipeline has
+no inline-ignore mechanism — those acceptances are deployer policy. For
+<em>image</em> CVEs, the blocking Trivy gate (since 0.4.0) reads acceptances from
+<code>.trivyignore</code> in the repo root, the active image-CVE-acceptance policy.</p>
 <h2 id="what-kneo-serv-deliberately-does-not-provide">What <code>kneo-serv</code> deliberately does not provide<a class="headerlink" href="#what-kneo-serv-deliberately-does-not-provide" title="Permanent link">&para;</a></h2>
 <p>Operators sometimes go looking for these; document the gap rather than
 inventing it:</p>
