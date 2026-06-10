@@ -311,7 +311,7 @@
       },
       "ErrorDetail": {
         "additionalProperties": true,
-        "description": "The `detail` object inside an error response.\n\n`error` is a stable, snake_case machine code (e.g. `not_found`,\n`invalid_request`, `internal_error`, `queue_full`, `resource_locked`,\n`unauthorized`, `forbidden`, `token_budget_exceeded`); `message` is a\nhuman-readable string.\nSome errors carry extra context keys (e.g. `resource`, `queue_depth`,\n`limit`, `required_scope`, `scope`, `metadata`), so additional fields\nare permitted.",
+        "description": "The `detail` object inside an *application* error response.\n\n`error` is a stable, snake_case machine code; the set raised by the surface is\n`not_found`, `invalid_request`, `internal_error`, `queue_full`,\n`resource_locked`, `unauthorized`, `forbidden`, `token_budget_exceeded`,\n`not_ready`, `payload_too_large`, `idempotency_key_in_progress`,\n`idempotency_key_conflict`, and `invalid_idempotency_key` (treat the list as\nillustrative, not exhaustive — new snake_case codes may be added in a minor).\n`message` is a human-readable string. Some errors carry extra context keys\n(e.g. `resource`, `queue_depth`, `limit`, `required_scope`, `scope`,\n`metadata`, `max_body_bytes`), so additional fields are permitted.\n\n**Exception:** request-*validation* failures (unknown fields, type/shape\nerrors, and the size-limit checks) return FastAPI's native `422` with a\nlist-shaped `detail` (`{\"detail\": [{\"loc\": ..., \"msg\": ..., \"type\": ...}]}`),\n**not** this `{error, message}` envelope. Application/runtime errors use this\nenvelope; framework request-validation uses the native 422 shape.",
         "properties": {
           "error": {
             "title": "Error",
@@ -623,6 +623,16 @@
             "additionalProperties": true,
             "title": "Overrides",
             "type": "object"
+          },
+          "skills": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SkillsOverlay"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "spec": {
             "anyOf": [
@@ -1129,6 +1139,87 @@
           "status"
         ],
         "title": "RunStatusResponse",
+        "type": "object"
+      },
+      "SkillsListResponse": {
+        "additionalProperties": false,
+        "description": "GET /v1/skills response body (read-only skill catalog: name/description/path).",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 100,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "skills": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Skills",
+            "type": "array"
+          },
+          "sort_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sort By"
+          },
+          "sort_order": {
+            "default": "asc",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "title": "Sort Order",
+            "type": "string"
+          },
+          "total": {
+            "default": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "skills",
+          "count"
+        ],
+        "title": "SkillsListResponse",
+        "type": "object"
+      },
+      "SkillsOverlay": {
+        "additionalProperties": false,
+        "description": "Per-request skill toggle for a run: enable / disable the root agent's skills.\n\n`add` enables skills that must already be **declared** in the spec's `skills`\nblock (no arbitrary injection from a request); `disable` removes skills from\nthe root agent's selection.",
+        "properties": {
+          "add": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Add",
+            "type": "array"
+          },
+          "disable": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Disable",
+            "type": "array"
+          }
+        },
+        "title": "SkillsOverlay",
         "type": "object"
       },
       "SpecCompileRequest": {
@@ -1676,6 +1767,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -1704,7 +1805,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Audit Events",
@@ -1778,6 +1879,26 @@
                 }
               ],
               "title": "Workflow Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "escalated"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
             }
           },
           {
@@ -1890,6 +2011,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -1918,7 +2049,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Human Tasks",
@@ -2002,6 +2133,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2030,7 +2171,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Human Task",
@@ -2140,6 +2281,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2168,7 +2319,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Resume Human Task",
@@ -2293,6 +2444,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "500": {
             "content": {
               "application/json": {
@@ -2311,7 +2472,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Environment Policies",
@@ -2397,6 +2558,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2425,7 +2596,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Environment Policy",
@@ -2519,6 +2690,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2547,7 +2728,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Put Environment Policy",
@@ -2717,6 +2898,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2745,7 +2936,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Runs",
@@ -2844,6 +3035,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2872,7 +3073,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Create Run",
@@ -2956,6 +3157,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -2984,7 +3195,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Run",
@@ -3068,6 +3279,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3096,7 +3317,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Cancel Run",
@@ -3244,6 +3465,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3272,7 +3503,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Checkpoints",
@@ -3390,6 +3621,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3418,7 +3659,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Diff Checkpoints",
@@ -3438,6 +3679,22 @@
             "schema": {
               "title": "Run Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
             }
           }
         ],
@@ -3502,6 +3759,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3530,7 +3797,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Continue Run",
@@ -3615,6 +3882,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3643,7 +3920,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Run Policy Report",
@@ -3727,6 +4004,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3755,7 +4042,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Recovery Context",
@@ -3839,6 +4126,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -3867,7 +4164,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Replay View",
@@ -4015,6 +4312,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4043,7 +4350,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Trace",
@@ -4166,6 +4473,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4194,12 +4511,174 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Credential Inventory",
         "tags": [
           "security"
+        ]
+      }
+    },
+    "/skills": {
+      "get": {
+        "description": "List discoverable skills (catalog only — does not load or compile them).",
+        "operationId": "list_skills_skills_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 10000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "schema": {
+              "default": "name",
+              "title": "Sort By",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "default": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "title": "Sort Order",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillsListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "List Skills",
+        "tags": [
+          "skills"
         ]
       }
     },
@@ -4277,6 +4756,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4305,7 +4794,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Compile Spec",
@@ -4388,6 +4877,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4416,7 +4915,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Explain Spec",
@@ -4499,6 +4998,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4527,7 +5036,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Policy Report Spec",
@@ -4628,6 +5137,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4656,7 +5175,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Run Spec",
@@ -4739,6 +5258,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4767,7 +5296,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Validate Spec",
@@ -4922,6 +5451,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -4950,7 +5489,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Audit Events",
@@ -5024,6 +5563,26 @@
                 }
               ],
               "title": "Workflow Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending",
+                    "escalated"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
             }
           },
           {
@@ -5136,6 +5695,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5164,7 +5733,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Human Tasks",
@@ -5248,6 +5817,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5276,7 +5855,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Human Task",
@@ -5386,6 +5965,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5414,7 +6003,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Resume Human Task",
@@ -5518,6 +6107,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "500": {
             "content": {
               "application/json": {
@@ -5536,7 +6135,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Environment Policies",
@@ -5622,6 +6221,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5650,7 +6259,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Environment Policy",
@@ -5744,6 +6353,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5772,7 +6391,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Put Environment Policy",
@@ -5942,6 +6561,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -5970,7 +6599,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Runs",
@@ -6069,6 +6698,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6097,7 +6736,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Create Run",
@@ -6181,6 +6820,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6209,7 +6858,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Run",
@@ -6293,6 +6942,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6321,7 +6980,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Cancel Run",
@@ -6469,6 +7128,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6497,7 +7166,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "List Checkpoints",
@@ -6615,6 +7284,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6643,7 +7322,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Diff Checkpoints",
@@ -6663,6 +7342,22 @@
             "schema": {
               "title": "Run Id",
               "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
             }
           }
         ],
@@ -6727,6 +7422,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6755,7 +7460,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Continue Run",
@@ -6840,6 +7545,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6868,7 +7583,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Run Policy Report",
@@ -6952,6 +7667,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -6980,7 +7705,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Recovery Context",
@@ -7064,6 +7789,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7092,7 +7827,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Replay View",
@@ -7240,6 +7975,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7268,7 +8013,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Get Trace",
@@ -7391,6 +8136,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7419,12 +8174,174 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Credential Inventory",
         "tags": [
           "security"
+        ]
+      }
+    },
+    "/v1/skills": {
+      "get": {
+        "description": "List discoverable skills (catalog only — does not load or compile them).",
+        "operationId": "list_skills_v1_skills_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 1000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 10000,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_by",
+            "required": false,
+            "schema": {
+              "default": "name",
+              "title": "Sort By",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort_order",
+            "required": false,
+            "schema": {
+              "default": "asc",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "title": "Sort Order",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillsListResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "List Skills",
+        "tags": [
+          "skills"
         ]
       }
     },
@@ -7502,6 +8419,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7530,7 +8457,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Compile Spec",
@@ -7613,6 +8540,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7641,7 +8578,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Explain Spec",
@@ -7724,6 +8661,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7752,7 +8699,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Policy Report Spec",
@@ -7853,6 +8800,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7881,7 +8838,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Run Spec",
@@ -7964,6 +8921,16 @@
             },
             "description": "Conflict (resource locked or idempotency key in progress)."
           },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
           "422": {
             "content": {
               "application/json": {
@@ -7992,7 +8959,7 @@
                 }
               }
             },
-            "description": "Service unavailable (queue full or not ready)."
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
           }
         },
         "summary": "Validate Spec",

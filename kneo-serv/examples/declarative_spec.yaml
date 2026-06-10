@@ -1,0 +1,91 @@
+version: v1
+
+# Declarative-spec-parity features added in kneo-serv 0.8.0. All three compile
+# with no network I/O — the MCP connection is lazy (first tool call) and the
+# build-order graph wires the cross-component references:
+#   1. MCP transports    — `mcp_servers` + a `tool.mcp` block (no client wiring)
+#   2. Agent-as-tool      — a tool backed by another agent (`tool.agent`)
+#   3. Workflow-as-agent  — an agent backed by a workflow (`agent.as_agent`)
+#
+# (The per-request skills overlay and the `GET /v1/skills` catalog are runtime /
+# API features, not spec fields — see docs/user/examples.md for those.)
+
+agent:
+  name: orchestrator
+  system_prompt: |
+    You coordinate research using an MCP-backed search tool and a specialist
+    sub-agent exposed as a tool.
+  model:
+    provider: openai
+    name: gpt-4o
+  strategy:
+    type: plan-act
+    max_iterations: 6
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  tools:
+    include: [search, ask_analyst]
+
+# 1. Declarative MCP transport. The server config is built at compile time but
+#    only connected on first tool call. Swap `http` for `stdio` (with `command`)
+#    or `sse` (with `sse_url`). For enterprise mTLS add `verify` / `ca_bundle` /
+#    `client_cert` and a `client_key_ref` (resolved from the environment via the
+#    SecretResolver — keep literal key material out of the spec).
+mcp_servers:
+  research_mcp:
+    transport: http
+    url: https://mcp.example.invalid/api
+    max_response_bytes: 1048576
+
+tools:
+  # 1. A tool backed by the MCP server's `remote_search` tool.
+  search:
+    description: Search via the research MCP server.
+    parameters:
+      type: object
+      properties:
+        q:
+          type: string
+      required: [q]
+    mcp:
+      server: research_mcp
+      name: remote_search
+
+  # 2. Agent-as-tool: backed by the `analyst` component agent. The build-order
+  #    graph compiles `analyst` first, wraps it as a tool, then builds the
+  #    `orchestrator` that selects it. A forward/cyclic reference is rejected at
+  #    `kneo spec validate`, not at runtime.
+  ask_analyst:
+    description: Delegate a question to the analyst sub-agent.
+    agent: analyst
+
+components:
+  agents:
+    # Plain component agent, surfaced as the `ask_analyst` tool above.
+    analyst:
+      name: analyst
+      system_prompt: Analyze the provided material and answer precisely.
+      model:
+        provider: openai
+        name: gpt-4o-mini
+      strategy:
+        type: react
+      runtime_preferences:
+        preferred_mode: bridge
+        allowed_modes: [bridge]
+
+    # 3. Workflow-as-agent: `reviewer` is an agent whose behavior is a workflow.
+    #    `as_agent` may not be combined with model/strategy/tools/middleware/etc.
+    reviewer:
+      name: reviewer
+      as_agent: review_flow
+
+  workflows:
+    review_flow:
+      type: sequential
+      name: review_flow
+      steps:
+        - id: review
+          kind: agent
+          ref: analyst

@@ -4586,8 +4586,8 @@ every environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.5.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.5</code>),
-and <code>latest</code>. amd64-only for the 0.5.x line; arm64 is deferred to
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.7.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.7</code>),
+and <code>latest</code>. amd64-only; arm64 is deferred to
 1.0. From 0.3.0 onward the image
 is keyless-signed via cosign and ships with a CycloneDX SBOM
 attestation; from 0.4.0 onward the release pipeline also runs a
@@ -4928,6 +4928,14 @@ Rotation is a config swap:</p>
   CLI and API spec flows enforce policy after overlays
   (<a href="../../user/project_config/"><code>project_config.md</code></a>).</li>
 </ul>
+<p><strong><code>spec_path</code> and <code>overlays</code> are filesystem-trusted inputs.</strong> A request that
+supplies <code>spec_path</code> (or overlay paths) makes the service read those files from
+its own filesystem. This is intentional and matches how a deployed service loads
+its specs, but it means the <em>caller of those paths must be trusted</em> — anyone who
+can set <code>spec_path</code>/<code>overlays</code> can cause the service to read any file path it has
+access to. Restrict who can submit path-bearing spec requests to operators, and
+prefer inline <code>spec</code> (with <code>overrides</code>) for less-trusted callers. Spec <em>content</em>
+validation (<code>/v1/specs/validate</code>) stays pure and performs no filesystem I/O.</p>
 <h4 id="5-terminate-tls-upstream">5. Terminate TLS upstream<a class="headerlink" href="#5-terminate-tls-upstream" title="Permanent link">&para;</a></h4>
 <ul>
 <li>[ ] A reverse proxy in front of the service terminates TLS; the
@@ -5309,6 +5317,12 @@ happen <em>outside</em> the agent's execution:</p>
 clean no-op when telemetry is off (no overhead beyond a single env-var
 check). Span names use the <code>kneo.&lt;area&gt;.&lt;operation&gt;</code> convention so they
 sort cleanly alongside SDK-owned spans in tracing UIs.</p>
+<p><strong>GenAI semantic conventions (<code>gen_ai.*</code>).</strong> The OpenTelemetry GenAI attributes
+(<code>gen_ai.system</code>, <code>gen_ai.operation.name</code>, token counts, …) are emitted by the
+SDK's <code>OpenTelemetryMiddleware</code> on the <strong>agent / model-call</strong> spans — that is where
+the model provider is known. The platform-side spans above are provider-agnostic
+infrastructure operations (queue / lease / lock) and deliberately do <strong>not</strong> carry
+<code>gen_ai.*</code>; querying GenAI telemetry uses the SDK-owned model spans.</p>
 <p>Lease spans with <code>kneo.worker.claimed=false</code> indicate an empty queue —
 useful for measuring how often workers idle. Continuation lock spans
 with <code>kneo.lock.acquired=false</code> correlate with the <code>LockAcquisitionError</code>

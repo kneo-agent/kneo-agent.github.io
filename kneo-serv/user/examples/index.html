@@ -723,6 +723,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#declarative_specyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        declarative_spec.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1639,6 +1650,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#declarative_specyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        declarative_spec.yaml
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1745,6 +1767,15 @@ under <a href="../../examples/"><code>examples/</code></a>. Use them to validate
 exercise the CLI, or as starting points for your own specs.</p>
 <p>These specs are non-production placeholders — the <code>provider</code>/<code>model</code> fields
 point at common defaults and should be retargeted before any real use.</p>
+<blockquote>
+<p><strong>Run the commands below from the repository root.</strong> A spec resolves its
+tools by a dotted <code>implementation:</code> path (e.g.
+<code>examples.app_functions.web_search</code>), which is imported relative to your
+current working directory. The CLI puts the invocation directory on the import
+path for you, so <code>kneo spec compile examples/research_agent.yaml</code> works as
+written from the repo root — and a spec of your own resolves its
+<code>implementation:</code> modules relative to your project root the same way.</p>
+</blockquote>
 <h2 id="spec-files">Spec files<a class="headerlink" href="#spec-files" title="Permanent link">&para;</a></h2>
 <h3 id="research_agentyaml"><a href="../../examples/research_agent.yaml"><code>research_agent.yaml</code></a><a class="headerlink" href="#research_agentyaml" title="Permanent link">&para;</a></h3>
 <p>A single-agent research pipeline using a plan-act strategy with two tools
@@ -1867,13 +1898,39 @@ script:</p>
 </code></pre></div>
 <p>See <a href="../deployment_smoke/"><code>deployment_smoke.md</code></a> for the full smoke
 sequence.</p>
+<h3 id="declarative_specyaml"><a href="../../examples/declarative_spec.yaml"><code>declarative_spec.yaml</code></a><a class="headerlink" href="#declarative_specyaml" title="Permanent link">&para;</a></h3>
+<p>The declarative-spec-parity features added in 0.8.0, in one spec:</p>
+<ul>
+<li><strong>MCP transport</strong> — <code>mcp_servers</code> declares an <code>http</code> (or <code>stdio</code> / <code>sse</code>)
+  server, and a tool binds to it with a <code>tool.mcp</code> block. The server config is
+  built at compile time but only connected on first tool call, so it compiles
+  offline. Enterprise mTLS fields (<code>verify</code> / <code>ca_bundle</code> / <code>client_cert</code> /
+  <code>client_key_ref</code>) ride the same block.</li>
+<li><strong>Agent-as-tool</strong> — <code>tool.agent</code> backs a tool with another component agent.</li>
+<li><strong>Workflow-as-agent</strong> — <code>agent.as_agent</code> backs an agent with a workflow.</li>
+</ul>
+<p>The build-order graph wires these cross-component references; a forward or
+cyclic reference is rejected at <code>validate</code>, not at runtime.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/declarative_spec.yaml
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/declarative_spec.yaml
+</code></pre></div>
+<p>The skills surface is a runtime/API feature rather than a spec field. List the
+discoverable skills and overlay them per run against a running service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Read-only catalog (auth scope: specs:read)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>http://127.0.0.1:8000/v1/skills
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Per-request overlay on a run — add/disable within your scope; audited.</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;input&quot;: &quot;hi&quot;, &quot;spec&quot;: {...}, &quot;skills&quot;: {&quot;disable&quot;: [&quot;risky_skill&quot;]}}&#39;</span>
+</code></pre></div>
 <h2 id="project-config">Project config<a class="headerlink" href="#project-config" title="Permanent link">&para;</a></h2>
 <h3 id="project_configyaml"><a href="../../examples/project_config.yaml"><code>project_config.yaml</code></a><a class="headerlink" href="#project_configyaml" title="Permanent link">&para;</a></h3>
 <p>Reference <code>.kneo/config.yaml</code> content showing project metadata, service
 defaults, runtime defaults, and per-environment policy enforcement
 overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, or use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <p>The schema and overlay rules are in
 <a href="../project_config/"><code>project_config.md</code></a>.</p>
@@ -1895,13 +1952,13 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
    through <code>ToolRegistry</code> or MCP servers (see
    <code>extending.md</code>).</li>
 <li>Validate against your target environment:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
 <li>Compile to confirm the workflow builds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 <li>Run locally before deploying:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../deployment/"><code>deployment.md</code></a>.</p>

@@ -1846,6 +1846,8 @@ responsibility and an explicit non-goal.</p>
 Full semantics in <a href="../environment/">environment.md</a>; the deployment-oriented
 subset and defaults also appear in
 <a href="../tutorial_postgres_deployment/#8-capacity-tuning-knobs"><code>tutorial_postgres_deployment.md § 8</code></a>.</p>
+<p>The <strong>Default</strong> column is the code default (no env set); the <strong>Tune when</strong> column
+carries a suggested production value where it differs.</p>
 <table>
 <thead>
 <tr>
@@ -1857,13 +1859,13 @@ subset and defaults also appear in
 <tbody>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code></td>
-<td>120</td>
-<td>Provider tail latency exceeds default.</td>
+<td>unset (no timeout)</td>
+<td>Provider tail latency needs bounding — <code>120</code> is a reasonable start.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_RETRIES</code></td>
-<td>2</td>
-<td>Provider has a documented transient error rate.</td>
+<td><code>0</code></td>
+<td>Provider has a documented transient error rate — <code>2</code> is a reasonable start.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_MAX_BODY_BYTES</code></td>

@@ -1407,6 +1407,12 @@ concepts the previous one introduces.</p>
    minimal human-in-the-loop spec that uses the <code>dummy</code> provider.
    Useful for deployment smoke tests that exercise the pause/resume
    path without a real LLM.</li>
+<li><strong><a href="declarative_spec.yaml"><code>declarative_spec.yaml</code></a></strong> — the
+   declarative-spec-parity features added in 0.8.0: an MCP-backed
+   tool (<code>mcp_servers</code> + <code>tool.mcp</code>), a tool backed by another agent
+   (<code>tool.agent</code>), and an agent backed by a workflow
+   (<code>agent.as_agent</code>). Compiles with no network I/O (the MCP
+   connection is lazy).</li>
 </ol>
 <h2 id="reference-not-a-spec-to-run">Reference (not a spec to run)<a class="headerlink" href="#reference-not-a-spec-to-run" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1449,6 +1455,7 @@ concepts the previous one introduces.</p>
 <li><a href="run_with_timeout.py"><code>run_with_timeout.py</code></a></li>
 <li><a href="app_functions.py"><code>app_functions.py</code></a></li>
 <li><a href="human_functions.py"><code>human_functions.py</code></a></li>
+<li><a href="declarative_spec.yaml"><code>declarative_spec.yaml</code></a></li>
 </ul>
 
 

@@ -1762,6 +1762,14 @@ Rotation is a config swap:</p>
   CLI and API spec flows enforce policy after overlays
   (<a href="../project_config/"><code>project_config.md</code></a>).</li>
 </ul>
+<p><strong><code>spec_path</code> and <code>overlays</code> are filesystem-trusted inputs.</strong> A request that
+supplies <code>spec_path</code> (or overlay paths) makes the service read those files from
+its own filesystem. This is intentional and matches how a deployed service loads
+its specs, but it means the <em>caller of those paths must be trusted</em> — anyone who
+can set <code>spec_path</code>/<code>overlays</code> can cause the service to read any file path it has
+access to. Restrict who can submit path-bearing spec requests to operators, and
+prefer inline <code>spec</code> (with <code>overrides</code>) for less-trusted callers. Spec <em>content</em>
+validation (<code>/v1/specs/validate</code>) stays pure and performs no filesystem I/O.</p>
 <h3 id="5-terminate-tls-upstream">5. Terminate TLS upstream<a class="headerlink" href="#5-terminate-tls-upstream" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] A reverse proxy in front of the service terminates TLS; the

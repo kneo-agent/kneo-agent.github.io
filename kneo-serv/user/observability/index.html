@@ -1951,6 +1951,12 @@ happen <em>outside</em> the agent's execution:</p>
 clean no-op when telemetry is off (no overhead beyond a single env-var
 check). Span names use the <code>kneo.&lt;area&gt;.&lt;operation&gt;</code> convention so they
 sort cleanly alongside SDK-owned spans in tracing UIs.</p>
+<p><strong>GenAI semantic conventions (<code>gen_ai.*</code>).</strong> The OpenTelemetry GenAI attributes
+(<code>gen_ai.system</code>, <code>gen_ai.operation.name</code>, token counts, …) are emitted by the
+SDK's <code>OpenTelemetryMiddleware</code> on the <strong>agent / model-call</strong> spans — that is where
+the model provider is known. The platform-side spans above are provider-agnostic
+infrastructure operations (queue / lease / lock) and deliberately do <strong>not</strong> carry
+<code>gen_ai.*</code>; querying GenAI telemetry uses the SDK-owned model spans.</p>
 <p>Lease spans with <code>kneo.worker.claimed=false</code> indicate an empty queue —
 useful for measuring how often workers idle. Continuation lock spans
 with <code>kneo.lock.acquired=false</code> correlate with the <code>LockAcquisitionError</code>
