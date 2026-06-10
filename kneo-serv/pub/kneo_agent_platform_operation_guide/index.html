@@ -2168,6 +2168,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3871,6 +3882,17 @@
     <span class="md-ellipsis">
       
         0.7.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.8.0
       
     </span>
   </a>
@@ -6169,6 +6191,73 @@ usage <strong>after</strong> each run and then raises
 from 0.6.0; <code>RunStateStore</code> gains a <code>schema_version</code> / <code>close</code> Protocol surface
 (behaviourally a no-op on the schema-less stores), but no on-disk change applies
 on upgrade.</p>
+<h4 id="080">0.8.0<a class="headerlink" href="#080" title="Permanent link">&para;</a></h4>
+<p>Declarative spec parity along the tools / MCP / skills axis. <strong>No breaking
+changes, no persistence migration, no SDK-floor change</strong> — the schema version is
+unchanged and the SDK floor stays <code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>. One <em>behaviour</em>
+note below is worth reading before you upgrade; everything else is additive and
+default-unset.</p>
+<p><strong>Upgrade</strong>:
+- <code>pip install -U kneo-serv</code> (resolves to <code>0.8.0</code>).
+- <code>docker pull ghcr.io/kneo-agent/kneo-serv:0.8.0</code> — <code>:0.8</code> and <code>:latest</code>
+  resolve to the 0.8.0 digest. Image signing, SBOM attestation, and the Trivy
+  gate are unchanged from 0.7.0.</p>
+<p><strong>Behaviour note — <code>overlays</code> is no longer silently ignored.</strong> <code>POST /v1/runs</code>
+(sync + async) and the <code>/v1/specs/run</code> / <code>/compile</code> / <code>/validate</code> /
+<code>/policy-report</code> routes accepted an <code>overlays</code> list but dropped it without
+applying it. From 0.8.0 the overlays are threaded through compile/run,
+persisted in run metadata, and replayed on resume. If any stored client request
+or automation passes <code>overlays</code>, audit it before upgrading — those overlays now
+actually change the compiled spec. <code>overrides</code> / <code>strict</code> are likewise now
+honored on the <code>/specs/*</code> routes that previously dropped them.</p>
+<p><strong>Trust note — <code>spec_path</code> and <code>overlays</code> are filesystem-trusted inputs.</strong> Both
+name paths the <em>server</em> reads at compile time. Grant <code>runs:write</code> /
+<code>specs:read</code>-scoped keys to callers you trust with that read surface, and see
+<a href="#security-hardening">security_hardening.md</a> for the posture before exposing
+these fields to semi-trusted callers.</p>
+<p><strong>New spec surface</strong> (all optional, additive — old specs are unaffected):</p>
+<ul>
+<li><strong>Declarative MCP transports.</strong> A top-level <code>mcp_servers</code> block
+  (<code>transport: stdio | http | sse</code>, with <code>command</code>/<code>args</code>/<code>env</code>/<code>cwd</code> or
+  <code>url</code>/<code>sse_url</code>/<code>message_url</code>/<code>headers</code>/<code>timeout</code>, plus <code>max_response_bytes</code>
+  / <code>sse_read_timeout</code> knobs and <code>verify</code> / <code>ca_bundle</code> / <code>client_cert</code> /
+  <code>client_key</code> TLS fields) and a <code>tool.mcp = {server: &lt;name&gt;, name?:
+  &lt;remote_tool&gt;}</code> reference. Construction happens at build time; the connection
+  is lazy on first tool call, so the spec compiles offline. <strong>Prefer
+  <code>client_key_ref</code></strong> (resolved via the <code>SecretResolver</code>) over inline
+  <code>client_key</code> — the inline spec is persisted unredacted into run metadata,
+  and the TLS field names are redaction terms only on audit/list surfaces.
+  <code>verify: false</code> draws a validation warning.</li>
+<li><strong>Agent-as-tool.</strong> <code>tool.agent: &lt;name&gt;</code> backs a tool with another declared
+  agent. A tool must be backed by exactly one of <code>implementation</code> / <code>mcp</code> /
+  <code>agent</code> — a tool with none is now a validation error (<code>E_TOOL_NO_BACKING</code>)
+  instead of being silently dropped at build.</li>
+<li><strong>Workflow-as-agent.</strong> <code>agent.as_agent: &lt;workflow&gt;</code> backs an agent with a
+  declared workflow; only <code>name</code> / <code>description</code> / <code>system_prompt</code> are legal
+  alongside it. Cyclic or dangling references across all of these fail at
+  <code>/specs/validate</code> (<code>E_BUILD_CYCLE</code> etc.), not at runtime.</li>
+</ul>
+<p><strong>New API surface</strong> (additive):</p>
+<ul>
+<li><strong><code>GET /v1/skills</code></strong> — read-only catalog of declared + default discoverable
+  skills; <code>specs:read</code> scope, standard pagination, no side effects.</li>
+<li><strong><code>RunCreateRequest.skills</code></strong> — per-request <code>{add, disable}</code> skills overlay.
+  <code>add</code> only enables skills already declared in the spec; out-of-scope overlays
+  are rejected; every overlay is audited (<code>run.skills_overlay</code>) and preserved
+  across resume.</li>
+<li><strong><code>GET /v1/human-tasks?status=pending|escalated</code></strong> — a real filter now; an
+  unknown value returns 422 where it was previously a silent no-op.</li>
+<li><strong><code>POST /runs/{id}/continue</code></strong> accepts an <code>Idempotency-Key</code> and replays the
+  stored response on retry; concurrent <code>/continue</code> calls are serialized under a
+  per-run lock. <code>POST /v1/specs/run</code> now holds the same idempotency lock as
+  <code>/runs</code> (409 <code>idempotency_key_in_progress</code> on contention).</li>
+<li><strong>Invalid specs on sync <code>POST /v1/runs</code> return <code>400</code></strong> with diagnostics where
+  they previously surfaced as an opaque 500. 413 (<code>payload_too_large</code>) is now
+  published in the OpenAPI error responses.</li>
+</ul>
+<p><strong>Persistence schemas</strong>: <strong>no migration.</strong> No new persisted fields; rollback to
+0.7.x after running 0.8.0 is persistence-safe (the new request/spec fields are
+request-scoped or compile-scoped only).</p>
 <h3 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h3>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then
