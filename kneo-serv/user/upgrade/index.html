@@ -616,6 +616,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../human_in_the_loop/" class="md-nav__link">
         
   
@@ -1300,34 +1328,6 @@
     
   
     Project .kneo/ config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run_lifecycle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
   
 
     
@@ -2418,10 +2418,15 @@ cut). If you built automation against the old behavior, adjust:</p>
   or continuing a terminal-but-not-failed / live-leased run, returns
   <strong><code>409 run_state_conflict</code></strong> instead of silently re-executing.
   Cancelling a blocked run removes its task from <code>GET /human-tasks</code>.</li>
-<li><strong>A per-attempt provider timeout no longer retries by default</strong> — the
-  abandoned attempt may still be running, so the retry double-executed
-  non-idempotent calls. Set <code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT=true</code>
-  (or <code>retry_on_timeout</code> in spec retry config) for idempotent call sites.</li>
+<li><strong>A per-attempt timeout no longer retries by default</strong> — the abandoned
+  attempt may still be running, so the retry double-executed
+  non-idempotent calls. This applies to provider calls AND to workflow
+  steps/nodes that set <code>timeout_seconds</code> + <code>max_retries</code>. Opt back in
+  per surface: <code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT=true</code> (or
+  <code>retry_on_timeout</code> in spec retry config) for providers,
+  <code>KNEO_SERV_WORKFLOW_RETRY_ON_TIMEOUT=true</code> for workflow steps/nodes.
+  MCP <em>connect</em> timeouts are the exception: they cancel the connect
+  coroutine cleanly, so configured MCP retries do retry them.</li>
 <li><strong>Stricter validation</strong> (pure checks; previously these crashed at
   runtime): graph <code>kind: human</code> nodes (<code>E_GRAPH_NODE_HUMAN_UNSUPPORTED</code>),
   memory blocks without <code>policy</code> (<code>E_MEMORY_POLICY_REQUIRED</code>), guardrail
@@ -2440,7 +2445,8 @@ cut). If you built automation against the old behavior, adjust:</p>
 <code>KNEO_SERV_RETENTION_RUN_STATUSES</code>, <code>KNEO_SERV_TRACE_MAX_EVENTS</code>,
 <code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code>,
 <code>KNEO_SERV_IDEMPOTENCY_LOCK_TTL_SECONDS</code>,
-<code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code>, <code>KNEO_SERV_ARTIFACT_PATH</code> /
+<code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code>,
+<code>KNEO_SERV_WORKFLOW_RETRY_ON_TIMEOUT</code>, <code>KNEO_SERV_ARTIFACT_PATH</code> /
 <code>KNEO_SERV_LOG_PATH</code>.</p>
 <h3 id="080">0.8.0<a class="headerlink" href="#080" title="Permanent link">&para;</a></h3>
 <p>Declarative spec parity along the tools / MCP / skills axis. <strong>No breaking

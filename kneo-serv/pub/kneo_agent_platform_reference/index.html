@@ -613,6 +613,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../../user/run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../user/human_in_the_loop/" class="md-nav__link">
         
   
@@ -1013,34 +1041,6 @@
     
   
     Project .kneo/ config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../user/run_lifecycle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
   
 
     
@@ -5706,12 +5706,19 @@ metadata:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-99-1" name="__codelineno-99-1" href="#__codelineno-99-1"></a><span class="p">{</span>
 <a id="__codelineno-99-2" name="__codelineno-99-2" href="#__codelineno-99-2"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
 <a id="__codelineno-99-3" name="__codelineno-99-3" href="#__codelineno-99-3"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">91</span><span class="p">,</span>
-<a id="__codelineno-99-4" name="__codelineno-99-4" href="#__codelineno-99-4"></a><span class="w">  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<a id="__codelineno-99-5" name="__codelineno-99-5" href="#__codelineno-99-5"></a><span class="w">  </span><span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
-<a id="__codelineno-99-6" name="__codelineno-99-6" href="#__codelineno-99-6"></a><span class="w">  </span><span class="nt">&quot;sort_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span>
-<a id="__codelineno-99-7" name="__codelineno-99-7" href="#__codelineno-99-7"></a><span class="w">  </span><span class="nt">&quot;sort_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;desc&quot;</span>
-<a id="__codelineno-99-8" name="__codelineno-99-8" href="#__codelineno-99-8"></a><span class="p">}</span>
+<a id="__codelineno-99-4" name="__codelineno-99-4" href="#__codelineno-99-4"></a><span class="w">  </span><span class="nt">&quot;window&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<a id="__codelineno-99-5" name="__codelineno-99-5" href="#__codelineno-99-5"></a><span class="w">  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<a id="__codelineno-99-6" name="__codelineno-99-6" href="#__codelineno-99-6"></a><span class="w">  </span><span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<a id="__codelineno-99-7" name="__codelineno-99-7" href="#__codelineno-99-7"></a><span class="w">  </span><span class="nt">&quot;sort_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span>
+<a id="__codelineno-99-8" name="__codelineno-99-8" href="#__codelineno-99-8"></a><span class="w">  </span><span class="nt">&quot;sort_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;desc&quot;</span>
+<a id="__codelineno-99-9" name="__codelineno-99-9" href="#__codelineno-99-9"></a><span class="p">}</span>
 </code></pre></div>
+<p><code>total</code> is the store-wide count; <code>window</code> is the newest-rows window a
+single list request fetches and pages over. On deployments where
+<code>total &gt; window</code>, rows older than the window are not reachable through
+the list endpoint (use retention pruning or direct store queries for
+archival access), and <code>sort_order=asc</code> orders <em>within</em> the window — it
+does not surface the oldest rows overall.</p>
 <p>Supported query parameters:</p>
 <ul>
 <li><code>GET /v1/runs</code>: <code>status</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code></li>
@@ -6134,17 +6141,22 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <tr>
 <td><code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code></td>
 <td>MCP per-attempt timeout, else <code>30</code></td>
-<td>Bound on a lazy MCP session's connect; a hung server aborts instead of bricking the tool.</td>
+<td>Bound on a lazy MCP session's connect; a hung server aborts instead of bricking the tool. Must be &gt; 0. Connect timeouts cancel the connect coroutine cleanly, so configured MCP retries do retry them.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_IDEMPOTENCY_LOCK_TTL_SECONDS</code></td>
 <td><code>300</code></td>
-<td>Per-key idempotency lock TTL; raise it for deployments with long synchronous runs.</td>
+<td>Per-key idempotency lock TTL; raise it for deployments with long synchronous runs. Validated at startup.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code></td>
 <td><code>false</code></td>
 <td>Opt-in: retry a provider call after a per-attempt timeout. The timed-out attempt's thread is abandoned, not cancelled — only enable for idempotent call sites.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_WORKFLOW_RETRY_ON_TIMEOUT</code></td>
+<td><code>false</code></td>
+<td>Same opt-in for the workflow step/node retry surface (spec <code>max_retries</code> + <code>timeout_seconds</code>); restores the pre-0.9.0 retry-after-timeout behavior there.</td>
 </tr>
 </tbody>
 </table>

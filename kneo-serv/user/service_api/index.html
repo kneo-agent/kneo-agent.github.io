@@ -1159,6 +1159,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../human_in_the_loop/" class="md-nav__link">
         
   
@@ -1559,34 +1587,6 @@
     
   
     Project .kneo/ config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run_lifecycle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
   
 
     
@@ -3203,12 +3203,19 @@ metadata:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="p">{</span>
 <a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
 <a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">91</span><span class="p">,</span>
-<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
-<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="w">  </span><span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
-<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="w">  </span><span class="nt">&quot;sort_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span>
-<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="w">  </span><span class="nt">&quot;sort_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;desc&quot;</span>
-<a id="__codelineno-52-8" name="__codelineno-52-8" href="#__codelineno-52-8"></a><span class="p">}</span>
+<a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">  </span><span class="nt">&quot;window&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="w">  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span>
+<a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="w">  </span><span class="nt">&quot;offset&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="w">  </span><span class="nt">&quot;sort_by&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span>
+<a id="__codelineno-52-8" name="__codelineno-52-8" href="#__codelineno-52-8"></a><span class="w">  </span><span class="nt">&quot;sort_order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;desc&quot;</span>
+<a id="__codelineno-52-9" name="__codelineno-52-9" href="#__codelineno-52-9"></a><span class="p">}</span>
 </code></pre></div>
+<p><code>total</code> is the store-wide count; <code>window</code> is the newest-rows window a
+single list request fetches and pages over. On deployments where
+<code>total &gt; window</code>, rows older than the window are not reachable through
+the list endpoint (use retention pruning or direct store queries for
+archival access), and <code>sort_order=asc</code> orders <em>within</em> the window — it
+does not surface the oldest rows overall.</p>
 <p>Supported query parameters:</p>
 <ul>
 <li><code>GET /v1/runs</code>: <code>status</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code></li>

@@ -13,10 +13,10 @@
         <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/run_lifecycle/">
       
       
-        <link rel="prev" href="../project_config/">
+        <link rel="prev" href="../run_recipes/">
       
       
-        <link rel="next" href="../../pub/">
+        <link rel="next" href="../human_in_the_loop/">
       
       
         
@@ -613,6 +613,147 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#status-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Status reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-failure-on_error-semantics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step failure: on_error semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeouts-cancellation-pauseresume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeouts, cancellation, pause/resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-run-creation-returns-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async run creation returns 200
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-retention-prunes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What retention prunes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-taxonomy-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error taxonomy quick reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
@@ -1024,147 +1165,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#status-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Status reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#step-failure-on_error-semantics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step failure: on_error semantics
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#timeouts-cancellation-pauseresume" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Timeouts, cancellation, pause/resume
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-run-creation-returns-200" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async run creation returns 200
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-retention-prunes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What retention prunes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-taxonomy-quick-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error taxonomy quick reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1602,14 +1602,16 @@ overwrite one (<code>409 run_state_conflict</code> where a client asks for it).<
 <pre class="mermaid"><code>stateDiagram-v2
     [*] --&gt; created
     created --&gt; running : execute / worker claim
+    created --&gt; cancelled : cancel before start
     running --&gt; completed
     running --&gt; failed : error past on_error policy
-    running --&gt; cancelled : cancel honored mid-run
+    running --&gt; cancelled : cancel honored
     running --&gt; timed_out : deadline exceeded
     running --&gt; blocked : human step reached
     blocked --&gt; running : resume with decision /&lt;br/&gt;on_timeout continue
     blocked --&gt; expired : task timeout, on_timeout fail
     blocked --&gt; cancelled : cancel (continuation deleted)
+    blocked --&gt; timed_out : run deadline exceeded&lt;br/&gt;(continuation deleted)
     failed --&gt; running : POST /runs/{id}/continue
     completed --&gt; [*]
     failed --&gt; [*]
@@ -1637,8 +1639,10 @@ applies <strong>after</strong> the step's retry budget (<code>max_retries</code>
 </ul>
 <p>Cancellation and human-intervention pauses are <strong>control flow, never step
 failures</strong> — no <code>on_error</code> policy can swallow them. One unsupported
-corner: a sequential <code>fallback_ref</code> pointing at a <em>human</em> step raises
-rather than pausing — keep human steps in the main chain.</p>
+corner: a <code>fallback_ref</code> pointing at a <em>human</em> step cannot pause — keep
+human steps in the main chain. <code>/specs/validate</code> rejects that shape
+(<code>E_STEP_FALLBACK_HUMAN</code>), along with a <code>fallback_ref</code> to a disabled
+graph node (<code>E_GRAPH_NODE_FALLBACK_DISABLED</code>).</p>
 <h2 id="timeouts-cancellation-pauseresume">Timeouts, cancellation, pause/resume<a class="headerlink" href="#timeouts-cancellation-pauseresume" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Run timeout</strong> (<code>timeout_seconds</code>): the sweep marks the run

@@ -616,6 +616,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../human_in_the_loop/" class="md-nav__link">
         
   
@@ -1073,6 +1101,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#self-hosted-staging-rehearsal-no-standing-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-hosted staging rehearsal (no standing staging)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1107,34 +1146,6 @@
     
   
     Project .kneo/ config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run_lifecycle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
   
 
     
@@ -1452,6 +1463,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#self-hosted-staging-rehearsal-no-standing-staging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-hosted staging rehearsal (no standing staging)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1574,6 +1596,68 @@ scoped smoke tokens from <code>KNEO_SERV_API_KEYS</code>, and runs the <code>/v1
 <p>The GitHub Actions <code>Staging Gate</code> workflow runs the same renderer and release
 gate from the <code>staging</code> environment secrets. Dispatch it with the deployed
 staging URL after the service is reachable.</p>
+<h2 id="self-hosted-staging-rehearsal-no-standing-staging">Self-hosted staging rehearsal (no standing staging)<a class="headerlink" href="#self-hosted-staging-rehearsal-no-standing-staging" title="Permanent link">&para;</a></h2>
+<p>A release cycle without a standing staging deployment can still run both
+staging gates against a <em>real deployed instance</em>: deploy the published
+release-candidate image on any Docker host and point the gates at it.
+This is the procedure that first closed the gate at <code>v0.9.0rc1</code> (it had
+been deferred for four releases for want of a staging environment).</p>
+<ol>
+<li><strong>Generate real secret values</strong> (no placeholders — the validator
+   rejects them) and export the eight <code>KNEO_STAGING_*</code> variables from
+   the renderer section above. Generate strong random tokens; for a
+   compose-hosted rehearsal, point <code>KNEO_STAGING_DATABASE_URL</code> at the
+   compose service host (<code>@db:5432</code>).</li>
+<li><strong>Store the same values as GitHub environment secrets</strong> so the
+   hosted workflow renders an env that matches the deployment:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gh<span class="w"> </span>api<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>repos/&lt;owner&gt;/&lt;repo&gt;/environments/staging<span class="w"> </span>--silent
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">for</span><span class="w"> </span>var<span class="w"> </span><span class="k">in</span><span class="w"> </span>KNEO_STAGING_API_KEYS<span class="w"> </span>KNEO_STAGING_ADMIN_API_KEY<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span>KNEO_STAGING_SPEC_SIGNING_KEY<span class="w"> </span>KNEO_STAGING_DATABASE_URL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>KNEO_STAGING_POSTGRES_PASSWORD<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>KNEO_STAGING_OTEL_EXPORTER_OTLP_ENDPOINT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>KNEO_STAGING_OPENAI_API_KEY<span class="w"> </span>KNEO_STAGING_MCP_API_KEY<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>printenv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span>--env<span class="w"> </span>staging
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">done</span>
+</code></pre></div>
+<ol>
+<li><strong>Deploy the rc image itself, pinned by digest</strong> (verify the cosign
+   signature first — see
+   <a href="../security_hardening/">security_hardening.md</a>), under the rendered
+   staging env:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>python<span class="w"> </span>scripts/render_staging_env.py<span class="w"> </span>--output<span class="w"> </span>deploy/staging.env
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/&lt;owner&gt;/kneo-serv@sha256:&lt;rc-digest&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>docker<span class="w"> </span>tag<span class="w">  </span>ghcr.io/&lt;owner&gt;/kneo-serv@sha256:&lt;rc-digest&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">            </span>ghcr.io/&lt;owner&gt;/kneo-serv:latest<span class="w">   </span><span class="c1"># local-only alias for compose</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--no-build
+</code></pre></div>
+<ol>
+<li><strong>Run the script gate locally</strong> against the instance
+   (<code>scripts/staging_release_gate.py --env-file deploy/staging.env
+   --base-url http://127.0.0.1:8000</code>), then <strong>dispatch the hosted
+   <code>Staging Gate</code> workflow</strong> with a URL the GitHub runner can reach.</li>
+</ol>
+<p><strong>Reachability caveat:</strong> GitHub-hosted runners have <strong>no IPv6
+   egress</strong> — a direct IPv6 URL fails with <code>[Errno 101] Network is
+   unreachable</code> even when the host is genuinely on the IPv6 internet.
+   If the host has no public IPv4, front the instance with a
+   short-lived tunnel and pass the tunnel URL instead:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cloudflared<span class="w"> </span>tunnel<span class="w"> </span>--url<span class="w"> </span>http://localhost:8000<span class="w"> </span>--no-autoupdate<span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># grep the https://&lt;random&gt;.trycloudflare.com URL from its output</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>gh<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>staging-gate.yml<span class="w"> </span>-f<span class="w"> </span><span class="nv">staging_url</span><span class="o">=</span>https://&lt;random&gt;.trycloudflare.com
+</code></pre></div>
+<p>Auth stays enforced for the whole exposure window — the gate's
+   <code>--expect-auth</code> checks depend on it.</p>
+<ol>
+<li><strong>Tear down afterwards</strong>: kill the tunnel, <code>docker compose
+   --env-file deploy/staging.env down -v</code>, delete the rendered
+   <code>deploy/staging.env</code>, and remove the local <code>latest</code> alias. The
+   GitHub environment secrets from step 2 are rehearsal-scoped —
+   re-render them against real keys and a managed DSN if you later
+   stand up permanent staging.</li>
+</ol>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../backup_and_recovery/#data-only-restore-into-a-clean-volume"><code>backup_and_recovery.md § Data-only restore into a clean volume</code></a>
