@@ -75,3 +75,32 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# --- 0.9.0: transient-vs-permanent classification --------------------------
+#
+# `default_non_retryable` stops the retry budget being burned on errors
+# that can never succeed (bad configuration, spec errors, anything whose
+# exception carries `retriable=False`) while leaving timeouts, connection
+# errors, and backpressure retryable. Note the timeout default change:
+# a timed-out attempt no longer retries unless the policy opts in with
+# `retry_on_timeout=True` (the abandoned attempt may still be running —
+# retrying a non-idempotent call would double its side effects).
+
+
+def classified_retry_example() -> None:
+    from kneo_serv.runtime.retry import (
+        RetryPolicy,
+        default_non_retryable,
+        run_with_retry,
+    )
+
+    def call_provider() -> str:
+        ...  # your provider call here
+        return "ok"
+
+    run_with_retry(
+        call_provider,
+        policy=RetryPolicy(max_retries=3, backoff_seconds=0.5, timeout_seconds=30),
+        non_retryable=default_non_retryable,
+    )

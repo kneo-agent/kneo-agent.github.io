@@ -382,6 +382,8 @@
       
         
       
+        
+      
     
     
     
@@ -811,6 +813,17 @@
     <span class="md-ellipsis">
       
         Adapting an example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#090-additions-resilience-handoff-stdio-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 additions: resilience, handoff, stdio MCP
       
     </span>
   </a>
@@ -1261,6 +1274,34 @@
     
   
     Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -1744,6 +1785,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#090-additions-resilience-handoff-stdio-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 additions: resilience, handoff, stdio MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1962,6 +2014,40 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../deployment/"><code>deployment.md</code></a>.</p>
+<h2 id="090-additions-resilience-handoff-stdio-mcp">0.9.0 additions: resilience, handoff, stdio MCP<a class="headerlink" href="#090-additions-resilience-handoff-stdio-mcp" title="Permanent link">&para;</a></h2>
+<p>Three examples landed with the 0.9.0 reliability cut, each doubling as
+the executable regression for a fixed surface (they run offline in CI —
+no provider keys, no network):</p>
+<ul>
+<li>
+<p><strong><code>handoff_workflow.yaml</code></strong> — a <code>round_robin</code> handoff: each participant
+  takes one turn, then the run completes (<code>status: completed</code>, not the
+  pre-0.9.0 <code>max_iterations</code> failure).</p>
+<p>kneo run examples/handoff_workflow.yaml \
+    --input "triage this incident report" --target workflow --json</p>
+</li>
+<li>
+<p><strong><code>resilient_workflow.yaml</code></strong> — per-step <code>on_error</code>: the <code>fetch</code> step
+  always fails and falls back to <code>cached_fetch</code>; <code>enrich</code> always fails
+  and is skipped (<code>continue</code>). The final report shows <code>[cached]</code> content
+  — both policies actually executing. Semantics:
+  <a href="../run_lifecycle/">run_lifecycle.md</a>.</p>
+<p>kneo run examples/resilient_workflow.yaml \
+    --input "quarterly metrics" --target workflow --json</p>
+</li>
+<li>
+<p><strong><code>mcp_stdio_workflow.yaml</code></strong> — declarative MCP over stdio, backed by
+  the bundled <code>mcp_stdio_server.py</code> (FastMCP, ships with the SDK's <code>mcp</code>
+  dependency). The platform spawns the server as a subprocess on the
+  tool's first call; the session lives on a dedicated event loop and is
+  reused across calls. This is a <strong>runtime transport proof</strong> — the
+  pre-0.9.0 stdio path failed on every invocation.</p>
+<p>kneo run examples/mcp_stdio_workflow.yaml \
+    --input "count the words in this sentence" --target agent --json</p>
+</li>
+</ul>
+<p>The <code>retention:</code> block in <code>project_config.yaml</code> now also shows every
+retention knob, including 0.9.0's <code>idempotency_days</code>.</p>
 
 
 

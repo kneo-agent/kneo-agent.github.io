@@ -1,0 +1,54 @@
+# Error-tolerant sequential workflow: per-step `on_error` policies.
+# `enrich` is flaky and declares `continue` (the chain proceeds with the
+# step skipped, failure recorded in checkpoint metadata); `fetch` declares
+# `fallback` to the `cached_fetch` step (which runs in its place, then the
+# chain continues). Both policies were validated-but-inert before 0.9.0 —
+# this example doubles as their executable regression.
+#
+#   kneo run examples/resilient_workflow.yaml \
+#     --input "quarterly metrics" --target workflow --json
+
+version: v1
+
+agent:
+  name: resilient-root
+  system_prompt: Root agent for the resilient pipeline.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: sequential
+  name: resilient-pipeline
+  steps:
+    - id: fetch
+      kind: function
+      ref: flaky_fetch
+      on_error: fallback
+      fallback_ref: cached_fetch
+    - id: cached_fetch
+      kind: function
+      ref: cached_fetch
+    - id: enrich
+      kind: function
+      ref: flaky_enrich
+      on_error: continue
+    - id: report
+      kind: function
+      ref: build_report
+
+components:
+  functions:
+    flaky_fetch:
+      implementation: examples.app_functions.flaky_fetch
+    cached_fetch:
+      implementation: examples.app_functions.cached_fetch
+    flaky_enrich:
+      implementation: examples.app_functions.flaky_enrich
+    build_report:
+      implementation: examples.app_functions.build_report

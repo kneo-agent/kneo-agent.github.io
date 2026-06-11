@@ -382,6 +382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1475,6 +1477,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#090-behavior-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 behavior notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 behavior notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools-echo-their-arguments-back-instead-of-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools echo their arguments back instead of running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-stdiosse-mcp-tool-fails-or-stalls-on-every-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A stdio/sse MCP tool fails or stalls on every call
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-runsidtrace-is-empty-for-a-failed-or-resumed-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /runs/{id}/trace is empty for a failed or resumed run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume-or-continue-returns-409-run_state_conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume or /continue returns 409 run_state_conflict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-run-fails-with-422-guardrail_violation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A run fails with 422 guardrail_violation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1527,6 +1601,34 @@
     
   
     Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -2276,6 +2378,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#090-behavior-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 behavior notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 behavior notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tools-echo-their-arguments-back-instead-of-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools echo their arguments back instead of running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-stdiosse-mcp-tool-fails-or-stalls-on-every-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A stdio/sse MCP tool fails or stalls on every call
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-runsidtrace-is-empty-for-a-failed-or-resumed-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET /runs/{id}/trace is empty for a failed or resumed run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resume-or-continue-returns-409-run_state_conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resume or /continue returns 409 run_state_conflict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-run-fails-with-422-guardrail_violation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A run fails with 422 guardrail_violation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2605,6 +2779,30 @@ gate that failed in its job summary.</p>
 </ul>
 <p>Audit events are accessible at <code>GET /audit-events</code> and frequently contain
 the operator action that preceded a fault.</p>
+<h2 id="090-behavior-notes">0.9.0 behavior notes<a class="headerlink" href="#090-behavior-notes" title="Permanent link">&para;</a></h2>
+<h3 id="tools-echo-their-arguments-back-instead-of-running">Tools echo their arguments back instead of running<a class="headerlink" href="#tools-echo-their-arguments-back-instead-of-running" title="Permanent link">&para;</a></h3>
+<p>A pre-0.9.0 bug: spec-compiled bridge agents got no tool handlers at
+all, so every declared tool silently returned its own arguments.
+Upgrade — 0.9.0 wires handler dispatch (and enforces the spec
+<code>ToolPolicy</code> on it).</p>
+<h3 id="a-stdiosse-mcp-tool-fails-or-stalls-on-every-call">A stdio/sse MCP tool fails or stalls on every call<a class="headerlink" href="#a-stdiosse-mcp-tool-fails-or-stalls-on-every-call" title="Permanent link">&para;</a></h3>
+<p>Pre-0.9.0, MCP sessions were created on a throwaway event loop —
+stdio/sse transports failed on every invocation. 0.9.0 hosts each
+session on a dedicated loop; a dead server now aborts the connect after
+<code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code> instead of hanging the tool.</p>
+<h3 id="get-runsidtrace-is-empty-for-a-failed-or-resumed-run"><code>GET /runs/{id}/trace</code> is empty for a failed or resumed run<a class="headerlink" href="#get-runsidtrace-is-empty-for-a-failed-or-resumed-run" title="Permanent link">&para;</a></h3>
+<p>Fixed in 0.9.0: failed runs persist their collected trace, and the
+pre-pause timeline survives a human-task resume. Older runs that
+predate the fix reassemble from their checkpoints where events exist.</p>
+<h3 id="resume-or-continue-returns-409-run_state_conflict">Resume or <code>/continue</code> returns <code>409 run_state_conflict</code><a class="headerlink" href="#resume-or-continue-returns-409-run_state_conflict" title="Permanent link">&para;</a></h3>
+<p>Expected: the run's status forbids the operation (e.g. it was cancelled
+after pausing, or a live worker still holds its lease). The response
+carries the run's current status — re-fetch the run rather than
+retrying blindly.</p>
+<h3 id="a-run-fails-with-422-guardrail_violation">A run fails with <code>422 guardrail_violation</code><a class="headerlink" href="#a-run-fails-with-422-guardrail_violation" title="Permanent link">&para;</a></h3>
+<p>A content guardrail blocked the input/output/tool result — previously
+this surfaced as an opaque <code>500 internal_error</code>. The violation type is
+in the response detail.</p>
 
 
 

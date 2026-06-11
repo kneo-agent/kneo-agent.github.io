@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -1011,6 +1013,34 @@
     
   
     Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -2584,6 +2614,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#090-additions-resilience-handoff-stdio-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 additions: resilience, handoff, stdio MCP
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4144,6 +4185,17 @@
     <span class="md-ellipsis">
       
         Adapting an example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#090-additions-resilience-handoff-stdio-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0 additions: resilience, handoff, stdio MCP
       
     </span>
   </a>
@@ -6037,7 +6089,17 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <tr>
 <td><code>KNEO_SERV_RETENTION_CONTINUATIONS_DAYS</code></td>
 <td>unset</td>
-<td>Delete old continuations.</td>
+<td>Delete old continuations. Continuations of still-<code>blocked</code> runs are always protected regardless of age.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_IDEMPOTENCY_DAYS</code></td>
+<td>unset</td>
+<td>Delete idempotency records by <code>updated_at</code> (they carry full response payloads and grow with traffic).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_RUN_STATUSES</code></td>
+<td><code>completed,failed,cancelled,timed_out,expired</code></td>
+<td>Comma-separated terminal statuses eligible for the runs prune.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_RETENTION_AUDIT_DAYS</code></td>
@@ -6053,6 +6115,36 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_RETENTION_LOGS_DAYS</code></td>
 <td>unset</td>
 <td>Delete old log files.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_ARTIFACT_PATH</code></td>
+<td>unset</td>
+<td>Root the artifacts retention pass prunes (<code>artifacts_days</code> no-ops without it).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_LOG_PATH</code></td>
+<td>unset</td>
+<td>Root the logs retention pass prunes (<code>logs_days</code> no-ops without it).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_TRACE_MAX_EVENTS</code></td>
+<td><code>10000</code></td>
+<td>Per-run trace buffer cap; <code>0</code> disables. Drops are counted and logged once.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code></td>
+<td>MCP per-attempt timeout, else <code>30</code></td>
+<td>Bound on a lazy MCP session's connect; a hung server aborts instead of bricking the tool.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_IDEMPOTENCY_LOCK_TTL_SECONDS</code></td>
+<td><code>300</code></td>
+<td>Per-key idempotency lock TTL; raise it for deployments with long synchronous runs.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code></td>
+<td><code>false</code></td>
+<td>Opt-in: retry a provider call after a per-attempt timeout. The timed-out attempt's thread is abandoned, not cancelled — only enable for idempotent call sites.</td>
 </tr>
 </tbody>
 </table>
@@ -6301,6 +6393,40 @@ workflow. Same pattern as <code>app_functions.py</code>.</p>
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../../user/deployment/"><code>deployment.md</code></a>.</p>
+<h3 id="090-additions-resilience-handoff-stdio-mcp">0.9.0 additions: resilience, handoff, stdio MCP<a class="headerlink" href="#090-additions-resilience-handoff-stdio-mcp" title="Permanent link">&para;</a></h3>
+<p>Three examples landed with the 0.9.0 reliability cut, each doubling as
+the executable regression for a fixed surface (they run offline in CI —
+no provider keys, no network):</p>
+<ul>
+<li>
+<p><strong><code>handoff_workflow.yaml</code></strong> — a <code>round_robin</code> handoff: each participant
+  takes one turn, then the run completes (<code>status: completed</code>, not the
+  pre-0.9.0 <code>max_iterations</code> failure).</p>
+<p>kneo run examples/handoff_workflow.yaml \
+    --input "triage this incident report" --target workflow --json</p>
+</li>
+<li>
+<p><strong><code>resilient_workflow.yaml</code></strong> — per-step <code>on_error</code>: the <code>fetch</code> step
+  always fails and falls back to <code>cached_fetch</code>; <code>enrich</code> always fails
+  and is skipped (<code>continue</code>). The final report shows <code>[cached]</code> content
+  — both policies actually executing. Semantics:
+  <a href="../../user/run_lifecycle/">run_lifecycle.md</a>.</p>
+<p>kneo run examples/resilient_workflow.yaml \
+    --input "quarterly metrics" --target workflow --json</p>
+</li>
+<li>
+<p><strong><code>mcp_stdio_workflow.yaml</code></strong> — declarative MCP over stdio, backed by
+  the bundled <code>mcp_stdio_server.py</code> (FastMCP, ships with the SDK's <code>mcp</code>
+  dependency). The platform spawns the server as a subprocess on the
+  tool's first call; the session lives on a dedicated event loop and is
+  reused across calls. This is a <strong>runtime transport proof</strong> — the
+  pre-0.9.0 stdio path failed on every invocation.</p>
+<p>kneo run examples/mcp_stdio_workflow.yaml \
+    --input "count the words in this sentence" --target agent --json</p>
+</li>
+</ul>
+<p>The <code>retention:</code> block in <code>project_config.yaml</code> now also shows every
+retention knob, including 0.9.0's <code>idempotency_days</code>.</p>
 <h2 id="project-kneo-config">Project <code>.kneo/</code> config<a class="headerlink" href="#project-kneo-config" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/project_config/"><code>docs/user/project_config.md</code></a></em></p>
 <p>Each project keeps a <code>.kneo/</code> directory for local service configuration,

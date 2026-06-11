@@ -382,6 +382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1184,6 +1186,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1942,7 +1972,17 @@ in <a href="../service_api/"><code>service_api.md</code></a>.</p>
 <tr>
 <td><code>KNEO_SERV_RETENTION_CONTINUATIONS_DAYS</code></td>
 <td>unset</td>
-<td>Delete old continuations.</td>
+<td>Delete old continuations. Continuations of still-<code>blocked</code> runs are always protected regardless of age.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_IDEMPOTENCY_DAYS</code></td>
+<td>unset</td>
+<td>Delete idempotency records by <code>updated_at</code> (they carry full response payloads and grow with traffic).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_RETENTION_RUN_STATUSES</code></td>
+<td><code>completed,failed,cancelled,timed_out,expired</code></td>
+<td>Comma-separated terminal statuses eligible for the runs prune.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_RETENTION_AUDIT_DAYS</code></td>
@@ -1958,6 +1998,36 @@ in <a href="../service_api/"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_RETENTION_LOGS_DAYS</code></td>
 <td>unset</td>
 <td>Delete old log files.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_ARTIFACT_PATH</code></td>
+<td>unset</td>
+<td>Root the artifacts retention pass prunes (<code>artifacts_days</code> no-ops without it).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_LOG_PATH</code></td>
+<td>unset</td>
+<td>Root the logs retention pass prunes (<code>logs_days</code> no-ops without it).</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_TRACE_MAX_EVENTS</code></td>
+<td><code>10000</code></td>
+<td>Per-run trace buffer cap; <code>0</code> disables. Drops are counted and logged once.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code></td>
+<td>MCP per-attempt timeout, else <code>30</code></td>
+<td>Bound on a lazy MCP session's connect; a hung server aborts instead of bricking the tool.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_IDEMPOTENCY_LOCK_TTL_SECONDS</code></td>
+<td><code>300</code></td>
+<td>Per-key idempotency lock TTL; raise it for deployments with long synchronous runs.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code></td>
+<td><code>false</code></td>
+<td>Opt-in: retry a provider call after a per-attempt timeout. The timed-out attempt's thread is abandoned, not cancelled — only enable for idempotent call sites.</td>
 </tr>
 </tbody>
 </table>

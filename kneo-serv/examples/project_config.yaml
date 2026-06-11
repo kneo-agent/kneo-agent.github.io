@@ -27,3 +27,13 @@ environments:
       require_human_review: true
       require_guardrails: true
       blocked_diagnostic_codes: [E_UNSAFE_TOOL_IMPORT, E_UNSAFE_FUNCTION_IMPORT]
+# Retention windows (days). Unset categories are never pruned. `expired`
+# runs prune with the other terminal statuses by default; continuations
+# of still-blocked runs are always protected regardless of age.
+retention:
+  runs_days: 30
+  checkpoints_days: 14
+  queue_days: 7
+  continuations_days: 14
+  audit_days: 90
+  idempotency_days: 7

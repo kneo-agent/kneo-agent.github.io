@@ -1311,8 +1311,31 @@
       },
       "SpecExplainRequest": {
         "additionalProperties": false,
-        "description": "POST /v1/specs/explain request body.",
+        "description": "POST /v1/specs/explain request body.\n\nCarries the same envelope as the other three spec endpoints — the\nmodule docstring always claimed parity, but this model lacked the\n`environment` / `overlays` / `overrides` fields, so (being a strict\nmodel) it 422'd clients that sent them while the sibling routes\naccepted them.",
         "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "overlays": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Overlays",
+            "type": "array"
+          },
+          "overrides": {
+            "additionalProperties": true,
+            "title": "Overrides",
+            "type": "object"
+          },
           "spec": {
             "anyOf": [
               {

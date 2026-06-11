@@ -1,0 +1,49 @@
+# Handoff workflow with a round_robin selector: each participant takes one
+# turn in rotation, then the run completes. (The 0.9.0 fix: a fully-visited
+# rotation used to be persisted as a FAILED run — this example doubles as
+# the executable regression for that.)
+#
+#   kneo run examples/handoff_workflow.yaml \
+#     --input "triage this incident report" --target workflow --json
+
+version: v1
+
+agent:
+  name: handoff-root
+  system_prompt: Root agent for the handoff rotation.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: handoff
+  name: triage-rotation
+  participants:
+    - id: classifier
+      kind: agent
+      ref: classifier
+    - id: investigator
+      kind: agent
+      ref: investigator
+    - id: resolver
+      kind: agent
+      ref: resolver
+  selector:
+    type: round_robin
+
+components:
+  agents:
+    classifier:
+      name: classifier
+      system_prompt: Classify the incident and hand off.
+    investigator:
+      name: investigator
+      system_prompt: Investigate the classified incident and hand off.
+    resolver:
+      name: resolver
+      system_prompt: Propose the resolution.

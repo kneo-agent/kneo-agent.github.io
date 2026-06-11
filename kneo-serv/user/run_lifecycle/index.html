@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/project_config/">
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/run_lifecycle/">
       
       
-        <link rel="prev" href="../deployment_smoke/">
+        <link rel="prev" href="../project_config/">
       
       
-        <link rel="next" href="../run_lifecycle/">
+        <link rel="next" href="../../pub/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Project .kneo/ config - Kneo Agent Platform</title>
+        <title>Run lifecycle & failure semantics - Kneo Agent Platform</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#project-kneo-config" class="md-skip">
+        <a href="#run-lifecycle-failure-semantics" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Project .kneo/ config
+              Run lifecycle &amp; failure semantics
             
           </span>
         </div>
@@ -1005,6 +1005,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../project_config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1024,7 +1052,7 @@
   <span class="md-ellipsis">
     
   
-    Project .kneo/ config
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -1042,7 +1070,7 @@
   <span class="md-ellipsis">
     
   
-    Project .kneo/ config
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -1068,10 +1096,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#retention" class="md-nav__link">
+  <a href="#status-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retention
+        Status reference
       
     </span>
   </a>
@@ -1079,10 +1107,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+  <a href="#step-failure-on_error-semantics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local / self-hosted LLM endpoints
+        Step failure: on_error semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeouts-cancellation-pauseresume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeouts, cancellation, pause/resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-run-creation-returns-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async run creation returns 200
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-retention-prunes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What retention prunes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-taxonomy-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error taxonomy quick reference
       
     </span>
   </a>
@@ -1093,34 +1165,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../run_lifecycle/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Run lifecycle &amp; failure semantics
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1397,10 +1441,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#retention" class="md-nav__link">
+  <a href="#status-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Retention
+        Status reference
       
     </span>
   </a>
@@ -1408,10 +1452,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-self-hosted-llm-endpoints" class="md-nav__link">
+  <a href="#step-failure-on_error-semantics" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local / self-hosted LLM endpoints
+        Step failure: on_error semantics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#timeouts-cancellation-pauseresume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeouts, cancellation, pause/resume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-run-creation-returns-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async run creation returns 200
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-retention-prunes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What retention prunes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-taxonomy-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error taxonomy quick reference
       
     </span>
   </a>
@@ -1435,110 +1523,260 @@
 
 
 
-<h1 id="project-kneo-config">Project <code>.kneo/</code> config<a class="headerlink" href="#project-kneo-config" title="Permanent link">&para;</a></h1>
-<p>Each project keeps a <code>.kneo/</code> directory for local service configuration,
-generated artifacts, and logs. This page covers the contents and the
-overlay/policy story; for the runtime variables read from the environment
-(rather than from project config), see <a href="../environment/">environment.md</a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.kneo/
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  config.yaml
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  README.md
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  artifacts/.gitkeep
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  logs/.gitkeep
-</code></pre></div>
-<p>The <code>.kneo/config.yaml</code> demonstrates:</p>
+<h1 id="run-lifecycle-failure-semantics">Run lifecycle &amp; failure semantics<a class="headerlink" href="#run-lifecycle-failure-semantics" title="Permanent link">&para;</a></h1>
+<p>The authoritative operator reference for what each run status means, how
+runs move between them, what happens when a step fails, times out, is
+cancelled, or pauses for a human — and which statuses retention prunes.
+The 0.9.0 cut made the state machine honest under failure; this page is
+the contract those fixes implement, and the surface the
+contract-stability policy binds to for run
+semantics.</p>
+<p>Related deep-dives: <a href="../human_in_the_loop/">human_in_the_loop.md</a> (the
+pause/resume walkthrough), <a href="../service_api/">service_api.md</a> (routes and
+error envelopes), <a href="../troubleshooting/">troubleshooting.md</a>.</p>
+<h2 id="status-reference">Status reference<a class="headerlink" href="#status-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Terminal?</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>created</code></td>
+<td>no</td>
+<td>Run row persisted; not yet executing.</td>
+</tr>
+<tr>
+<td><code>queued</code> <em>(queue record)</em></td>
+<td>no</td>
+<td>Waiting for a worker (async mode). The run row itself stays <code>created</code>/<code>running</code>; <code>queued</code> is the queue record's status.</td>
+</tr>
+<tr>
+<td><code>running</code></td>
+<td>no</td>
+<td>A worker (or the synchronous caller) is executing it under a lease.</td>
+</tr>
+<tr>
+<td><code>blocked</code></td>
+<td>no</td>
+<td>Paused at a human step; a <code>WorkflowContinuation</code> holds the resume context.</td>
+</tr>
+<tr>
+<td><code>paused</code></td>
+<td>no</td>
+<td>Reserved/legacy pause marker; human pauses use <code>blocked</code>.</td>
+</tr>
+<tr>
+<td><code>completed</code></td>
+<td><strong>yes</strong></td>
+<td>Finished successfully.</td>
+</tr>
+<tr>
+<td><code>failed</code></td>
+<td><strong>yes</strong></td>
+<td>A step or the runtime raised past its error policy. Eligible for <code>/continue</code> (sequential workflows).</td>
+</tr>
+<tr>
+<td><code>cancelled</code></td>
+<td><strong>yes</strong></td>
+<td>An operator cancel landed (cooperatively honored mid-run).</td>
+</tr>
+<tr>
+<td><code>timed_out</code></td>
+<td><strong>yes</strong></td>
+<td>The run exceeded its <code>timeout_seconds</code> deadline.</td>
+</tr>
+<tr>
+<td><code>expired</code></td>
+<td><strong>yes</strong></td>
+<td>A blocked human task hit its timeout with <code>on_timeout: fail</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>Terminal statuses are final: every write path fences on the canonical
+terminal set, so a late worker result, a resume, or a cancel can never
+overwrite one (<code>409 run_state_conflict</code> where a client asks for it).</p>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; created
+    created --&gt; running : execute / worker claim
+    running --&gt; completed
+    running --&gt; failed : error past on_error policy
+    running --&gt; cancelled : cancel honored mid-run
+    running --&gt; timed_out : deadline exceeded
+    running --&gt; blocked : human step reached
+    blocked --&gt; running : resume with decision /&lt;br/&gt;on_timeout continue
+    blocked --&gt; expired : task timeout, on_timeout fail
+    blocked --&gt; cancelled : cancel (continuation deleted)
+    failed --&gt; running : POST /runs/{id}/continue
+    completed --&gt; [*]
+    failed --&gt; [*]
+    cancelled --&gt; [*]
+    timed_out --&gt; [*]
+    expired --&gt; [*]</code></pre>
+<h2 id="step-failure-on_error-semantics">Step failure: <code>on_error</code> semantics<a class="headerlink" href="#step-failure-on_error-semantics" title="Permanent link">&para;</a></h2>
+<p>Each workflow step/node declares <code>on_error</code> (default <code>fail</code>). The policy
+applies <strong>after</strong> the step's retry budget (<code>max_retries</code>) is exhausted:</p>
 <ul>
-<li>default project name and owner</li>
-<li>service URL</li>
-<li>local state/artifact/log paths</li>
-<li>default spec</li>
-<li>environment overlays</li>
-<li>runtime defaults</li>
-<li>model defaults</li>
-<li>policy defaults</li>
-<li>environment-variable secret references</li>
-<li>retention windows (per-project)</li>
+<li><strong><code>fail</code></strong> — the run fails; the error lands in <code>state.error</code> and the
+  <code>run_failed</code> checkpoint (with the collected trace).</li>
+<li><strong><code>retry</code></strong> — the step retries up to <code>max_retries</code> before <code>fail</code>
+  semantics apply.</li>
+<li><strong><code>continue</code></strong> — the failed step is skipped: its <strong>input passes through
+  unchanged</strong> to the next step, the failure is recorded in the step's
+  checkpoint metadata (and a <code>step_failed</code> checkpoint on graph paths),
+  and the run proceeds. In graph workflows, edge conditions see the real
+  outcome — a <code>status_is: failed</code> condition routes the failure branch.</li>
+<li><strong><code>fallback</code></strong> — the referenced step/node (<code>fallback_ref</code>) runs in
+  place of the failed one, under the fallback's own retry/timeout policy
+  but never its <code>on_error</code> policy (fallback chains cannot recurse);
+  traversal then continues. Note: a sequential <code>fallback_ref</code> is another
+  step of the same workflow, so it also runs at its own chain position.</li>
 </ul>
-<p>Environment-specific policy enforcement can be configured under
-<code>environments.&lt;name&gt;.policy_enforcement</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">environments</span><span class="p">:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">staging</span><span class="p">:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="nt">prod</span><span class="p">:</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">deny_unrestricted_tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="nt">require_human_review</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">require_guardrails</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
-</code></pre></div>
-<p>Policy enforcement runs after spec overlays and project defaults are applied.
-<code>kneo spec validate --env prod</code>, <code>kneo spec compile --env prod</code>,
-<code>kneo spec policy-report --env prod</code>, and <code>kneo run --env prod</code> all
-honor the resolved environment policy.</p>
-<h2 id="retention">Retention<a class="headerlink" href="#retention" title="Permanent link">&para;</a></h2>
-<p>Retention windows for runs, checkpoints, queue records, continuations,
-audit events, artifacts, and log files live in a top-level <code>retention:</code>
-block. Each field is a count of days to keep; unset fields disable
-pruning for that category. Values must be zero or greater.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">retention</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">audit_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
-</code></pre></div>
-<p><code>audit_days</code> prunes the audit-event log purely by age (it reaps events
-with no associated run too); the audit table grows unbounded otherwise,
-so it is the table most likely to exhaust disk on a long-lived deployment.</p>
-<p>The same seven retention fields can be overridden per-host via env vars
-(<code>KNEO_SERV_RETENTION_RUNS_DAYS</code> and friends; see
-<a href="../environment/#retention">environment.md § Retention</a>). <strong>Precedence
-is env var &gt; project config &gt; unset.</strong> Set the project-config field for
-the per-project default; set the env var to deviate on a specific host
-(staging vs. prod, etc.) without editing the committed <code>.kneo/config.yaml</code>.</p>
-<p>The retention values feed
-<code>kneo_serv.maintenance.retention.RetentionPolicy.from_project_and_env(config.retention)</code>,
-which the operator can pass to <code>PlatformManager.prune_retention(policy=...)</code>
-on whatever cadence makes sense for the deployment (cron, scheduled
-workflow, manual operator action).</p>
-<h2 id="local-self-hosted-llm-endpoints">Local / self-hosted LLM endpoints<a class="headerlink" href="#local-self-hosted-llm-endpoints" title="Permanent link">&para;</a></h2>
-<p>The native (<code>openai</code>) runtime can target any OpenAI-compatible server —
-<strong>Ollama, vLLM, llama.cpp, LocalAI</strong> — by setting <code>base_url</code> (and, if the
-server requires one, an API key) under the agent spec's <code>model.extra</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">agent</span><span class="p">:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-prem-assistant</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">native_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span><span class="w">            </span><span class="c1"># the model the local server serves</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">extra</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434/v1</span><span class="w">   </span><span class="c1"># e.g. Ollama</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">api_key_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOCAL_LLM_KEY</span><span class="w">            </span><span class="c1"># resolved from the env (see below)</span>
-</code></pre></div>
+<p>Cancellation and human-intervention pauses are <strong>control flow, never step
+failures</strong> — no <code>on_error</code> policy can swallow them. One unsupported
+corner: a sequential <code>fallback_ref</code> pointing at a <em>human</em> step raises
+rather than pausing — keep human steps in the main chain.</p>
+<h2 id="timeouts-cancellation-pauseresume">Timeouts, cancellation, pause/resume<a class="headerlink" href="#timeouts-cancellation-pauseresume" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong><code>base_url</code></strong> — the OpenAI-compatible endpoint. Omit it to use the hosted
-  OpenAI API as before; this field is purely additive.</li>
-<li><strong><code>api_key_ref</code></strong> — the <em>name of a secret reference</em>, resolved at runtime
-  through the <code>SecretResolver</code> (it reads the project <code>extra_env</code> map, falling
-  back to an env var of the same name). Prefer this over a literal so the key
-  is never baked into a persisted or signed spec bundle.</li>
-<li><strong><code>api_key</code></strong> — a literal-key escape hatch for throwaway/local use. It is a
-  <a href="../security_hardening/">sensitive key</a>, so it is redacted from audit events
-  and list responses — but it still lives in the stored spec, so <code>api_key_ref</code>
-  is the recommended path.</li>
+<li><strong>Run timeout</strong> (<code>timeout_seconds</code>): the sweep marks the run
+  <code>timed_out</code>, signals any still-executing worker to stop cooperatively,
+  and deletes a blocked run's continuation.</li>
+<li><strong>Cancel</strong> (<code>POST /runs/{id}/cancel</code>): cooperative mid-run; on a
+  blocked run it also deletes the continuation (the task disappears from
+  <code>GET /human-tasks</code>). Cancelling an already-terminal run is a no-op that
+  returns the unchanged state.</li>
+<li><strong>Pause/resume</strong>: a human step persists a continuation and the run goes
+  <code>blocked</code>. Resume re-enters under the continuation lock and <strong>refuses
+  any run that is no longer <code>blocked</code></strong> with <code>409 run_state_conflict</code> —
+  a cancel that raced the reviewer wins. The resumed leg runs under the
+  run's cancellation token, and the full pre-pause trace survives on
+  <code>GET /runs/{id}/trace</code>.</li>
+<li><strong><code>/continue</code></strong> (crash/failure recovery, sequential only): re-enters a
+  <code>failed</code> run from its last checkpoint. Terminal-but-not-failed runs are
+  refused, as are <code>running</code> runs whose worker lease is still live
+  (double-execution guard); an expired lease admits the legitimate
+  crash-recovery case.</li>
 </ul>
-<p>If neither key field is set, the runtime falls back to the provider's normal
-env var (<code>OPENAI_API_KEY</code>), which is fine for a keyless local server.</p>
+<h2 id="async-run-creation-returns-200">Async run creation returns <code>200</code><a class="headerlink" href="#async-run-creation-returns-200" title="Permanent link">&para;</a></h2>
+<p><code>POST /v1/runs</code> with <code>async_mode</code> returns <strong><code>200</code></strong> with a <code>queued</code> run —
+not <code>202</code>. The <code>200 → 202</code> move is an intentional contract change held
+for the 1.0 contract-stability policy; do not infer REST-conventional
+semantics from the status code. Poll <code>GET /runs/{id}</code> for progress.</p>
+<h2 id="what-retention-prunes">What retention prunes<a class="headerlink" href="#what-retention-prunes" title="Permanent link">&para;</a></h2>
+<p>Each knob is days-based; <code>None</code>/unset means "never prune" (see
+<a href="../deployment/">deployment.md</a> for configuration):</p>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Prunes</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runs_days</code></td>
+<td>Terminal runs</td>
+<td>Default statuses: <code>completed</code>, <code>failed</code>, <code>cancelled</code>, <code>timed_out</code>, <code>expired</code>; override via <code>KNEO_SERV_RETENTION_RUN_STATUSES</code>.</td>
+</tr>
+<tr>
+<td><code>checkpoints_days</code></td>
+<td>Checkpoint rows</td>
+<td>By <code>created_at</code>.</td>
+</tr>
+<tr>
+<td><code>queue_days</code></td>
+<td>Finished queue records</td>
+<td><code>completed</code>/<code>failed</code> queue statuses.</td>
+</tr>
+<tr>
+<td><code>continuations_days</code></td>
+<td><strong>Stale</strong> continuations</td>
+<td>Continuations of still-<code>blocked</code> runs are protected — age alone never bricks a pending human task.</td>
+</tr>
+<tr>
+<td><code>audit_days</code></td>
+<td>Audit events</td>
+<td>By <code>created_at</code>.</td>
+</tr>
+<tr>
+<td><code>idempotency_days</code></td>
+<td>Idempotency records</td>
+<td>By <code>updated_at</code> (a re-upserted key refreshes its lifetime).</td>
+</tr>
+<tr>
+<td><code>artifacts_days</code> / <code>logs_days</code></td>
+<td>Files under <code>KNEO_SERV_ARTIFACT_PATH</code> / <code>KNEO_SERV_LOG_PATH</code></td>
+<td>By mtime.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="error-taxonomy-quick-reference">Error taxonomy quick reference<a class="headerlink" href="#error-taxonomy-quick-reference" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>HTTP</th>
+<th><code>error</code></th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>400</td>
+<td><code>spec_invalid</code> / <code>invalid_request</code></td>
+<td>Spec fails compile; malformed input.</td>
+</tr>
+<tr>
+<td>403</td>
+<td><code>environment_policy_blocked</code></td>
+<td>The environment's stored policy blocks the deployment (diagnostics included).</td>
+</tr>
+<tr>
+<td>404</td>
+<td><code>not_found</code></td>
+<td>Unknown run/continuation id.</td>
+</tr>
+<tr>
+<td>409</td>
+<td><code>run_state_conflict</code></td>
+<td>Resume/continue against a run whose status forbids it.</td>
+</tr>
+<tr>
+<td>409</td>
+<td><code>resource_locked</code> / <code>idempotency_key_conflict</code></td>
+<td>Concurrent operation holds the lock; same key, different payload.</td>
+</tr>
+<tr>
+<td>413</td>
+<td>payload too large</td>
+<td>Body over the cap — including chunked uploads.</td>
+</tr>
+<tr>
+<td>422</td>
+<td><code>guardrail_violation</code></td>
+<td>A guardrail blocked the content (violation type included).</td>
+</tr>
+<tr>
+<td>422</td>
+<td><em>(native envelope)</em></td>
+<td>Request-shape validation errors.</td>
+</tr>
+<tr>
+<td>503</td>
+<td><code>queue_full</code></td>
+<td>Backpressure: retry after the queue drains (<code>Retry-After</code>).</td>
+</tr>
+<tr>
+<td>503</td>
+<td><code>store_unavailable</code></td>
+<td>The persistence backend is unreachable; transient (<code>Retry-After</code>).</td>
+</tr>
+</tbody>
+</table>
+<p>Full envelopes and examples: <a href="../service_api/">service_api.md</a>.</p>
 
 
 

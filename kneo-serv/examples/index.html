@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -1022,6 +1024,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1437,9 +1467,29 @@ concepts the previous one introduces.</p>
   <code>provider</code>/<code>model</code> fields point at common defaults
   (<code>openai/gpt-4o</code>, <code>openai/gpt-4o-mini</code>) and should be retargeted
   before any real use.</li>
-<li>The Python helpers return placeholder strings — replace with real
-  implementations before running against production tooling.</li>
+<li>
+<p>The Python helpers return placeholder strings — replace with real
+  implementations before running against production tooling.</p>
+</li>
+<li>
+<p><strong><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></strong> — handoff
+   workflow with a <code>round_robin</code> selector: one turn per participant,
+   then a clean completion. The executable regression for the 0.9.0
+   round-robin status fix.</p>
+</li>
+<li><strong><a href="resilient_workflow.yaml"><code>resilient_workflow.yaml</code></a></strong> — per-step
+   <code>on_error</code> policies: a failing step that <code>continue</code>s (skipped, chain
+   proceeds) and one that <code>fallback</code>s to a cached source. See the
+   <a href="../user/run_lifecycle/">run lifecycle guide</a> for the exact
+   semantics.</li>
+<li><strong><a href="mcp_stdio_workflow.yaml"><code>mcp_stdio_workflow.yaml</code></a></strong> +
+   <strong><a href="mcp_stdio_server.py"><code>mcp_stdio_server.py</code></a></strong> — declarative MCP
+   over <strong>stdio</strong>, runnable with no network or credentials: the platform
+   spawns the bundled server as a subprocess on first tool call. A
+   runtime transport proof, not a compile-only demo.</li>
 </ul>
+<p>All three run offline in CI (<code>tests/test_examples_e2e.py</code>) — they are
+the executable regressions for the surfaces the 0.9.0 cut fixed.</p>
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="project_config.yaml"><code>project_config.yaml</code></a></li>
@@ -1456,6 +1506,10 @@ concepts the previous one introduces.</p>
 <li><a href="app_functions.py"><code>app_functions.py</code></a></li>
 <li><a href="human_functions.py"><code>human_functions.py</code></a></li>
 <li><a href="declarative_spec.yaml"><code>declarative_spec.yaml</code></a></li>
+<li><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></li>
+<li><a href="mcp_stdio_server.py"><code>mcp_stdio_server.py</code></a></li>
+<li><a href="mcp_stdio_workflow.yaml"><code>mcp_stdio_workflow.yaml</code></a></li>
+<li><a href="resilient_workflow.yaml"><code>resilient_workflow.yaml</code></a></li>
 </ul>
 
 

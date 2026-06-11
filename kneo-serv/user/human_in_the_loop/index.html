@@ -382,6 +382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1251,6 +1253,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1752,6 +1782,10 @@ from where it stopped, using the persisted replay context.</p>
     Workflow--&gt;&gt;Service: RunResult
     Service--&gt;&gt;Reviewer: 200 result</code></pre>
 <h2 id="1-declare-a-human-step-in-a-spec">1 · Declare a human step in a spec<a class="headerlink" href="#1-declare-a-human-step-in-a-spec" title="Permanent link">&para;</a></h2>
+<p>Human steps are supported in <strong>sequential workflows only</strong> — graph
+workflows have no pause/continuation path yet, so <code>/specs/validate</code>
+rejects a graph node with <code>kind: human</code> (<code>E_GRAPH_NODE_HUMAN_UNSUPPORTED</code>)
+rather than letting the run fail at the node.</p>
 <p><a href="../../examples/human_approval_workflow.yaml"><code>examples/human_approval_workflow.yaml</code></a>
 is the reference example. The relevant pieces:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">workflow</span><span class="p">:</span>

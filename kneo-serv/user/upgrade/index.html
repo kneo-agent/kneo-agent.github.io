@@ -382,6 +382,8 @@
       
         
       
+        
+      
     
     
     
@@ -1142,6 +1144,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#090" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#080" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1287,6 +1300,34 @@
     
   
     Project .kneo/ config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../run_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Run lifecycle &amp; failure semantics
   
 
     
@@ -1752,6 +1793,17 @@
     <span class="md-ellipsis">
       
         0.7.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#090" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.9.0
       
     </span>
   </a>
@@ -2335,6 +2387,61 @@ usage <strong>after</strong> each run and then raises
 from 0.6.0; <code>RunStateStore</code> gains a <code>schema_version</code> / <code>close</code> Protocol surface
 (behaviourally a no-op on the schema-less stores), but no on-disk change applies
 on upgrade.</p>
+<h3 id="090">0.9.0<a class="headerlink" href="#090" title="Permanent link">&para;</a></h3>
+<p>Reliability &amp; retention. <strong>No breaking changes, no persistence migration,
+no SDK-floor change</strong> — the spec schema version is unchanged and the SDK
+floor stays <code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>. Persistence additions (the
+idempotency prune, count queries) are additive-only; rollback to 0.8.0 is
+safe (no persisted-field removals).</p>
+<p><strong>Behavior corrections to review before upgrading.</strong> Each corrects shipped
+behavior that contradicted its own documented/validated contract (the
+fixes-vs-breaks test in the new
+contract-stability policy, adopted this
+cut). If you built automation against the old behavior, adjust:</p>
+<ul>
+<li><strong>Handoff <code>round_robin</code> runs report <code>completed</code></strong> after a full rotation
+  (previously every successful rotation persisted as <code>failed</code> /
+  <code>max_iterations</code>). Alerts keyed on that false failure will go quiet.</li>
+<li><strong><code>on_error: continue</code> / <code>fallback</code> execute.</strong> Workflows that declared
+  error tolerance but relied on the hard failure will now proceed:
+  <code>continue</code> passes the step's input through; <code>fallback</code> runs the
+  referenced step. See the
+  <a href="../run_lifecycle/">run lifecycle guide</a>.</li>
+<li><strong>List <code>total</code> is the true store count</strong> — it previously capped
+  silently at the 10 000-row fetch window. Dashboards asserting
+  <code>total ≤ 10000</code> should read the pagination block. Run list items now
+  carry <code>trace_event_count</code> instead of each run's full <code>trace_events</code>
+  array (the trace lives at <code>GET /runs/{id}/trace</code>).</li>
+<li><strong>Token-usage metrics survive redaction</strong> (<code>input_tokens</code> etc. were
+  <code>[REDACTED]</code> everywhere). Cost dashboards start receiving real values.</li>
+<li><strong>Resume/continue are fenced</strong>: resuming a run that is not <code>blocked</code>,
+  or continuing a terminal-but-not-failed / live-leased run, returns
+  <strong><code>409 run_state_conflict</code></strong> instead of silently re-executing.
+  Cancelling a blocked run removes its task from <code>GET /human-tasks</code>.</li>
+<li><strong>A per-attempt provider timeout no longer retries by default</strong> — the
+  abandoned attempt may still be running, so the retry double-executed
+  non-idempotent calls. Set <code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT=true</code>
+  (or <code>retry_on_timeout</code> in spec retry config) for idempotent call sites.</li>
+<li><strong>Stricter validation</strong> (pure checks; previously these crashed at
+  runtime): graph <code>kind: human</code> nodes (<code>E_GRAPH_NODE_HUMAN_UNSUPPORTED</code>),
+  memory blocks without <code>policy</code> (<code>E_MEMORY_POLICY_REQUIRED</code>), guardrail
+  items missing <code>id</code>/<code>type</code> (<code>E_GUARDRAIL_FIELDS</code>). Invalid path-based
+  specs now return <code>200 {valid: false}</code> from <code>/specs/validate</code> (was 400).</li>
+<li><strong>Environment policies set via REST are enforced</strong> on run/compile when
+  the request names the environment — a deployment blocked by policy
+  returns <code>403 environment_policy_blocked</code>. Verify your stored policies
+  say what you mean before upgrading production.</li>
+<li><strong>Stricter env-var parsing</strong>: invalid numeric values in
+  <code>KNEO_SERV_WORKER_*</code> / queue knobs now fail startup instead of
+  silently running defaults; same for the new strictly-parsed knobs.</li>
+</ul>
+<p><strong>New knobs</strong> (all optional; see
+<a href="../environment/">environment.md</a>): <code>KNEO_SERV_RETENTION_IDEMPOTENCY_DAYS</code>,
+<code>KNEO_SERV_RETENTION_RUN_STATUSES</code>, <code>KNEO_SERV_TRACE_MAX_EVENTS</code>,
+<code>KNEO_SERV_MCP_CONNECT_TIMEOUT_SECONDS</code>,
+<code>KNEO_SERV_IDEMPOTENCY_LOCK_TTL_SECONDS</code>,
+<code>KNEO_SERV_PROVIDER_RETRY_ON_TIMEOUT</code>, <code>KNEO_SERV_ARTIFACT_PATH</code> /
+<code>KNEO_SERV_LOG_PATH</code>.</p>
 <h3 id="080">0.8.0<a class="headerlink" href="#080" title="Permanent link">&para;</a></h3>
 <p>Declarative spec parity along the tools / MCP / skills axis. <strong>No breaking
 changes, no persistence migration, no SDK-floor change</strong> — the schema version is

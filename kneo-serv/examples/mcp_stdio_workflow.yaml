@@ -1,0 +1,43 @@
+# Declarative MCP over stdio — a RUNNABLE transport proof, no network and
+# no credentials: the platform spawns `examples/mcp_stdio_server.py` as a
+# subprocess on the tool's first call (lazy connect), and the session
+# lives on a dedicated event loop (the 0.9.0 session-lifecycle fix; this
+# transport failed on every call before).
+#
+#   kneo run examples/mcp_stdio_workflow.yaml \
+#     --input "count the words in this sentence" --target agent --json
+
+version: v1
+
+agent:
+  name: stdio-tools-agent
+  system_prompt: Use the word tools to answer.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  tools:
+    - word_count
+
+mcp_servers:
+  local_tools:
+    transport: stdio
+    command: python
+    args: [examples/mcp_stdio_server.py]
+
+tools:
+  word_count:
+    description: Count words via the local stdio MCP server.
+    parameters:
+      type: object
+      properties:
+        text:
+          type: string
+      required: [text]
+    mcp:
+      server: local_tools
+      name: word_count
