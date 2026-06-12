@@ -533,6 +533,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-catalog-and-per-request-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills catalog and per-request overlays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sync-facade" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1025,6 +1036,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#skills-catalog-and-per-request-overlays" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skills catalog and per-request overlays
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sync-facade" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1108,7 +1130,7 @@
 <p>Requires Python ≥ 3.12 (3.12 / 3.13 / 3.14 tested in CI). The runtime closure is small: <code>httpx</code>, <code>pydantic</code>, <code>anyio</code>, <code>platformdirs</code>, <code>attrs</code>. No CLI is installed — <code>kneo-client</code> is a library, not a service.</p>
 <p>Verify the install:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from kneo_client import KneoClient, __version__; print(__version__)&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.5.0</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.7.0</span>
 </code></pre></div>
 <h2 id="configure-a-profile">Configure a profile<a class="headerlink" href="#configure-a-profile" title="Permanent link">&para;</a></h2>
 <p>The client reads connection details in this order (later sources override earlier):</p>
@@ -1158,7 +1180,7 @@
 </ul>
 <p>If you get a <code>KneoAuthError</code>, your API key isn't reaching the platform — re-check the profile resolution chain. If you get a <code>KneoNetworkError</code>, the URL is unreachable; see <a href="../errors/#transport-errors-and-network-troubleshooting">Error handling § Transport errors and network troubleshooting</a> for timeouts, TLS, proxies, and how to inspect the underlying httpx cause.</p>
 <h2 id="create-your-first-run">Create your first run<a class="headerlink" href="#create-your-first-run" title="Permanent link">&para;</a></h2>
-<p>A run is the unit of work the platform executes — it instantiates a spec (an agent definition) and tracks its lifecycle through <code>queued → running → terminal {completed, failed, cancelled}</code>. To create one:</p>
+<p>A run is the unit of work the platform executes — it instantiates a spec (an agent definition) and tracks its lifecycle through <code>queued → running → terminal {completed, failed, cancelled, timed_out, expired}</code>. To create one:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;your-spec-id&quot;</span><span class="p">})</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;run_id=</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2"> status=</span><span class="si">{</span><span class="n">created</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1175,47 +1197,60 @@
 <p>The interesting parts:</p>
 <ul>
 <li><strong><code>runs.create(...)</code></strong> auto-injects an <code>Idempotency-Key</code> header (UUID4). Re-running the same payload with the same key is safe — the platform replays the original response. See <a href="../idempotency_and_retries/">Idempotency and retries</a>.</li>
-<li><strong><code>runs.wait_for_completion(...)</code></strong> polls <code>runs.get(run_id)</code> until the run reaches a terminal status. Default terminal set is <code>{"completed", "failed", "cancelled"}</code>; pass <code>terminal_statuses={"paused_human_review", …}</code> to treat additional states as terminal.</li>
+<li><strong><code>runs.wait_for_completion(...)</code></strong> polls <code>runs.get(run_id)</code> until the run reaches a terminal status. Default terminal set is <code>{"completed", "failed", "cancelled", "timed_out", "expired"}</code> — the platform's canonical terminal set; pass <code>terminal_statuses={"blocked", …}</code> to also stop when a run pauses for human review.</li>
 <li><strong><code>runs.trace(...)</code></strong> returns events the platform recorded during the run (tool calls, model calls, middleware decisions, policy checks, etc.).</li>
 </ul>
 <p>This is the operational core of the platform adapter. Every other endpoint follows the same shape: <code>client.platform.&lt;resource&gt;.&lt;method&gt;(...)</code> returning a typed model.</p>
+<h2 id="skills-catalog-and-per-request-overlays">Skills catalog and per-request overlays<a class="headerlink" href="#skills-catalog-and-per-request-overlays" title="Permanent link">&para;</a></h2>
+<p>The agent surface (<code>client.agent.*</code>) mirrors the same shape. One pairing worth knowing early: the platform publishes a <strong>skill catalog</strong> — the declared + default skills a spec may reference by name — and <code>runs.create</code> accepts a per-request <strong>skills overlay</strong> that adds or disables skills for just that run:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">catalog</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">agent</span><span class="o">.</span><span class="n">skills</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># Page; requires kneo_serv &gt;= 0.8.0</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="k">for</span> <span class="n">skill</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">skill</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">skill</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">])</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">created</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">({</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;your-spec-id&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="s2">&quot;skills&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;add&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;web_search&quot;</span><span class="p">],</span> <span class="s2">&quot;disable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;code_exec&quot;</span><span class="p">]},</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">})</span>
+</code></pre></div>
+<p>The <code>skills</code> overlay on <code>runs.create</code> requires <code>kneo_serv &gt;= 0.9.0</code>, and every name in <code>add</code> must be declared in the spec's skills block — the server rejects undeclared names. Use <code>agent.skills.list()</code> to discover the valid targets.</p>
 <h2 id="sync-facade">Sync facade<a class="headerlink" href="#sync-facade" title="Permanent link">&para;</a></h2>
 <p>If your caller can't run an event loop (a script, a notebook, a sync framework), wrap the transport with <code>SyncTransport</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">SyncTransport</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">with</span> <span class="n">SyncTransport</span><span class="p">(</span><span class="n">load_profile</span><span class="p">())</span> <span class="k">as</span> <span class="n">transport</span><span class="p">:</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/healthz&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.transport</span><span class="w"> </span><span class="kn">import</span> <span class="n">SyncTransport</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">with</span> <span class="n">SyncTransport</span><span class="p">(</span><span class="n">load_profile</span><span class="p">())</span> <span class="k">as</span> <span class="n">transport</span><span class="p">:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/healthz&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
 </code></pre></div>
 <p>Under the hood <code>SyncTransport</code> runs <code>Transport</code> inside an <code>anyio.from_thread.start_blocking_portal()</code> — same retry / idempotency / error flows, called synchronously. The async surface is the recommended path; the sync facade is for ergonomics.</p>
 <p><code>SyncTransport</code> does <strong>not</strong> mount <code>.platform</code> / <code>.agent</code> adapters — those are async-only. Two patterns work for sync consumers who want the wrapped endpoints:</p>
 <h3 id="one-shot-asynciorun">One-shot: <code>asyncio.run()</code><a class="headerlink" href="#one-shot-asynciorun" title="Permanent link">&para;</a></h3>
 <p>If you're calling once and not in an existing event loop:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s1&quot;</span><span class="p">})</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>        <span class="k">return</span> <span class="n">run</span><span class="o">.</span><span class="n">run_id</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">run_id</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">fetch</span><span class="p">())</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">({</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s1&quot;</span><span class="p">})</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="k">return</span> <span class="n">run</span><span class="o">.</span><span class="n">run_id</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="n">run_id</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">fetch</span><span class="p">())</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nb">print</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="repeated-calls-anyiofrom_threadstart_blocking_portal">Repeated calls: <code>anyio.from_thread.start_blocking_portal()</code><a class="headerlink" href="#repeated-calls-anyiofrom_threadstart_blocking_portal" title="Permanent link">&para;</a></h3>
 <p>If you're calling many times from sync code (e.g., inside a synchronous CLI loop) and want to avoid the startup cost of <code>asyncio.run()</code> per call, hold open a portal — the same machinery <code>SyncTransport</code> itself uses:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anyio.from_thread</span><span class="w"> </span><span class="kn">import</span> <span class="n">start_blocking_portal</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">with</span> <span class="n">start_blocking_portal</span><span class="p">()</span> <span class="k">as</span> <span class="n">portal</span><span class="p">:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span><span class="o">.</span><span class="fm">__aenter__</span><span class="p">)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">run</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s1&quot;</span><span class="p">})</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">status</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="k">finally</span><span class="p">:</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="fm">__aexit__</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">anyio.from_thread</span><span class="w"> </span><span class="kn">import</span> <span class="n">start_blocking_portal</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">with</span> <span class="n">start_blocking_portal</span><span class="p">()</span> <span class="k">as</span> <span class="n">portal</span><span class="p">:</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">client</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span><span class="o">.</span><span class="fm">__aenter__</span><span class="p">)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>        <span class="n">run</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;s1&quot;</span><span class="p">})</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="n">status</span> <span class="o">=</span> <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">get</span><span class="p">,</span> <span class="n">run</span><span class="o">.</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="k">finally</span><span class="p">:</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>        <span class="n">portal</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="fm">__aexit__</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </code></pre></div>
 <p>The portal runs an event loop on a background thread; <code>portal.call(async_fn, *args)</code> blocks the calling thread until the coroutine completes. This is the recommended pattern for long-lived sync code that talks to the platform repeatedly.</p>
 <h2 id="where-to-go-next">Where to go next<a class="headerlink" href="#where-to-go-next" title="Permanent link">&para;</a></h2>
@@ -1223,7 +1258,7 @@
 <ul>
 <li><strong><a href="../profiles_and_auth/">Profiles and auth</a></strong> — multi-profile workflows, the two header schemes the platform supports, environment-variable precedence.</li>
 <li><strong><a href="../idempotency_and_retries/">Idempotency and retries</a></strong> — when keys are auto-injected, how 409 mismatches surface, customizing the retry policy.</li>
-<li><strong><a href="../list_results/">List-method results</a></strong> — <code>Page[T]</code> and <code>Map[K, V]</code> wrappers, walking pages with <code>iterate_all()</code>, the audit limit-only case.</li>
+<li><strong><a href="../list_results/">List-method results</a></strong> — <code>Page[T]</code> and <code>Map[K, V]</code> wrappers, walking pages with <code>iterate_all()</code> (audit included — fully paginated since <code>kneo_serv</code> 0.6.0), the paging <code>window</code> / true-<code>total</code> semantics.</li>
 <li><strong><a href="../errors/">Error handling</a></strong> — the full exception hierarchy and what to catch.</li>
 <li><strong><a href="../compatibility/">Compatibility matrix</a></strong> — which <code>kneo-client</code> releases support which <code>kneo_serv</code> versions.</li>
 </ul>

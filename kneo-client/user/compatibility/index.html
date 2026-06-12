@@ -701,6 +701,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#server-version-floors-and-behavior-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-version floors and behavior changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#breaking-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1008,6 +1019,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#server-version-floors-and-behavior-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-version floors and behavior changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#breaking-changes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1075,6 +1097,13 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.7.0</code></td>
+<td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td>
+<td><code>kneo_serv</code> <code>0.9.x</code> line</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>In development (unreleased)</td>
+</tr>
+<tr>
 <td><code>0.6.0</code></td>
 <td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.7.x</code> line</td>
@@ -1128,6 +1157,10 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.8.x</code> / <code>0.9.x</code></td>
+<td><code>0.7.0</code> (pinned to <code>v0.9.0</code>; in development). Adds the skill-catalog wrapper (<code>agent.skills.list</code>), the per-request <code>skills</code> overlay on <code>runs.create</code>, <code>Page.window</code>, the typed <code>400</code> / <code>413</code> / <code>422</code> errors, and code-aware 409 classification. A <code>v0.7.0</code>-pinned client (<code>0.6.0</code>) still works against <code>0.8.x</code>/<code>0.9.x</code> for everything it wraps — it just won't expose those additions.</td>
+</tr>
+<tr>
 <td><code>0.6.x</code> / <code>0.7.x</code></td>
 <td><code>0.6.0</code> (pinned to <code>v0.7.0</code>). Adds the audit-events pagination + sorting kwargs (<code>offset</code> / <code>sort_by</code> / <code>sort_order</code>, server-honored since <code>kneo_serv 0.6.0</code>), the standardized error envelope, and the <code>HumanTaskResponse.messages</code> thread projection. A <code>v0.5.0</code>-pinned client (<code>0.5.x</code>) still works against <code>0.6.x</code>/<code>0.7.x</code> for everything it wraps — it just won't expose those additions.</td>
 </tr>
@@ -1142,6 +1175,14 @@
 </tbody>
 </table>
 <p>(More rows added as the project ships.)</p>
+<h2 id="server-version-floors-and-behavior-changes">Server-version floors and behavior changes<a class="headerlink" href="#server-version-floors-and-behavior-changes" title="Permanent link">&para;</a></h2>
+<p>Some wrapped surfaces depend on the server actually implementing them — the client sends the request either way, so know your deployment's <code>kneo_serv</code> version:</p>
+<ul>
+<li><strong><code>overlays</code> are applied only from <code>kneo_serv</code> 0.9.0.</strong> Older servers accepted the <code>overlays</code> (and <code>overrides</code> / <code>strict</code> on the specs routes) fields but <em>silently ignored</em> them. From 0.9.0 they are actually applied server-side (and replayed on resume). A deployment upgrading <code>kneo_serv</code> from <code>0.7.x</code> to <code>0.9.x</code> will see previously-ignored overlay fields in stored request payloads take effect — audit those payloads before upgrading.</li>
+<li><strong>Skill catalog requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>client.agent.skills.list()</code> 404s against older servers. The per-request <code>skills</code> overlay on <code>runs.create</code> requires <code>&gt;= 0.9.0</code>.</li>
+<li><strong>Human-task <code>status</code> filter requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>human_tasks.list(status=...)</code> is silently ignored by older servers (honored from 0.8.0, contractual in the 0.9.0 spec).</li>
+<li><strong>Spec-explain envelope requires <code>kneo_serv &gt;= 0.9.0</code>.</strong> The <code>environment</code> / <code>overlays</code> / <code>overrides</code> fields on <code>specs.explain</code> (including the explain leg of <code>dry_run</code>) draw a 422 from older servers.</li>
+</ul>
 <h2 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
 <p>A breaking change in either direction triggers a major bump:</p>
 <ul>
@@ -1150,16 +1191,20 @@
 </ul>
 <p>Within a major, deprecated surfaces keep aliases for at least one minor. See <code>docs/dev/contributing.md</code> for the deprecation policy.</p>
 <h2 id="verifying-compatibility-yourself">Verifying compatibility yourself<a class="headerlink" href="#verifying-compatibility-yourself" title="Permanent link">&para;</a></h2>
-<p>The simplest smoke is the bundled examples:</p>
+<p>The simplest smoke is the bundled examples. They ship in the repository (not in the wheel), so run them from a checkout:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install a specific kneo-client version</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kneo-client==X.Y.Z&quot;</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Point it at your kneo_serv instance</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://your-kneo-serv.example.com
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Grab the MATCHING examples — check out the same release tag, or the</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># examples may use surface the installed wheel doesn&#39;t have</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>git<span class="w"> </span>clone<span class="w"> </span>--branch<span class="w"> </span>vX.Y.Z<span class="w"> </span>https://github.com/kneo-agent/kneo-client.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>kneo-client
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>python<span class="w"> </span>-m<span class="w"> </span>kneo_client.examples.01_basic_run<span class="w"> </span>YOUR_SPEC_ID
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Point it at your kneo_serv instance</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://your-kneo-serv.example.com
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>...
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>python<span class="w"> </span>examples/01_basic_run.py<span class="w"> </span>YOUR_SPEC_ID
 </code></pre></div>
 <p>The five <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
 <p>For deeper validation, the integration test suite is env-gated; set <code>KNEO_TEST_URL</code> and <code>KNEO_TEST_API_KEY</code> and run <code>python -m pytest tests/integration -v</code>.</p>

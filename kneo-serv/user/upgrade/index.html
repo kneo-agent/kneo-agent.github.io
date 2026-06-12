@@ -1890,8 +1890,9 @@ design.md § 13.</p>
 <ol>
 <li><strong>Read the release notes</strong> for every minor/major version between your
    current and target version. Patch upgrades only need the latest patch's
-   notes. Notes for the current release are at
-   release_notes_0.1.0.md.</li>
+   notes. The reading-order index (newest first) is
+   releases/README.md; the current release's
+   notes are release_notes_0.9.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -2065,8 +2066,8 @@ schema changes.</p>
 <p><strong>Documentation</strong>:
 - Forward-looking plan docs and "as of 0.1.0" framing in user/dev
   docs swept to match the 0.2.x shipped reality. No content lost —
-  historical files (CHANGELOG entries, shipped release notes,
-  <code>TODO-0.2.0.md</code>, ADRs) are unchanged.</p>
+  historical files (CHANGELOG entries, shipped release notes, the
+  archived <code>0.2.0</code> tracker, ADRs) are unchanged.</p>
 <p><strong>Persistence schemas</strong>: unchanged from 0.2.1. No migrations required.</p>
 <h3 id="030">0.3.0<a class="headerlink" href="#030" title="Permanent link">&para;</a></h3>
 <p>Next additive minor on the 0.2.x line. No breaking changes to spec

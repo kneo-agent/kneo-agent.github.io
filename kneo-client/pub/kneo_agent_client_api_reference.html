@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.6.0 · 2026-06-08</div>
+    <div class="version">v0.7.0 · 2026-06-12</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.6.0</a>
+    <a href="#whats-new">What's new in v0.7.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -614,6 +614,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="nav-section">
     <div class="nav-section-label">Agent adapter</div>
     <a href="#agentclient">AgentClient</a>
+    <a href="#skillsclient" class="sub">SkillsClient</a>
     <a href="#specsclient" class="sub">SpecsClient</a>
     <a href="#validatethencompileresult" class="sub">ValidateThenCompileResult</a>
     <a href="#dryrunresult" class="sub">DryRunResult</a>
@@ -644,11 +645,11 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.6.0</div>
+      <div class="cover-card-value">v0.7.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
-      <div class="cover-card-value">v0.7.0 (/v1 only)</div>
+      <div class="cover-card-value">v0.9.0 (/v1 only)</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Python</div>
@@ -681,7 +682,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.6.0</a></li>
+        <li><a href="#whats-new">What's new in v0.7.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -717,6 +718,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
       <h3 style="margin-top: 1.2rem;">Agent adapter</h3>
       <ul class="toc-list">
         <li><a href="#agentclient"><code>AgentClient</code></a></li>
+        <li class="toc-sub"><a href="#skillsclient"><code>SkillsClient</code></a></li>
         <li class="toc-sub"><a href="#specsclient"><code>SpecsClient</code></a></li>
         <li class="toc-sub"><a href="#validatethencompileresult"><code>ValidateThenCompileResult</code></a></li>
         <li class="toc-sub"><a href="#dryrunresult"><code>DryRunResult</code></a></li>
@@ -739,26 +741,28 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.6.0</span>
+    <span class="badge badge-blue">v0.7.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
-    <span class="badge badge-purple">kneo_serv /v1 · 0.7.x</span>
+    <span class="badge badge-purple">kneo_serv /v1 · 0.9.x</span>
   </div>
 </div>
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.6.0</h2>
-  <p>A <code>kneo_serv v0.7.0</code> spec-pin uptake plus a hygiene / typing / supply-chain cut. Unlike the byte-identical <code>v0.4.0</code>→<code>v0.5.0</code> bump, this pin moves the <code>/v1</code> contract (audit-events pagination, a standardized error envelope, a human-task message thread), so the generated client was regenerated. One behavior change; everything else additive or internal.</p>
+  <h2>What's new in v0.7.0</h2>
+  <p>A <code>kneo_serv v0.9.0</code> spec-pin uptake (two server minors in one cut — the largest <code>/v1</code> delta since 0.6.0) plus the resolutions of a workflow-based deep audit of the package at 0.6.0. Zero breaking changes; four narrated behavior corrections, all toward server truth.</p>
   <p>Headline pieces:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong>Spec pin refreshed <code>v0.5.0</code> → <code>kneo_serv v0.7.0</code>.</strong> The operability features in <code>kneo_serv</code> 0.6.0/0.7.0 (token ceiling, local-LLM targeting, lease heartbeat, worker pool, dead-letter, audit export) are spec-internal or operator-facing — not <code>/v1</code> — so there is no new wrapper surface for them.</li>
-    <li><strong><code>audit.list</code> is paginated again.</strong> <code>kneo_serv 0.6.0</code> added server-honored <code>offset</code> / <code>sort_by</code> / <code>sort_order</code> to <code>/v1/audit-events</code>, so the kwargs return and <code>audit.list</code> yields a fully paginated <code>Page</code>. Partially reverses the 0.5.0 removal (additive; <code>principal</code> stays removed).</li>
-    <li><strong>Typed error envelope + <code>KneoError.code</code>.</strong> <code>kneo_serv 0.6.0</code> standardized the error body as <code>{"detail": {"error", "message"}}</code> with stable snake_case codes; error parsing now reads that envelope and exposes the code as <code>KneoError.code</code>. Back-compatible with the flat string-<code>detail</code> shape.</li>
-    <li><strong><code>runs.policy_report</code> is typed (behavior change).</strong> Returns the typed <code>SpecPolicyReportResponse</code> instead of a raw <code>dict</code>, matching <code>agent.specs.policy_report</code> and the spec.</li>
-    <li><strong>Custom <code>http_client</code> injection.</strong> <code>KneoClient(...)</code> and <code>from_profile(...)</code> accept a pre-built <code>httpx.AsyncClient</code> (caller-owned) for custom timeouts / TLS / proxies; <code>human_tasks.get()</code> surfaces the new <code>HumanTaskResponse.messages</code> thread.</li>
+    <li><strong>Spec pin refreshed <code>v0.7.0</code> → <code>kneo_serv v0.9.0</code>.</strong> New <code>GET /v1/skills</code> catalog, the <code>RunCreateRequest.skills</code> overlay, the shared <code>environment</code>/<code>overlays</code>/<code>overrides</code> envelope on explain, a documented human-tasks <code>status</code> filter (retiring the contract opt-out carried since 0.3.0), <code>window</code> pagination metadata, and a structured 413 across the board.</li>
+    <li><strong><code>agent.skills</code> — the skill catalog.</strong> <code>SkillsClient.list()</code> wraps the read-only catalog (<code>kneo_serv ≥ 0.8.0</code>); catalog names are the valid targets for a per-request <code>SkillsOverlay</code> on <code>runs.create</code>.</li>
+    <li><strong><code>Page.window</code> + honest <code>has_more</code>.</strong> <code>total</code> is now the true store count and can exceed the paging window; <code>has_more</code> reports <em>fetchability</em>, so pagination loops stop at the window edge.</li>
+    <li><strong>Code-aware 409s (behavior).</strong> <code>run_state_conflict</code> / <code>resource_locked</code> raise <code>KneoConflictError</code> (which gains <code>.retry_after</code>); the transient <code>idempotency_key_in_progress</code> is auto-retried; only <code>idempotency_key_conflict</code> raises <code>KneoIdempotencyMismatchError</code>.</li>
+    <li><strong>Typed 400 / 413 / 422.</strong> <code>KneoBadRequestError</code>, <code>KneoPayloadTooLarge</code> (carries <code>max_body_bytes</code>), <code>KneoValidationError</code> (FastAPI list-shaped 422 detail summarized into the message).</li>
+    <li><strong>Lifecycle truth.</strong> <code>DEFAULT_TERMINAL_STATUSES</code> gains <code>timed_out</code> / <code>expired</code> (behavior); the phantom <code>paused_human_review</code> status is gone from the docs (the real pause status is <code>blocked</code>); <code>resume_first_pending()</code> reads the real <code>id</code> key and claims earliest-deadline-first.</li>
+    <li><strong>Retry hardening.</strong> <code>Retry-After</code> hints above <code>max_delay</code> fail fast with the hint on the typed error (behavior); transport-level errors retry only when replay-safe; auto-managed headers overwrite caller variants case-insensitively.</li>
   </ul>
   <p>
-    See the 0.6.0 release notes for the full summary including the <code>runs.policy_report</code> upgrade note and the spec-pin uptake. The 0.5.0 release notes cover the prior cut's <code>audit.list</code> kwarg removal and the <code>KneoServiceUnavailable</code> error.
+    See the 0.7.0 release notes for the full summary including the four behavior-correction upgrade notes. The 0.6.0 release notes cover the prior cut's audit-pagination revival and <code>KneoError.code</code>.
   </p>
 </section>
 
@@ -902,7 +906,7 @@ asyncio.run(main())</code></pre>
     <li><strong>Idempotent verbs</strong> — <code>GET</code>, <code>HEAD</code>, <code>OPTIONS</code>, <code>PUT</code>, <code>DELETE</code>.</li>
     <li><strong><code>POST</code> with an idempotency key</strong> — which is always, since the transport auto-injects a UUID4 key on every <code>POST</code>.</li>
   </ul>
-  <p>A <code>Retry-After</code> response header on 429 overrides the computed delay verbatim (jitter is not applied on top).</p>
+  <p>A <code>Retry-After</code> response header on 429 / 503 (and the auto-retried 409 <code>idempotency_key_in_progress</code>) overrides the computed delay — no jitter on top — when the hint is within <code>max_delay</code>. A hint <em>above</em> <code>max_delay</code> is not slept on: retrying earlier than the server asked is likely doomed, so the transport stops retrying and raises the typed error carrying the verbatim hint on <code>.retry_after</code> for caller-side back-off.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">aclose</span>() <span class="ret">→ None</span></h4>
   <p>Close the underlying <code>httpx.AsyncClient</code> if this <code>Transport</code> owns it. When a caller-supplied <code>http_client</code> was passed to <code>__init__</code>, the caller's client is not closed.</p>
@@ -1075,7 +1079,7 @@ p = load_profile(url=<span class="st">"https://ad-hoc"</span>, api_key=tok)  <sp
   <table class="param-table">
     <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
     <tr><td class="param-name">attempt</td><td class="param-type">int</td><td class="param-default">—</td><td class="param-desc">The upcoming attempt number, starting at 2.</td></tr>
-    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Optional server-supplied hint (from a <code>Retry-After</code> header). When set, returned verbatim; jitter is not applied (the server's hint is authoritative).</td></tr>
+    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Optional server-supplied hint (from a <code>Retry-After</code> header). Honored verbatim — no jitter — up to <code>max_delay</code>. Hints above the cap never reach this method: the transport fails fast on them, surfacing the typed error with <code>.retry_after</code> instead of retrying earlier than the server asked; the <code>min</code> clamp here is defense in depth for direct callers.</td></tr>
   </table>
 
   <p><strong>RETRYABLE_STATUS_CODES</strong></p>
@@ -1117,7 +1121,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <p>Module <code>kneo_client.core.results</code> (renamed from <code>core.pagination</code> in 0.2.0). Hosts the two collection wrappers every list-method on <code>PlatformClient</code> returns, plus the page-walking <code>iterate_all()</code>.</p>
 
   <h3 class="api-class">class Page[T] <span class="tag tag-dataclass">dataclass</span></h3>
-  <p>Wrapper around list-shaped server responses. Metadata fields are all Optional — an endpoint that doesn't echo a field (notably <code>audit.list</code>, which is <code>limit</code>-only) leaves that field as <code>None</code> rather than carrying a synthesized value. Supports sequence ergonomics: <code>__iter__</code>, <code>__len__</code>, <code>__getitem__</code>.</p>
+  <p>Wrapper around list-shaped server responses. Every paginating endpoint populates the full metadata set against current servers (audit included — fully paginated since <code>kneo_serv 0.6.0</code> / client 0.6.0). Metadata fields are all Optional: against an older server that omits a field, the field surfaces as <code>None</code> rather than carrying a synthesized value. Supports sequence ergonomics: <code>__iter__</code>, <code>__len__</code>, <code>__getitem__</code>.</p>
   <table class="param-table">
     <tr><th>Field</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">items</td><td class="param-type">list[T]</td><td class="param-desc">Items on this page.</td></tr>
@@ -1126,12 +1130,13 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="param-name">offset</td><td class="param-type">int | None</td><td class="param-desc">Offset of the first item on this page, when echoed.</td></tr>
     <tr><td class="param-name">sort_by</td><td class="param-type">str | None</td><td class="param-desc">Sort field in effect, when echoed.</td></tr>
     <tr><td class="param-name">sort_order</td><td class="param-type">str | None</td><td class="param-desc"><code>"asc"</code> or <code>"desc"</code>, when echoed.</td></tr>
+    <tr><td class="param-name">window</td><td class="param-type">int | None</td><td class="param-desc">The server's paging window — the deepest offset it will page to (<code>kneo_serv &gt;= 0.9.0</code>). <code>total</code> is the true store count and can exceed it; <code>has_more</code> accounts for both.</td></tr>
   </table>
   <p><strong>Properties</strong></p>
   <table class="param-table">
     <tr><th>Property</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">count</td><td class="param-type">int</td><td class="param-desc"><code>len(items)</code>.</td></tr>
-    <tr><td class="param-name">has_more</td><td class="param-type">bool</td><td class="param-desc"><code>offset + count &lt; total</code>; <code>False</code> when <code>offset</code> or <code>total</code> is <code>None</code> (server didn't tell us, so we don't speculate).</td></tr>
+    <tr><td class="param-name">has_more</td><td class="param-type">bool</td><td class="param-desc"><code>offset + count &lt; min(total, window)</code> — reports whether more items are <em>fetchable</em>, clamping to the paging <code>window</code> when the server discloses one, so pagination loops stop honestly at the window edge instead of fetching one guaranteed-empty page. <code>False</code> when <code>offset</code> or <code>total</code> is <code>None</code> (server didn't tell us, so we don't speculate).</td></tr>
   </table>
 
   <h3 class="api-class">class Map[K, V] <span class="tag tag-dataclass">dataclass</span></h3>
@@ -1153,7 +1158,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   </table>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">iterate_all</span>(<span class="param">fetch_page</span>: <span class="typ">Callable[[int, int], Awaitable[Page[T]]]</span>, *, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>) <span class="ret">→ AsyncIterator[T]</span></h4>
-  <p>Walk all items across pages. <code>fetch_page(limit, offset)</code> must return a <code>Page</code>. Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code>. Stops when <code>Page.has_more</code> is <code>False</code> — either because the server signaled end-of-data or because metadata fields are <code>None</code> (audit endpoint case; one fetch then exit).</p>
+  <p>Walk all items across pages. <code>fetch_page(limit, offset)</code> must return a <code>Page</code>. Clamps <code>page_size</code> to <code>MAX_PAGE_SIZE = 1000</code>. Stops when <code>Page.has_more</code> is <code>False</code> — the server signaled end-of-data, or the page reached the paging <code>window</code> edge. Works across every paginating endpoint, audit included (<code>audit.list</code> is fully paginated since client 0.6.0). Against a pre-0.6.0 <em>server</em> that omits the pagination metadata, the fields degrade to <code>None</code> and the walk does one fetch then exits.</p>
 
   <p><strong>Constants:</strong> <code>DEFAULT_PAGE_SIZE = 100</code>, <code>MAX_PAGE_SIZE = 1000</code>.</p>
 </section>
@@ -1202,11 +1207,14 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <div class="exc-tree">
 <span class="exc-base">KneoError</span>
 ├── <span class="exc-child">KneoNetworkError</span>          <span class="exc-sub"># transport-level: DNS / connect / TLS / read timeout</span>
+├── <span class="exc-child">KneoBadRequestError</span>       <span class="exc-sub"># HTTP 400 — semantically rejected (branch on .code)</span>
 ├── <span class="exc-child">KneoAuthError</span>             <span class="exc-sub"># HTTP 401</span>
 ├── <span class="exc-child">KneoPermissionError</span>       <span class="exc-sub"># HTTP 403</span>
 ├── <span class="exc-child">KneoNotFoundError</span>         <span class="exc-sub"># HTTP 404</span>
-├── <span class="exc-child">KneoConflictError</span>         <span class="exc-sub"># HTTP 409 (generic)</span>
-│   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 on idempotency-key replay with different payload</span>
+├── <span class="exc-child">KneoConflictError</span>         <span class="exc-sub"># HTTP 409 (carries .retry_after; branch on .code)</span>
+│   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 with code idempotency_key_conflict</span>
+├── <span class="exc-child">KneoPayloadTooLarge</span>       <span class="exc-sub"># HTTP 413 (carries .max_body_bytes)</span>
+├── <span class="exc-child">KneoValidationError</span>       <span class="exc-sub"># HTTP 422 — request validation failed</span>
 ├── <span class="exc-child">KneoRateLimited</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
 └── <span class="exc-child">KneoServerError</span>           <span class="exc-sub"># HTTP 5xx</span>
     └── <span class="exc-child">KneoServiceUnavailable</span> <span class="exc-sub"># HTTP 503 — backpressure / overload (carries .retry_after)</span>
@@ -1220,7 +1228,31 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="param-name">body</td><td class="param-type">Any</td><td class="param-desc">Parsed JSON dict, raw text, or <code>None</code>.</td></tr>
     <tr><td class="param-name">request_id</td><td class="param-type">str | None</td><td class="param-desc">The <code>X-Request-ID</code> the platform returned, when present.</td></tr>
     <tr><td class="param-name">idempotency_key</td><td class="param-type">str | None</td><td class="param-desc">The <code>Idempotency-Key</code> sent on the failing request, when set.</td></tr>
+    <tr><td class="param-name">code</td><td class="param-type">str | None</td><td class="param-desc">Stable snake_case error code from the platform's error envelope (<code>detail.error</code>; <code>kneo_serv 0.6.0+</code>), or <code>None</code> when the body carries no code. Branch on this rather than the human-readable message.</td></tr>
   </table>
+
+  <h3 class="api-class">class KneoBadRequestError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 400 — the request was structurally valid but semantically rejected. The platform's stable codes include <code>invalid_request</code>, <code>spec_invalid</code> (with a diagnostics list in the body), and <code>token_budget_exceeded</code> — branch on <code>KneoError.code</code>.</p>
+
+  <h3 class="api-class">class KneoConflictError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 409 — a conflict with current server state. The platform's 409s carry a stable <code>code</code> discriminating the cause: <code>run_state_conflict</code> (a lifecycle fence, e.g. cancelling an already-terminal run or resuming a run that isn't blocked) and <code>resource_locked</code> (held by another operation) raise this class; <code>idempotency_key_in_progress</code> (a request with the same <code>Idempotency-Key</code> is still executing) is transient — the transport auto-retries it honoring <code>Retry-After</code>, so it reaches the caller as this class with <code>retry_after</code> set only once retries are exhausted; <code>idempotency_key_conflict</code> raises the <code>KneoIdempotencyMismatchError</code> subclass instead. Adds one attribute on top of <code>KneoError</code>:</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-desc">Seconds parsed from the <code>Retry-After</code> header, or <code>None</code> when the server did not provide the hint.</td></tr>
+  </table>
+
+  <h3 class="api-class">class KneoIdempotencyMismatchError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 409 caused by an <code>Idempotency-Key</code> replay with a different payload — almost always a caller bug. A subclass of <code>KneoConflictError</code>. Raised only for the <code>idempotency_key_conflict</code> envelope code (or, against pre-0.6.0 servers whose bodies carry no code, for any 409 on a keyed request); other 409 causes raise the <code>KneoConflictError</code> base instead.</p>
+
+  <h3 class="api-class">class KneoPayloadTooLarge <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 413 — the request body exceeds the server's size cap (<code>kneo_serv</code> enforces <code>KNEO_SERV_MAX_BODY_BYTES</code>, chunked bodies included). Not retryable — shrink the payload. Adds one attribute on top of <code>KneoError</code>:</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">max_body_bytes</td><td class="param-type">int | None</td><td class="param-desc">The server's configured cap, when disclosed in the error envelope.</td></tr>
+  </table>
+
+  <h3 class="api-class">class KneoValidationError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 422 — request validation failed. Two body shapes reach this: the platform's error envelope (stable codes such as <code>guardrail_violation</code>), and FastAPI's list-shaped request-validation detail (<code>{"detail": [{loc, msg, type}, …]}</code>), whose first entry is summarized into the exception message. The full diagnostics stay available on <code>KneoError.body</code>.</p>
 
   <h3 class="api-class">class KneoRateLimited <span class="tag tag-exception">exception</span></h3>
   <p class="desc">Adds one attribute on top of <code>KneoError</code>:</p>
@@ -1242,11 +1274,14 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <p>Map an HTTP response to the appropriate <code>KneoError</code> subclass.</p>
   <table class="cmp-table">
     <tr><th>HTTP status</th><th>Exception</th><th>Notes</th></tr>
+    <tr><td class="col-dim">400</td><td><code>KneoBadRequestError</code></td><td>Semantically rejected; branch on <code>code</code> (<code>invalid_request</code>, <code>spec_invalid</code>, <code>token_budget_exceeded</code>).</td></tr>
     <tr><td class="col-dim">401</td><td><code>KneoAuthError</code></td><td>Missing or invalid API key.</td></tr>
     <tr><td class="col-dim">403</td><td><code>KneoPermissionError</code></td><td>Key valid; insufficient scope.</td></tr>
     <tr><td class="col-dim">404</td><td><code>KneoNotFoundError</code></td><td>Resource missing.</td></tr>
-    <tr><td class="col-dim">409 (with key)</td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload.</td></tr>
-    <tr><td class="col-dim">409 (no key)</td><td><code>KneoConflictError</code></td><td>Generic conflict.</td></tr>
+    <tr><td class="col-dim">409, code <code>idempotency_key_conflict</code></td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload. Also raised for code-less legacy bodies (pre-0.6.0 servers) on keyed requests.</td></tr>
+    <tr><td class="col-dim">409 (other codes)</td><td><code>KneoConflictError</code></td><td><code>run_state_conflict</code> / <code>resource_locked</code>; <code>idempotency_key_in_progress</code> is auto-retried by the transport and surfaces here with <code>retry_after</code> once exhausted.</td></tr>
+    <tr><td class="col-dim">413</td><td><code>KneoPayloadTooLarge</code></td><td>Body exceeds the server's size cap; carries <code>max_body_bytes</code>.</td></tr>
+    <tr><td class="col-dim">422</td><td><code>KneoValidationError</code></td><td>Envelope codes (e.g. <code>guardrail_violation</code>) or FastAPI list-shaped detail, summarized into the message.</td></tr>
     <tr><td class="col-dim">429</td><td><code>KneoRateLimited</code></td><td>Carries <code>retry_after</code>.</td></tr>
     <tr><td class="col-dim">503</td><td><code>KneoServiceUnavailable</code></td><td>Backpressure / overload. <code>KneoServerError</code> subclass; carries <code>retry_after</code>.</td></tr>
     <tr><td class="col-dim">5xx (other)</td><td><code>KneoServerError</code></td><td>Server-side failure.</td></tr>
@@ -1336,7 +1371,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <p>POST <code>/v1/runs/{run_id}/cancel</code> — cooperatively cancel a running run. The platform may not honor the cancel if the run is already in a terminal state; the returned status reflects the post-cancel state.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">continue_</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
-  <p>POST <code>/v1/runs/{run_id}/continue</code> — resume a paused run (typically after a human task was resumed). Trailing underscore avoids the Python <code>continue</code> keyword collision.</p>
+  <p>POST <code>/v1/runs/{run_id}/continue</code> — resume a paused run (typically after a human task was resumed). Trailing underscore avoids the Python <code>continue</code> keyword collision. The auto-injected <code>Idempotency-Key</code> makes replays contractually safe on <code>kneo_serv &gt;= 0.9.0</code> (older servers treated the key as best-effort on this route).</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">replay</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunReplayResponse</span></h4>
   <p>GET <code>/v1/runs/{run_id}/replay</code> — fetch a deterministic replay view derived from the run's checkpoints + trace.</p>
@@ -1362,14 +1397,14 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
     <tr><td class="param-name">timeout</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Total time budget in seconds. <code>None</code> means wait indefinitely.</td></tr>
     <tr><td class="param-name">poll_interval</td><td class="param-type">float</td><td class="param-default">1.0</td><td class="param-desc">Seconds to sleep between polls.</td></tr>
-    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Defaults to <code>{"completed", "failed", "cancelled"}</code>. Pass <code>{"paused_human_review", ...}</code> to treat additional states as terminal.</td></tr>
+    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Defaults to <code>{"completed", "failed", "cancelled", "timed_out", "expired"}</code>. Pass an explicit set including <code>"blocked"</code> to stop waiting when the run pauses for human review.</td></tr>
   </table>
   <div class="returns-label">Returns</div>
   <p class="desc">The terminal <code>RunStatusResponse</code>.</p>
   <div class="raises-label">Raises</div>
   <p class="desc"><code>TimeoutError</code> if <code>timeout</code> elapses before a terminal status is reached.</p>
 
-  <p><strong>Module constant:</strong> <code>DEFAULT_TERMINAL_STATUSES = frozenset({"completed", "failed", "cancelled"})</code>.</p>
+  <p><strong>Module constant:</strong> <code>DEFAULT_TERMINAL_STATUSES = frozenset({"completed", "failed", "cancelled", "timed_out", "expired"})</code>.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">tail_trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">poll_interval</span>: <span class="typ">float</span> = <span class="nm">1.0</span>, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>, <span class="param">terminal_statuses</span>: <span class="typ">Iterable[str] | None</span> = <span class="nm">None</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>) <span class="ret">→ AsyncIterator[TraceResponseEventsItem]</span></h4>
   <p>Stream trace events as they arrive. Polls <code>trace(run_id)</code> with ascending offset, yields each new event as the page arrives, then performs one final drain pass after the run reaches a terminal status to capture any events emitted between the last poll and the status transition. Returns when the drain pass finds no new events. Convenience helper; not a separate platform endpoint.</p>
@@ -1377,7 +1412,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
     <tr><td class="param-name">poll_interval</td><td class="param-type">float</td><td class="param-default">1.0</td><td class="param-desc">Seconds to sleep between polls.</td></tr>
     <tr><td class="param-name">timeout</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Total time budget. <code>None</code> means wait indefinitely.</td></tr>
-    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Status set that ends streaming. Defaults to <code>{"completed", "failed", "cancelled"}</code>.</td></tr>
+    <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Status set that ends streaming. Defaults to <code>{"completed", "failed", "cancelled", "timed_out", "expired"}</code>; include <code>"blocked"</code> to stop at a human-review pause.</td></tr>
     <tr><td class="param-name">start_offset</td><td class="param-type">int</td><td class="param-default">0</td><td class="param-desc">Offset to start from. Use a saved checkpoint to resume mid-trace.</td></tr>
     <tr><td class="param-name">page_size</td><td class="param-type">int</td><td class="param-default">100</td><td class="param-desc">Per-poll page size; clamped server-side to 1000.</td></tr>
   </table>
@@ -1403,8 +1438,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class HumanTasksClient <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_kind</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"created_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ Page[HumanTaskListResponseTasksItem]</span></h4>
-  <p>GET <code>/v1/human-tasks</code> — list pending and recent human tasks as a <code>Page</code>. <code>run_id</code> and <code>workflow_kind</code> are server-side filters (added in 0.2.0). <code>status</code> is honored by the server but is a wrapper-side kwarg per a documented spec-side omission (see TODO-0.3.0 § parameter-drift gate).</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">run_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_kind</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">sort_order</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ Page[HumanTaskListResponseTasksItem]</span></h4>
+  <p>GET <code>/v1/human-tasks</code> — list pending and recent human tasks as a <code>Page</code>. <code>run_id</code> and <code>workflow_kind</code> are server-side filters (added in 0.2.0). <code>status</code> accepts <code>pending</code> (awaiting review) or <code>escalated</code> (the task's escalation timeout fired); honored by <code>kneo_serv &gt;= 0.8.0</code>, silently ignored by older servers. <code>sort_by</code> / <code>sort_order</code> default to <code>None</code> — when unset, the server's own defaults apply.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">continuation_id</span>: <span class="typ">str</span>) <span class="ret">→ HumanTaskResponse</span></h4>
   <p>GET <code>/v1/human-tasks/{continuation_id}</code> — fetch a single human task.</p>
@@ -1470,13 +1505,25 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 <!-- ── AgentClient ────────────────────────────────────────── -->
 <section class="section" id="agentclient">
   <h2>AgentClient</h2>
-  <p>Development surface for <strong>Kneo Agent Studio</strong>. Currently aggregates one sub-client (<a href="#specsclient"><code>SpecsClient</code></a>).</p>
+  <p>Development surface for <strong>Kneo Agent Studio</strong>. Aggregates two sub-clients (<a href="#skillsclient"><code>SkillsClient</code></a> and <a href="#specsclient"><code>SpecsClient</code></a>) backed by the shared <a href="#transport"><code>Transport</code></a>.</p>
 
   <h3 class="api-class">class AgentClient <span class="tag tag-class">class</span></h3>
   <table class="param-table">
     <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">skills</td><td class="param-type"><a href="#skillsclient">SkillsClient</a></td><td class="param-desc"><code>/v1/skills</code></td></tr>
     <tr><td class="param-name">specs</td><td class="param-type"><a href="#specsclient">SpecsClient</a></td><td class="param-desc"><code>/v1/specs/*</code></td></tr>
   </table>
+</section>
+
+<!-- ── SkillsClient ───────────────────────────────────────── -->
+<section class="section" id="skillsclient">
+  <h2>SkillsClient</h2>
+  <p>Read-only skill catalog: the declared + default skills a spec (or a per-request <code>SkillsOverlay</code> on <a href="#runsclient"><code>runs.create</code></a>) may reference by name. The endpoint requires <code>kneo_serv &gt;= 0.8.0</code>; older servers return 404, surfaced as <a href="#exceptions"><code>KneoNotFoundError</code></a>. Exposed as <code>client.agent.skills</code>.</p>
+
+  <h3 class="api-class">class SkillsClient <span class="tag tag-class">class</span></h3>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"name"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ Page[SkillsListResponseSkillsItem]</span></h4>
+  <p>GET <code>/v1/skills</code> — list the skill catalog as a fully paginated <a href="#list-results"><code>Page</code></a> (metadata includes the <code>window</code> field on <code>kneo_serv &gt;= 0.9.0</code>). Each item is an open mapping carrying at least <code>name</code> / <code>description</code> / <code>path</code>. The names returned here are the valid targets for a <code>SkillsOverlay.add</code> list on <code>runs.create</code> — the server rejects overlay names not declared in the spec's skills block.</p>
 </section>
 
 <!-- ── SpecsClient ────────────────────────────────────────── -->
@@ -1565,8 +1612,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.6.0</td><td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td><td><code>kneo_serv</code> <code>0.7.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.5.0</td><td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td><td><code>kneo_serv</code> <code>0.5.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.7.0</td><td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td><td><code>kneo_serv</code> <code>0.9.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.6.0</td><td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td><td><code>kneo_serv</code> <code>0.7.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.5.0</td><td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td><td><code>kneo_serv</code> <code>0.5.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.4.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.3.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
   </table>
@@ -1594,7 +1642,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
         <span class="kw">return await</span> client.platform.runs.list(limit=limit, offset=offset, **filters)
     <span class="kw">async for</span> run <span class="kw">in</span> iterate_all(fetch_page, page_size=<span class="nm">200</span>):
         <span class="kw">yield</span> run</code></pre>
-  <p>For the audit endpoint, <code>iterate_all</code> does one fetch and exits because <code>has_more</code> is <code>False</code> (server returns only <code>count</code> + <code>events</code>; no offset to advance). For the two <code>Map</code>-returning endpoints, walk the values directly: <code>for cred in (await client.platform.credentials.list()):</code>.</p>
+  <p>This works for every paginating endpoint, audit included — <code>audit.list</code> has been fully paginated since client 0.6.0 (<code>offset</code> / <code>sort_by</code> / <code>sort_order</code> kwargs; <code>total</code> / <code>offset</code> echoed in the <code>Page</code>), so <code>iterate_all</code> walks all audit pages. (Against a pre-0.6.0 <em>server</em> the metadata degrades to <code>None</code> and the walk does one fetch then exits.) For the two <code>Map</code>-returning endpoints, walk the values directly: <code>for cred in (await client.platform.credentials.list()):</code>.</p>
 
   <h3 class="api-class">Bring your own httpx client</h3>
   <p>For shared connection pools, custom transports, proxy configuration:</p>
@@ -1619,12 +1667,12 @@ shared = httpx.AsyncClient(
     <span class="kw">await</span> shared.aclose()</code></pre>
 
   <h3 class="api-class">Wait for a non-default terminal status</h3>
-  <p><code>wait_for_completion()</code> treats <code>{"completed", "failed", "cancelled"}</code> as terminal by default. To return as soon as the run pauses for human review:</p>
+  <p><code>wait_for_completion()</code> treats <code>{"completed", "failed", "cancelled", "timed_out", "expired"}</code> as terminal by default. To return as soon as the run pauses for human review:</p>
 <pre><code>terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(
     run_id,
     poll_interval=<span class="nm">2.0</span>,
     timeout=<span class="nm">300</span>,
-    terminal_statuses={<span class="st">"completed"</span>, <span class="st">"failed"</span>, <span class="st">"cancelled"</span>, <span class="st">"paused_human_review"</span>},
+    terminal_statuses={<span class="st">"completed"</span>, <span class="st">"failed"</span>, <span class="st">"cancelled"</span>, <span class="st">"timed_out"</span>, <span class="st">"expired"</span>, <span class="st">"blocked"</span>},
 )</code></pre>
 
   <h3 class="api-class">More recipes</h3>
@@ -1632,7 +1680,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.6.0 · 2026-06-08 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v0.7.0 · 2026-06-12 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 

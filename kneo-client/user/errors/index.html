@@ -696,6 +696,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#branching-on-kneoerrorcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branching on KneoError.code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#handle-idempotency-key-mismatches-loudly" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1142,6 +1153,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#branching-on-kneoerrorcode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branching on KneoError.code
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#handle-idempotency-key-mismatches-loudly" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1293,14 +1315,17 @@
 <h2 id="hierarchy">Hierarchy<a class="headerlink" href="#hierarchy" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>KneoError
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── KneoNetworkError              # DNS / connect / TLS / read timeout — wrapped from httpx.HTTPError
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── KneoAuthError                 # HTTP 401 — missing or invalid API key
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── KneoPermissionError           # HTTP 403 — key valid but lacks the required scope
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── KneoNotFoundError             # HTTP 404 — resource does not exist
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── KneoConflictError             # HTTP 409 (generic)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └── KneoIdempotencyMismatchError   # HTTP 409 with payload mismatch on a replayed Idempotency-Key
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── KneoRateLimited               # HTTP 429 (carries .retry_after)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└── KneoServerError               # HTTP 5xx — server-side failure
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    └── KneoServiceUnavailable    # HTTP 503 — overloaded / backpressure (carries .retry_after)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── KneoBadRequestError           # HTTP 400 — semantically rejected (spec_invalid, token_budget_exceeded, …)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── KneoAuthError                 # HTTP 401 — missing or invalid API key
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>├── KneoPermissionError           # HTTP 403 — scope denied, or environment_policy_blocked
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>├── KneoNotFoundError             # HTTP 404 — resource does not exist
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── KneoConflictError             # HTTP 409 — state conflict, classified by .code (carries .retry_after)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └── KneoIdempotencyMismatchError   # HTTP 409 with code idempotency_key_conflict
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── KneoPayloadTooLarge           # HTTP 413 — body over the server&#39;s cap (carries .max_body_bytes)
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── KneoValidationError           # HTTP 422 — request validation failed
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>├── KneoRateLimited               # HTTP 429 (carries .retry_after)
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└── KneoServerError               # HTTP 5xx — server-side failure
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    └── KneoServiceUnavailable    # HTTP 503 — backpressure / store down (carries .retry_after)
 </code></pre></div>
 <p><code>KneoIdempotencyMismatchError</code> is a <em>subclass</em> of <code>KneoConflictError</code> (catching <code>KneoConflictError</code> also catches the mismatch case). Everything else is parallel.</p>
 <h2 id="what-every-exception-carries">What every exception carries<a class="headerlink" href="#what-every-exception-carries" title="Permanent link">&para;</a></h2>
@@ -1309,13 +1334,20 @@
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">body</span><span class="p">:</span> <span class="n">Any</span>                   <span class="c1"># Parsed JSON dict, raw text, or None</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>      <span class="c1"># X-Request-ID echoed by the server</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">idempotency_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="c1"># Idempotency-Key sent on the failing request (POSTs)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>            <span class="c1"># Stable snake_case code from the error envelope (kneo_serv 0.6.0+)</span>
 </code></pre></div>
-<p><code>KneoRateLimited</code> (429) and <code>KneoServiceUnavailable</code> (503) each add a <code>retry_after</code> field:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoRateLimited</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
+<p><code>KneoConflictError</code> (409), <code>KneoRateLimited</code> (429), and <code>KneoServiceUnavailable</code> (503) each add a <code>retry_after</code> field; <code>KneoPayloadTooLarge</code> (413) adds <code>max_body_bytes</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoConflictError</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoServiceUnavailable</span><span class="p">(</span><span class="n">KneoServerError</span><span class="p">):</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoRateLimited</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoServiceUnavailable</span><span class="p">(</span><span class="n">KneoServerError</span><span class="p">):</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoPayloadTooLarge</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">max_body_bytes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span>  <span class="c1"># The server&#39;s configured body-size cap, when disclosed</span>
 </code></pre></div>
 <p><code>KneoServiceUnavailable</code> is a <em>subclass</em> of <code>KneoServerError</code> (catching <code>KneoServerError</code> also catches the 503 case). All other subclasses inherit from <code>KneoError</code> without adding fields.</p>
 <h2 id="status-code-exception-mapping">Status code → exception mapping<a class="headerlink" href="#status-code-exception-mapping" title="Permanent link">&para;</a></h2>
@@ -1329,6 +1361,11 @@
 </thead>
 <tbody>
 <tr>
+<td>400</td>
+<td><code>KneoBadRequestError</code></td>
+<td>Structurally valid but semantically rejected — <code>.code</code> is e.g. <code>invalid_request</code>, <code>spec_invalid</code> (diagnostics list in <code>.body</code>), or <code>token_budget_exceeded</code>.</td>
+</tr>
+<tr>
 <td>401</td>
 <td><code>KneoAuthError</code></td>
 <td>Missing or invalid API key. Re-check the profile resolution chain.</td>
@@ -1336,7 +1373,7 @@
 <tr>
 <td>403</td>
 <td><code>KneoPermissionError</code></td>
-<td>API key is valid but the platform won't authorize this operation. Check the key's scopes / role.</td>
+<td>API key is valid but the platform won't authorize this operation. <code>.code</code> distinguishes a scope/role denial from <code>environment_policy_blocked</code> — the target environment's policy rejected the operation; fixing the key's scopes won't help there.</td>
 </tr>
 <tr>
 <td>404</td>
@@ -1346,12 +1383,22 @@
 <tr>
 <td>409</td>
 <td><code>KneoConflictError</code></td>
-<td>Generic conflict — resource state, optimistic-lock failure, etc.</td>
+<td>A state conflict, classified by <code>.code</code>: <code>run_state_conflict</code> (lifecycle fence — e.g. cancelling an already-terminal run) or <code>resource_locked</code> (held by another operation). Carries <code>.retry_after</code>. <code>idempotency_key_in_progress</code> (same key's original attempt still executing) is auto-retried by the transport per its <code>Retry-After</code> and surfaces here only once retries exhaust.</td>
 </tr>
 <tr>
-<td>409 with idempotency key</td>
+<td>409 with code <code>idempotency_key_conflict</code></td>
 <td><code>KneoIdempotencyMismatchError</code></td>
-<td>Same key reused with a different payload — see <a href="../idempotency_and_retries/">idempotency</a>.</td>
+<td>Same key reused with a different payload — see <a href="../idempotency_and_retries/">idempotency</a>. Also raised for code-less legacy 409 bodies (pre-0.6.0 servers) on keyed requests.</td>
+</tr>
+<tr>
+<td>413</td>
+<td><code>KneoPayloadTooLarge</code></td>
+<td>Request body exceeds the server's <code>KNEO_SERV_MAX_BODY_BYTES</code> cap; <code>.max_body_bytes</code> carries the cap when disclosed. Not retryable — shrink the payload.</td>
+</tr>
+<tr>
+<td>422</td>
+<td><code>KneoValidationError</code></td>
+<td>Request validation failed. Either the platform's envelope (e.g. <code>.code == "guardrail_violation"</code>) or FastAPI's list-shaped detail, whose first entry is summarized into the message as <code>loc.path: msg (+N more)</code> — the full diagnostics stay on <code>.body</code>.</td>
 </tr>
 <tr>
 <td>429</td>
@@ -1361,7 +1408,7 @@
 <tr>
 <td>503</td>
 <td><code>KneoServiceUnavailable</code></td>
-<td>Platform overloaded / shedding load (e.g. <code>kneo_serv</code>'s run-queue backpressure on <code>POST /v1/runs</code>). A <code>KneoServerError</code> subclass that also carries <code>.retry_after</code>. The transport already retried within its policy honoring <code>Retry-After</code>; one reaching your code means retries exhausted — use <code>.retry_after</code> for longer caller-side back-off.</td>
+<td>Platform temporarily unavailable, classified by <code>.code</code>: <code>queue_full</code> (<code>kneo_serv</code>'s run-queue backpressure on <code>POST /v1/runs</code>) vs <code>store_unavailable</code> (the persistence store is down) — both carry <code>Retry-After</code>. A <code>KneoServerError</code> subclass that also carries <code>.retry_after</code>. The transport already retried within its policy honoring <code>Retry-After</code>; one reaching your code means retries exhausted — use <code>.retry_after</code> for longer caller-side back-off.</td>
 </tr>
 <tr>
 <td>5xx (other)</td>
@@ -1431,63 +1478,132 @@
 <a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>    <span class="k">raise</span>
 </code></pre></div>
 <p>Order matters: catch more specific exceptions first (<code>KneoNotFoundError</code> before <code>KneoError</code>).</p>
-<h3 id="handle-idempotency-key-mismatches-loudly">Handle idempotency-key mismatches loudly<a class="headerlink" href="#handle-idempotency-key-mismatches-loudly" title="Permanent link">&para;</a></h3>
-<p>A 409 with an idempotency key set means the <em>same key was reused with a different payload</em>. This is almost always a caller bug — surface it explicitly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
+<h3 id="branching-on-kneoerrorcode">Branching on <code>KneoError.code</code><a class="headerlink" href="#branching-on-kneoerrorcode" title="Permanent link">&para;</a></h3>
+<p>When one status covers several operational meanings, branch on <code>.code</code> — the stable snake_case code from the platform's error envelope (<code>kneo_serv</code> 0.6.0+; <code>None</code> when the body carries no code). The code is the contract; the human-readable message is not:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoConflictError</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">except</span> <span class="n">KneoIdempotencyMismatchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="sa">f</span><span class="s2">&quot;Idempotency-Key </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">!r}</span><span class="s2"> was reused with a different payload. &quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="sa">f</span><span class="s2">&quot;Either generate a new key for the new request or fix the payload drift.&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">cancel</span><span class="p">(</span><span class="n">run_id</span><span class="p">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="k">except</span> <span class="n">KneoConflictError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="k">if</span> <span class="n">exc</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="s2">&quot;run_state_conflict&quot;</span><span class="p">:</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="k">pass</span>  <span class="c1"># already terminal — fine for a cancel</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="k">raise</span>
+</code></pre></div>
+<p>Codes worth knowing (illustrative, not exhaustive — <code>kneo_serv</code> may add new snake_case codes in a minor):</p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Status</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invalid_request</code>, <code>spec_invalid</code>, <code>token_budget_exceeded</code></td>
+<td>400</td>
+<td>Semantically rejected request.</td>
+</tr>
+<tr>
+<td><code>environment_policy_blocked</code></td>
+<td>403</td>
+<td>Environment policy rejected the operation — distinct from a scope denial.</td>
+</tr>
+<tr>
+<td><code>run_state_conflict</code>, <code>resource_locked</code></td>
+<td>409</td>
+<td>Lifecycle fence / resource held by another operation.</td>
+</tr>
+<tr>
+<td><code>idempotency_key_in_progress</code></td>
+<td>409</td>
+<td>Same key's original attempt still executing; auto-retried by the transport.</td>
+</tr>
+<tr>
+<td><code>idempotency_key_conflict</code></td>
+<td>409</td>
+<td>Key replayed with a different payload → <code>KneoIdempotencyMismatchError</code>.</td>
+</tr>
+<tr>
+<td><code>payload_too_large</code></td>
+<td>413</td>
+<td>Body over the server's cap.</td>
+</tr>
+<tr>
+<td><code>guardrail_violation</code></td>
+<td>422</td>
+<td>A guardrail rejected the request content.</td>
+</tr>
+<tr>
+<td><code>not_ready</code></td>
+<td>503</td>
+<td>The platform isn't ready to serve yet.</td>
+</tr>
+<tr>
+<td><code>queue_full</code>, <code>store_unavailable</code></td>
+<td>503</td>
+<td>Run-queue backpressure vs persistence-store outage; both carry <code>Retry-After</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="handle-idempotency-key-mismatches-loudly">Handle idempotency-key mismatches loudly<a class="headerlink" href="#handle-idempotency-key-mismatches-loudly" title="Permanent link">&para;</a></h3>
+<p>A 409 with code <code>idempotency_key_conflict</code> means the <em>same key was reused with a different payload</em>. This is almost always a caller bug — surface it explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">except</span> <span class="n">KneoIdempotencyMismatchError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        <span class="sa">f</span><span class="s2">&quot;Idempotency-Key </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">idempotency_key</span><span class="si">!r}</span><span class="s2"> was reused with a different payload. &quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="sa">f</span><span class="s2">&quot;Either generate a new key for the new request or fix the payload drift.&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span>
 </code></pre></div>
 <p>See <a href="../idempotency_and_retries/">Idempotency and retries</a> for the full story on how / when this happens.</p>
 <h3 id="dont-catch-successful-status-branches">Don't catch successful-status branches<a class="headerlink" href="#dont-catch-successful-status-branches" title="Permanent link">&para;</a></h3>
 <p>Methods on the platform / agent clients return parsed response models on success and <em>raise</em> on failure. There is no "ok / err" branching at the call site. Wrap the <em>call</em> in <code>try</code> / <code>except</code>, not the return value:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Right</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">process</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="k">except</span> <span class="n">KneoError</span><span class="p">:</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="o">...</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Wrong — runs.create never returns None / False on failure; it raises</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># never happens</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="o">...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Right</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">run</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">process</span><span class="p">(</span><span class="n">run</span><span class="p">)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">except</span> <span class="n">KneoError</span><span class="p">:</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="o">...</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Wrong — runs.create never returns None / False on failure; it raises</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># never happens</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="o">...</span>
 </code></pre></div>
 <h2 id="transport-errors-and-network-troubleshooting">Transport errors and network troubleshooting<a class="headerlink" href="#transport-errors-and-network-troubleshooting" title="Permanent link">&para;</a></h2>
 <p><code>KneoNetworkError</code> covers everything below the HTTP layer: DNS resolution, TCP connect failures, TLS handshakes, read timeouts, connection resets. It wraps the underlying <code>httpx.HTTPError</code> as the cause — <code>exc.__cause__</code> is the original httpx exception if you need to inspect it.</p>
 <p>The transport retries these automatically within <code>RetryPolicy.max_attempts</code> for transport errors and for HTTP 429 / 502 / 503 / 504. So a <code>KneoNetworkError</code> reaching your code means <strong>all retries exhausted</strong>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoNetworkError</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">health</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">health</span><span class="o">.</span><span class="n">readyz</span><span class="p">()</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">except</span> <span class="n">KneoNetworkError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not reach the platform: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="c1"># Treat as a hard dependency outage; don&#39;t pretend the call succeeded.</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="k">raise</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoNetworkError</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">health</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">health</span><span class="o">.</span><span class="n">readyz</span><span class="p">()</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">except</span> <span class="n">KneoNetworkError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;could not reach the platform: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="c1"># Treat as a hard dependency outage; don&#39;t pretend the call succeeded.</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">raise</span>
 </code></pre></div>
 <p>If you want to see the retry behavior in your logs, set the <code>kneo_client.transport</code> logger to <code>INFO</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_client.transport&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># → INFO kneo_client.transport: transport error on attempt 1; sleeping 0.20s: ...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;kneo_client.transport&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># → INFO kneo_client.transport: transport error on attempt 1; sleeping 0.20s: ...</span>
 </code></pre></div>
 <h3 id="timeouts">Timeouts<a class="headerlink" href="#timeouts" title="Permanent link">&para;</a></h3>
 <p><code>Profile.timeout</code> (default 30s, settable per-profile in <code>~/.config/kneo/client.toml</code> or via the <code>KNEO_TIMEOUT</code> env var) becomes httpx's single-number timeout, which is shorthand for <em>all four</em> of httpx's timeout dimensions: connect, read, write, and pool. So a <code>timeout=30.0</code> means each of those phases independently must complete within 30s, not that the whole request must finish within 30s.</p>
 <p>A read timeout while waiting for a slow <code>runs.create</code> or <code>agent.specs.compile</code> response surfaces as <code>KneoNetworkError(__cause__=httpx.ReadTimeout(...))</code>. The transport's retry policy applies — if you're seeing these reach your code, increase <code>timeout</code> (e.g. <code>KNEO_TIMEOUT=120</code>) rather than raising <code>RetryPolicy.max_attempts</code>, since retrying a slow request just rebuilds the same wait.</p>
 <p>For finer control (e.g. a long read budget but a short connect budget), inject a custom httpx client with a <code>httpx.Timeout</code> instance:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">custom</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="n">timeout</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Timeout</span><span class="p">(</span><span class="n">connect</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">read</span><span class="o">=</span><span class="mf">120.0</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="mf">5.0</span><span class="p">),</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">http_client</span><span class="o">=</span><span class="n">custom</span><span class="p">)</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># Caller owns `custom`&#39;s lifecycle when passing http_client.</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">custom</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="n">timeout</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Timeout</span><span class="p">(</span><span class="n">connect</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">read</span><span class="o">=</span><span class="mf">120.0</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">pool</span><span class="o">=</span><span class="mf">5.0</span><span class="p">),</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">client</span> <span class="o">=</span> <span class="n">KneoClient</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span> <span class="n">http_client</span><span class="o">=</span><span class="n">custom</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Caller owns `custom`&#39;s lifecycle when passing http_client.</span>
 </code></pre></div>
 <h3 id="tls-verification">TLS verification<a class="headerlink" href="#tls-verification" title="Permanent link">&para;</a></h3>
 <p>httpx verifies server certificates by default against the <code>certifi</code> CA bundle, and that's what kneo-client uses with no extra configuration. Three common operational variations:</p>
@@ -1500,52 +1616,52 @@
 <p>A failing TLS handshake surfaces as <code>KneoNetworkError(__cause__=httpx.ConnectError(...))</code> with a message like <code>[SSL: CERTIFICATE_VERIFY_FAILED]</code>. Check the <code>__cause__</code> for the precise OpenSSL error code.</p>
 <h3 id="http-proxies">HTTP proxies<a class="headerlink" href="#http-proxies" title="Permanent link">&para;</a></h3>
 <p>httpx automatically picks up <code>HTTPS_PROXY</code>, <code>HTTP_PROXY</code>, and <code>NO_PROXY</code> from the environment — kneo-client inherits that behavior with no extra wiring. So:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://proxy.corp.example.com:8080<span class="w"> </span>python<span class="w"> </span>my_script.py
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">HTTPS_PROXY</span><span class="o">=</span>http://proxy.corp.example.com:8080<span class="w"> </span>python<span class="w"> </span>my_script.py
 </code></pre></div>
 <p>works out of the box. For an explicit proxy URL set in code (without touching env vars), inject a custom httpx client:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">custom</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">proxy</span><span class="o">=</span><span class="s2">&quot;http://proxy.corp.example.com:8080&quot;</span><span class="p">,</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">custom</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">(</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">base_url</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">proxy</span><span class="o">=</span><span class="s2">&quot;http://proxy.corp.example.com:8080&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="p">)</span>
 </code></pre></div>
 <p>A proxy that returns 502 or refuses the upstream connection surfaces as <code>KneoServerError</code> (if the proxy returns a real HTTP error) or <code>KneoNetworkError</code> (if the connection itself fails). Check <code>__cause__</code> to distinguish.</p>
 <h3 id="inspecting-the-underlying-httpx-exception">Inspecting the underlying httpx exception<a class="headerlink" href="#inspecting-the-underlying-httpx-exception" title="Permanent link">&para;</a></h3>
 <p>For diagnosing intermittent network issues, the original httpx exception carries more context than <code>KneoNetworkError</code>'s string. Walk the cause chain:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">except</span> <span class="n">KneoNetworkError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">cause</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">__cause__</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;kneo wrapper: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;httpx cause:  </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">cause</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="c1"># Common httpx exception types you&#39;ll see here:</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="c1">#   httpx.ConnectTimeout    — couldn&#39;t connect within the connect budget</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="c1">#   httpx.ReadTimeout       — server stopped responding mid-read</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="c1">#   httpx.ConnectError      — DNS / TCP / TLS handshake failed</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="c1">#   httpx.RemoteProtocolError — connection reset, partial response, etc.</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="c1">#   httpx.ProxyError        — proxy-specific failure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">except</span> <span class="n">KneoNetworkError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">cause</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">__cause__</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;kneo wrapper: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;httpx cause:  </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">cause</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">cause</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="c1"># Common httpx exception types you&#39;ll see here:</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="c1">#   httpx.ConnectTimeout    — couldn&#39;t connect within the connect budget</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="c1">#   httpx.ReadTimeout       — server stopped responding mid-read</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="c1">#   httpx.ConnectError      — DNS / TCP / TLS handshake failed</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="c1">#   httpx.RemoteProtocolError — connection reset, partial response, etc.</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>    <span class="c1">#   httpx.ProxyError        — proxy-specific failure</span>
 </code></pre></div>
 <p>When opening a support ticket for an intermittent failure, including the <code>__cause__</code>'s type and message lets the operator distinguish connection-pool exhaustion from a stuck upstream from a proxy misconfiguration.</p>
 <h2 id="building-error-messages-for-users">Building error messages for users<a class="headerlink" href="#building-error-messages-for-users" title="Permanent link">&para;</a></h2>
 <p>The exceptions are designed for <em>internal</em> error handling, not for user-facing messages. If you're surfacing platform errors to end users (in a dashboard UI, a CLI prompt, etc.), build a friendly message from the exception's attributes rather than printing <code>str(exc)</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">user_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="n">KneoError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoAuthError</span><span class="p">):</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="k">return</span> <span class="s2">&quot;Your API key is invalid. Please check your credentials.&quot;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoPermissionError</span><span class="p">):</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="k">return</span> <span class="s2">&quot;You don&#39;t have permission to perform this action.&quot;</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNotFoundError</span><span class="p">):</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="k">return</span> <span class="s2">&quot;The requested item could not be found.&quot;</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoRateLimited</span><span class="p">):</span>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="n">wait</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">60</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Too many requests. Please try again in </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span><span class="si">}</span><span class="s2">s.&quot;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">):</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Server error (request </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">request_id</span><span class="si">}</span><span class="s2">). Please report this.&quot;</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNetworkError</span><span class="p">):</span>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>        <span class="k">return</span> <span class="s2">&quot;Could not reach the server. Check your network connection.&quot;</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">user_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="n">KneoError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoAuthError</span><span class="p">):</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>        <span class="k">return</span> <span class="s2">&quot;Your API key is invalid. Please check your credentials.&quot;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoPermissionError</span><span class="p">):</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>        <span class="k">return</span> <span class="s2">&quot;You don&#39;t have permission to perform this action.&quot;</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNotFoundError</span><span class="p">):</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        <span class="k">return</span> <span class="s2">&quot;The requested item could not be found.&quot;</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoRateLimited</span><span class="p">):</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">wait</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">retry_after</span> <span class="ow">or</span> <span class="mi">60</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Too many requests. Please try again in </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">wait</span><span class="p">)</span><span class="si">}</span><span class="s2">s.&quot;</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">):</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Server error (request </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">request_id</span><span class="si">}</span><span class="s2">). Please report this.&quot;</span>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exc</span><span class="p">,</span> <span class="n">KneoNetworkError</span><span class="p">):</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>        <span class="k">return</span> <span class="s2">&quot;Could not reach the server. Check your network connection.&quot;</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span>
 </code></pre></div>
 <h2 id="why-a-typed-hierarchy">Why a typed hierarchy<a class="headerlink" href="#why-a-typed-hierarchy" title="Permanent link">&para;</a></h2>
 <p>A single <code>KneoError</code> would force callers to inspect <code>.status</code> everywhere they want to branch. A flat enum of error codes would lose the natural <code>isinstance</code> ergonomics. The hierarchy lets you catch broadly (<code>except KneoError</code>) for logging and narrowly (<code>except KneoAuthError</code>) for recovery — without losing the underlying response context, which stays attached to the exception instance.</p>
-<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 0.5.0 — which added run-queue backpressure (<code>503</code> + <code>Retry-After</code> on <code>POST /v1/runs</code>), now surfaced as <code>KneoServiceUnavailable</code>.</p>
+<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 0.9.0: <code>0.5.0</code> added run-queue backpressure (<code>503</code> + <code>Retry-After</code>, surfaced as <code>KneoServiceUnavailable</code>), <code>0.6.0</code> standardized the error envelope (surfaced as <code>.code</code>), and the <code>0.8.0</code> / <code>0.9.0</code> surfaces brought the <code>400</code> / <code>413</code> / <code>422</code> shapes now typed as <code>KneoBadRequestError</code>, <code>KneoPayloadTooLarge</code>, and <code>KneoValidationError</code>.</p>
 <h2 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1562,9 +1678,9 @@
 <td>Maps an <code>httpx.Response</code> to the appropriate <code>KneoError</code> subclass. Used internally by <code>Transport</code>; rarely called directly.</td>
 </tr>
 <tr>
-<td><code>KneoError(message, *, status, body, request_id, idempotency_key)</code></td>
+<td><code>KneoError(message, *, status, body, request_id, idempotency_key, code)</code></td>
 <td><code>kneo_client.core.errors</code></td>
-<td>The base. All subclasses share this constructor signature (except <code>KneoRateLimited</code> and <code>KneoServiceUnavailable</code>, which add <code>retry_after</code>).</td>
+<td>The base. All subclasses share this constructor signature (except <code>KneoConflictError</code>, <code>KneoRateLimited</code>, and <code>KneoServiceUnavailable</code>, which add <code>retry_after</code>, and <code>KneoPayloadTooLarge</code>, which adds <code>max_body_bytes</code>).</td>
 </tr>
 </tbody>
 </table>

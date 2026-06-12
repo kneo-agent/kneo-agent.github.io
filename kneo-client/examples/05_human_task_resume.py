@@ -39,12 +39,13 @@ async def main(decision: str) -> None:
         print(f"resumed -> status={response.status!r}")
 
         # To loop over multiple pending tasks, fall back to the manual
-        # list-then-resume pattern (the helper only claims one):
+        # list-then-resume pattern (the helper only claims one). Task
+        # items are continuation records keyed by "id":
         #
         # page = await client.platform.human_tasks.list(status="pending", limit=10)
         # for task in page:
         #     await client.platform.human_tasks.resume(
-        #         task["continuation_id"], {"decision": decision}
+        #         task["id"], {"decision": decision}
         #     )
 
 

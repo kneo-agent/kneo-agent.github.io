@@ -952,8 +952,8 @@ needs beyond the connection ones.</p>
 <tr>
 <td>3</td>
 <td><a href="03_paginate_audit.py"><code>03_paginate_audit.py</code></a></td>
-<td>List audit events through the <code>Page</code> wrapper. Documents the platform's <code>limit</code>-only / no-<code>offset</code> audit semantics — <code>Page</code> surfaces this as <code>None</code> metadata fields, <code>has_more=False</code>.</td>
-<td><code>audit.list</code> (returns <strong><code>Page[AuditEvent]</code></strong>), iteration over <code>Page</code></td>
+<td>List audit events through the <code>Page</code> wrapper, then walk the remaining pages with <code>iterate_all()</code> — audit is fully paginated (<code>offset</code> / <code>total</code> / sort metadata) since <code>kneo_serv</code> 0.6.0, and <code>Page.window</code> discloses the 0.9.0 paging-window edge.</td>
+<td><code>audit.list</code> (returns <strong><code>Page[AuditEvent]</code></strong>), <strong><code>iterate_all</code></strong> page-walking</td>
 </tr>
 <tr>
 <td>4</td>

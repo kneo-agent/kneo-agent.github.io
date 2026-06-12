@@ -1444,7 +1444,7 @@ PDFs and print-HTMLs are rendered by
 <li><strong>Authored user docs</strong> live in <a href="../user/"><code>docs/user/</code></a> — the combined handouts above are the only "published" copies of that content under <code>docs/pub/</code>.</li>
 </ul>
 <h2 id="drift-detection">Drift detection<a class="headerlink" href="#drift-detection" title="Permanent link">&para;</a></h2>
-<p>CI runs <code>generate_combined_docs.py --check</code> and <code>generate_reference_docs.py --check</code> on every PR; either failing means the underlying authored source changed without regenerating the artifact here.</p>
+<p>The release workflow runs <code>generate_combined_docs.py --check</code> and <code>generate_reference_docs.py --check</code> <strong>at release tags</strong> (not per PR — per-PR drift is reconciled at the Pre-cut release step); either failing means the underlying authored source changed without regenerating the artifact here.</p>
 <h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="kneo_agent_platform_tutorial/">Kneo Agent Platform Tutorial</a></li>
