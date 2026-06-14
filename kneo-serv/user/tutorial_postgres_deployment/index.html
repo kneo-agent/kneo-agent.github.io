@@ -384,6 +384,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1038,6 +1042,62 @@
     
   
     Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring_and_alerting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../checkpoint_and_state_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkpoint &amp; state lifecycle
   
 
     
@@ -1868,7 +1928,9 @@ volume, not the container layer.</p>
 </table>
 <p>Full list and semantics: <a href="../environment/">environment.md</a>.</p>
 <h2 id="9-backup-the-database">9 · Backup the database<a class="headerlink" href="#9-backup-the-database" title="Permanent link">&para;</a></h2>
-<p>A seeded backup/restore drill is part of the release checklist. The
+<p>A periodic seeded backup/restore drill is recommended operator practice —
+run one on a regular cadence and again immediately before any major
+upgrade (see <a href="../backup_and_recovery/">backup_and_recovery.md</a>). The
 shape for production:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Backup</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span><span class="se">\</span>

@@ -1,0 +1,71 @@
+# Tool-stage guardrails are ENFORCED, not just validated (0.10.0 HIGH #2).
+#
+# The agent declares a `tool`-stage guardrail that redacts any tool result
+# matching an SSN pattern. Before 0.10.0 only `input`/`output`-stage
+# guardrails were wired into the runtime: a `tool` (or `workflow`) stage
+# guardrail passed `/specs/validate`, satisfied the production
+# `require_guardrails` gate, deployed — and was then NEVER enforced. The
+# fix routes `tool`-stage plans through `build_tool_guardrail_middlewares`
+# into the runtime's tool-call chain via `bind_runtime(tool_middlewares=…)`.
+#
+# This guardrail uses `action: redact` deliberately. Only the non-raising
+# tool-stage actions (`redact`, `warn`) are enforced: a *raising* action (the
+# default `block`, plus escalate/human_review/retry/revise) would be swallowed
+# by the SDK bridge executor's per-tool-failure contract (it becomes a
+# recoverable error result), so raising tool-stage actions are REJECTED at
+# `/specs/validate` (`E_GUARDRAIL_ACTION_UNSUPPORTED`) rather than shipped
+# fail-open. For a hard block, put the check at the input/output stage; true
+# tool-stage block-enforcement is 0.11.0 work.
+#
+# `workflow`-stage guardrails are deliberately NOT declared here: no runtime
+# hook enforces them yet, so they are REJECTED at `/specs/validate` with
+# `E_GUARDRAIL_STAGE_UNSUPPORTED` rather than silently accepted-and-dropped
+# (a dropped security control is worse than a rejected spec). The companion
+# test asserts that rejection.
+#
+# Running end-to-end needs a provider (the agent must CHOOSE to call the
+# tool), so the offline regression in tests/test_examples_e2e.py instead
+# compiles this spec, confirms the guardrail is wired into the runtime, and
+# exercises it on a PII-bearing tool result to prove redaction.
+#
+#   kneo specs validate examples/guardrails_complete.yaml   # green
+#   kneo run examples/guardrails_complete.yaml \
+#     --input "look up account 4021" --target agent --json   # needs a provider
+
+version: v1
+
+agent:
+  name: support-agent
+  system_prompt: >
+    Answer account questions. Use the lookup_account tool to retrieve
+    records. Never reveal personally identifiable information.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  tools:
+    include: [lookup_account]
+  guardrails:
+    tool:
+      - id: no-pii
+        type: regex
+        action: redact
+        config:
+          # Social-security-number shape.
+          patterns: ['\d{3}-\d{2}-\d{4}']
+
+tools:
+  lookup_account:
+    description: Look up an account record by query string.
+    parameters:
+      type: object
+      properties:
+        q:
+          type: string
+          description: Account id or name to look up.
+      required: [q]
+    implementation: examples.guardrail_functions.lookup_account

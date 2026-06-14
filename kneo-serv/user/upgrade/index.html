@@ -384,6 +384,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -868,6 +872,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../monitoring_and_alerting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../checkpoint_and_state_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkpoint &amp; state lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../performance/" class="md-nav__link">
         
   
@@ -1187,6 +1247,17 @@
     <span class="md-ellipsis">
       
         0.8.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0
       
     </span>
   </a>
@@ -1815,6 +1886,17 @@
     <span class="md-ellipsis">
       
         0.8.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#0100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0
       
     </span>
   </a>
@@ -2516,6 +2598,64 @@ these fields to semi-trusted callers.</p>
 <p><strong>Persistence schemas</strong>: <strong>no migration.</strong> No new persisted fields; rollback to
 0.7.x after running 0.8.0 is persistence-safe (the new request/spec fields are
 request-scoped or compile-scoped only).</p>
+<h3 id="0100">0.10.0<a class="headerlink" href="#0100" title="Permanent link">&para;</a></h3>
+<p>Theme: <strong>performance &amp; capacity / 1.0 runway.</strong> A correctness/security/
+hardening cut. Additive-only; <strong>no migration</strong>; SDK floor held at
+<code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>. 0.10.0 is a normal additive minor — <strong>not</strong> the
+<code>1.0</code> cut.</p>
+<p><strong>Intentional behavior changes</strong> (each corrects provably-wrong shipped
+behavior per the contract-stability policy;
+act if you keyed on the old behavior):</p>
+<ul>
+<li><strong><code>tool</code>-stage <code>redact</code>/<code>warn</code> guardrails now actually enforce.</strong> Before
+  0.10.0 a declared <code>tool</code>-stage guardrail validated, satisfied the production
+  <code>require_guardrails</code> gate, and deployed — but was never wired into the
+  runtime, so it never ran. <code>redact</code>/<code>warn</code> now execute in the tool-call
+  chain. <strong>Action:</strong> if a deployment declared a <code>tool</code>-stage <code>redact</code>/<code>warn</code>
+  guardrail, it was <em>unprotected</em> until now (disclosed on fix) — re-review it
+  and confirm the now-live behavior is what you want (e.g. a <code>redact</code> action
+  will now actually redact tool output).</li>
+<li><strong>Raising tool-stage guardrail actions are now rejected at
+  <code>/specs/validate</code></strong> (<code>E_GUARDRAIL_ACTION_UNSUPPORTED</code>). A tool-stage
+  guardrail with the default <code>block</code> (or escalate/human_review/retry/revise)
+  cannot abort the run yet — the SDK bridge executor's per-tool-failure
+  contract converts the raised violation into a recoverable result, so it
+  would fail open. Rather than ship that, such specs now fail validation.
+  <strong>Action:</strong> for tool-stage guardrails use <code>redact</code>/<code>warn</code>, or move a
+  blocking check to the <code>input</code>/<code>output</code> stage (those enforce <code>block</code>
+  correctly). True tool-stage block-enforcement is planned for 0.11.0. Note:
+  a tool-stage guardrail with <strong>no explicit <code>action</code></strong> defaults to <code>block</code>,
+  so add <code>action: redact</code> (or <code>warn</code>) to such specs.</li>
+<li><strong>Guardrails with a non-<code>middleware</code> <code>mode</code> are now rejected at
+  <code>/specs/validate</code></strong> (<code>E_GUARDRAIL_MODE_UNSUPPORTED</code>). Only the <code>middleware</code>
+  attachment is wired; other modes (<code>runtime</code>/<code>tool</code>/<code>workflow</code>) were
+  silently dropped. <strong>Action:</strong> remove <code>mode</code> (it defaults to <code>middleware</code>)
+  or set it to <code>middleware</code>.</li>
+<li><strong><code>workflow</code>-stage guardrails are now rejected at <code>/specs/validate</code></strong>
+  (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>). No runtime hook enforces them yet, so a
+  spec declaring one previously validated green and silently did nothing.
+  <strong>Action:</strong> remove <code>workflow</code>-stage guardrail blocks (or move the control
+  to a <code>tool</code>/<code>input</code>/<code>output</code> stage); such specs will now fail validation.</li>
+<li><strong>A <code>kind: workflow</code> step containing a human-approval step is rejected at
+  <code>/specs/validate</code></strong> (<code>E_STEP_WORKFLOW_NESTED_HUMAN</code>). Such specs used to
+  validate and then complete the run with the <em>unapproved</em> output.
+  <strong>Action:</strong> lift the human-approval step to the top-level workflow (the
+  supported pattern — it blocks and resumes correctly).</li>
+<li><strong>Secret redaction now covers pluralized credential keys</strong> (<code>api_keys</code>,
+  <code>refresh_tokens</code>, <code>KNEO_SERV_API_KEYS</code>). Single-segment usage counters
+  (<code>input_tokens</code>, <code>max_tokens</code>) are unaffected. <strong>Action:</strong> none expected;
+  if you scraped a redacted log/trace/audit field expecting a plural
+  credential key to appear in the clear, it no longer will.</li>
+<li><strong>Release packaging:</strong> the container image's public tags (<code>:X.Y.Z</code> /
+  <code>:X.Y</code> / <code>:latest</code>) and the GitHub Release are now gated behind the Trivy
+  CVE scan and the coverage/postgres lanes (the <code>release → scan → gated
+  ship</code> split). No operator action; relevant only if you build the image
+  from this repo's workflow.</li>
+</ul>
+<p><strong>Persistence schemas</strong>: <strong>no migration.</strong> Terminal-write atomicity, the
+persistent idle-poll worker, and checkpoint-prune liveness are
+behavior-internal; no new persisted fields. Rollback to 0.9.x is
+persistence-safe.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

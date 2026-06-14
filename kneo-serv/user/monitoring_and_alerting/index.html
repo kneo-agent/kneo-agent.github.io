@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/deployment/">
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/monitoring_and_alerting/">
       
       
-        <link rel="prev" href="../tutorial_postgres_deployment/">
+        <link rel="prev" href="../observability/">
       
       
-        <link rel="next" href="../environment/">
+        <link rel="next" href="../checkpoint_and_state_lifecycle/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Deployment - Kneo Agent Platform</title>
+        <title>Monitoring & alerting - Kneo Agent Platform</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deployment" class="md-skip">
+        <a href="#monitoring-alerting" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Deployment
+              Monitoring &amp; alerting
             
           </span>
         </div>
@@ -729,37 +729,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Deployment
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
         
   
   
@@ -775,92 +748,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#container" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Container
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#compose" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Compose
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tls-and-reverse-proxy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLS and reverse proxy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#choosing-a-persistence-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Choosing a persistence backend
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#readiness-and-liveness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Readiness and liveness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workers, scaling, and graceful shutdown
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -982,10 +869,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../monitoring_and_alerting/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1001,6 +915,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#alert-catalogue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alert catalogue
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alert catalogue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queue-backlog-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue backlog / backpressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-starvation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worker starvation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-dead-letter-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure &amp; dead-letter rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latency-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency regression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-spend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token spend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readiness-dependency-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Readiness / dependency health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signals-that-arent-on-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals that aren't on /metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1501,10 +1540,93 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#container" class="md-nav__link">
+  <a href="#alert-catalogue" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Container
+        Alert catalogue
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alert catalogue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#queue-backlog-backpressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue backlog / backpressure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worker-starvation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worker starvation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#failure-dead-letter-rate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Failure &amp; dead-letter rate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latency-regression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency regression
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-spend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token spend
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#readiness-dependency-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Readiness / dependency health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signals-that-arent-on-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signals that aren't on /metrics
       
     </span>
   </a>
@@ -1512,54 +1634,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#compose" class="md-nav__link">
+  <a href="#wiring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Compose
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#tls-and-reverse-proxy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLS and reverse proxy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#choosing-a-persistence-backend" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Choosing a persistence backend
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#readiness-and-liveness" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Readiness and liveness
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#workers-scaling-and-graceful-shutdown" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Workers, scaling, and graceful shutdown
+        Wiring
       
     </span>
   </a>
@@ -1583,132 +1661,100 @@
 
 
 
-<h1 id="deployment">Deployment<a class="headerlink" href="#deployment" title="Permanent link">&para;</a></h1>
-<p>Reference for the supported deployment shapes. For a guided zero-to-running
-walkthrough on Docker Compose with PostgreSQL, see
-<a href="../tutorial_postgres_deployment/"><code>tutorial_postgres_deployment.md</code></a>. For
-copy-paste quick shapes (local poke, operator pull-and-run, one-shot CLI
-in the image), see <a href="../run_recipes/"><code>run_recipes.md</code></a>. For every
-environment variable referenced below, see
-<a href="../environment/"><code>environment.md</code></a>.</p>
-<p>The service supports three shapes:</p>
-<ul>
-<li><strong>Container</strong> — a single <code>kneo-serv</code> image with a database you supply.</li>
-<li><strong>Compose</strong> — the bundled stack that starts the API plus PostgreSQL.</li>
-<li><strong>Embedded</strong> — <code>kneo_serv.service.app:create_app()</code> mounted in your own
-  ASGI server (covered in
-  <a href="../tutorial_custom_tool/#7-ship-the-tool-to-the-service"><code>tutorial_custom_tool.md § 7</code></a>).</li>
-</ul>
-<h2 id="container">Container<a class="headerlink" href="#container" title="Permanent link">&para;</a></h2>
-<p>Pull the published image from GitHub Container Registry:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
-</code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.9.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.9</code>),
-and <code>latest</code>. amd64-only; arm64 is deferred to
-1.0. From 0.3.0 onward the image
-is keyless-signed via cosign and ships with a CycloneDX SBOM
-attestation; from 0.4.0 onward the release pipeline also runs a
-blocking Trivy CVE scan against the pushed digest under the CVSS≥7
-policy (<a href="../security_hardening/#image-vulnerability-scanning">security_hardening.md § Image vulnerability scanning</a>)
-— verification commands in
-<code>supply_chain_review.md § Verification commands</code>.
-The image installs the <code>kneo-serv[deploy]</code> extra (psycopg + SDK
-telemetry).</p>
-<p>Run it against PostgreSQL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8000</span>:8000<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_DATABASE_URL</span><span class="o">=</span>postgresql://kneo_serv:change-me@host.docker.internal:5432/kneo_serv<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_AUTH_ENABLED</span><span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_SERV_API_KEYS</span><span class="o">=</span><span class="s1">&#39;operator:replace-token:operator&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-serv:latest
-</code></pre></div>
-<p>For local builds from a source checkout (contributor / pre-publish):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>kneo-serv:local<span class="w"> </span>.
-</code></pre></div>
-<h2 id="compose">Compose<a class="headerlink" href="#compose" title="Permanent link">&para;</a></h2>
-<p>The bundled Compose stack starts the API plus PostgreSQL:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cp<span class="w"> </span>deploy/production.env.example<span class="w"> </span>deploy/production.env
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>up<span class="w"> </span>--build
-</code></pre></div>
-<p>Replace every placeholder token and database password before binding the
-service to a network. The stack defaults to port <code>8000</code>; set
-<code>KNEO_SERV_PORT</code> to change the host-side port.</p>
-<p>For a staging rehearsal, use the staging env example:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cp<span class="w"> </span>deploy/staging.env.example<span class="w"> </span>deploy/staging.env
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">KNEO_SERV_ENV_FILE</span><span class="o">=</span>./deploy/staging.env<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/staging.env<span class="w"> </span>up<span class="w"> </span>--build
-</code></pre></div>
-<p><code>deploy/staging.env</code> is gitignored. Keep SDK telemetry argument/result
-capture (<code>KNEO_SERV_OTEL_RECORD_ARGUMENTS</code>, <code>KNEO_SERV_OTEL_RECORD_RESULTS</code>)
-disabled in staging unless the deployment's data classification has
-explicitly approved payload capture.</p>
-<h2 id="tls-and-reverse-proxy">TLS and reverse proxy<a class="headerlink" href="#tls-and-reverse-proxy" title="Permanent link">&para;</a></h2>
-<p>The service speaks bare HTTP and does not terminate TLS itself. For any
-deployment exposed beyond <code>127.0.0.1</code>, place a reverse proxy
-(nginx, Caddy, AWS ALB, or similar) in front and terminate TLS there.
-See <a href="../tls_and_proxy/"><code>tls_and_proxy.md</code></a> for topology, bind-address
-guidance, and trusted-proxy header handling.</p>
-<h2 id="choosing-a-persistence-backend">Choosing a persistence backend<a class="headerlink" href="#choosing-a-persistence-backend" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Backend</th>
-<th>When to use</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>SQLite</strong></td>
-<td>Local dev or single-process service. Default when <code>KNEO_SERV_DATABASE_URL</code> is unset.</td>
-</tr>
-<tr>
-<td><strong>PostgreSQL</strong></td>
-<td>Any multi-process or production deployment. Set <code>KNEO_SERV_DATABASE_URL</code>. Requires <code>kneo-serv[postgres]</code> or <code>kneo-serv[deploy]</code>.</td>
-</tr>
-</tbody>
-</table>
-<p>When <code>KNEO_SERV_DATABASE_URL</code> is set, the service uses PostgreSQL for run
-state, checkpoints, idempotency records, queue leases, locks, audit events,
-and workflow continuations. Without it, the service falls back to SQLite for
-state and file-backed continuations.</p>
-<p>Multi-process SQLite is not a supported topology; see
-<a href="../troubleshooting/#23-sqlite-database-is-locked-errors">troubleshooting.md § 2.3</a>.</p>
-<p>For the throughput and latency trade-offs between the two backends — including
-why SQLite write throughput does not scale with concurrency — and a bench
-harness to size your own deployment, see
-<a href="../performance/">performance.md</a>.</p>
-<h2 id="readiness-and-liveness">Readiness and liveness<a class="headerlink" href="#readiness-and-liveness" title="Permanent link">&para;</a></h2>
-<p>Wire these endpoints into your supervisor or load balancer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="err">GET /livez      # process liveness</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="err">GET /readyz     # readiness: all dependencies healthy</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="err">GET /healthz    # lightweight overall health</span>
-</code></pre></div>
-<p><code>/livez</code> and <code>/readyz</code> are intentionally unauthenticated for probe
-integration. <code>/readyz</code> returns <code>503</code> with a structured <code>not_ready</code> payload
-when any dependency check fails — see
-<a href="../troubleshooting/#12-readyz-returns-503">troubleshooting.md § 1.2</a> for the
-failure shape.</p>
-<p>The Prometheus scrape endpoint <code>GET /metrics</code> (since 0.5.0) is also
-unauthenticated — restrict it to your monitoring network or disable it with
-<code>KNEO_SERV_METRICS_ENABLED=false</code>. See
+<h1 id="monitoring-alerting">Monitoring &amp; alerting<a class="headerlink" href="#monitoring-alerting" title="Permanent link">&para;</a></h1>
+<p><a href="../observability/">observability.md</a> covers the <em>setup</em> — the three signals
+(Prometheus <code>/metrics</code>, structured logs, OTel spans) and how to wire them.
+This page is the <em>interpretation</em>: what to alert on, the expression to
+alert with, what a firing alert means, and what to do about it. It assumes
+the <code>/metrics</code> endpoint is scraped (since 0.5.0) and the JSON request logs
+are aggregated.</p>
+<blockquote>
+<p>Counters on <code>/metrics</code> are <strong>per-process</strong> and reset on restart — always
+wrap them in <code>rate()</code>, and <code>sum()</code> across instances in a multi-process
+deployment. The metric surface is the table in
 <a href="../observability/#prometheus-metrics">observability.md § Prometheus <code>/metrics</code></a>.</p>
-<h2 id="workers-scaling-and-graceful-shutdown">Workers, scaling, and graceful shutdown<a class="headerlink" href="#workers-scaling-and-graceful-shutdown" title="Permanent link">&para;</a></h2>
-<p>A single process runs a pool of <code>KNEO_SERV_WORKER_CONCURRENCY</code> worker threads
-(default <code>1</code>) draining the run queue. Raise it for provider-bound workloads;
-for write-concurrent scale on PostgreSQL, run <strong>multiple service processes</strong> —
-each leases queued runs safely via <code>FOR UPDATE SKIP LOCKED</code>. Sizing guidance and
-the SQLite single-writer caveat are in <a href="../performance/">performance.md</a>.</p>
-<p>On <code>SIGTERM</code> (e.g. a rolling deploy) the service drains the worker pool: workers
-stop claiming new work and finish the run they are currently executing, and the
-service waits up to <code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (default <code>30</code>) for them
-to exit. A run <em>still executing</em> when that timeout elapses is interrupted by
-process exit — but it stays claimed and is automatically re-leased and retried
-by another worker once its <code>KNEO_SERV_WORKER_LEASE_SECONDS</code> lease expires, so it
-is not lost, only restarted. To drain in-flight runs without that restart, set
-<code>KNEO_SERV_SHUTDOWN_TIMEOUT_SECONDS</code> (and your orchestrator's termination grace
-period) at least as long as your longest expected run step. Set
-<code>KNEO_SERV_MAX_QUEUE_DEPTH</code> to shed load with <code>503</code> under overload, and
-<code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> (default <code>5</code>) to dead-letter poison runs rather
-than retry them forever.</p>
+</blockquote>
+<h2 id="alert-catalogue">Alert catalogue<a class="headerlink" href="#alert-catalogue" title="Permanent link">&para;</a></h2>
+<p>Each row is a <em>page-worthy</em> signal. PromQL is illustrative — tune the
+thresholds and windows to your traffic and SLOs.</p>
+<h3 id="queue-backlog-backpressure">Queue backlog / backpressure<a class="headerlink" href="#queue-backlog-backpressure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Backlog growing and not draining (tune 50 / 10m to your throughput)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">kneo_runs_queued</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="kr">deriv</span><span class="o">(</span><span class="nv">kneo_runs_queued</span><span class="p">[</span><span class="s">10m</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p><strong>Means:</strong> runs are arriving faster than the worker pool drains them, or
+workers are wedged. <strong>Do:</strong> check <code>kneo_worker_count</code> is non-zero and
+<code>kneo_runs_running</code> is moving; scale <code>KNEO_SERV_WORKER_CONCURRENCY</code> or add
+instances; if a deployment runs with <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> set,
+sustained backlog at the cap means clients are getting <code>503</code> load-shed
+(those runs are terminalized <code>failed{queue_full}</code>, not silently dropped).</p>
+<h3 id="worker-starvation">Worker starvation<a class="headerlink" href="#worker-starvation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">kneo_worker_count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">kneo_runs_queued</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p><strong>Means:</strong> queued work with no live worker to claim it. Workers poll
+persistently until shutdown (0.10.0), so a zero count with a backlog
+points at a crashed pool or a process that never called <code>start_worker</code>.
+<strong>Do:</strong> check the process is up and <code>/readyz</code> is green; restart drains the
+queue (leases are reclaimed).</p>
+<h3 id="failure-dead-letter-rate">Failure &amp; dead-letter rate<a class="headerlink" href="#failure-dead-letter-rate" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Failures as a fraction of completions over 5m</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kr">rate</span><span class="o">(</span><span class="nv">kneo_runs_failed_total</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="o">/</span><span class="w"> </span><span class="kr">clamp_min</span><span class="o">(</span><span class="kr">rate</span><span class="o">(</span><span class="nv">kneo_runs_completed_total</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0.1</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Any dead-lettering is worth attention</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="kr">rate</span><span class="o">(</span><span class="nv">kneo_runs_dead_lettered_total</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+</code></pre></div>
+<p><strong>Means:</strong> a rising failed-ratio is a provider outage, a bad spec, or
+store pressure; <strong>dead-lettering</strong> means a run exceeded
+<code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code> re-claims (it repeatedly crashed its
+worker). <strong>Do:</strong> read the failing runs' traces (<code>GET /v1/runs/{id}/trace</code>)
+and the JSON logs for the exception; a dead-letter usually means a
+poison run — fix the spec/tool, don't just raise the cap.</p>
+<h3 id="latency-regression">Latency regression<a class="headerlink" href="#latency-regression" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kr">histogram_quantile</span><span class="o">(</span><span class="mf">0.95</span><span class="p">,</span><span class="w"> </span><span class="k">sum</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="o">(</span><span class="nv">le</span><span class="o">)</span><span class="w"> </span><span class="o">(</span><span class="kr">rate</span><span class="o">(&lt;</span><span class="nv">proxy_request_duration_bucket</span><span class="o">&gt;</span><span class="p">[</span><span class="s">5m</span><span class="p">]</span><span class="o">)))</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nv">slo</span><span class="o">&gt;</span>
+</code></pre></div>
+<p><code>/metrics</code> exports run counters and queue gauges, <strong>not</strong> request-latency
+histograms — read p95 from the reverse-proxy access logs or the OTel
+spans, or from the <code>duration_ms</code> field on the JSON request logs.
+<strong>Means:</strong> provider slowness, queue wait, or DB pressure. <strong>Do:</strong>
+correlate with <code>kneo_runs_queued</code> (queue wait) and provider latency in the
+spans.</p>
+<h3 id="token-spend">Token spend<a class="headerlink" href="#token-spend" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">rate</span><span class="o">(</span><span class="nv">kneo_tokens_total</span><span class="p">[</span><span class="s">1h</span><span class="p">]</span><span class="o">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="nv">budget_per_hour</span><span class="o">&gt;</span>
+</code></pre></div>
+<p><strong>Means:</strong> consumption above your cost envelope. <strong>Do:</strong> the per-run hard
+ceiling is <code>TokenBudgetMiddleware</code> (a run that hits it ends
+<code>failed{token_budget_exceeded}</code>); this alert catches <em>aggregate</em> spend
+trending over budget across runs.</p>
+<h3 id="readiness-dependency-health">Readiness / dependency health<a class="headerlink" href="#readiness-dependency-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From the proxy/LB health checks, not /metrics:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="o">/</span><span class="nv">readyz</span><span class="w"> </span><span class="nv">returns</span><span class="w"> </span><span class="mi">503</span><span class="w"> </span><span class="nv">for</span><span class="w"> </span><span class="nv">more</span><span class="w"> </span><span class="nv">than</span><span class="w"> </span><span class="nv">one</span><span class="w"> </span><span class="nv">probe</span><span class="w"> </span><span class="nv">interval</span>
+</code></pre></div>
+<p><strong>Means:</strong> a dependency probe (store, queue, configured provider secret)
+is failing — <code>/readyz</code> reports per-check detail. <strong>Do:</strong> read the
+<code>checks</code> block in the <code>/readyz</code> body; see
+<a href="../incident_response/">incident_response.md</a>.</p>
+<h2 id="signals-that-arent-on-metrics">Signals that aren't on <code>/metrics</code><a class="headerlink" href="#signals-that-arent-on-metrics" title="Permanent link">&para;</a></h2>
+<p>Two state-growth signals matter operationally but are read from the API /
+store, not the scrape endpoint (see
+<a href="../checkpoint_and_state_lifecycle/">checkpoint_and_state_lifecycle.md</a>):</p>
+<ul>
+<li><strong>Continuation backlog</strong> — <code>GET /v1/human-tasks</code> (or a <code>COUNT</code> on the
+  continuation store). A count that only grows means human tasks are
+  neither answered nor expired. Give human tasks an <code>on_timeout</code> and run
+  <code>prune_expired_human_tasks</code>.</li>
+<li><strong>Checkpoint / store growth</strong> — track store size or a checkpoint
+  <code>COUNT</code>. Rising size with a flat run rate means the retention sweep
+  (<code>prune_retention</code>) isn't running. Note the 0.10.0 liveness guard
+  <em>intentionally</em> retains live (blocked/running) runs' checkpoints
+  regardless of age, so a large blocked-run population is expected store.</li>
+</ul>
+<h2 id="wiring">Wiring<a class="headerlink" href="#wiring" title="Permanent link">&para;</a></h2>
+<p>The service does not push its own alerts — it exposes signals. Point your
+Prometheus/Alertmanager at <code>/metrics</code>, your log pipeline at the JSON
+records, and your proxy's health checks at <code>/readyz</code>. Keep <code>/metrics</code>
+unauthenticated but <strong>not publicly reachable</strong> (it carries operational
+counts, no run content); bind it behind the reverse proxy per
+<a href="../tls_and_proxy/">tls_and_proxy.md</a>.</p>
 
 
 

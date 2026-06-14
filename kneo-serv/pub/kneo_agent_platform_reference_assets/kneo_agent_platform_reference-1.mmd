@@ -1,0 +1,19 @@
+stateDiagram-v2
+    [*] --> created
+    created --> running : execute / worker claim
+    created --> cancelled : cancel before start
+    running --> completed
+    running --> failed : error past on_error policy
+    running --> cancelled : cancel honored
+    running --> timed_out : deadline exceeded
+    running --> blocked : human step reached
+    blocked --> running : resume with decision /<br/>on_timeout continue
+    blocked --> expired : task timeout, on_timeout fail
+    blocked --> cancelled : cancel (continuation deleted)
+    blocked --> timed_out : run deadline exceeded<br/>(continuation deleted)
+    failed --> running : POST /runs/{id}/continue
+    completed --> [*]
+    failed --> [*]
+    cancelled --> [*]
+    timed_out --> [*]
+    expired --> [*]

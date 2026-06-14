@@ -380,6 +380,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -863,6 +867,62 @@
   
   
     <li class="md-nav__item">
+      <a href="../user/monitoring_and_alerting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/checkpoint_and_state_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkpoint &amp; state lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../user/performance/" class="md-nav__link">
         
   
@@ -1326,6 +1386,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#feature-example-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature → example matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reading-order" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1402,8 +1473,71 @@
 Use them to validate a local install, exercise the CLI, or as
 starting points for your own specs.</p>
 <p>For the annotated walkthrough — exact <code>kneo spec</code> / <code>kneo run</code>
-commands, expected output, caveats — see
-<a href="../user/examples/"><code>docs/user/examples.md</code></a>.</p>
+commands, expected output, caveats — and a fuller <strong>feature → example
+matrix</strong>, see <a href="../user/examples/"><code>docs/user/examples.md</code></a>.</p>
+<h2 id="feature-example-matrix">Feature → example matrix<a class="headerlink" href="#feature-example-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Feature / surface</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single agent + tools, env overlays</td>
+<td><code>research_agent.yaml</code></td>
+</tr>
+<tr>
+<td>Graph / concurrent / group-chat workflows</td>
+<td><code>graph_review_workflow.yaml</code>, <code>concurrent_review_workflow.yaml</code>, <code>group_chat_workflow.yaml</code></td>
+</tr>
+<tr>
+<td>Human-in-the-loop (pause/resume)</td>
+<td><code>human_approval_workflow.yaml</code>, <code>smoke_human_workflow.yaml</code></td>
+</tr>
+<tr>
+<td>Declarative MCP / agent-as-tool / workflow-as-agent</td>
+<td><code>declarative_spec.yaml</code></td>
+</tr>
+<tr>
+<td>Run-level timeouts</td>
+<td><code>run_with_timeout.py</code></td>
+</tr>
+<tr>
+<td>Handoff <code>round_robin</code> <em>(0.9.0 regression)</em></td>
+<td><code>handoff_workflow.yaml</code></td>
+</tr>
+<tr>
+<td>Per-step <code>on_error</code> <em>(0.9.0 regression)</em></td>
+<td><code>resilient_workflow.yaml</code></td>
+</tr>
+<tr>
+<td>MCP stdio transport <em>(0.9.0 regression)</em></td>
+<td><code>mcp_stdio_workflow.yaml</code></td>
+</tr>
+<tr>
+<td>Nested workflow + human approval <em>(0.10.0 HIGH #1)</em></td>
+<td><code>nested_workflow_human_approval.yaml</code></td>
+</tr>
+<tr>
+<td>Tool-stage guardrail enforcement <em>(0.10.0 HIGH #2)</em></td>
+<td><code>guardrails_complete.yaml</code></td>
+</tr>
+<tr>
+<td>Secret redaction <em>(0.10.0 MEDIUMs)</em></td>
+<td><code>redaction_demo.py</code></td>
+</tr>
+<tr>
+<td>Custom middleware + adapter hop <em>(0.10.0 MEDIUMs)</em></td>
+<td><code>custom_middleware_demo.py</code></td>
+</tr>
+<tr>
+<td>Project config / overlays</td>
+<td><code>project_config.yaml</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="reading-order">Reading order<a class="headerlink" href="#reading-order" title="Permanent link">&para;</a></h2>
 <p>If you're new, work through these specs in order. Each one builds on
 concepts the previous one introduces.</p>
@@ -1460,6 +1594,14 @@ concepts the previous one introduces.</p>
 <li><strong><a href="human_functions.py"><code>human_functions.py</code></a></strong> — function
   references for <code>human_approval_workflow.yaml</code> (<code>draft_report</code>,
   <code>publish_report</code>). Also stubs.</li>
+<li><strong><a href="nested_functions.py"><code>nested_functions.py</code></a></strong> — function
+  references for <code>nested_workflow_human_approval.yaml</code> (the nested
+  drafting steps <code>outline_section</code> / <code>expand_draft</code> and the top-level
+  <code>publish_report</code>). Also stubs.</li>
+<li><strong><a href="guardrail_functions.py"><code>guardrail_functions.py</code></a></strong> — the
+  <code>lookup_account</code> tool implementation for <code>guardrails_complete.yaml</code>;
+  deliberately returns a record containing an SSN so the tool-stage
+  guardrail has PII to redact. Also a stub.</li>
 </ul>
 <h2 id="caveats">Caveats<a class="headerlink" href="#caveats" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1487,9 +1629,44 @@ concepts the previous one introduces.</p>
    over <strong>stdio</strong>, runnable with no network or credentials: the platform
    spawns the bundled server as a subprocess on first tool call. A
    runtime transport proof, not a compile-only demo.</li>
+<li><strong><a href="nested_workflow_human_approval.yaml"><code>nested_workflow_human_approval.yaml</code></a></strong>
+   — a <code>kind: workflow</code> nested drafting pipeline gated by a <strong>top-level</strong>
+   human-approval step: the run blocks at approval and publishes only the
+   approved draft. The executable regression for the 0.10.0 HIGH #1 fix —
+   burying a human step <em>inside</em> a nested <code>kind: workflow</code> component is
+   rejected at validation (<code>E_STEP_WORKFLOW_NESTED_HUMAN</code>), so an approval
+   gate can never be silently bypassed. The test covers both the working
+   top-level pattern and the rejected anti-pattern.</li>
+<li><strong><a href="guardrails_complete.yaml"><code>guardrails_complete.yaml</code></a></strong> — a
+    <strong>tool-stage</strong> guardrail that redacts PII (an SSN pattern) from a tool
+    result. The executable regression for the 0.10.0 HIGH #2 fix: before it,
+    <code>tool</code>/<code>workflow</code>-stage guardrails passed validation and the production
+    <code>require_guardrails</code> gate but were never enforced. <code>workflow</code>-stage
+    guardrails are now rejected at validation (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>)
+    rather than silently dropped. End-to-end needs a provider (the agent must
+    choose to call the tool), so the offline test compiles the spec, confirms
+    the guardrail is wired into the runtime, and exercises it on a PII-bearing
+    result to prove redaction.</li>
+<li><strong><a href="redaction_demo.py"><code>redaction_demo.py</code></a></strong> — a runnable script (not a
+    spec) that scrubs secrets across the three surfaces the platform
+    redacts: structured payloads (<code>redact_data</code>), free text (<code>redact_text</code>),
+    and trace events (<code>Tracer.emit</code>). The executable regression for the
+    0.10.0 redaction MEDIUMs, especially the pluralized-key fix —
+    credential plurals like <code>api_keys</code> / <code>refresh_tokens</code> are redacted while
+    single-segment usage keys like <code>input_tokens</code> / <code>max_tokens</code> survive
+    (over-redacting them corrupted token-usage accounting). Run it with
+    <code>python examples/redaction_demo.py</code>.</li>
+<li><strong><a href="custom_middleware_demo.py"><code>custom_middleware_demo.py</code></a></strong> — a runnable
+    script showing a custom tool middleware and the two 0.10.0 adapter-hop
+    fixes: a custom middleware's <code>ToolResult.metadata</code> reaches the SDK
+    <code>ToolCallContext.metadata</code> (instead of being dropped by
+    <code>tool_result_to_sdk</code>), and the OpenTelemetry context survives the
+    <code>run_awaitable_sync</code> worker-thread hop (so spans nest under the run span
+    instead of becoming orphan roots). Run it with
+    <code>python examples/custom_middleware_demo.py</code>.</li>
 </ul>
-<p>All three run offline in CI (<code>tests/test_examples_e2e.py</code>) — they are
-the executable regressions for the surfaces the 0.9.0 cut fixed.</p>
+<p>These specs run offline in CI (<code>tests/test_examples_e2e.py</code>) — they are
+the executable regressions for the surfaces the 0.9.0 and 0.10.0 cuts fixed.</p>
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="declarative_spec.yaml"><code>declarative_spec.yaml</code></a></li>
@@ -1503,11 +1680,17 @@ the executable regressions for the surfaces the 0.9.0 cut fixed.</p>
 <li><a href="group_chat_workflow.yaml"><code>group_chat_workflow.yaml</code></a></li>
 <li><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></li>
 <li><a href="resilient_workflow.yaml"><code>resilient_workflow.yaml</code></a></li>
+<li><a href="guardrails_complete.yaml"><code>guardrails_complete.yaml</code></a></li>
+<li><a href="guardrail_functions.py"><code>guardrail_functions.py</code></a></li>
 <li><a href="human_approval_workflow.yaml"><code>human_approval_workflow.yaml</code></a></li>
+<li><a href="nested_workflow_human_approval.yaml"><code>nested_workflow_human_approval.yaml</code></a></li>
+<li><a href="nested_functions.py"><code>nested_functions.py</code></a></li>
 <li><a href="smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a></li>
 <li><a href="mcp_stdio_workflow.yaml"><code>mcp_stdio_workflow.yaml</code></a></li>
 <li><a href="mcp_stdio_server.py"><code>mcp_stdio_server.py</code></a></li>
 <li><a href="run_with_timeout.py"><code>run_with_timeout.py</code></a></li>
+<li><a href="custom_middleware_demo.py"><code>custom_middleware_demo.py</code></a></li>
+<li><a href="redaction_demo.py"><code>redaction_demo.py</code></a></li>
 <li><a href="app_functions.py"><code>app_functions.py</code></a></li>
 <li><a href="human_functions.py"><code>human_functions.py</code></a></li>
 </ul>

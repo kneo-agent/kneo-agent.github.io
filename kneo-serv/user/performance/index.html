@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://kneo-agent.github.io/kneo-serv/user/performance/">
       
       
-        <link rel="prev" href="../observability/">
+        <link rel="prev" href="../checkpoint_and_state_lifecycle/">
       
       
         <link rel="next" href="../backup_and_recovery/">
@@ -338,6 +338,10 @@
       
         
           
+        
+      
+        
+      
         
       
         
@@ -865,6 +869,62 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring_and_alerting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../checkpoint_and_state_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkpoint &amp; state lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -950,10 +1010,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reference-profile-and-illustrative-numbers" class="md-nav__link">
+  <a href="#reference-profile-and-measured-numbers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reference profile and illustrative numbers
+        Reference profile and measured numbers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sustained-load-soak-resource-stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sustained-load soak (resource stability)
       
     </span>
   </a>
@@ -1519,10 +1590,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#reference-profile-and-illustrative-numbers" class="md-nav__link">
+  <a href="#reference-profile-and-measured-numbers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Reference profile and illustrative numbers
+        Reference profile and measured numbers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sustained-load-soak-resource-stability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sustained-load soak (resource stability)
       
     </span>
   </a>
@@ -1729,17 +1811,20 @@ behaviour, not for comparing per-run cost.</p>
 <p>The harness is also exercised by <code>pytest -m bench</code> as a smoke check so it does
 not bit-rot; that lane asserts the harness runs and returns sane metrics, it is
 <strong>not</strong> a performance gate.</p>
-<h2 id="reference-profile-and-illustrative-numbers">Reference profile and illustrative numbers<a class="headerlink" href="#reference-profile-and-illustrative-numbers" title="Permanent link">&para;</a></h2>
+<h2 id="reference-profile-and-measured-numbers">Reference profile and measured numbers<a class="headerlink" href="#reference-profile-and-measured-numbers" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
-<p class="admonition-title">These numbers are illustrative, not a sizing table</p>
-<p>Captured on a single developer machine: <strong>8 vCPU, 16 GiB RAM, Linux 6.17
-(x86_64), CPython 3.12.3</strong>, local SQLite on the same disk, no PostgreSQL,
-echo agent with zero provider delay. They show <em>ratios and shape</em> — the
-SQLite single-writer ceiling, the memory/SQLite gap, queue-wait under one
-worker. Re-run the harness on <em>your</em> hardware and store before sizing
-anything. Replace this block with your own profile + table.</p>
+<p class="admonition-title">A reference baseline, not a production sizing table</p>
+<p>Measured on a <strong>developer workstation</strong> (2026-06-13): Intel i7-6700K
+(4 cores / 8 threads @ 4.0 GHz), <strong>16 GiB RAM, NVMe SSD</strong>, Linux 6.17
+(x86_64), CPython 3.12.3; SQLite on local NVMe and PostgreSQL 16 in a
+local container; <strong>echo agent, zero provider delay</strong> — so these are the
+<em>platform-overhead ceiling</em> (the rate you'd hit if the model were
+instantaneous), not your real throughput. Single run, <code>--total-runs 300</code>,
+10-run warmup, 256-byte payload. They show <em>ratios and shape</em>, not a
+sizing table — <strong>re-run the harness on your own hardware and store before
+sizing</strong> (the release procedure that automates this is
+bench_soak_runbook.md).</p>
 </div>
-<p><code>--total-runs 300</code>, 10-run warmup, 256-byte payload:</p>
 <table>
 <thead>
 <tr>
@@ -1756,76 +1841,120 @@ anything. Replace this block with your own profile + table.</p>
 <tr>
 <td>sqlite / sync</td>
 <td>1</td>
-<td>269</td>
-<td>2.0 ms</td>
-<td>2.6 ms</td>
+<td>181</td>
 <td>2.9 ms</td>
+<td>3.6 ms</td>
+<td>4.4 ms</td>
 <td>73 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>4</td>
-<td>155</td>
-<td>13.9 ms</td>
-<td>33.3 ms</td>
-<td>39.7 ms</td>
-<td>74 MiB</td>
+<td>114</td>
+<td>19.9 ms</td>
+<td>40.4 ms</td>
+<td>51.4 ms</td>
+<td>73 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>8</td>
-<td>127</td>
-<td>34.8 ms</td>
-<td>76.4 ms</td>
-<td>90.4 ms</td>
+<td>95</td>
+<td>51.3 ms</td>
+<td>104.3 ms</td>
+<td>126.3 ms</td>
 <td>74 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>16</td>
-<td>107</td>
-<td>97.0 ms</td>
-<td>180.2 ms</td>
-<td>213.5 ms</td>
+<td>113</td>
+<td>84.6 ms</td>
+<td>171.6 ms</td>
+<td>235.6 ms</td>
 <td>75 MiB</td>
 </tr>
 <tr>
-<td>memory / sync</td>
-<td>8</td>
-<td>785</td>
-<td>0.6 ms</td>
-<td>0.6 ms</td>
-<td>1.1 ms</td>
-<td>73 MiB</td>
+<td>postgres / sync</td>
+<td>1</td>
+<td>115</td>
+<td>5.4 ms</td>
+<td>7.1 ms</td>
+<td>7.6 ms</td>
+<td>74 MiB</td>
 </tr>
 <tr>
-<td>sqlite / queue</td>
+<td>postgres / sync</td>
 <td>8</td>
-<td>178</td>
-<td>773 ms</td>
-<td>1101 ms</td>
-<td>1160 ms</td>
-<td>73 MiB</td>
+<td>103</td>
+<td>54.3 ms</td>
+<td>75.9 ms</td>
+<td>89.3 ms</td>
+<td>75 MiB</td>
+</tr>
+<tr>
+<td>postgres / sync</td>
+<td>16</td>
+<td>102</td>
+<td>110.1 ms</td>
+<td>150.2 ms</td>
+<td>172.0 ms</td>
+<td>75 MiB</td>
+</tr>
+<tr>
+<td>postgres / sync</td>
+<td>32</td>
+<td>102</td>
+<td>218.1 ms</td>
+<td>276.9 ms</td>
+<td>306.8 ms</td>
+<td>77 MiB</td>
+</tr>
+<tr>
+<td>postgres / queue</td>
+<td>8</td>
+<td>61</td>
+<td>2159 ms</td>
+<td>2587 ms</td>
+<td>2666 ms</td>
+<td>74 MiB</td>
 </tr>
 </tbody>
 </table>
-<p>What this profile shows — and what you should expect to hold directionally on
-any hardware:</p>
+<p>What this profile shows — and what should hold directionally on any hardware:</p>
 <ul>
-<li><strong>SQLite throughput <em>drops</em> as concurrency rises</strong> (269 → 107 runs/s from 1 →
-  16 workers) and latency climbs. SQLite is a single writer; concurrent runs
-  serialize on the write lock and add contention. <strong>More workers do not buy more
-  write throughput on SQLite</strong> — they buy queueing. This is the headline
-  capacity fact.</li>
-<li><strong>In-memory is ~6× faster than SQLite</strong> at the same concurrency (785 vs 127
-  runs/s) because it skips serialization and <code>fsync</code>. In-memory is for tests and
-  ephemeral single-process use only — it is not durable.</li>
-<li><strong>Queue mode shows per-run latency dominated by queue wait</strong> (p50 ~773 ms)
-  because the background worker drains FIFO; throughput (178 runs/s) reflects the
-  drain rate, not per-run cost.</li>
-<li><strong>Peak RSS is flat (~73–75 MiB)</strong> across the sweep — memory is not the first
-  constraint you hit at these volumes; the write path is.</li>
+<li><strong>SQLite throughput is flat-to-<em>down</em> as concurrency rises</strong> (181 → ~100
+  runs/s) — SQLite is a single writer, so concurrent runs serialize on the
+  write lock. <strong>More workers do not buy more write throughput on SQLite</strong>;
+  they buy queueing. This is the headline capacity fact.</li>
+<li><strong>PostgreSQL holds ~100 runs/s flat from 1 → 32 concurrent</strong> (sync): per-run
+  latency scales linearly with concurrency (more in-flight) but <em>throughput
+  does not collapse</em>. This is the measured evidence for the "move to
+  PostgreSQL for write-concurrent deployments" guidance below — the
+  concurrent-writer path scales where the single-writer one does not.</li>
+<li><strong>Queue mode latency is dominated by queue wait</strong> (p50 ~2.1 s here): the
+  background pool drains FIFO, so the ~61 runs/s is the single-worker <em>drain
+  rate</em>, not per-run cost. Add workers / processes to raise it.</li>
+<li><strong>Peak RSS is flat (~73–77 MiB)</strong> across every shape — memory is not the
+  first constraint at these volumes; the write path is.</li>
 </ul>
+<h2 id="sustained-load-soak-resource-stability">Sustained-load soak (resource stability)<a class="headerlink" href="#sustained-load-soak-resource-stability" title="Permanent link">&para;</a></h2>
+<p>A sustained run on the same workstation — <strong>5 000 runs, PostgreSQL, queue
+mode, 16-way dispatch</strong> (~88 s) — held steady end to end:</p>
+<ul>
+<li><strong>0 errors across 5 000 runs</strong>; drain throughput stable (~57 runs/s).</li>
+<li><strong>RSS flat at ~79 MiB</strong> for the whole run after warmup — no leak in the
+  worker pool, the cancellation-Event map, the MCP session host, or event
+  loops under sustained load.</li>
+<li><strong>Thread count bounded at 2–3</strong> — the persistent idle-poll worker (0.10.0)
+  neither spawns nor leaks threads.</li>
+</ul>
+<p>Cross-process safety was checked separately against the same PostgreSQL: the
+idempotency lock (<code>acquire_lock</code>) is <strong>exclusive under 32-way concurrent
+contention across separate connections</strong> (exactly one winner) and
+re-acquirable after release — the multi-worker guarantee the durable-queue
+and idempotency paths rest on. The longer, production-class soak and the full
+assertion list are in bench_soak_runbook.md.</p>
 <h2 id="choosing-a-store-for-capacity">Choosing a store for capacity<a class="headerlink" href="#choosing-a-store-for-capacity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1862,8 +1991,9 @@ any hardware:</p>
 concurrent run throughput, <strong>move to PostgreSQL</strong> — that is the supported path
 for write-concurrent deployments. See
 <a href="../tutorial_postgres_deployment/"><code>tutorial_postgres_deployment.md</code></a> for the
-guided setup. (Promoting the PostgreSQL persistence smoke into a default CI lane
-is deferred to 1.0.)</p>
+guided setup. (The PostgreSQL store-contract + multi-connection concurrency
+suite already runs as a default CI lane on every PR — promoted in 0.6.0; see
+ga_notes.md.)</p>
 <h3 id="postgresql-sizing-notes">PostgreSQL sizing notes<a class="headerlink" href="#postgresql-sizing-notes" title="Permanent link">&para;</a></h3>
 <p>Connection pooling lives at the psycopg layer; size the pool to your worker
 concurrency plus headroom for the API request path. Start from your bench: run

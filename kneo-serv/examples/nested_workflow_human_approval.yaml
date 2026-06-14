@@ -1,0 +1,73 @@
+# Nested workflow + human approval — done the SAFE way (0.10.0 HIGH #1).
+#
+# A `kind: workflow` step runs a nested drafting sub-pipeline, then a
+# TOP-LEVEL human-approval step gates publication. The run blocks at the
+# human step and only publishes the approved draft after it resumes — the
+# unapproved draft is never published.
+#
+# Why the human step is at the top level and NOT inside the nested
+# `drafting` workflow: burying a human step inside a `kind: workflow`
+# component is REJECTED at `/specs/validate` with
+# `E_STEP_WORKFLOW_NESTED_HUMAN`. Before 0.10.0 such a spec validated green
+# and the run silently *completed with the unapproved output* (the inner
+# `blocked` result was forwarded as a normal completed step). The guard
+# forces the approval gate to live where it can actually pause the run.
+# See tests/test_examples_e2e.py and tests/test_nested_workflow_human_guard.py.
+#
+#   kneo run examples/nested_workflow_human_approval.yaml \
+#     --input "the Q3 board report" --target workflow --json
+#   # → blocks at `approve`; resume the human task to publish.
+
+version: v1
+
+agent:
+  name: nested-approval-root
+  system_prompt: Root agent for the nested drafting + approval pipeline.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: sequential
+  name: nested-approval-workflow
+  steps:
+    - id: drafting
+      kind: workflow
+      ref: drafting-pipeline
+    - id: approve
+      kind: human
+      ref: approval-reviewer
+    - id: publish
+      kind: function
+      ref: publish_report
+
+components:
+  workflows:
+    drafting-pipeline:
+      type: sequential
+      name: drafting-pipeline
+      steps:
+        - id: outline
+          kind: function
+          ref: outline_section
+        - id: draft
+          kind: function
+          ref: expand_draft
+  functions:
+    outline_section:
+      implementation: examples.nested_functions.outline_section
+    expand_draft:
+      implementation: examples.nested_functions.expand_draft
+    publish_report:
+      implementation: examples.nested_functions.publish_report
+  humans:
+    approval-reviewer:
+      description: Approve the drafted report before it is published.
+      assignee: reviewer@example.com
+      timeout_seconds: 86400
+      on_timeout: escalate

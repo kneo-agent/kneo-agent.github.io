@@ -384,6 +384,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -620,6 +624,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#feature-example-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature → example matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#spec-files" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -824,6 +839,17 @@
     <span class="md-ellipsis">
       
         0.9.0 additions: resilience, handoff, stdio MCP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0100-additions-regression-showcase-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0 additions: regression-showcase examples
       
     </span>
   </a>
@@ -1106,6 +1132,62 @@
     
   
     Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring_and_alerting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring &amp; alerting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../checkpoint_and_state_lifecycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Checkpoint &amp; state lifecycle
   
 
     
@@ -1586,6 +1668,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#feature-example-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature → example matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#spec-files" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1796,6 +1889,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#0100-additions-regression-showcase-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.10.0 additions: regression-showcase examples
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1828,6 +1932,101 @@ path for you, so <code>kneo spec compile examples/research_agent.yaml</code> wor
 written from the repo root — and a spec of your own resolves its
 <code>implementation:</code> modules relative to your project root the same way.</p>
 </blockquote>
+<h2 id="feature-example-matrix">Feature → example matrix<a class="headerlink" href="#feature-example-matrix" title="Permanent link">&para;</a></h2>
+<p>Pick an example by the feature or surface you want to see. The
+<em>regression</em> examples double as the executable proof of a specific fix and
+run offline in CI (no provider keys, no network).</p>
+<table>
+<thead>
+<tr>
+<th>Feature / surface</th>
+<th>Example</th>
+<th>What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Single agent + tools, env overlays</td>
+<td><code>research_agent.yaml</code> (+ <code>.dev</code>/<code>.staging</code>/<code>.prod</code>)</td>
+<td>A base agent with function tools and per-environment overlays.</td>
+</tr>
+<tr>
+<td>Graph workflow</td>
+<td><code>graph_review_workflow.yaml</code></td>
+<td>Conditional edges between steps.</td>
+</tr>
+<tr>
+<td>Concurrent fan-out</td>
+<td><code>concurrent_review_workflow.yaml</code></td>
+<td>Parallel branches that join.</td>
+</tr>
+<tr>
+<td>Group chat</td>
+<td><code>group_chat_workflow.yaml</code></td>
+<td>Multi-agent turn-taking.</td>
+</tr>
+<tr>
+<td>Human-in-the-loop</td>
+<td><code>human_approval_workflow.yaml</code></td>
+<td>Pause at a human step, resume via the continuation API.</td>
+</tr>
+<tr>
+<td>Human (smoke)</td>
+<td><code>smoke_human_workflow.yaml</code></td>
+<td>Minimal pause/resume on the <code>dummy</code> provider, for smoke tests.</td>
+</tr>
+<tr>
+<td>Declarative MCP / agent-as-tool / workflow-as-agent</td>
+<td><code>declarative_spec.yaml</code></td>
+<td>The 0.8.0 declarative-parity features (compiles offline).</td>
+</tr>
+<tr>
+<td>Run-level timeouts</td>
+<td><code>run_with_timeout.py</code></td>
+<td>Deadlines + the <code>prune_timed_out_runs</code> sweep.</td>
+</tr>
+<tr>
+<td>Project config / overlays</td>
+<td><code>project_config.yaml</code></td>
+<td>Per-environment overlays + policy + retention knobs.</td>
+</tr>
+<tr>
+<td>Handoff <code>round_robin</code> <em>(0.9.0 regression)</em></td>
+<td><code>handoff_workflow.yaml</code></td>
+<td>One turn per participant, then a clean <code>completed</code>.</td>
+</tr>
+<tr>
+<td>Per-step <code>on_error</code> <em>(0.9.0 regression)</em></td>
+<td><code>resilient_workflow.yaml</code></td>
+<td><code>fallback</code> and <code>continue</code> policies actually executing.</td>
+</tr>
+<tr>
+<td>MCP stdio transport <em>(0.9.0 regression)</em></td>
+<td><code>mcp_stdio_workflow.yaml</code> + <code>mcp_stdio_server.py</code></td>
+<td>A real subprocess + stdio handshake on first tool call.</td>
+</tr>
+<tr>
+<td>Nested workflow + human approval <em>(0.10.0 HIGH #1)</em></td>
+<td><code>nested_workflow_human_approval.yaml</code></td>
+<td>A nested pipeline gated by a top-level human step; the human-inside-nested anti-pattern is rejected at validation.</td>
+</tr>
+<tr>
+<td>Tool-stage guardrail enforcement <em>(0.10.0 HIGH #2)</em></td>
+<td><code>guardrails_complete.yaml</code></td>
+<td>A declared tool-stage guardrail redacts PII; a workflow-stage one is rejected.</td>
+</tr>
+<tr>
+<td>Secret redaction <em>(0.10.0 MEDIUMs)</em></td>
+<td><code>redaction_demo.py</code></td>
+<td>Redaction across structured data, free text, and traces; pluralized credential keys redacted, usage keys preserved.</td>
+</tr>
+<tr>
+<td>Custom middleware + adapter hop <em>(0.10.0 MEDIUMs)</em></td>
+<td><code>custom_middleware_demo.py</code></td>
+<td>A custom middleware's <code>ToolResult.metadata</code> reaches the SDK; OTel context survives the worker-thread hop.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="spec-files">Spec files<a class="headerlink" href="#spec-files" title="Permanent link">&para;</a></h2>
 <h3 id="research_agentyaml"><a href="../../examples/research_agent.yaml"><code>research_agent.yaml</code></a><a class="headerlink" href="#research_agentyaml" title="Permanent link">&para;</a></h3>
 <p>A single-agent research pipeline using a plan-act strategy with two tools
@@ -2048,6 +2247,46 @@ no provider keys, no network):</p>
 </ul>
 <p>The <code>retention:</code> block in <code>project_config.yaml</code> now also shows every
 retention knob, including 0.9.0's <code>idempotency_days</code>.</p>
+<h2 id="0100-additions-regression-showcase-examples">0.10.0 additions: regression-showcase examples<a class="headerlink" href="#0100-additions-regression-showcase-examples" title="Permanent link">&para;</a></h2>
+<p>Four examples landed with the 0.10.0 cut, each the executable proof of a
+cluster-0 fix. They run offline in CI (no provider keys, no network).
+Where an agent would need a provider to drive a tool call, the example
+proves enforcement at the seam instead (compile + wire + exercise, or a
+direct adapter call) — the YAML/script headers say which.</p>
+<ul>
+<li>
+<p><strong><code>nested_workflow_human_approval.yaml</code></strong> <em>(HIGH #1)</em> — a <code>kind: workflow</code>
+  nested drafting pipeline gated by a <strong>top-level</strong> human-approval step.
+  The run blocks at approval and publishes only the approved draft; burying
+  the human step <em>inside</em> the nested workflow is rejected at validation
+  (<code>E_STEP_WORKFLOW_NESTED_HUMAN</code>), so an approval gate can never be
+  silently bypassed.</p>
+<p>kneo run examples/nested_workflow_human_approval.yaml \
+    --input "the Q3 board report" --target workflow --json</p>
+</li>
+<li>
+<p><strong><code>guardrails_complete.yaml</code></strong> <em>(HIGH #2)</em> — a <code>tool</code>-stage guardrail
+  that redacts PII (an SSN pattern) from a tool result. Before the fix a
+  <code>tool</code>/<code>workflow</code>-stage guardrail validated, satisfied the production
+  <code>require_guardrails</code> gate, deployed, and was never enforced.
+  <code>workflow</code>-stage guardrails are now rejected at validation
+  (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>) rather than silently dropped.</p>
+</li>
+<li>
+<p><strong><code>redaction_demo.py</code></strong> — secret redaction across structured payloads,
+  free text, and trace events. Pins the pluralized-key fix: <code>api_keys</code> /
+  <code>refresh_tokens</code> are redacted while usage keys (<code>input_tokens</code>,
+  <code>max_tokens</code>) survive.</p>
+<p>python examples/redaction_demo.py</p>
+</li>
+<li>
+<p><strong><code>custom_middleware_demo.py</code></strong> — a custom tool middleware plus the two
+  adapter-hop fixes: a custom middleware's <code>ToolResult.metadata</code> reaches the
+  SDK <code>ToolCallContext.metadata</code>, and the OpenTelemetry context survives the
+  <code>run_awaitable_sync</code> worker-thread hop.</p>
+<p>python examples/custom_middleware_demo.py</p>
+</li>
+</ul>
 
 
 
