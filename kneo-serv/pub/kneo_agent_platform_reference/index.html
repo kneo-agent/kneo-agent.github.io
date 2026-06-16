@@ -2752,6 +2752,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#nested_functionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nested_functions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guardrail_functionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        guardrail_functions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4428,6 +4450,28 @@
     <span class="md-ellipsis">
       
         human_functions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nested_functionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        nested_functions.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#guardrail_functionspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        guardrail_functions.py
       
     </span>
   </a>
@@ -6838,9 +6882,9 @@ run offline in CI (no provider keys, no network).</p>
 <td>A nested pipeline gated by a top-level human step; the human-inside-nested anti-pattern is rejected at validation.</td>
 </tr>
 <tr>
-<td>Tool-stage guardrail enforcement <em>(0.10.0 HIGH #2)</em></td>
+<td>Guardrail enforcement <em>(0.10.0 HIGH #2; completed 0.11.0)</em></td>
 <td><code>guardrails_complete.yaml</code></td>
-<td>A declared tool-stage guardrail redacts PII; a workflow-stage one is rejected.</td>
+<td>A declared tool-stage guardrail redacts PII; as of 0.11.0 a workflow-stage one is enforced per step (no longer rejected).</td>
 </tr>
 <tr>
 <td>Secret redaction <em>(0.10.0 MEDIUMs)</em></td>
@@ -7021,6 +7065,14 @@ just return formatted strings so the agent loop has something to do.</p>
 <h4 id="human_functionspy"><a href="../../examples/human_functions.py"><code>human_functions.py</code></a><a class="headerlink" href="#human_functionspy" title="Permanent link">&para;</a></h4>
 <p>Stub <code>draft_report</code> and <code>publish_report</code> used by the human-approval
 workflow. Same pattern as <code>app_functions.py</code>.</p>
+<h4 id="nested_functionspy"><a href="../../examples/nested_functions.py"><code>nested_functions.py</code></a><a class="headerlink" href="#nested_functionspy" title="Permanent link">&para;</a></h4>
+<p>Stub nested-drafting steps (<code>outline_section</code>, <code>expand_draft</code>) and the
+top-level <code>publish_report</code> referenced by
+<code>nested_workflow_human_approval.yaml</code>. Same stub pattern.</p>
+<h4 id="guardrail_functionspy"><a href="../../examples/guardrail_functions.py"><code>guardrail_functions.py</code></a><a class="headerlink" href="#guardrail_functionspy" title="Permanent link">&para;</a></h4>
+<p>Stub <code>lookup_account</code> tool for <code>guardrails_complete.yaml</code>; deliberately
+returns a record containing an SSN so the tool-stage guardrail has PII to
+redact.</p>
 <h3 id="adapting-an-example">Adapting an example<a class="headerlink" href="#adapting-an-example" title="Permanent link">&para;</a></h3>
 <ol>
 <li>Copy a spec into your project, e.g. <code>cp examples/research_agent.yaml my_agent.yaml</code>.</li>
