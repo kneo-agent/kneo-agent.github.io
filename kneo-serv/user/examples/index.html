@@ -2268,9 +2268,11 @@ direct adapter call) — the YAML/script headers say which.</p>
 <p><strong><code>guardrails_complete.yaml</code></strong> <em>(HIGH #2)</em> — a <code>tool</code>-stage guardrail
   that redacts PII (an SSN pattern) from a tool result. Before the fix a
   <code>tool</code>/<code>workflow</code>-stage guardrail validated, satisfied the production
-  <code>require_guardrails</code> gate, deployed, and was never enforced.
-  <code>workflow</code>-stage guardrails are now rejected at validation
-  (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>) rather than silently dropped.</p>
+  <code>require_guardrails</code> gate, deployed, and was never enforced. As of <strong>0.11.0</strong>
+  every tool-stage action is enforced (a <em>raising</em> action aborts the run via
+  <code>GuardrailAbort</code>) and <code>workflow</code>-stage guardrails are enforced per step, so
+  the 0.10.0 validator-rejects (<code>E_GUARDRAIL_ACTION_UNSUPPORTED</code> /
+  <code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>) no longer fire.</p>
 </li>
 <li>
 <p><strong><code>redaction_demo.py</code></strong> — secret redaction across structured payloads,

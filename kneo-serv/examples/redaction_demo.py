@@ -10,7 +10,11 @@ especially the *pluralized-key* fix: keys like ``api_keys``,
 ``refresh_tokens``, and ``KNEO_SERV_API_KEYS`` are credentials and must be
 redacted, while single-segment *usage* keys like ``input_tokens`` /
 ``max_tokens`` are counting nouns and must survive untouched (over-redacting
-them corrupted token-usage accounting before the fix).
+them corrupted token-usage accounting before the fix). It also covers the
+0.11.0 ``redact_text`` broadening (M4): JSON/quoted-shaped secrets and
+arbitrary fused keys (``user_password=``, ``client_secret=``) are scrubbed in
+free text even when the value is not a recognizable shape, while usage/identity
+keys (``input_tokens``, ``primary_key``) are preserved.
 
 Run with:
 
@@ -60,6 +64,15 @@ def redaction_report() -> dict[str, Any]:
         "and authorization=Bearer abc.def.ghi"
     )
 
+    # 2b. Free text — the 0.11.0 redact_text broadening (M4): JSON/quoted-shaped
+    #     secrets and arbitrary fused keys are now scrubbed even when the value
+    #     is not a recognizable shape, while usage/identity keys are preserved.
+    fused_keys = redact_text(
+        'user_password=hunter2 provider_secret="cs-abc" '
+        '{"refresh_token": "rt-xyz"} client_secret=zzz '
+        "input_tokens=512 primary_key=42"  # usage + identity keys: kept
+    )
+
     # 3. Trace event — previews, metadata, and errors are scrubbed on emit.
     ctx = TraceContext(run_id="run-redaction-demo")
     Tracer(ctx).emit(
@@ -73,6 +86,7 @@ def redaction_report() -> dict[str, Any]:
     return {
         "structured": structured,
         "free_text": free_text,
+        "fused_keys": fused_keys,
         "trace_event": trace_event,
     }
 
@@ -92,6 +106,9 @@ def main() -> None:
     print()
     print("== Free text (redact_text) ==")
     print(" ", report["free_text"])
+    print()
+    print("== Free text — fused/JSON keys (0.11.0 M4 broadening) ==")
+    print(" ", report["fused_keys"])
     print()
     print("== Trace event (Tracer.emit) ==")
     print(

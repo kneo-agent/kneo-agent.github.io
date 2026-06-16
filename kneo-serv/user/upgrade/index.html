@@ -1264,6 +1264,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1903,6 +1914,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1974,7 +1996,7 @@ design.md § 13.</p>
    current and target version. Patch upgrades only need the latest patch's
    notes. The reading-order index (newest first) is
    releases/README.md; the current release's
-   notes are release_notes_0.9.0.md.</li>
+   notes are release_notes_0.10.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -2656,6 +2678,50 @@ act if you keyed on the old behavior):</p>
 persistent idle-poll worker, and checkpoint-prune liveness are
 behavior-internal; no new persisted fields. Rollback to 0.9.x is
 persistence-safe.</p>
+<h3 id="0110">0.11.0<a class="headerlink" href="#0110" title="Permanent link">&para;</a></h3>
+<p>0.11.0 is a <strong>breaking, 1.0-runway cut</strong>: it ships the two held 1.0-register
+<code>/v1</code> contract changes, plus guardrail-enforcement that turns some
+previously-rejected specs into accepted-and-enforced ones.</p>
+<p><strong>Breaking — <code>/v1</code> contract:</strong></p>
+<ul>
+<li><strong>Async run-create returns <code>202 Accepted</code></strong> (was <code>200</code>). <code>POST /runs</code> /
+  <code>POST /v1/runs</code> with <code>async_mode=true</code> now returns <strong>202</strong>; synchronous
+  creates (<code>async_mode=false</code>) still return <strong>200</strong>. The response <em>body</em> is
+  unchanged. <strong>Action:</strong> if your client asserts <code>status_code == 200</code> on async
+  create, accept <code>202</code> (or treat <code>2xx</code> as success); keep polling
+  <code>GET /runs/{run_id}</code> exactly as before. Idempotent replays preserve the 202.</li>
+<li><strong>Unknown query parameters are rejected with <code>422</code>.</strong> Any query-string
+  parameter a route does not declare now returns
+  <code>422 {"error": "unknown_query_parameters", "unknown": [...]}</code> on the
+  authenticated <code>/v1</code> (and root) surface; through 0.10.x they were silently
+  ignored. <code>/healthz</code>, <code>/readyz</code>, <code>/metrics</code> are exempt. <strong>Action:</strong> remove
+  stray/misspelled query params from API calls; a typo that was previously a
+  silent no-op now errors (which is the point — it surfaces the bug). Request
+  bodies already rejected unknown fields, so this only changes query strings.</li>
+</ul>
+<p><strong>Behavior — guardrail enforcement (specs rejected at 0.10.0 now validate):</strong></p>
+<ul>
+<li><strong>Tool-stage</strong> guardrails with a <em>raising</em> action (<code>block</code>/escalate/etc.) are
+  now <strong>enforced</strong> — a violation aborts the run (sync → <code>422</code>, async → <code>failed</code>)
+  instead of failing open. <strong><code>E_GUARDRAIL_ACTION_UNSUPPORTED</code> is no longer
+  raised</strong> at <code>/specs/validate</code>.</li>
+<li><strong><code>workflow</code>-stage</strong> guardrails are now <strong>accepted and enforced per step</strong>
+  (each step's output is checked; block aborts, redact/revise rewrite).
+  <strong><code>E_GUARDRAIL_STAGE_UNSUPPORTED</code> is no longer raised.</strong> <strong>Action:</strong> if you
+  relied on these being rejected as a lint, note they now run — audit any
+  <code>tool</code>/<code>workflow</code>-stage guardrail blocks you had declared "for later."</li>
+<li>Guardrails now also apply to <strong>streaming</strong> runs (<code>Agent.stream</code>): input
+  guardrails run before the stream; an output <code>revise</code> buffers and rewrites the
+  caller-received text (so a stream with an output guardrail yields the revised
+  result as one chunk rather than token-by-token).</li>
+</ul>
+<p><strong>Persistence schemas</strong>: <strong>no migration</strong> — all changes are API-surface or
+behavior-internal; no new persisted fields. Rollback to 0.10.x is
+persistence-safe (but clients depending on the new 202/422 contract must roll
+back too).</p>
+<p><strong>Downstream:</strong> <code>kneo_client</code> (and anything pinning the <code>/v1</code> contract) needs a
+coordinated uptake for the 202 + reject-unknown-query-params changes — see its
+<code>TODO-0.8.0</code>.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

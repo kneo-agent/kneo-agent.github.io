@@ -8,20 +8,23 @@
 # fix routes `tool`-stage plans through `build_tool_guardrail_middlewares`
 # into the runtime's tool-call chain via `bind_runtime(tool_middlewares=…)`.
 #
-# This guardrail uses `action: redact` deliberately. Only the non-raising
-# tool-stage actions (`redact`, `warn`) are enforced: a *raising* action (the
-# default `block`, plus escalate/human_review/retry/revise) would be swallowed
-# by the SDK bridge executor's per-tool-failure contract (it becomes a
-# recoverable error result), so raising tool-stage actions are REJECTED at
-# `/specs/validate` (`E_GUARDRAIL_ACTION_UNSUPPORTED`) rather than shipped
-# fail-open. For a hard block, put the check at the input/output stage; true
-# tool-stage block-enforcement is 0.11.0 work.
+# This guardrail uses `action: redact` (a realistic PII example — the
+# secret-bearing tool result is rewritten before it reaches the model).
 #
-# `workflow`-stage guardrails are deliberately NOT declared here: no runtime
-# hook enforces them yet, so they are REJECTED at `/specs/validate` with
-# `E_GUARDRAIL_STAGE_UNSUPPORTED` rather than silently accepted-and-dropped
-# (a dropped security control is worse than a rejected spec). The companion
-# test asserts that rejection.
+# 0.11.0: EVERY tool-stage action is now enforced. A *raising* action
+# (`block`/escalate/human_review/retry/revise) raises `GuardrailAbort` (a
+# BaseException) that escapes the SDK bridge executor's per-tool
+# `except Exception` — which previously swallowed it into a recoverable result
+# — and aborts the run (sync -> 422, async -> failed). So raising tool-stage
+# actions are now ACCEPTED at `/specs/validate` (the 0.10.0
+# `E_GUARDRAIL_ACTION_UNSUPPORTED` reject was relaxed); swap `redact` for
+# `block` above for a hard stop. End-to-end block enforcement through the real
+# executor is covered in tests/test_tool_stage_guardrail_wiring.py.
+#
+# 0.11.0: `workflow`-stage guardrails are now enforced per step too — each
+# workflow step's output is checked (block aborts; redact/revise rewrite) — so
+# `E_GUARDRAIL_STAGE_UNSUPPORTED` is no longer raised. Not declared here: this
+# example is a single agent, not a workflow.
 #
 # Running end-to-end needs a provider (the agent must CHOOSE to call the
 # tool), so the offline regression in tests/test_examples_e2e.py instead

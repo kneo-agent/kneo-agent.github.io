@@ -713,10 +713,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#async-run-creation-returns-200" class="md-nav__link">
+  <a href="#async-run-creation-returns-202-accepted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async run creation returns 200
+        Async run creation returns 202 Accepted
       
     </span>
   </a>
@@ -1534,10 +1534,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#async-run-creation-returns-200" class="md-nav__link">
+  <a href="#async-run-creation-returns-202-accepted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async run creation returns 200
+        Async run creation returns 202 Accepted
       
     </span>
   </a>
@@ -1724,11 +1724,17 @@ graph node (<code>E_GRAPH_NODE_FALLBACK_DISABLED</code>).</p>
   (double-execution guard); an expired lease admits the legitimate
   crash-recovery case.</li>
 </ul>
-<h2 id="async-run-creation-returns-200">Async run creation returns <code>200</code><a class="headerlink" href="#async-run-creation-returns-200" title="Permanent link">&para;</a></h2>
-<p><code>POST /v1/runs</code> with <code>async_mode</code> returns <strong><code>200</code></strong> with a <code>queued</code> run —
-not <code>202</code>. The <code>200 → 202</code> move is an intentional contract change held
-for the 1.0 contract-stability policy; do not infer REST-conventional
-semantics from the status code. Poll <code>GET /runs/{id}</code> for progress.</p>
+<h2 id="async-run-creation-returns-202-accepted">Async run creation returns <code>202 Accepted</code><a class="headerlink" href="#async-run-creation-returns-202-accepted" title="Permanent link">&para;</a></h2>
+<p><code>POST /v1/runs</code> with <code>async_mode=true</code> returns <strong><code>202 Accepted</code></strong>: the run is
+dispatched to the worker queue and the caller polls <code>GET /runs/{id}</code> for
+progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>.</p>
+<p><strong>0.11.0 breaking change:</strong> through 0.10.x this returned <code>200</code>; the <code>200 → 202</code>
+move was held for the contract-stability boundary and shipped in 0.11.0 (see
+contract_stability.md and
+<a href="../upgrade/">upgrade.md § 0.11.0</a>). The response body shape is unchanged — only
+the status code. (The run <em>row</em> progresses <code>created → running → terminal</code>;
+<code>queued</code> is the queue record's status, not the run's — see the status table
+above.)</p>
 <h2 id="what-retention-prunes">What retention prunes<a class="headerlink" href="#what-retention-prunes" title="Permanent link">&para;</a></h2>
 <p>Each knob is days-based; <code>None</code>/unset means "never prune" (see
 <a href="../deployment/">deployment.md</a> for configuration):</p>

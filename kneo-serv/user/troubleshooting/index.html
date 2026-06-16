@@ -1566,6 +1566,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#0110-behavior-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.0 behavior notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.11.0 behavior notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#async-run-create-now-returns-202-accepted-was-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async run-create now returns 202 Accepted (was 200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#422-unknown_query_parameters-on-a-request-that-used-to-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        422 unknown_query_parameters on a request that used to work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-run-now-aborts-on-a-guardrail-that-previously-did-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A run now aborts on a guardrail that previously did nothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#090-behavior-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2439,6 +2489,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#0110-behavior-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.11.0 behavior notes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.11.0 behavior notes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#async-run-create-now-returns-202-accepted-was-200" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async run-create now returns 202 Accepted (was 200)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#422-unknown_query_parameters-on-a-request-that-used-to-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        422 unknown_query_parameters on a request that used to work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-run-now-aborts-on-a-guardrail-that-previously-did-nothing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A run now aborts on a guardrail that previously did nothing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#090-behavior-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2839,6 +2939,31 @@ gate that failed in its job summary.</p>
 </ul>
 <p>Audit events are accessible at <code>GET /audit-events</code> and frequently contain
 the operator action that preceded a fault.</p>
+<h2 id="0110-behavior-notes">0.11.0 behavior notes<a class="headerlink" href="#0110-behavior-notes" title="Permanent link">&para;</a></h2>
+<p>0.11.0 is a breaking cut; see <a href="../upgrade/">upgrade.md § 0.11.0</a> for the full
+migration. The behaviors most likely to surface as a "bug" after upgrading:</p>
+<h3 id="async-run-create-now-returns-202-accepted-was-200">Async run-create now returns <code>202 Accepted</code> (was <code>200</code>)<a class="headerlink" href="#async-run-create-now-returns-202-accepted-was-200" title="Permanent link">&para;</a></h3>
+<p><code>POST /runs</code> / <code>POST /v1/runs</code> (and <code>POST /specs/run</code>) with <code>async_mode=true</code>
+now return <strong><code>202</code></strong>, not <code>200</code>. Synchronous creates still return <code>200</code>, the
+response body is unchanged, and idempotency-replay preserves the original <code>202</code>.
+A client asserting <code>== 200</code> on an async create will read this as a failure —
+accept <code>2xx</code> (or <code>202</code> specifically). Poll <code>GET /runs/{run_id}</code> as before.</p>
+<h3 id="422-unknown_query_parameters-on-a-request-that-used-to-work"><code>422 unknown_query_parameters</code> on a request that used to work<a class="headerlink" href="#422-unknown_query_parameters-on-a-request-that-used-to-work" title="Permanent link">&para;</a></h3>
+<p>A query parameter the route does not declare is now <strong>rejected</strong> (it was
+silently ignored through 0.10.x). The response detail names the offending keys.
+This is almost always a typo (<code>?staus=failed</code>) or a client sending a param the
+endpoint never supported — fix the parameter name. Monitoring/scrape routes
+(<code>/healthz</code>, <code>/livez</code>, <code>/readyz</code>, <code>/metrics</code>) are exempt and still accept
+arbitrary params.</p>
+<h3 id="a-run-now-aborts-on-a-guardrail-that-previously-did-nothing">A run now aborts on a guardrail that previously did nothing<a class="headerlink" href="#a-run-now-aborts-on-a-guardrail-that-previously-did-nothing" title="Permanent link">&para;</a></h3>
+<p>In 0.11.0 a <strong>tool-stage guardrail with a raising action</strong> (<code>block</code>, escalate,
+human_review, retry, revise) aborts the run — sync → <code>422 guardrail_violation</code>,
+async → <code>failed</code> — and <strong><code>workflow</code>-stage guardrails are enforced per step</strong>.
+Before 0.11.0 a tool-stage <code>block</code> failed open (the run continued) and a
+workflow-stage guardrail was refused at <code>/specs/validate</code>. If a run that used to
+complete now stops, a previously-inert guardrail is now doing its job — this is
+the intended fail-closed behavior. (<code>redact</code>/<code>warn</code> rewrite/log instead of
+aborting; non-<code>middleware</code> modes are still rejected at validate.)</p>
 <h2 id="090-behavior-notes">0.9.0 behavior notes<a class="headerlink" href="#090-behavior-notes" title="Permanent link">&para;</a></h2>
 <h3 id="tools-echo-their-arguments-back-instead-of-running">Tools echo their arguments back instead of running<a class="headerlink" href="#tools-echo-their-arguments-back-instead-of-running" title="Permanent link">&para;</a></h3>
 <p>A pre-0.9.0 bug: spec-compiled bridge agents got no tool handlers at

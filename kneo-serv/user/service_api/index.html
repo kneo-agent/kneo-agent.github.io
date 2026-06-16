@@ -3287,10 +3287,14 @@ does not surface the oldest rows overall.</p>
   <code>sort_by</code>, <code>sort_order</code></li>
 </ul>
 <p><code>sort_order</code> is <code>asc</code> or <code>desc</code>; <code>limit</code> is capped at <code>1000</code>.</p>
-<p>Only the documented query parameters above are honored. Unrecognized query
-parameters are <strong>silently ignored</strong> (standard Starlette/FastAPI behavior), so a
-misspelled or unsupported filter is a no-op rather than an error — check the
-spelling against this list if a filter appears to have no effect.</p>
+<p>Only the documented query parameters above are honored. <strong>0.11.0 breaking
+change:</strong> an unrecognized query parameter is now <strong>rejected with <code>422</code></strong>
+(<code>error: "unknown_query_parameters"</code>, naming the offending keys) on the
+authenticated <code>/v1</code> (and root) routes — through 0.10.x it was silently ignored.
+This mirrors the request-body contract (unknown body fields are already
+rejected). The <code>/healthz</code>, <code>/readyz</code>, and <code>/metrics</code> endpoints are <strong>exempt</strong>
+(monitoring tooling may pass arbitrary scrape params). See
+<a href="../upgrade/">upgrade.md § 0.11.0</a>.</p>
 
 
 

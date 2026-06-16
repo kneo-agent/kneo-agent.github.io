@@ -2381,10 +2381,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#async-run-creation-returns-200" class="md-nav__link">
+  <a href="#async-run-creation-returns-202-accepted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async run creation returns 200
+        Async run creation returns 202 Accepted
       
     </span>
   </a>
@@ -4063,10 +4063,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#async-run-creation-returns-200" class="md-nav__link">
+  <a href="#async-run-creation-returns-202-accepted" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async run creation returns 200
+        Async run creation returns 202 Accepted
       
     </span>
   </a>
@@ -6001,10 +6001,14 @@ does not surface the oldest rows overall.</p>
   <code>sort_by</code>, <code>sort_order</code></li>
 </ul>
 <p><code>sort_order</code> is <code>asc</code> or <code>desc</code>; <code>limit</code> is capped at <code>1000</code>.</p>
-<p>Only the documented query parameters above are honored. Unrecognized query
-parameters are <strong>silently ignored</strong> (standard Starlette/FastAPI behavior), so a
-misspelled or unsupported filter is a no-op rather than an error — check the
-spelling against this list if a filter appears to have no effect.</p>
+<p>Only the documented query parameters above are honored. <strong>0.11.0 breaking
+change:</strong> an unrecognized query parameter is now <strong>rejected with <code>422</code></strong>
+(<code>error: "unknown_query_parameters"</code>, naming the offending keys) on the
+authenticated <code>/v1</code> (and root) routes — through 0.10.x it was silently ignored.
+This mirrors the request-body contract (unknown body fields are already
+rejected). The <code>/healthz</code>, <code>/readyz</code>, and <code>/metrics</code> endpoints are <strong>exempt</strong>
+(monitoring tooling may pass arbitrary scrape params). See
+<a href="../../user/upgrade/">upgrade.md § 0.11.0</a>.</p>
 <h2 id="run-lifecycle-failure-semantics">Run lifecycle &amp; failure semantics<a class="headerlink" href="#run-lifecycle-failure-semantics" title="Permanent link">&para;</a></h2>
 <p><em>Source: <a href="../../user/run_lifecycle/"><code>docs/user/run_lifecycle.md</code></a></em></p>
 <p>The authoritative operator reference for what each run status means, how
@@ -6147,11 +6151,17 @@ graph node (<code>E_GRAPH_NODE_FALLBACK_DISABLED</code>).</p>
   (double-execution guard); an expired lease admits the legitimate
   crash-recovery case.</li>
 </ul>
-<h3 id="async-run-creation-returns-200">Async run creation returns <code>200</code><a class="headerlink" href="#async-run-creation-returns-200" title="Permanent link">&para;</a></h3>
-<p><code>POST /v1/runs</code> with <code>async_mode</code> returns <strong><code>200</code></strong> with a <code>queued</code> run —
-not <code>202</code>. The <code>200 → 202</code> move is an intentional contract change held
-for the 1.0 contract-stability policy; do not infer REST-conventional
-semantics from the status code. Poll <code>GET /runs/{id}</code> for progress.</p>
+<h3 id="async-run-creation-returns-202-accepted">Async run creation returns <code>202 Accepted</code><a class="headerlink" href="#async-run-creation-returns-202-accepted" title="Permanent link">&para;</a></h3>
+<p><code>POST /v1/runs</code> with <code>async_mode=true</code> returns <strong><code>202 Accepted</code></strong>: the run is
+dispatched to the worker queue and the caller polls <code>GET /runs/{id}</code> for
+progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>.</p>
+<p><strong>0.11.0 breaking change:</strong> through 0.10.x this returned <code>200</code>; the <code>200 → 202</code>
+move was held for the contract-stability boundary and shipped in 0.11.0 (see
+contract_stability.md and
+<a href="../../user/upgrade/">upgrade.md § 0.11.0</a>). The response body shape is unchanged — only
+the status code. (The run <em>row</em> progresses <code>created → running → terminal</code>;
+<code>queued</code> is the queue record's status, not the run's — see the status table
+above.)</p>
 <h3 id="what-retention-prunes">What retention prunes<a class="headerlink" href="#what-retention-prunes" title="Permanent link">&para;</a></h3>
 <p>Each knob is days-based; <code>None</code>/unset means "never prune" (see
 <a href="../../user/deployment/">deployment.md</a> for configuration):</p>
@@ -7085,9 +7095,11 @@ direct adapter call) — the YAML/script headers say which.</p>
 <p><strong><code>guardrails_complete.yaml</code></strong> <em>(HIGH #2)</em> — a <code>tool</code>-stage guardrail
   that redacts PII (an SSN pattern) from a tool result. Before the fix a
   <code>tool</code>/<code>workflow</code>-stage guardrail validated, satisfied the production
-  <code>require_guardrails</code> gate, deployed, and was never enforced.
-  <code>workflow</code>-stage guardrails are now rejected at validation
-  (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>) rather than silently dropped.</p>
+  <code>require_guardrails</code> gate, deployed, and was never enforced. As of <strong>0.11.0</strong>
+  every tool-stage action is enforced (a <em>raising</em> action aborts the run via
+  <code>GuardrailAbort</code>) and <code>workflow</code>-stage guardrails are enforced per step, so
+  the 0.10.0 validator-rejects (<code>E_GUARDRAIL_ACTION_UNSUPPORTED</code> /
+  <code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>) no longer fire.</p>
 </li>
 <li>
 <p><strong><code>redaction_demo.py</code></strong> — secret redaction across structured payloads,
