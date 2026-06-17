@@ -910,8 +910,8 @@
 
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
-<p>Five end-to-end scripts demonstrating the operational and Studio
-surfaces of <code>kneo-client</code>. Each script is small (≤ 60 LOC) and
+<p>Seven end-to-end scripts demonstrating the operational and Studio
+surfaces of <code>kneo-client</code>. Each script is small (≤ 65 LOC) and
 self-contained — runs against a real Kneo Agent Platform instance, no
 mocks. Designed to be read top-to-bottom in order; later scripts assume
 the patterns from earlier ones.</p>
@@ -967,6 +967,18 @@ needs beyond the connection ones.</p>
 <td>Resume the first pending human-review task with a decision. Replaces the prior list-then-resume dance with a single helper call; returns <code>None</code> when no matching task exists.</td>
 <td><strong><code>human_tasks.resume_first_pending</code></strong></td>
 </tr>
+<tr>
+<td>6</td>
+<td><a href="06_async_run.py"><code>06_async_run.py</code></a></td>
+<td>Submit a run with <code>async_mode=true</code> (server returns <strong>202 Accepted</strong> since <code>kneo_serv</code> 0.11.0) and poll it to a terminal status. Contrast with example 1's live trace stream.</td>
+<td><code>runs.create</code> with <code>async_mode</code>, <strong><code>runs.wait_for_completion</code></strong></td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="07_skills_overlay.py"><code>07_skills_overlay.py</code></a></td>
+<td>List the skill catalog, then start a run with a per-request <code>SkillsOverlay</code> (<code>{"add": [...], "disable": [...]}</code>) narrowing what the run may use.</td>
+<td><strong><code>agent.skills.list</code></strong>, <code>runs.create</code> with a <code>skills</code> overlay</td>
+</tr>
 </tbody>
 </table>
 <h2 id="reading-order-vs-running-order">Reading order vs. running order<a class="headerlink" href="#reading-order-vs-running-order" title="Permanent link">&para;</a></h2>
@@ -1017,6 +1029,8 @@ the render pipeline.</p>
 <li><a href="03_paginate_audit.py"><code>03_paginate_audit.py</code></a></li>
 <li><a href="04_validate_spec.py"><code>04_validate_spec.py</code></a></li>
 <li><a href="05_human_task_resume.py"><code>05_human_task_resume.py</code></a></li>
+<li><a href="06_async_run.py"><code>06_async_run.py</code></a></li>
+<li><a href="07_skills_overlay.py"><code>07_skills_overlay.py</code></a></li>
 </ul>
 
 

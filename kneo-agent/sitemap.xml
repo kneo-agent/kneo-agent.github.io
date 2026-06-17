@@ -2,82 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/cookbook/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/weather/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/weather/SKILL/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/weather/references/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/weather/references/REFERENCE/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/examples/skills/weather/scripts/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/pub/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/agent_middleware_guide/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/agent_skills_guide/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/api_stability/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/human_in_the_loop_guide/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/mcp_guide/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/offline_install/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/self_hosted_observability/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/upgrading_to_1.2/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-agent/user/upgrading_to_2.0/</loc>
-         <lastmod>2026-06-16</lastmod>
+         <lastmod>2026-06-17</lastmod>
     </url>
 </urlset>

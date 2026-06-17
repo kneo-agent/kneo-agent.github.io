@@ -41,8 +41,8 @@ async def main(spec_path: Path) -> None:
         assert result.compile is not None
         print(f"compile: ok={result.compile.ok}")
         if not result.compile.ok:
-            for diag in result.compile.diagnostics or []:
-                print(f"  {diag}")
+            for compile_diag in result.compile.diagnostics or []:
+                print(f"  {compile_diag}")
             return
 
         # Optional: get a human-readable summary too.

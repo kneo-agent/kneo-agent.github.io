@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.7.0 · 2026-06-12</div>
+    <div class="version">v0.8.0 · 2026-06-17</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.7.0</a>
+    <a href="#whats-new">What's new in v0.8.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -645,11 +645,11 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.7.0</div>
+      <div class="cover-card-value">v0.8.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
-      <div class="cover-card-value">v0.9.0 (/v1 only)</div>
+      <div class="cover-card-value">v0.11.0 (/v1 only)</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Python</div>
@@ -682,7 +682,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.7.0</a></li>
+        <li><a href="#whats-new">What's new in v0.8.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -741,28 +741,28 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.7.0</span>
+    <span class="badge badge-blue">v0.8.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
-    <span class="badge badge-purple">kneo_serv /v1 · 0.9.x</span>
+    <span class="badge badge-purple">kneo_serv /v1 · 0.11.x</span>
   </div>
 </div>
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.7.0</h2>
-  <p>A <code>kneo_serv v0.9.0</code> spec-pin uptake (two server minors in one cut — the largest <code>/v1</code> delta since 0.6.0) plus the resolutions of a workflow-based deep audit of the package at 0.6.0. Zero breaking changes; four narrated behavior corrections, all toward server truth.</p>
+  <h2>What's new in v0.8.0</h2>
+  <p>A <code>kneo_serv v0.11.0</code> spec-pin uptake of the held 1.0-register breaking <code>/v1</code> changes, pinned by regression tests, plus a production-readiness hardening pass. <strong>No breaking changes to the client API</strong> — the client was already structurally compatible, so the three server-side breaks are absorbed without a public-surface change.</p>
   <p>Headline pieces:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong>Spec pin refreshed <code>v0.7.0</code> → <code>kneo_serv v0.9.0</code>.</strong> New <code>GET /v1/skills</code> catalog, the <code>RunCreateRequest.skills</code> overlay, the shared <code>environment</code>/<code>overlays</code>/<code>overrides</code> envelope on explain, a documented human-tasks <code>status</code> filter (retiring the contract opt-out carried since 0.3.0), <code>window</code> pagination metadata, and a structured 413 across the board.</li>
-    <li><strong><code>agent.skills</code> — the skill catalog.</strong> <code>SkillsClient.list()</code> wraps the read-only catalog (<code>kneo_serv ≥ 0.8.0</code>); catalog names are the valid targets for a per-request <code>SkillsOverlay</code> on <code>runs.create</code>.</li>
-    <li><strong><code>Page.window</code> + honest <code>has_more</code>.</strong> <code>total</code> is now the true store count and can exceed the paging window; <code>has_more</code> reports <em>fetchability</em>, so pagination loops stop at the window edge.</li>
-    <li><strong>Code-aware 409s (behavior).</strong> <code>run_state_conflict</code> / <code>resource_locked</code> raise <code>KneoConflictError</code> (which gains <code>.retry_after</code>); the transient <code>idempotency_key_in_progress</code> is auto-retried; only <code>idempotency_key_conflict</code> raises <code>KneoIdempotencyMismatchError</code>.</li>
-    <li><strong>Typed 400 / 413 / 422.</strong> <code>KneoBadRequestError</code>, <code>KneoPayloadTooLarge</code> (carries <code>max_body_bytes</code>), <code>KneoValidationError</code> (FastAPI list-shaped 422 detail summarized into the message).</li>
-    <li><strong>Lifecycle truth.</strong> <code>DEFAULT_TERMINAL_STATUSES</code> gains <code>timed_out</code> / <code>expired</code> (behavior); the phantom <code>paused_human_review</code> status is gone from the docs (the real pause status is <code>blocked</code>); <code>resume_first_pending()</code> reads the real <code>id</code> key and claims earliest-deadline-first.</li>
-    <li><strong>Retry hardening.</strong> <code>Retry-After</code> hints above <code>max_delay</code> fail fast with the hint on the typed error (behavior); transport-level errors retry only when replay-safe; auto-managed headers overwrite caller variants case-insensitively.</li>
+    <li><strong>Spec pin refreshed <code>v0.9.0</code> → <code>kneo_serv v0.11.0</code>.</strong> <code>v0.10.0</code> contributes no <code>/v1</code> delta and <code>v0.11.0</code> adds only a <code>202</code> response to <code>POST /v1/runs</code>, so the generated client regen touched only the create-run endpoint.</li>
+    <li><strong>Async run-create returns <code>202</code> (behavior).</strong> An <code>async_mode=true</code> create is accepted with HTTP <code>202</code> (was <code>200</code> through <code>0.10.x</code>); synchronous creates still return <code>200</code>. The transport treats any <code>2xx</code> as success, so <code>runs.create()</code> returns the same <code>RunCreateResponse</code> either way — no caller change.</li>
+    <li><strong>Unknown query params rejected (behavior).</strong> <code>kneo_serv 0.11.0</code> rejects undeclared query keys with <code>422 unknown_query_parameters</code>. The generated wrappers only send spec-declared params, so this is inert for wrapper callers; a stray param on a raw-transport call surfaces as <code>KneoValidationError</code> with <code>.code</code>.</li>
+    <li><strong>Guardrail blocks terminalize a run (behavior).</strong> A guardrail block returns <code>422</code> (<code>guardrail_violation</code> → <code>KneoValidationError</code>) on a synchronous run and ends an async run in the <code>failed</code> terminal status, instead of failing open. Handled by the existing status/<code>.code</code> mapping.</li>
+    <li><strong>Versioned <code>User-Agent</code>.</strong> Transport-owned clients send <code>kneo-client/&lt;version&gt; httpx/&lt;version&gt;</code> so operators can identify SDK traffic; a caller-supplied <code>http_client</code> keeps its own UA.</li>
+    <li><strong><code>Retry-After</code> HTTP-date form honored.</strong> Both RFC 7231 forms now parse (numeric <code>delta-seconds</code> and the HTTP-date form, clamped non-negative), so back-pressure hints from a fronting proxy/CDN are no longer dropped.</li>
+    <li><strong>Production hardening.</strong> Coverage gate raised <code>70 → 85</code> (actual ≈98%); <code>mypy</code> type-checks <code>examples/</code>; Dependabot added; a gated GitHub Pages deploy job; <code>SECURITY.md</code> corrected.</li>
   </ul>
   <p>
-    See the 0.7.0 release notes for the full summary including the four behavior-correction upgrade notes. The 0.6.0 release notes cover the prior cut's audit-pagination revival and <code>KneoError.code</code>.
+    See the 0.8.0 release notes for the full summary including the upgrade notes. The 0.7.0 release notes cover the prior cut's <code>kneo_serv v0.9.0</code> uptake (skills catalog, <code>Page.window</code>, typed 400/413/422).
   </p>
 </section>
 
@@ -1612,8 +1612,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.7.0</td><td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td><td><code>kneo_serv</code> <code>0.9.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.6.0</td><td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td><td><code>kneo_serv</code> <code>0.7.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.8.0</td><td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td><td><code>kneo_serv</code> <code>0.11.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.7.0</td><td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td><td><code>kneo_serv</code> <code>0.9.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.6.0</td><td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td><td><code>kneo_serv</code> <code>0.7.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.5.0</td><td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td><td><code>kneo_serv</code> <code>0.5.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.4.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.3.0</td><td><code>v0.4.0</code> (<code>info.version</code> <code>0.4.0</code>)</td><td><code>kneo_serv</code> <code>0.4.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
@@ -1680,7 +1681,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.7.0 · 2026-06-12 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v0.8.0 · 2026-06-17 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 
