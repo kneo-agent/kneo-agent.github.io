@@ -1275,6 +1275,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#0120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1925,6 +1936,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#0120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0.12.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1996,7 +2018,7 @@ design.md § 13.</p>
    current and target version. Patch upgrades only need the latest patch's
    notes. The reading-order index (newest first) is
    releases/README.md; the current release's
-   notes are release_notes_0.11.0.md.</li>
+   notes are release_notes_0.12.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -2722,6 +2744,46 @@ back too).</p>
 <p><strong>Downstream:</strong> <code>kneo_client</code> (and anything pinning the <code>/v1</code> contract) needs a
 coordinated uptake for the 202 + reject-unknown-query-params changes — see its
 <code>TODO-0.8.0</code>.</p>
+<h3 id="0120">0.12.0<a class="headerlink" href="#0120" title="Permanent link">&para;</a></h3>
+<p>0.12.0 is an <strong>additive, production-ready minor</strong> (the GA candidate). No breaking
+<code>/v1</code> change ships in this cut; the one deliberate break (spec-path confinement
+default-on) is <em>staged</em> here as a deprecation warning and lands at <code>1.0.0</code>.</p>
+<p><strong>Behavior change — <code>POST /specs/run</code> honors <code>async_mode</code>:</strong></p>
+<ul>
+<li>Through 0.11.x, <code>POST /specs/run</code> silently ignored <code>async_mode</code> and always ran
+  the spec inline, returning <code>200</code>. It now mirrors <code>POST /runs</code>: with
+  <code>async_mode=true</code> it dispatches to the worker queue and returns <strong><code>202
+  Accepted</code></strong> with the queued <code>run_id</code> (poll <code>GET /runs/{run_id}</code>); the
+  synchronous default (<code>async_mode=false</code>) still returns <strong><code>200</code></strong>; idempotent
+  replay preserves the original status. <strong>Action:</strong> a client that sent
+  <code>async_mode=true</code> to <code>/specs/run</code> and relied on getting a completed run back at
+  <code>200</code> will now get <code>202</code> + a queued id — switch to polling (as <code>/runs</code> callers
+  already do). Clients that only used the synchronous default are unaffected.</li>
+</ul>
+<p><strong>Deprecation (becomes a default-on break at <code>1.0.0</code>) — spec-path confinement:</strong></p>
+<ul>
+<li><code>spec_path</code> and <code>overlays</code> are caller-supplied filesystem paths the service
+  reads at compile time. 0.12.0 adds an opt-in <code>KNEO_SERV_SPEC_ROOT</code> env var: set
+  it to an allow-listed root and any path resolving outside it (absolute,
+  <code>..</code>-traversal, symlink escape) is rejected <code>422 spec_path_confined</code>. <strong>While
+  <code>KNEO_SERV_SPEC_ROOT</code> is unset, behavior is unchanged except that an absolute
+  path now logs a <code>DeprecationWarning</code>.</strong> At <code>1.0.0</code> confinement becomes
+  <strong>default-on</strong> and absolute / out-of-root paths are rejected by default.
+  <strong>Action:</strong> set <code>KNEO_SERV_SPEC_ROOT</code> to the directory that holds your specs
+  now — this both closes the path-disclosure surface today and adopts the GA
+  behavior ahead of the <code>1.0.0</code> flip. (Held 1.0-register change; see
+  <code>../dev/contract_stability.md</code>.)</li>
+</ul>
+<p><strong>Also in this cut (no action needed):</strong> human-approval (<code>kind=human</code>) gates now
+pause + resume in <strong>every</strong> workflow shape (graph, handoff, group-chat,
+concurrent — previously sequential only); the <code>kneo spec explain</code> CLI command;
+an enforced seeded backup/restore release gate; and internal correctness/security
+fixes (overlay path-confinement, a tool-policy fail-open close, file-store
+retention-race hardening). See the CHANGELOG.</p>
+<p><strong>Persistence schemas</strong>: <strong>no migration</strong> — additive only; rollback to 0.11.x is
+persistence-safe. (A run blocked inside a graph/orchestration workflow on 0.12.0
+cannot be resumed after a rollback to 0.11.x, which lacks the continuation
+support — drain in-flight blocked runs before rolling back.)</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

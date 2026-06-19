@@ -1814,7 +1814,7 @@ not bit-rot; that lane asserts the harness runs and returns sane metrics, it is
 <h2 id="reference-profile-and-measured-numbers">Reference profile and measured numbers<a class="headerlink" href="#reference-profile-and-measured-numbers" title="Permanent link">&para;</a></h2>
 <div class="admonition warning">
 <p class="admonition-title">A reference baseline, not a production sizing table</p>
-<p>Measured on a <strong>dedicated bare-metal host</strong> (2026-06-15): AMD Ryzen
+<p>Measured on a <strong>dedicated bare-metal host</strong> (2026-06-18): AMD Ryzen
 Threadripper PRO 3975WX (64 logical cores), <strong>126 GiB RAM</strong>, Linux 6.17
 (x86_64), CPython 3.12.3; SQLite on local disk and PostgreSQL 16.14;
 <strong>echo agent, zero provider delay</strong> — so these are the
@@ -1842,99 +1842,99 @@ how-to is dev/release_soak.md).</p>
 <tr>
 <td>sqlite / sync</td>
 <td>1</td>
-<td>52</td>
-<td>10.6 ms</td>
-<td>11.4 ms</td>
-<td>12.3 ms</td>
+<td>51</td>
+<td>10.7 ms</td>
+<td>11.6 ms</td>
+<td>12.4 ms</td>
 <td>56 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>4</td>
 <td>51</td>
-<td>52.6 ms</td>
-<td>69.0 ms</td>
-<td>81.0 ms</td>
+<td>54.5 ms</td>
+<td>71.7 ms</td>
+<td>84.0 ms</td>
 <td>56 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>8</td>
-<td>51</td>
-<td>103.5 ms</td>
-<td>155.8 ms</td>
-<td>220.2 ms</td>
-<td>56 MiB</td>
+<td>50</td>
+<td>105.9 ms</td>
+<td>170.4 ms</td>
+<td>230.3 ms</td>
+<td>57 MiB</td>
 </tr>
 <tr>
 <td>sqlite / sync</td>
 <td>16</td>
 <td>51</td>
-<td>205.8 ms</td>
-<td>320.7 ms</td>
-<td>452.5 ms</td>
-<td>57 MiB</td>
+<td>197.3 ms</td>
+<td>415.9 ms</td>
+<td>634.9 ms</td>
+<td>58 MiB</td>
 </tr>
 <tr>
 <td>postgres / sync</td>
 <td>1</td>
-<td>80</td>
-<td>8.0 ms</td>
-<td>8.4 ms</td>
-<td>8.8 ms</td>
-<td>56 MiB</td>
+<td>79</td>
+<td>8.1 ms</td>
+<td>8.6 ms</td>
+<td>8.9 ms</td>
+<td>57 MiB</td>
 </tr>
 <tr>
 <td>postgres / sync</td>
 <td>8</td>
-<td>78</td>
-<td>71.8 ms</td>
-<td>96.0 ms</td>
-<td>142.7 ms</td>
-<td>56 MiB</td>
+<td>77</td>
+<td>72.3 ms</td>
+<td>99.6 ms</td>
+<td>139.0 ms</td>
+<td>58 MiB</td>
 </tr>
 <tr>
 <td>postgres / sync</td>
 <td>16</td>
-<td>77</td>
-<td>129.1 ms</td>
-<td>244.3 ms</td>
-<td>456.5 ms</td>
+<td>76</td>
+<td>149.9 ms</td>
+<td>220.5 ms</td>
+<td>324.6 ms</td>
 <td>58 MiB</td>
 </tr>
 <tr>
 <td>postgres / sync</td>
 <td>32</td>
-<td>77</td>
-<td>299.4 ms</td>
-<td>409.1 ms</td>
-<td>561.7 ms</td>
-<td>58 MiB</td>
+<td>75</td>
+<td>260.4 ms</td>
+<td>626.5 ms</td>
+<td>804.5 ms</td>
+<td>57 MiB</td>
 </tr>
 <tr>
 <td>postgres / queue</td>
 <td>8</td>
-<td>45</td>
-<td>4962 ms</td>
-<td>5747 ms</td>
-<td>5990 ms</td>
+<td>44</td>
+<td>5039 ms</td>
+<td>5830 ms</td>
+<td>6233 ms</td>
 <td>57 MiB</td>
 </tr>
 </tbody>
 </table>
 <p>With a simulated 0.5 s provider delay (postgres / sync, 8 concurrent) throughput
-is 15 runs/s at p50 514 ms — the ~13 ms of platform overhead is dwarfed by model
+is 15 runs/s at p50 513 ms — the ~13 ms of platform overhead is dwarfed by model
 latency, which is the point: real throughput is provider-bound.</p>
 <p>What this profile shows — and what should hold directionally on any hardware:</p>
 <ul>
 <li><strong>SQLite throughput is flat as concurrency rises</strong> (~51 runs/s from 1 → 16
-  here) while per-run latency scales linearly (p50 10.6 → 206 ms) — SQLite is a
+  here) while per-run latency scales linearly (p50 10.7 → 197 ms) — SQLite is a
   single writer, so concurrent runs serialize on the write lock. <strong>More workers
   do not buy more write throughput on SQLite</strong>; they buy queueing. This is the
   headline capacity fact. (The <em>absolute</em> SQLite ceiling is fsync/disk-bound and
   varies by hardware — it is lower here than on a laptop with a faster
   single-thread fsync — but the flat-with-concurrency shape is invariant.)</li>
-<li><strong>PostgreSQL holds ~77–80 runs/s flat from 1 → 32 concurrent</strong> (sync): per-run
+<li><strong>PostgreSQL holds ~75–79 runs/s flat from 1 → 32 concurrent</strong> (sync): per-run
   latency scales linearly (more in-flight) but <em>throughput does not collapse</em>,
   and on this host PostgreSQL <strong>out-throughputs SQLite even at concurrency 1</strong>.
   This is the measured evidence for the "move to PostgreSQL for write-concurrent
@@ -1950,14 +1950,14 @@ latency, which is the point: real throughput is provider-bound.</p>
 <h2 id="sustained-load-soak-resource-stability">Sustained-load soak (resource stability)<a class="headerlink" href="#sustained-load-soak-resource-stability" title="Permanent link">&para;</a></h2>
 <p>A <strong>production-class, bare-metal sustained run</strong> on the host above (AMD
 Threadripper PRO 3975WX, 64 cores, 126 GiB, PostgreSQL 16.14) — <strong>1 hour,
-16 workers, multi-worker queue drain</strong> — held steady end to end (2026-06-15):</p>
+16 workers, multi-worker queue drain</strong> — held steady end to end (2026-06-18):</p>
 <ul>
-<li><strong>159,156 runs dispatched, 0 errors</strong>; backlog bounded (peak queued 60) and
+<li><strong>158,745 runs dispatched, 0 errors</strong>; backlog bounded (peak queued 59) and
   drained to zero on stop.</li>
-<li><strong>RSS 61.1 → 61.6 MiB (+0.8%)</strong> over the full hour (peak 61.7 MiB), inside a
+<li><strong>RSS 61.3 → 61.8 MiB (+0.8%)</strong> over the full hour (peak 61.8 MiB), inside a
   tightened 10% tolerance — no leak in the worker pool, the cancellation-Event
   map, the MCP session host, or event loops under sustained load.</li>
-<li><strong>Thread count bounded at 31</strong> — the persistent idle-poll worker (0.10.0)
+<li><strong>Thread count bounded at 32</strong> — the persistent idle-poll worker (0.10.0)
   neither spawns nor leaks threads.</li>
 </ul>
 <p>Run in the same pass against the same PostgreSQL: <strong>queue-depth backpressure</strong>

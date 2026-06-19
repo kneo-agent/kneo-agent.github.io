@@ -1799,7 +1799,7 @@ definition, so you don't need to enforce auth here.</p>
 Names must match what we registered in step 2. Validate the spec:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/lookup_agent.yaml
 </code></pre></div>
-<p>If you see <code>E_UNKNOWN_TOOL</code>, the spec is referencing a name that isn't
+<p>If you see <code>E_TOOL_REF</code>, the spec is referencing a name that isn't
 in the registry. Re-check step 2 — the registry must include
 <code>lookup_user</code> <em>before</em> <code>SpecCompiler</code> runs.</p>
 <h2 id="4-run-the-agent">4 · Run the agent<a class="headerlink" href="#4-run-the-agent" title="Permanent link">&para;</a></h2>
@@ -1915,7 +1915,7 @@ references it, including service-backed CLI calls and HTTP <code>POST /v1/runs</
 </thead>
 <tbody>
 <tr>
-<td><code>E_UNKNOWN_TOOL</code> on <code>kneo spec validate</code></td>
+<td><code>E_TOOL_REF</code> on <code>kneo spec validate</code></td>
 <td>Custom tool isn't in the registry the CLI is using; use the Python entrypoint from § 4.</td>
 </tr>
 <tr>

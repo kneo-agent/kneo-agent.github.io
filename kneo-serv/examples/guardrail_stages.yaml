@@ -1,0 +1,44 @@
+# Input- and output-stage guardrails (companion to guardrails_complete.yaml,
+# which covers the tool stage). All four stages — input / output / tool /
+# workflow — share the same `{id, type, action, config}` shape; this example
+# demonstrates the two request/response-boundary stages on a single agent:
+#
+#   - input stage:  block the run before the model is called if the prompt
+#                   matches a forbidden pattern (a fail-closed safety gate).
+#   - output stage: redact PII (an SSN shape) from the final answer before it
+#                   reaches the caller.
+#
+# (The tool stage is in guardrails_complete.yaml; workflow-stage guardrails —
+# enforced per step as of 0.11.0 — are demonstrated in a workflow spec.)
+#
+#   kneo spec validate examples/guardrail_stages.yaml   # green
+#   kneo run examples/guardrail_stages.yaml \
+#     --input "summarise this ticket" --target agent --json   # needs a provider
+
+version: v1
+
+agent:
+  name: guarded-agent
+  system_prompt: Answer the user's question concisely.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  guardrails:
+    input:
+      - id: no-secrets-in-prompt
+        type: regex
+        action: block
+        config:
+          # Reject prompts that try to smuggle an API key in.
+          patterns: ['sk-[A-Za-z0-9]{16,}']
+    output:
+      - id: redact-ssn
+        type: regex
+        action: redact
+        config:
+          patterns: ['\d{3}-\d{2}-\d{4}']

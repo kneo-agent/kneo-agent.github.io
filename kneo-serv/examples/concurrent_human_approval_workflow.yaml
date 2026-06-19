@@ -1,0 +1,51 @@
+version: v1
+
+# Concurrent workflow with a human-approval participant (0.12.0 § D — concurrent
+# shape). A concurrent fan-out runs every participant against the same input
+# snapshot in parallel. When a `kind=human` participant is present the run is
+# "drain-then-block": the non-human siblings run to completion (they are
+# independent of the human gate), their results are captured, and the run blocks
+# on the human. On resume the human response is merged with the already-complete
+# sibling results — siblings are never re-run. At most ONE human participant is
+# allowed per concurrent fan-out (E_ORCHESTRATION_MULTI_HUMAN_UNSUPPORTED).
+# Non-human participants use canned functions so the example runs end-to-end
+# without a provider; retarget them before any real use.
+
+agent:
+  name: concurrent-approval-root
+  system_prompt: Root agent for the concurrent approval workflow.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: concurrent
+  name: concurrent-approval-workflow
+  participants:
+    - id: draft
+      kind: function
+      ref: draft_report
+    - id: approve
+      kind: human
+      ref: approval-reviewer
+    - id: summarize
+      kind: function
+      ref: publish_report
+
+components:
+  functions:
+    draft_report:
+      implementation: examples.human_functions.draft_report
+    publish_report:
+      implementation: examples.human_functions.publish_report
+  humans:
+    approval-reviewer:
+      description: Please approve or reject the request.
+      assignee: reviewer@example.com
+      timeout_seconds: 86400
+      on_timeout: escalate

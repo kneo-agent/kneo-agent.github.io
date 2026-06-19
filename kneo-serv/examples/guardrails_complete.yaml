@@ -31,7 +31,7 @@
 # compiles this spec, confirms the guardrail is wired into the runtime, and
 # exercises it on a PII-bearing tool result to prove redaction.
 #
-#   kneo specs validate examples/guardrails_complete.yaml   # green
+#   kneo spec validate examples/guardrails_complete.yaml   # green
 #   kneo run examples/guardrails_complete.yaml \
 #     --input "look up account 4021" --target agent --json   # needs a provider
 

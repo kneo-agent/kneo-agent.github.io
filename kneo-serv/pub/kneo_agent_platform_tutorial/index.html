@@ -2740,8 +2740,8 @@ stdout by default. Use <code>--json</code> to get the full structured response.<
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
 </code></pre></div>
-<p>The JSON response includes a <code>continuation_id</code> and a <code>request_id</code>. Resume
-with an approval:</p>
+<p>The JSON response includes a top-level <code>continuation_id</code>; the <code>request_id</code>
+is nested under <code>metadata.pending_human_request</code>. Resume with an approval:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
 </code></pre></div>
 <p>For a deeper end-to-end walkthrough, see
@@ -2974,7 +2974,7 @@ definition, so you don't need to enforce auth here.</p>
 Names must match what we registered in step 2. Validate the spec:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/lookup_agent.yaml
 </code></pre></div>
-<p>If you see <code>E_UNKNOWN_TOOL</code>, the spec is referencing a name that isn't
+<p>If you see <code>E_TOOL_REF</code>, the spec is referencing a name that isn't
 in the registry. Re-check step 2 — the registry must include
 <code>lookup_user</code> <em>before</em> <code>SpecCompiler</code> runs.</p>
 <h3 id="4-run-the-agent">4 · Run the agent<a class="headerlink" href="#4-run-the-agent" title="Permanent link">&para;</a></h3>
@@ -3090,7 +3090,7 @@ references it, including service-backed CLI calls and HTTP <code>POST /v1/runs</
 </thead>
 <tbody>
 <tr>
-<td><code>E_UNKNOWN_TOOL</code> on <code>kneo spec validate</code></td>
+<td><code>E_TOOL_REF</code> on <code>kneo spec validate</code></td>
 <td>Custom tool isn't in the registry the CLI is using; use the Python entrypoint from § 4.</td>
 </tr>
 <tr>
@@ -3196,7 +3196,7 @@ include a line per migration applied at first startup.</p>
 <a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/livez&quot;</span>
 <a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/readyz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </code></pre></div>
-<p><code>/livez</code> returns <code>{"ok": true, "metadata": {}}</code> as soon as the process
+<p><code>/livez</code> returns <code>{"ok": true, "metadata": {"status": "alive"}, …}</code> as soon as the process
 accepts connections. <code>/readyz</code> returns 200 only after every dependency
 check passes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="p">{</span>
@@ -3208,8 +3208,8 @@ check passes:</p>
 <a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="w">      </span><span class="nt">&quot;run_state_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_state_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="w">      </span><span class="nt">&quot;continuation_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;continuation_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a><span class="w">      </span><span class="nt">&quot;queue&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;queue&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
-<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="w">      </span><span class="nt">&quot;runtime_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;runtime_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;adapter&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;native&quot;</span><span class="p">]},</span>
-<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="w">      </span><span class="nt">&quot;tool_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tool_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;compress_history&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;publish_report&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;web_search&quot;</span><span class="p">]},</span>
+<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a><span class="w">      </span><span class="nt">&quot;runtime_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;runtime_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;native&quot;</span><span class="p">]},</span>
+<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="w">      </span><span class="nt">&quot;tool_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tool_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;webpage_reader&quot;</span><span class="p">]},</span>
 <a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="w">      </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;providers&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a><span class="w">      </span><span class="nt">&quot;mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
 <a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a><span class="w">    </span><span class="p">}</span>
@@ -3228,9 +3228,9 @@ policy update.</p>
 <a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>
 <a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span>--base-url<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span>--operator-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">  </span>--reviewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="w">  </span>--viewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VIEW_TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span>--operator-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VIEW_TOKEN</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>A clean run prints each step with a <code>PASS</code> and exits 0. If any step
 fails, the script identifies the failing endpoint and HTTP status.
@@ -3247,7 +3247,7 @@ and what each step verifies.</p>
 <a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </code></pre></div>
 <p>This spec uses the in-process <code>dummy</code> provider so it runs without
-provider credentials. You should see a <code>paused</code> response with a
+provider credentials. You should see a <code>blocked</code> response with a
 <code>continuation_id</code> (the workflow has a human step). Resume it:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/human-tasks/cont_…/resume&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -3279,12 +3279,12 @@ volume, not the container layer.</p>
 <tbody>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code></td>
-<td>120</td>
+<td>unset (suggest 120)</td>
 <td>Provider tail latency exceeds default.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_RETRIES</code></td>
-<td>2</td>
+<td>0 (suggest 2)</td>
 <td>Provider has documented transient error rate.</td>
 </tr>
 <tr>
@@ -3309,7 +3309,8 @@ volume, not the container layer.</p>
 </tr>
 </tbody>
 </table>
-<p>Full list and semantics: <a href="../../user/environment/">environment.md</a>.</p>
+<p>Canonical defaults and tuning guidance: <a href="../../user/environment/">environment.md</a> and
+<a href="../../user/performance/">performance.md</a>.</p>
 <h3 id="9-backup-the-database">9 · Backup the database<a class="headerlink" href="#9-backup-the-database" title="Permanent link">&para;</a></h3>
 <p>A periodic seeded backup/restore drill is recommended operator practice —
 run one on a regular cadence and again immediately before any major
@@ -3387,7 +3388,7 @@ page is the operational walkthrough.</p>
 <p>A workflow can include steps that block on a human decision. When the
 runtime reaches such a step it raises <code>HumanInterventionRequired</code>, which
 the platform catches, serializes into a <code>WorkflowContinuation</code>, and
-exposes to operators. The run goes from <code>running</code> to <code>paused</code>. A
+exposes to operators. The run goes from <code>running</code> to <code>blocked</code>. A
 subsequent resume call provides the decision and the workflow continues
 from where it stopped, using the persisted replay context.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3402,7 +3403,7 @@ from where it stopped, using the persisted replay context.</p>
     Service-&gt;&gt;Workflow: execute
     Workflow--&gt;&gt;Service: HumanInterventionRequired&lt;br/&gt;(continuation_id, request_id)
     Service-&gt;&gt;Cont: save continuation + checkpoint
-    Service--&gt;&gt;Caller: 202 with continuation_id
+    Service--&gt;&gt;Caller: 200 with continuation_id (202 when async_mode=true)
 
     Reviewer-&gt;&gt;Service: GET /human-tasks
     Service--&gt;&gt;Reviewer: list (continuation, request, prompt, deadline)
@@ -3475,7 +3476,7 @@ status, the <code>continuation_id</code> to resume against, and the pending requ
 nested in <code>metadata.pending_human_request</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
 <a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_2026-05-10T12:34:56_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paused&quot;</span><span class="p">,</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blocked&quot;</span><span class="p">,</span>
 <a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
@@ -3617,7 +3618,7 @@ underlying run is still <code>blocked</code>, the prune dispatches on
   the original <code>assignee</code>. Subsequent prune calls <strong>skip</strong>
   continuations carrying the <code>escalated_at</code> marker — escalation fires
   once. The continuation stays alive until an operator resumes it via
-  the normal <code>/continuations/{id}/resume</code> path (typically after
+  the normal <code>/v1/human-tasks/{continuation_id}/resume</code> path (typically after
   reassigning to a different reviewer in the operator's external
   workflow).</li>
 </ul>
@@ -3687,7 +3688,7 @@ mid-execution).</p>
 <ul>
 <li><a href="../../user/examples/">examples.md</a> — the full set of runnable specs.</li>
 <li><a href="../../user/service_api/">service_api.md</a> — <code>/human-tasks</code> route shapes.</li>
-<li>design.md § 4.3 — design rationale.</li>
+<li>design.md § 8.5 — design rationale.</li>
 </ul>
 
 

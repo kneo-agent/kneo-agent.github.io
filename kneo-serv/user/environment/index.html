@@ -1703,6 +1703,11 @@ in <a href="../service_api/"><code>service_api.md</code></a>.</p>
 <td>unset</td>
 <td>HMAC signing key used by <code>kneo spec bundle sign</code> and <code>verify</code>.</td>
 </tr>
+<tr>
+<td><code>KNEO_SERV_SPEC_ROOT</code></td>
+<td>unset</td>
+<td>Allow-listed root for caller-supplied <code>spec_path</code> / <code>overlays</code>. When set, any spec/overlay read (run, resume, <code>/v1/specs/*</code>) resolving outside it — absolute, <code>..</code>-traversal, or symlink escape — is rejected <code>422 spec_path_confined</code>. Unset = unchanged behavior except an absolute path logs a <code>DeprecationWarning</code>; confinement is default-on at <code>1.0.0</code>. See <a href="../security_hardening/">security_hardening.md</a>.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="service-auth">Service auth<a class="headerlink" href="#service-auth" title="Permanent link">&para;</a></h2>

@@ -1164,8 +1164,12 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.10.x</code> / <code>0.11.x</code></td>
+<td><code>0.8.0</code> (pinned to <code>v0.11.0</code>). Absorbs the <code>kneo_serv 0.11.0</code> <code>/v1</code> breaks (async run-create <code>202</code>, unknown-query-param <code>422</code> rejection, guardrail-block run terminalization) and adds a versioned <code>User-Agent</code> + <code>Retry-After</code> HTTP-date parsing. <code>v0.10.0</code> introduced no <code>/v1</code> change, so a <code>v0.9.0</code>-pinned client (<code>0.7.0</code>) also works against <code>0.10.x</code> for everything it wraps.</td>
+</tr>
+<tr>
 <td><code>0.8.x</code> / <code>0.9.x</code></td>
-<td><code>0.7.0</code> (pinned to <code>v0.9.0</code>; in development). Adds the skill-catalog wrapper (<code>agent.skills.list</code>), the per-request <code>skills</code> overlay on <code>runs.create</code>, <code>Page.window</code>, the typed <code>400</code> / <code>413</code> / <code>422</code> errors, and code-aware 409 classification. A <code>v0.7.0</code>-pinned client (<code>0.6.0</code>) still works against <code>0.8.x</code>/<code>0.9.x</code> for everything it wraps — it just won't expose those additions.</td>
+<td><code>0.7.0</code> (pinned to <code>v0.9.0</code>). Adds the skill-catalog wrapper (<code>agent.skills.list</code>), the per-request <code>skills</code> overlay on <code>runs.create</code>, <code>Page.window</code>, the typed <code>400</code> / <code>413</code> / <code>422</code> errors, and code-aware 409 classification. A <code>v0.7.0</code>-pinned client (<code>0.6.0</code>) still works against <code>0.8.x</code>/<code>0.9.x</code> for everything it wraps — it just won't expose those additions.</td>
 </tr>
 <tr>
 <td><code>0.6.x</code> / <code>0.7.x</code></td>
@@ -1213,7 +1217,7 @@
 <a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
 <a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>python<span class="w"> </span>examples/01_basic_run.py<span class="w"> </span>YOUR_SPEC_ID
 </code></pre></div>
-<p>The five <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
+<p>The seven <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
 <p>For deeper validation, the integration test suite is env-gated; set <code>KNEO_TEST_URL</code> and <code>KNEO_TEST_API_KEY</code> and run <code>python -m pytest tests/integration -v</code>.</p>
 <h2 id="what-the-pin-does-not-guarantee">What the pin does <em>not</em> guarantee<a class="headerlink" href="#what-the-pin-does-not-guarantee" title="Permanent link">&para;</a></h2>
 <p>The pin guarantees the <em>wire format</em> and the <em>path set</em> of <code>/v1</code>. It does not guarantee:</p>

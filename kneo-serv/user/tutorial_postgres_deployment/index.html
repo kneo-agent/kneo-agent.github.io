@@ -1813,7 +1813,7 @@ include a line per migration applied at first startup.</p>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/livez&quot;</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/readyz&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </code></pre></div>
-<p><code>/livez</code> returns <code>{"ok": true, "metadata": {}}</code> as soon as the process
+<p><code>/livez</code> returns <code>{"ok": true, "metadata": {"status": "alive"}, …}</code> as soon as the process
 accepts connections. <code>/readyz</code> returns 200 only after every dependency
 check passes:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
@@ -1825,8 +1825,8 @@ check passes:</p>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">      </span><span class="nt">&quot;run_state_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_state_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="nt">&quot;continuation_store&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;continuation_store&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="nt">&quot;queue&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;queue&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="nt">&quot;runtime_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;runtime_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;adapter&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;native&quot;</span><span class="p">]},</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">      </span><span class="nt">&quot;tool_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tool_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;compress_history&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;publish_report&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;web_search&quot;</span><span class="p">]},</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">      </span><span class="nt">&quot;runtime_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;runtime_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;bridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;native&quot;</span><span class="p">]},</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">      </span><span class="nt">&quot;tool_registry&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tool_registry&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;names&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;summarize&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;web_search&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;webpage_reader&quot;</span><span class="p">]},</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">      </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;providers&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="nt">&quot;mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;mcp&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
 <a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="p">}</span>
@@ -1845,9 +1845,9 @@ policy update.</p>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>python<span class="w"> </span>scripts/deployment_smoke.py<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--base-url<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--operator-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--reviewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--viewer-token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VIEW_TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--operator-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--reviewer-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--viewer-api-key<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VIEW_TOKEN</span><span class="s2">&quot;</span>
 </code></pre></div>
 <p>A clean run prints each step with a <code>PASS</code> and exits 0. If any step
 fails, the script identifies the failing endpoint and HTTP status.
@@ -1864,7 +1864,7 @@ and what each step verifies.</p>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
 </code></pre></div>
 <p>This spec uses the in-process <code>dummy</code> provider so it runs without
-provider credentials. You should see a <code>paused</code> response with a
+provider credentials. You should see a <code>blocked</code> response with a
 <code>continuation_id</code> (the workflow has a human step). Resume it:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/human-tasks/cont_…/resume&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$REV_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -1896,12 +1896,12 @@ volume, not the container layer.</p>
 <tbody>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_TIMEOUT_SECONDS</code></td>
-<td>120</td>
+<td>unset (suggest 120)</td>
 <td>Provider tail latency exceeds default.</td>
 </tr>
 <tr>
 <td><code>KNEO_SERV_PROVIDER_RETRIES</code></td>
-<td>2</td>
+<td>0 (suggest 2)</td>
 <td>Provider has documented transient error rate.</td>
 </tr>
 <tr>
@@ -1926,7 +1926,8 @@ volume, not the container layer.</p>
 </tr>
 </tbody>
 </table>
-<p>Full list and semantics: <a href="../environment/">environment.md</a>.</p>
+<p>Canonical defaults and tuning guidance: <a href="../environment/">environment.md</a> and
+<a href="../performance/">performance.md</a>.</p>
 <h2 id="9-backup-the-database">9 · Backup the database<a class="headerlink" href="#9-backup-the-database" title="Permanent link">&para;</a></h2>
 <p>A periodic seeded backup/restore drill is recommended operator practice —
 run one on a regular cadence and again immediately before any major

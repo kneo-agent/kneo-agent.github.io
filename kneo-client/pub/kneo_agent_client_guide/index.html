@@ -2847,7 +2847,7 @@
 <p>Requires Python ≥ 3.12 (3.12 / 3.13 / 3.14 tested in CI). The runtime closure is small: <code>httpx</code>, <code>pydantic</code>, <code>anyio</code>, <code>platformdirs</code>, <code>attrs</code>. No CLI is installed — <code>kneo-client</code> is a library, not a service.</p>
 <p>Verify the install:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from kneo_client import KneoClient, __version__; print(__version__)&quot;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.7.0</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># → 0.8.0</span>
 </code></pre></div>
 <h3 id="configure-a-profile">Configure a profile<a class="headerlink" href="#configure-a-profile" title="Permanent link">&para;</a></h3>
 <p>The client reads connection details in this order (later sources override earlier):</p>
@@ -3136,7 +3136,7 @@
 </code></pre></div>
 <p>…and never include <code>p.api_key</code> in anything that goes to a log sink.</p>
 <h3 id="profile-errors">Profile errors<a class="headerlink" href="#profile-errors" title="Permanent link">&para;</a></h3>
-<p><code>ProfileError</code> covers four failure modes:</p>
+<p><code>ProfileError</code> covers five failure modes:</p>
 <table>
 <thead>
 <tr>
@@ -4302,8 +4302,12 @@ easy to misuse. Pattern:</p>
 </thead>
 <tbody>
 <tr>
+<td><code>0.10.x</code> / <code>0.11.x</code></td>
+<td><code>0.8.0</code> (pinned to <code>v0.11.0</code>). Absorbs the <code>kneo_serv 0.11.0</code> <code>/v1</code> breaks (async run-create <code>202</code>, unknown-query-param <code>422</code> rejection, guardrail-block run terminalization) and adds a versioned <code>User-Agent</code> + <code>Retry-After</code> HTTP-date parsing. <code>v0.10.0</code> introduced no <code>/v1</code> change, so a <code>v0.9.0</code>-pinned client (<code>0.7.0</code>) also works against <code>0.10.x</code> for everything it wraps.</td>
+</tr>
+<tr>
 <td><code>0.8.x</code> / <code>0.9.x</code></td>
-<td><code>0.7.0</code> (pinned to <code>v0.9.0</code>; in development). Adds the skill-catalog wrapper (<code>agent.skills.list</code>), the per-request <code>skills</code> overlay on <code>runs.create</code>, <code>Page.window</code>, the typed <code>400</code> / <code>413</code> / <code>422</code> errors, and code-aware 409 classification. A <code>v0.7.0</code>-pinned client (<code>0.6.0</code>) still works against <code>0.8.x</code>/<code>0.9.x</code> for everything it wraps — it just won't expose those additions.</td>
+<td><code>0.7.0</code> (pinned to <code>v0.9.0</code>). Adds the skill-catalog wrapper (<code>agent.skills.list</code>), the per-request <code>skills</code> overlay on <code>runs.create</code>, <code>Page.window</code>, the typed <code>400</code> / <code>413</code> / <code>422</code> errors, and code-aware 409 classification. A <code>v0.7.0</code>-pinned client (<code>0.6.0</code>) still works against <code>0.8.x</code>/<code>0.9.x</code> for everything it wraps — it just won't expose those additions.</td>
 </tr>
 <tr>
 <td><code>0.6.x</code> / <code>0.7.x</code></td>
@@ -4351,7 +4355,7 @@ easy to misuse. Pattern:</p>
 <a id="__codelineno-62-12" name="__codelineno-62-12" href="#__codelineno-62-12"></a><span class="c1"># Run the smoke (touches health, runs, audit, agent specs, and human tasks)</span>
 <a id="__codelineno-62-13" name="__codelineno-62-13" href="#__codelineno-62-13"></a>python<span class="w"> </span>examples/01_basic_run.py<span class="w"> </span>YOUR_SPEC_ID
 </code></pre></div>
-<p>The five <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
+<p>The seven <code>examples/</code> scripts collectively touch the platform health, runs, audit, agent spec, and human-task surfaces — enough to catch obvious incompatibilities in seconds.</p>
 <p>For deeper validation, the integration test suite is env-gated; set <code>KNEO_TEST_URL</code> and <code>KNEO_TEST_API_KEY</code> and run <code>python -m pytest tests/integration -v</code>.</p>
 <h3 id="what-the-pin-does-not-guarantee">What the pin does <em>not</em> guarantee<a class="headerlink" href="#what-the-pin-does-not-guarantee" title="Permanent link">&para;</a></h3>
 <p>The pin guarantees the <em>wire format</em> and the <em>path set</em> of <code>/v1</code>. It does not guarantee:</p>

@@ -1852,14 +1852,26 @@ Rotation is a config swap:</p>
   CLI and API spec flows enforce policy after overlays
   (<a href="../project_config/"><code>project_config.md</code></a>).</li>
 </ul>
-<p><strong><code>spec_path</code> and <code>overlays</code> are filesystem-trusted inputs.</strong> A request that
-supplies <code>spec_path</code> (or overlay paths) makes the service read those files from
-its own filesystem. This is intentional and matches how a deployed service loads
-its specs, but it means the <em>caller of those paths must be trusted</em> — anyone who
-can set <code>spec_path</code>/<code>overlays</code> can cause the service to read any file path it has
-access to. Restrict who can submit path-bearing spec requests to operators, and
+<p><strong><code>spec_path</code> and <code>overlays</code> are filesystem-trusted inputs — confine them with
+<code>KNEO_SERV_SPEC_ROOT</code>.</strong> A request that supplies <code>spec_path</code> (or overlay paths)
+makes the service read those files from its own filesystem. Two layers guard it:</p>
+<ul>
+<li>The API boundary always rejects <code>..</code> parent-traversal and <code>~</code> home-expansion in
+  <code>spec_path</code> <strong>and</strong> <code>overlays</code>.</li>
+<li>Setting <strong><code>KNEO_SERV_SPEC_ROOT</code></strong> to an allow-listed directory confines every
+  caller-supplied spec/overlay read — across run, resume, and the <code>/v1/specs/*</code>
+  surfaces — to that root: anything resolving outside it (an absolute path, a
+  traversal, or a symlink escape) is rejected <code>422 spec_path_confined</code>. <strong>Set
+  this in any deployment that accepts spec requests from less-than-fully-trusted
+  callers.</strong></li>
+</ul>
+<p>When <code>KNEO_SERV_SPEC_ROOT</code> is <strong>unset</strong> (the default through 0.12.x) behavior is
+unchanged except that an absolute path now logs a <code>DeprecationWarning</code>:
+confinement becomes <strong>default-on at <code>1.0.0</code></strong>, so adopt the env var now. Until
+then also restrict who can submit path-bearing spec requests to operators, and
 prefer inline <code>spec</code> (with <code>overrides</code>) for less-trusted callers. Spec <em>content</em>
-validation (<code>/v1/specs/validate</code>) stays pure and performs no filesystem I/O.</p>
+validation (<code>/v1/specs/validate</code>) stays pure (no filesystem I/O beyond the
+now-confined spec/overlay read).</p>
 <h3 id="5-terminate-tls-upstream">5. Terminate TLS upstream<a class="headerlink" href="#5-terminate-tls-upstream" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] A reverse proxy in front of the service terminates TLS; the

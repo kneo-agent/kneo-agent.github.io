@@ -1,0 +1,45 @@
+# Declarative MCP over HTTP — a COMPILE-ONLY example (not run in CI): the
+# server config is built at compile time and only connected on the tool's
+# first call, so the unreachable host below never opens a connection during
+# `kneo spec compile`. This complements the runnable stdio proof
+# (mcp_stdio_workflow.yaml) by exercising the `http` transport shape; swap
+# `transport: http` + `url:` for `transport: sse` + `sse_url:` for SSE.
+#
+#   kneo spec compile examples/mcp_http_workflow.yaml --json
+#
+# To actually RUN it, point `url` at a reachable MCP server and supply any
+# auth via the documented secret-reference fields.
+
+version: v1
+
+agent:
+  name: http-tools-agent
+  system_prompt: Use the remote MCP tools to answer.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  tools:
+    - remote_lookup
+
+mcp_servers:
+  remote_tools:
+    transport: http
+    url: https://mcp.example.invalid/api
+
+tools:
+  remote_lookup:
+    description: Look up a value via the remote HTTP MCP server.
+    parameters:
+      type: object
+      properties:
+        query:
+          type: string
+      required: [query]
+    mcp:
+      server: remote_tools
+      name: lookup

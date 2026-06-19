@@ -2831,7 +2831,7 @@ scope. <code>service/idempotency.py</code></p>
   request payload and replay the original response on match.</li>
 </ul>
 <h3 id="55-400-bad-request-invalid_idempotency_key">5.5 <code>400 Bad Request — invalid_idempotency_key</code><a class="headerlink" href="#55-400-bad-request-invalid_idempotency_key" title="Permanent link">&para;</a></h3>
-<p><code>Idempotency-Key</code> headers must be 1–256 characters after trimming.
+<p><code>Idempotency-Key</code> headers must be 256 characters or fewer after trimming.
 <code>service/idempotency.py</code></p>
 <ul>
 <li>Fix: shorten the key. UUIDs are sufficient.</li>

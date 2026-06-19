@@ -1,0 +1,76 @@
+# Human-in-the-loop request taxonomy + timeout policy.
+#
+# A `kind: human` step pauses the run and surfaces a HumanInterventionRequest.
+# Beyond the default `approval`, the request carries a `request_type`
+# (review / correction / selection / freeform), optional `options` +
+# `default_option` (for selection), a `context` map, and a `timeout_seconds`
+# with an `on_timeout` policy:
+#
+#   - fail      → the run fails if the human task expires (the default)
+#   - continue  → the run proceeds with no human input on expiry
+#   - escalate  → the task is escalated on expiry (operator-visible)
+#
+# This workflow chains a `selection` gate (pick a route, default on timeout)
+# into a `review` gate (escalate on timeout) so all three on_timeout policies
+# and several request types appear in one runnable spec.
+#
+#   kneo spec validate examples/human_task_taxonomy.yaml   # green
+#   kneo run examples/human_task_taxonomy.yaml \
+#     --input "process this case" --target workflow --json   # pauses at the gate
+
+version: v1
+
+agent:
+  name: caseworker-root
+  system_prompt: Route and resolve the case.
+  model:
+    provider: dummy
+    name: demo-model
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: sequential
+  name: case-handling
+  steps:
+    - id: choose_route
+      kind: human
+      ref: route-selection
+    - id: resolve
+      kind: agent
+      ref: resolver
+    - id: sign_off
+      kind: human
+      ref: final-review
+
+components:
+  agents:
+    resolver:
+      name: resolver
+      system_prompt: Resolve the case along the chosen route.
+      model:
+        provider: dummy
+        name: demo-model
+      strategy:
+        type: simple
+      runtime_preferences:
+        preferred_mode: bridge
+        allowed_modes: [bridge]
+  humans:
+    route-selection:
+      description: Pick how to handle this case.
+      request_type: selection
+      options: [refund, replace, escalate-to-legal]
+      default_option: refund
+      timeout_seconds: 1800
+      on_timeout: continue # proceed with the default_option if no one responds
+    final-review:
+      description: Review the resolution before it is finalized.
+      request_type: review
+      assignee: lead@example.com
+      timeout_seconds: 3600
+      on_timeout: escalate
+      response_role: assistant

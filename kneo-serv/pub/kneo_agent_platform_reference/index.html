@@ -4907,10 +4907,12 @@ different signing key is used.</p>
 <a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a> lint           Surface validator warnings and errors. Exits 1 if any are
 <a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>                found.
 <a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a> compile
-<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a> resolve
-<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a> migrate        Migrate an older YAML spec to the current v1 shape.
-<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a> policy-report  Generate a policy evaluation report for a spec.
-<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a> bundle         Sign and verify approved spec bundles
+<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a> explain        Explain a spec: the resolved root agent/workflow and
+<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>                component agents.
+<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a> resolve
+<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a> migrate        Migrate an older YAML spec to the current v1 shape.
+<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a> policy-report  Generate a policy evaluation report for a spec.
+<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a> bundle         Sign and verify approved spec bundles
 </code></pre></div>
 <h3 id="kneo-spec-validate"><code>kneo spec validate</code><a class="headerlink" href="#kneo-spec-validate" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a> Usage: kneo spec validate [OPTIONS] [SPEC_PATH]
@@ -5444,7 +5446,8 @@ and changed field names.</p>
 strict request-model validation for inline payloads. Unknown request fields are
 rejected with <code>422</code>, and bodies above the configured transport limit return
 <code>413</code>.</p>
-<p>Default limits:</p>
+<p>Default limits (<a href="#service-limits">environment.md § Service limits</a>
+is canonical for these values):</p>
 <ul>
 <li><code>KNEO_SERV_MAX_BODY_BYTES</code>: <code>1048576</code></li>
 <li><code>KNEO_SERV_MAX_INPUT_CHARS</code>: <code>20000</code></li>
@@ -5700,11 +5703,21 @@ deployment-level filesystem backups when those paths are used.</p>
 <li>POST /v1/specs/policy-report</li>
 <li>POST /v1/specs/run</li>
 </ul>
-<p>All four read-only endpoints accept the same envelope (<code>spec_path</code> or inline
-<code>spec</code>, plus <code>environment</code>, <code>overlays</code>, and <code>overrides</code>); <code>compile</code> additionally
-honors <code>strict</code>. The overlays/overrides layer the effective spec the same way a
-run does. An invalid spec returns <code>400 spec_invalid</code> carrying the diagnostic
-list (it is not a <code>500</code>).</p>
+<p>The four read-only endpoints (<code>validate</code>, <code>compile</code>, <code>explain</code>, <code>policy-report</code>)
+accept the same envelope (<code>spec_path</code> or inline <code>spec</code>, plus <code>environment</code>,
+<code>overlays</code>, and <code>overrides</code>); <code>compile</code> additionally honors <code>strict</code>. The
+overlays/overrides layer the effective spec the same way a run does. An invalid
+spec returns <code>400 spec_invalid</code> carrying the diagnostic list (it is not a <code>500</code>).</p>
+<p><code>POST /specs/run</code> takes the <code>POST /runs</code> envelope and, as of <strong>0.12.0</strong>, honors
+<code>async_mode</code>: with <code>async_mode=true</code> it dispatches the run to the worker queue
+and returns <strong><code>202 Accepted</code></strong> with the queued <code>run_id</code> (poll
+<code>GET /runs/{run_id}</code>), exactly like <code>POST /runs</code>; the synchronous default
+(<code>async_mode=false</code>) runs inline and returns <code>200</code>.</p>
+<p><strong>Spec-path confinement.</strong> <code>spec_path</code> and <code>overlays</code> are filesystem paths the
+service reads at compile time. Setting <code>KNEO_SERV_SPEC_ROOT</code> confines those reads
+to an allow-listed root (anything resolving outside it is rejected <code>422</code>); when
+unset, an absolute path is accepted but logs a deprecation warning (the default
+flips to reject at <code>1.0</code>). See <a href="../../user/security_hardening/">security_hardening.md</a>.</p>
 <p>Legacy aliases:</p>
 <ul>
 <li>POST /specs/validate</li>
@@ -5790,7 +5803,7 @@ the failure shape.</p>
 <p>If the workflow pauses on a human step:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a><span class="p">{</span>
 <a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-77-3" name="__codelineno-77-3" href="#__codelineno-77-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paused&quot;</span><span class="p">,</span>
+<a id="__codelineno-77-3" name="__codelineno-77-3" href="#__codelineno-77-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blocked&quot;</span><span class="p">,</span>
 <a id="__codelineno-77-4" name="__codelineno-77-4" href="#__codelineno-77-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <a id="__codelineno-77-5" name="__codelineno-77-5" href="#__codelineno-77-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-77-6" name="__codelineno-77-6" href="#__codelineno-77-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
@@ -5874,9 +5887,9 @@ in-flight steps stop at unit-of-work boundaries. See
 <a id="__codelineno-86-3" name="__codelineno-86-3" href="#__codelineno-86-3"></a><span class="w">  </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-86-4" name="__codelineno-86-4" href="#__codelineno-86-4"></a><span class="w">    </span><span class="p">{</span>
 <a id="__codelineno-86-5" name="__codelineno-86-5" href="#__codelineno-86-5"></a><span class="w">      </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
-<a id="__codelineno-86-6" name="__codelineno-86-6" href="#__codelineno-86-6"></a><span class="w">      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;E_UNKNOWN_TOOL&quot;</span><span class="p">,</span>
-<a id="__codelineno-86-7" name="__codelineno-86-7" href="#__codelineno-86-7"></a><span class="w">      </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tool &#39;web_search&#39; is not registered.&quot;</span><span class="p">,</span>
-<a id="__codelineno-86-8" name="__codelineno-86-8" href="#__codelineno-86-8"></a><span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;agent.tools[0]&quot;</span>
+<a id="__codelineno-86-6" name="__codelineno-86-6" href="#__codelineno-86-6"></a><span class="w">      </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;E_TOOL_REF&quot;</span><span class="p">,</span>
+<a id="__codelineno-86-7" name="__codelineno-86-7" href="#__codelineno-86-7"></a><span class="w">      </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tool &#39;web_search&#39; is referenced but not defined.&quot;</span><span class="p">,</span>
+<a id="__codelineno-86-8" name="__codelineno-86-8" href="#__codelineno-86-8"></a><span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;agent.tools&quot;</span>
 <a id="__codelineno-86-9" name="__codelineno-86-9" href="#__codelineno-86-9"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-86-10" name="__codelineno-86-10" href="#__codelineno-86-10"></a><span class="w">  </span><span class="p">]</span>
 <a id="__codelineno-86-11" name="__codelineno-86-11" href="#__codelineno-86-11"></a><span class="p">}</span>
@@ -5940,13 +5953,13 @@ PII patterns never appear.</p>
 <a id="__codelineno-92-4" name="__codelineno-92-4" href="#__codelineno-92-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;evt_…&quot;</span><span class="p">,</span>
 <a id="__codelineno-92-5" name="__codelineno-92-5" href="#__codelineno-92-5"></a><span class="w">      </span><span class="nt">&quot;event_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;human.decision&quot;</span><span class="p">,</span>
 <a id="__codelineno-92-6" name="__codelineno-92-6" href="#__codelineno-92-6"></a><span class="w">      </span><span class="nt">&quot;actor&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;reviewer&quot;</span><span class="p">,</span>
-<a id="__codelineno-92-7" name="__codelineno-92-7" href="#__codelineno-92-7"></a><span class="w">      </span><span class="nt">&quot;occurred_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-10T12:35:01Z&quot;</span><span class="p">,</span>
-<a id="__codelineno-92-8" name="__codelineno-92-8" href="#__codelineno-92-8"></a><span class="w">      </span><span class="nt">&quot;payload&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-92-7" name="__codelineno-92-7" href="#__codelineno-92-7"></a><span class="w">      </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-05-10T12:35:01Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-92-8" name="__codelineno-92-8" href="#__codelineno-92-8"></a><span class="w">      </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-92-9" name="__codelineno-92-9" href="#__codelineno-92-9"></a><span class="w">        </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span>
 <a id="__codelineno-92-10" name="__codelineno-92-10" href="#__codelineno-92-10"></a><span class="w">        </span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approved&quot;</span><span class="p">,</span>
 <a id="__codelineno-92-11" name="__codelineno-92-11" href="#__codelineno-92-11"></a><span class="w">        </span><span class="nt">&quot;selected_option&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-92-12" name="__codelineno-92-12" href="#__codelineno-92-12"></a><span class="w">        </span><span class="nt">&quot;result_status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
-<a id="__codelineno-92-13" name="__codelineno-92-13" href="#__codelineno-92-13"></a><span class="w">        </span><span class="nt">&quot;content_present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-92-12" name="__codelineno-92-12" href="#__codelineno-92-12"></a><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
+<a id="__codelineno-92-13" name="__codelineno-92-13" href="#__codelineno-92-13"></a><span class="w">        </span><span class="nt">&quot;has_content&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <a id="__codelineno-92-14" name="__codelineno-92-14" href="#__codelineno-92-14"></a><span class="w">      </span><span class="p">}</span>
 <a id="__codelineno-92-15" name="__codelineno-92-15" href="#__codelineno-92-15"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-92-16" name="__codelineno-92-16" href="#__codelineno-92-16"></a><span class="w">  </span><span class="p">],</span>
@@ -5961,14 +5974,14 @@ secret values never appear.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a><span class="p">{</span>
 <a id="__codelineno-94-2" name="__codelineno-94-2" href="#__codelineno-94-2"></a><span class="w">  </span><span class="nt">&quot;inventory&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-94-3" name="__codelineno-94-3" href="#__codelineno-94-3"></a><span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-94-4" name="__codelineno-94-4" href="#__codelineno-94-4"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;***REDACTED***&quot;</span><span class="p">},</span>
-<a id="__codelineno-94-5" name="__codelineno-94-5" href="#__codelineno-94-5"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;anthropic&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span>
-<a id="__codelineno-94-6" name="__codelineno-94-6" href="#__codelineno-94-6"></a><span class="w">    </span><span class="p">],</span>
-<a id="__codelineno-94-7" name="__codelineno-94-7" href="#__codelineno-94-7"></a><span class="w">    </span><span class="nt">&quot;mcp&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
-<a id="__codelineno-94-8" name="__codelineno-94-8" href="#__codelineno-94-8"></a><span class="w">    </span><span class="nt">&quot;service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-94-9" name="__codelineno-94-9" href="#__codelineno-94-9"></a><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;operator&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KNEO_SERV_API_KEYS&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;***REDACTED***&quot;</span><span class="p">}</span>
-<a id="__codelineno-94-10" name="__codelineno-94-10" href="#__codelineno-94-10"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-94-3" name="__codelineno-94-3" href="#__codelineno-94-3"></a><span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-94-4" name="__codelineno-94-4" href="#__codelineno-94-4"></a><span class="w">      </span><span class="nt">&quot;openai&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:openai&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span><span class="p">},</span>
+<a id="__codelineno-94-5" name="__codelineno-94-5" href="#__codelineno-94-5"></a><span class="w">      </span><span class="nt">&quot;anthropic&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:anthropic&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ANTHROPIC_API_KEY&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">}</span>
+<a id="__codelineno-94-6" name="__codelineno-94-6" href="#__codelineno-94-6"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-94-7" name="__codelineno-94-7" href="#__codelineno-94-7"></a><span class="w">    </span><span class="nt">&quot;extra&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<a id="__codelineno-94-8" name="__codelineno-94-8" href="#__codelineno-94-8"></a><span class="w">    </span><span class="nt">&quot;service_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-94-9" name="__codelineno-94-9" href="#__codelineno-94-9"></a><span class="w">      </span><span class="nt">&quot;KNEO_SERV_API_KEYS&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;service:KNEO_SERV_API_KEYS&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;KNEO_SERV_API_KEYS&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span><span class="p">}</span>
+<a id="__codelineno-94-10" name="__codelineno-94-10" href="#__codelineno-94-10"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-94-11" name="__codelineno-94-11" href="#__codelineno-94-11"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-94-12" name="__codelineno-94-12" href="#__codelineno-94-12"></a><span class="p">}</span>
 </code></pre></div>
@@ -6350,6 +6363,11 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 <td><code>KNEO_SERV_SPEC_SIGNING_KEY</code></td>
 <td>unset</td>
 <td>HMAC signing key used by <code>kneo spec bundle sign</code> and <code>verify</code>.</td>
+</tr>
+<tr>
+<td><code>KNEO_SERV_SPEC_ROOT</code></td>
+<td>unset</td>
+<td>Allow-listed root for caller-supplied <code>spec_path</code> / <code>overlays</code>. When set, any spec/overlay read (run, resume, <code>/v1/specs/*</code>) resolving outside it — absolute, <code>..</code>-traversal, or symlink escape — is rejected <code>422 spec_path_confined</code>. Unset = unchanged behavior except an absolute path logs a <code>DeprecationWarning</code>; confinement is default-on at <code>1.0.0</code>. See <a href="../../user/security_hardening/">security_hardening.md</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -6842,6 +6860,11 @@ run offline in CI (no provider keys, no network).</p>
 <td>Pause at a human step, resume via the continuation API.</td>
 </tr>
 <tr>
+<td>Human pause/continuation per workflow shape <em>(0.12.0 § D)</em></td>
+<td><code>graph_human_approval_workflow.yaml</code>, <code>concurrent_human_approval_workflow.yaml</code>, <code>group_chat_human_approval_workflow.yaml</code>, <code>handoff_human_approval_workflow.yaml</code></td>
+<td>A human-approval gate pauses + resumes in every workflow shape (graph / concurrent / group-chat / handoff; concurrent via drain-then-block).</td>
+</tr>
+<tr>
 <td>Human (smoke)</td>
 <td><code>smoke_human_workflow.yaml</code></td>
 <td>Minimal pause/resume on the <code>dummy</code> provider, for smoke tests.</td>
@@ -7059,8 +7082,8 @@ overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, o
 <h3 id="helper-python">Helper Python<a class="headerlink" href="#helper-python" title="Permanent link">&para;</a></h3>
 <h4 id="app_functionspy"><a href="../../examples/app_functions.py"><code>app_functions.py</code></a><a class="headerlink" href="#app_functionspy" title="Permanent link">&para;</a></h4>
 <p>Stub implementations for the tools and helpers referenced by
-<code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>, <code>webpage_reader</code>,
-<code>summarize</code>). Ship-quality replacements would call real services; these
+<code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>, <code>webpage_reader</code>).
+Ship-quality replacements would call real services; these
 just return formatted strings so the agent loop has something to do.</p>
 <h4 id="human_functionspy"><a href="../../examples/human_functions.py"><code>human_functions.py</code></a><a class="headerlink" href="#human_functionspy" title="Permanent link">&para;</a></h4>
 <p>Stub <code>draft_report</code> and <code>publish_report</code> used by the human-approval

@@ -1816,7 +1816,7 @@ page is the operational walkthrough.</p>
 <p>A workflow can include steps that block on a human decision. When the
 runtime reaches such a step it raises <code>HumanInterventionRequired</code>, which
 the platform catches, serializes into a <code>WorkflowContinuation</code>, and
-exposes to operators. The run goes from <code>running</code> to <code>paused</code>. A
+exposes to operators. The run goes from <code>running</code> to <code>blocked</code>. A
 subsequent resume call provides the decision and the workflow continues
 from where it stopped, using the persisted replay context.</p>
 <pre class="mermaid"><code>sequenceDiagram
@@ -1831,7 +1831,7 @@ from where it stopped, using the persisted replay context.</p>
     Service-&gt;&gt;Workflow: execute
     Workflow--&gt;&gt;Service: HumanInterventionRequired&lt;br/&gt;(continuation_id, request_id)
     Service-&gt;&gt;Cont: save continuation + checkpoint
-    Service--&gt;&gt;Caller: 202 with continuation_id
+    Service--&gt;&gt;Caller: 200 with continuation_id (202 when async_mode=true)
 
     Reviewer-&gt;&gt;Service: GET /human-tasks
     Service--&gt;&gt;Reviewer: list (continuation, request, prompt, deadline)
@@ -1904,7 +1904,7 @@ status, the <code>continuation_id</code> to resume against, and the pending requ
 nested in <code>metadata.pending_human_request</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_2026-05-10T12:34:56_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;paused&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;blocked&quot;</span><span class="p">,</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
@@ -2046,7 +2046,7 @@ underlying run is still <code>blocked</code>, the prune dispatches on
   the original <code>assignee</code>. Subsequent prune calls <strong>skip</strong>
   continuations carrying the <code>escalated_at</code> marker — escalation fires
   once. The continuation stays alive until an operator resumes it via
-  the normal <code>/continuations/{id}/resume</code> path (typically after
+  the normal <code>/v1/human-tasks/{continuation_id}/resume</code> path (typically after
   reassigning to a different reviewer in the operator's external
   workflow).</li>
 </ul>
@@ -2116,7 +2116,7 @@ mid-execution).</p>
 <ul>
 <li><a href="../examples/">examples.md</a> — the full set of runnable specs.</li>
 <li><a href="../service_api/">service_api.md</a> — <code>/human-tasks</code> route shapes.</li>
-<li>design.md § 4.3 — design rationale.</li>
+<li>design.md § 8.5 — design rationale.</li>
 </ul>
 
 

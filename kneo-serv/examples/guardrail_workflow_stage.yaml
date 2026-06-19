@@ -1,0 +1,63 @@
+# Workflow-stage guardrail (the fourth stage; companion to guardrails_complete.yaml
+# = tool stage and guardrail_stages.yaml = input/output).
+#
+# As of 0.11.0 a `workflow`-stage guardrail is ENFORCED per step: each
+# workflow step's output is checked, and a `block` action aborts the run
+# (redact/revise rewrite the step output). Before 0.11.0 it was rejected at
+# validate (`E_GUARDRAIL_STAGE_UNSUPPORTED`); now it validates green and runs.
+# Declared on the root agent's `guardrails.workflow`, it applies to every step
+# of the root workflow (and nested/component workflows).
+#
+#   kneo spec validate examples/guardrail_workflow_stage.yaml   # green
+#   kneo run examples/guardrail_workflow_stage.yaml \
+#     --input "draft a status update" --target workflow --json   # needs a provider
+
+version: v1
+
+agent:
+  name: pipeline-root
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  guardrails:
+    workflow:
+      - id: no-leak-between-steps
+        type: keyword
+        action: block
+        config:
+          # Abort the run if any step's output contains this marker, so an
+          # unreviewed disclosure can't flow into the next step.
+          keywords: [CONFIDENTIAL_LEAK]
+
+workflow:
+  type: sequential
+  name: drafting-pipeline
+  steps:
+    - id: draft
+      kind: agent
+      ref: drafter
+    - id: refine
+      kind: agent
+      ref: refiner
+
+components:
+  agents:
+    drafter:
+      name: drafter
+      model:
+        provider: openai
+        name: gpt-4o-mini
+      strategy:
+        type: simple
+    refiner:
+      name: refiner
+      model:
+        provider: openai
+        name: gpt-4o-mini
+      strategy:
+        type: simple

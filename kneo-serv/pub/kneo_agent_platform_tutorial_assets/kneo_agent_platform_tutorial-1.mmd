@@ -10,7 +10,7 @@ sequenceDiagram
     Service->>Workflow: execute
     Workflow-->>Service: HumanInterventionRequired<br/>(continuation_id, request_id)
     Service->>Cont: save continuation + checkpoint
-    Service-->>Caller: 202 with continuation_id
+    Service-->>Caller: 200 with continuation_id (202 when async_mode=true)
 
     Reviewer->>Service: GET /human-tasks
     Service-->>Reviewer: list (continuation, request, prompt, deadline)

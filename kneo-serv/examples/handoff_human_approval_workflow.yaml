@@ -1,0 +1,51 @@
+version: v1
+
+# Handoff workflow with a human-approval participant (0.12.0 § D — handoff
+# shape). Handoff runs participants in selector order, one at a time; a
+# `kind=human` participant pauses the rotation: the run returns a `blocked`
+# result and persists a continuation, resumable with the reviewer's response.
+# On resume the rotation continues at the participants still to run. Non-human
+# participants use canned functions so the example runs end-to-end without a
+# provider; retarget them before any real use.
+
+agent:
+  name: handoff-approval-root
+  system_prompt: Root agent for the handoff approval workflow.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  strategy:
+    type: simple
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+
+workflow:
+  type: handoff
+  name: handoff-approval-workflow
+  selector:
+    type: sequence
+    sequence: [draft, approve, publish]
+  participants:
+    - id: draft
+      kind: function
+      ref: draft_report
+    - id: approve
+      kind: human
+      ref: approval-reviewer
+    - id: publish
+      kind: function
+      ref: publish_report
+
+components:
+  functions:
+    draft_report:
+      implementation: examples.human_functions.draft_report
+    publish_report:
+      implementation: examples.human_functions.publish_report
+  humans:
+    approval-reviewer:
+      description: Please approve or reject the drafted report.
+      assignee: reviewer@example.com
+      timeout_seconds: 86400
+      on_timeout: escalate

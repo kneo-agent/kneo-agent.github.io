@@ -925,7 +925,7 @@
 </ul>
 <p>The reference is the source of truth for <em>what's there</em>; the user guides are the source of truth for <em>how to use it</em>.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<p>For runnable code: <code>examples/</code> ships five end-to-end scripts:</p>
+<p>For runnable code: <code>examples/</code> ships seven end-to-end scripts:</p>
 <table>
 <thead>
 <tr>
@@ -953,6 +953,14 @@
 <tr>
 <td><code>05_human_task_resume.py</code></td>
 <td>List pending human tasks and resume with a decision.</td>
+</tr>
+<tr>
+<td><code>06_async_run.py</code></td>
+<td>Submit a run with <code>async_mode=true</code> (server returns <code>202</code> since <code>kneo_serv</code> 0.11.0) and poll to a terminal status.</td>
+</tr>
+<tr>
+<td><code>07_skills_overlay.py</code></td>
+<td>List the skill catalog, then start a run with a per-request <code>SkillsOverlay</code>.</td>
 </tr>
 </tbody>
 </table>

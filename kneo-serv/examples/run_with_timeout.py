@@ -18,7 +18,7 @@ Run with:
 Reads no external secrets — the example uses the `dummy` runtime via
 the bundled smoke spec.
 
-See [`docs/user/human_in_the_loop.md § 9.5`](../docs/user/human_in_the_loop.md)
+See [`docs/user/human_in_the_loop.md § 9`](../docs/user/human_in_the_loop.md)
 for the dispatch matrix between run-level and human-task timeouts.
 """
 

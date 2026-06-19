@@ -1441,6 +1441,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#more-examples-deeper-cuts-regressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More examples (deeper cuts + regressions)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#files" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1473,8 +1484,10 @@
 Use them to validate a local install, exercise the CLI, or as
 starting points for your own specs.</p>
 <p>For the annotated walkthrough — exact <code>kneo spec</code> / <code>kneo run</code>
-commands, expected output, caveats — and a fuller <strong>feature → example
-matrix</strong>, see <a href="../user/examples/"><code>docs/user/examples.md</code></a>.</p>
+commands, expected output, caveats — see
+<a href="../user/examples/"><code>docs/user/examples.md</code></a>, which is the
+<strong>canonical feature → example matrix</strong>. The condensed matrix below is a
+quick index; when the two differ, <code>docs/user/examples.md</code> wins.</p>
 <h2 id="feature-example-matrix">Feature → example matrix<a class="headerlink" href="#feature-example-matrix" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1497,6 +1510,10 @@ matrix</strong>, see <a href="../user/examples/"><code>docs/user/examples.md</co
 <td><code>human_approval_workflow.yaml</code>, <code>smoke_human_workflow.yaml</code></td>
 </tr>
 <tr>
+<td>Human pause/continuation per workflow shape <em>(0.12.0 § D)</em></td>
+<td><code>graph_human_approval_workflow.yaml</code>, <code>concurrent_human_approval_workflow.yaml</code>, <code>group_chat_human_approval_workflow.yaml</code>, <code>handoff_human_approval_workflow.yaml</code></td>
+</tr>
+<tr>
 <td>Declarative MCP / agent-as-tool / workflow-as-agent</td>
 <td><code>declarative_spec.yaml</code></td>
 </tr>
@@ -1513,6 +1530,10 @@ matrix</strong>, see <a href="../user/examples/"><code>docs/user/examples.md</co
 <td><code>resilient_workflow.yaml</code></td>
 </tr>
 <tr>
+<td>MCP http transport <em>(compile-only)</em></td>
+<td><code>mcp_http_workflow.yaml</code></td>
+</tr>
+<tr>
 <td>MCP stdio transport <em>(0.9.0 regression)</em></td>
 <td><code>mcp_stdio_workflow.yaml</code></td>
 </tr>
@@ -1523,6 +1544,18 @@ matrix</strong>, see <a href="../user/examples/"><code>docs/user/examples.md</co
 <tr>
 <td>Tool-stage guardrail enforcement <em>(0.10.0 HIGH #2)</em></td>
 <td><code>guardrails_complete.yaml</code></td>
+</tr>
+<tr>
+<td>Input + output-stage guardrails</td>
+<td><code>guardrail_stages.yaml</code></td>
+</tr>
+<tr>
+<td>Workflow-stage guardrail <em>(enforced per step, 0.11.0)</em></td>
+<td><code>guardrail_workflow_stage.yaml</code></td>
+</tr>
+<tr>
+<td>Human-task request + timeout taxonomy</td>
+<td><code>human_task_taxonomy.yaml</code></td>
 </tr>
 <tr>
 <td>Secret redaction <em>(0.10.0 MEDIUMs)</em></td>
@@ -1589,11 +1622,11 @@ concepts the previous one introduces.</p>
 <ul>
 <li><strong><a href="app_functions.py"><code>app_functions.py</code></a></strong> — function references
   for <code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>,
-  <code>webpage_reader</code>, <code>summarize</code>). Stub implementations meant to be
+  <code>webpage_reader</code>). Stub implementations meant to be
   replaced with real ones in your own spec.</li>
 <li><strong><a href="human_functions.py"><code>human_functions.py</code></a></strong> — function
   references for <code>human_approval_workflow.yaml</code> (<code>draft_report</code>,
-  <code>publish_report</code>). Also stubs.</li>
+  <code>publish_report</code>, <code>archive_rejected</code>). Also stubs.</li>
 <li><strong><a href="nested_functions.py"><code>nested_functions.py</code></a></strong> — function
   references for <code>nested_workflow_human_approval.yaml</code> (the nested
   drafting steps <code>outline_section</code> / <code>expand_draft</code> and the top-level
@@ -1609,16 +1642,15 @@ concepts the previous one introduces.</p>
   <code>provider</code>/<code>model</code> fields point at common defaults
   (<code>openai/gpt-4o</code>, <code>openai/gpt-4o-mini</code>) and should be retargeted
   before any real use.</li>
-<li>
-<p>The Python helpers return placeholder strings — replace with real
-  implementations before running against production tooling.</p>
-</li>
-<li>
-<p><strong><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></strong> — handoff
+<li>The Python helpers return placeholder strings — replace with real
+  implementations before running against production tooling.</li>
+</ul>
+<h2 id="more-examples-deeper-cuts-regressions">More examples (deeper cuts + regressions)<a class="headerlink" href="#more-examples-deeper-cuts-regressions" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></strong> — handoff
    workflow with a <code>round_robin</code> selector: one turn per participant,
    then a clean completion. The executable regression for the 0.9.0
-   round-robin status fix.</p>
-</li>
+   round-robin status fix.</li>
 <li><strong><a href="resilient_workflow.yaml"><code>resilient_workflow.yaml</code></a></strong> — per-step
    <code>on_error</code> policies: a failing step that <code>continue</code>s (skipped, chain
    proceeds) and one that <code>fallback</code>s to a cached source. See the
@@ -1641,9 +1673,11 @@ concepts the previous one introduces.</p>
     <strong>tool-stage</strong> guardrail that redacts PII (an SSN pattern) from a tool
     result. The executable regression for the 0.10.0 HIGH #2 fix: before it,
     <code>tool</code>/<code>workflow</code>-stage guardrails passed validation and the production
-    <code>require_guardrails</code> gate but were never enforced. <code>workflow</code>-stage
-    guardrails are now rejected at validation (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code>)
-    rather than silently dropped. End-to-end needs a provider (the agent must
+    <code>require_guardrails</code> gate but were never enforced. As of <strong>0.11.0</strong>,
+    <code>workflow</code>-stage guardrails are <strong>accepted and enforced per step</strong> (block
+    aborts the run; redact/revise rewrite the step output) — they are no longer
+    rejected at validation (<code>E_GUARDRAIL_STAGE_UNSUPPORTED</code> no longer fires).
+    End-to-end needs a provider (the agent must
     choose to call the tool), so the offline test compiles the spec, confirms
     the guardrail is wired into the runtime, and exercises it on a PII-bearing
     result to prove redaction.</li>
@@ -1664,9 +1698,20 @@ concepts the previous one introduces.</p>
     <code>run_awaitable_sync</code> worker-thread hop (so spans nest under the run span
     instead of becoming orphan roots). Run it with
     <code>python examples/custom_middleware_demo.py</code>.</li>
-</ul>
+<li><strong><a href="graph_human_approval_workflow.yaml"><code>graph_human_approval_workflow.yaml</code></a></strong>,
+    <strong><a href="concurrent_human_approval_workflow.yaml"><code>concurrent_human_approval_workflow.yaml</code></a></strong>,
+    <strong><a href="group_chat_human_approval_workflow.yaml"><code>group_chat_human_approval_workflow.yaml</code></a></strong>,
+    <strong><a href="handoff_human_approval_workflow.yaml"><code>handoff_human_approval_workflow.yaml</code></a></strong>
+    <em>(0.12.0 § D)</em> — a <code>kind=human</code> approval gate that pauses + resumes in every
+    workflow shape, not only sequential: the graph node, group-chat turn, and
+    handoff rotation each return a <code>blocked</code> result and persist a continuation;
+    the concurrent fan-out is <strong>drain-then-block</strong> (non-human siblings run to
+    completion, then the run blocks on the human, and siblings are never re-run
+    on resume). Non-human nodes use canned functions so each runs end-to-end
+    without a provider.</li>
+</ol>
 <p>These specs run offline in CI (<code>tests/test_examples_e2e.py</code>) — they are
-the executable regressions for the surfaces the 0.9.0 and 0.10.0 cuts fixed.</p>
+the executable regressions for the surfaces the 0.9.0 through 0.12.0 cuts fixed.</p>
 <h2 id="files">Files<a class="headerlink" href="#files" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="declarative_spec.yaml"><code>declarative_spec.yaml</code></a></li>
@@ -1676,17 +1721,25 @@ the executable regressions for the surfaces the 0.9.0 and 0.10.0 cuts fixed.</p>
 <li><a href="research_agent.staging.yaml"><code>research_agent.staging.yaml</code></a></li>
 <li><a href="research_agent.prod.yaml"><code>research_agent.prod.yaml</code></a></li>
 <li><a href="graph_review_workflow.yaml"><code>graph_review_workflow.yaml</code></a></li>
+<li><a href="graph_human_approval_workflow.yaml"><code>graph_human_approval_workflow.yaml</code></a></li>
 <li><a href="concurrent_review_workflow.yaml"><code>concurrent_review_workflow.yaml</code></a></li>
+<li><a href="concurrent_human_approval_workflow.yaml"><code>concurrent_human_approval_workflow.yaml</code></a></li>
 <li><a href="group_chat_workflow.yaml"><code>group_chat_workflow.yaml</code></a></li>
+<li><a href="group_chat_human_approval_workflow.yaml"><code>group_chat_human_approval_workflow.yaml</code></a></li>
 <li><a href="handoff_workflow.yaml"><code>handoff_workflow.yaml</code></a></li>
+<li><a href="handoff_human_approval_workflow.yaml"><code>handoff_human_approval_workflow.yaml</code></a></li>
 <li><a href="resilient_workflow.yaml"><code>resilient_workflow.yaml</code></a></li>
 <li><a href="guardrails_complete.yaml"><code>guardrails_complete.yaml</code></a></li>
+<li><a href="guardrail_stages.yaml"><code>guardrail_stages.yaml</code></a></li>
+<li><a href="guardrail_workflow_stage.yaml"><code>guardrail_workflow_stage.yaml</code></a></li>
 <li><a href="guardrail_functions.py"><code>guardrail_functions.py</code></a></li>
 <li><a href="human_approval_workflow.yaml"><code>human_approval_workflow.yaml</code></a></li>
 <li><a href="nested_workflow_human_approval.yaml"><code>nested_workflow_human_approval.yaml</code></a></li>
 <li><a href="nested_functions.py"><code>nested_functions.py</code></a></li>
+<li><a href="human_task_taxonomy.yaml"><code>human_task_taxonomy.yaml</code></a></li>
 <li><a href="smoke_human_workflow.yaml"><code>smoke_human_workflow.yaml</code></a></li>
 <li><a href="mcp_stdio_workflow.yaml"><code>mcp_stdio_workflow.yaml</code></a></li>
+<li><a href="mcp_http_workflow.yaml"><code>mcp_http_workflow.yaml</code></a></li>
 <li><a href="mcp_stdio_server.py"><code>mcp_stdio_server.py</code></a></li>
 <li><a href="run_with_timeout.py"><code>run_with_timeout.py</code></a></li>
 <li><a href="custom_middleware_demo.py"><code>custom_middleware_demo.py</code></a></li>

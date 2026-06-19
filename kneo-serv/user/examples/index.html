@@ -2015,6 +2015,11 @@ run offline in CI (no provider keys, no network).</p>
 <td>Pause at a human step, resume via the continuation API.</td>
 </tr>
 <tr>
+<td>Human pause/continuation per workflow shape <em>(0.12.0 § D)</em></td>
+<td><code>graph_human_approval_workflow.yaml</code>, <code>concurrent_human_approval_workflow.yaml</code>, <code>group_chat_human_approval_workflow.yaml</code>, <code>handoff_human_approval_workflow.yaml</code></td>
+<td>A human-approval gate pauses + resumes in every workflow shape (graph / concurrent / group-chat / handoff; concurrent via drain-then-block).</td>
+</tr>
+<tr>
 <td>Human (smoke)</td>
 <td><code>smoke_human_workflow.yaml</code></td>
 <td>Minimal pause/resume on the <code>dummy</code> provider, for smoke tests.</td>
@@ -2232,8 +2237,8 @@ overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, o
 <h2 id="helper-python">Helper Python<a class="headerlink" href="#helper-python" title="Permanent link">&para;</a></h2>
 <h3 id="app_functionspy"><a href="../../examples/app_functions.py"><code>app_functions.py</code></a><a class="headerlink" href="#app_functionspy" title="Permanent link">&para;</a></h3>
 <p>Stub implementations for the tools and helpers referenced by
-<code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>, <code>webpage_reader</code>,
-<code>summarize</code>). Ship-quality replacements would call real services; these
+<code>research_agent.yaml</code> (<code>compress_history</code>, <code>web_search</code>, <code>webpage_reader</code>).
+Ship-quality replacements would call real services; these
 just return formatted strings so the agent loop has something to do.</p>
 <h3 id="human_functionspy"><a href="../../examples/human_functions.py"><code>human_functions.py</code></a><a class="headerlink" href="#human_functionspy" title="Permanent link">&para;</a></h3>
 <p>Stub <code>draft_report</code> and <code>publish_report</code> used by the human-approval
