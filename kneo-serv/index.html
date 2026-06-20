@@ -1759,7 +1759,7 @@ platform owns everything around them — spec compilation, run state,
 checkpoints, audit events, API-key auth, request limits, structured logging,
 and persistent backends.</p>
 <h2 id="capabilities">Capabilities<a class="headerlink" href="#capabilities" title="Permanent link">&para;</a></h2>
-<p>Kneo Agent Platform 0.12.x (<code>kneo-serv</code> 0.12.x; current: 0.12.0) ships:</p>
+<p>Kneo Agent Platform 1.0.x (<code>kneo-serv</code> 1.0.x; current: 1.0.0) ships:</p>
 <ul>
 <li>An SDK-backed <code>Agent</code> compatibility layer over <code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>.</li>
 <li>Bridge, native, and adapter runtime modes with retry, timeout, and
@@ -1840,11 +1840,14 @@ full profile workflow and
 <a href="user/tutorial_postgres_deployment/">Tutorial — deploying with PostgreSQL from zero</a>
 for a zero-to-running Docker Compose walkthrough.</p>
 <h2 id="status-and-scope">Status and scope<a class="headerlink" href="#status-and-scope" title="Permanent link">&para;</a></h2>
-<p>Kneo Agent Platform is a production-ready release within its supported
+<p>Kneo Agent Platform 1.0.x (current: 1.0.0) is a <strong>generally available</strong>,
+production-ready release line. The <code>/v1</code> HTTP API and the <code>kneo</code> CLI are
+stable surfaces under semantic versioning — additive changes within a major,
+deprecation windows before any removal, and no silent <code>/v1</code> breaks. Supported
 scope: single-tenant deployment, API-key auth with scope-based authorization,
 PostgreSQL or SQLite persistence, durable background runs, audit events, and
 signed spec bundles.</p>
-<p>Out of scope for the <code>0.12.x</code> series:</p>
+<p>Out of scope for the <code>1.0.x</code> line:</p>
 <ul>
 <li>OIDC, SSO, or per-user identity (auth is API-key only).</li>
 <li>Multi-region replication or cross-region failover.</li>
