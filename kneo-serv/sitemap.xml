@@ -2,126 +2,138 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/examples/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-serv/examples/skills/</loc>
+         <lastmod>2026-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-serv/examples/skills/code_review/</loc>
+         <lastmod>2026-06-20</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-serv/examples/skills/code_review/SKILL/</loc>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/pub/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/pub/kneo_agent_platform_operation_guide/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/pub/kneo_agent_platform_reference/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/pub/kneo_agent_platform_tutorial/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/backup_and_recovery/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/checkpoint_and_state_lifecycle/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/cli/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/cli_reference/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/deployment/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/deployment_smoke/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/environment/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/examples/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/human_in_the_loop/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/incident_response/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/monitoring_and_alerting/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/observability/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/performance/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/project_config/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/quickstart/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/run_lifecycle/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/run_recipes/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/security_hardening/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/service_api/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/tls_and_proxy/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/troubleshooting/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/tutorial_custom_tool/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/tutorial_postgres_deployment/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-serv/user/upgrade/</loc>
-         <lastmod>2026-06-19</lastmod>
+         <lastmod>2026-06-20</lastmod>
     </url>
 </urlset>

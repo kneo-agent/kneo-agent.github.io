@@ -1,0 +1,33 @@
+version: v1
+
+# Declared skills are a SPEC FIELD. The top-level `skills:` block maps a name to
+# a bundle `source` (a filesystem path to a skill directory or single file), and
+# an agent activates them by name in its own `skills:` list. At compile time the
+# bundle's instructions are composed into the agent's system prompt.
+#
+# `source` is a caller-supplied path, so — like `spec_path`/`overlays` — it is
+# confined to `KNEO_SERV_SPEC_ROOT` (default: the process working directory). A
+# source resolving outside the root is rejected `422 spec_path_confined`. Paths
+# below are relative to the directory you run `kneo` from (the repo root for this
+# example).
+#
+# (Declared skills are distinct from the per-request skills overlay and the
+# read-only `GET /v1/skills` catalog — the runtime/API surface. See
+# docs/user/examples.md.)
+
+agent:
+  name: reviewer
+  system_prompt: |
+    You review pull requests for a software team.
+  model:
+    provider: openai
+    name: gpt-4o-mini
+  runtime_preferences:
+    preferred_mode: bridge
+    allowed_modes: [bridge]
+  skills: [code_review]
+
+skills:
+  code_review:
+    source: examples/skills/code_review
+    description: Guidance for reviewing code changes.

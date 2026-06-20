@@ -2913,6 +2913,8 @@
           
         
       
+        
+      
     
     
     
@@ -2949,6 +2951,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
@@ -2962,6 +2969,192 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/code_review/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code review
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code review
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/code_review/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Review skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
           </ul>
@@ -5713,11 +5906,15 @@ spec returns <code>400 spec_invalid</code> carrying the diagnostic list (it is n
 and returns <strong><code>202 Accepted</code></strong> with the queued <code>run_id</code> (poll
 <code>GET /runs/{run_id}</code>), exactly like <code>POST /runs</code>; the synchronous default
 (<code>async_mode=false</code>) runs inline and returns <code>200</code>.</p>
-<p><strong>Spec-path confinement.</strong> <code>spec_path</code> and <code>overlays</code> are filesystem paths the
-service reads at compile time. Setting <code>KNEO_SERV_SPEC_ROOT</code> confines those reads
-to an allow-listed root (anything resolving outside it is rejected <code>422</code>); when
-unset, an absolute path is accepted but logs a deprecation warning (the default
-flips to reject at <code>1.0</code>). See <a href="../../user/security_hardening/">security_hardening.md</a>.</p>
+<p><strong>Spec-path confinement.</strong> <code>spec_path</code>, <code>overlays</code>, and <code>skills[].source</code> are
+filesystem paths the service reads at compile time. They are confined to the
+<strong>spec root</strong> — <code>KNEO_SERV_SPEC_ROOT</code> when set, otherwise the process working
+directory — and anything resolving outside it (absolute path, <code>..</code>-traversal, or
+symlink escape) is rejected <code>422 spec_path_confined</code>. Confinement is
+<strong>default-on as of <code>1.0.0</code></strong> (it was opt-in through <code>0.12.x</code>, where an out-of-root
+absolute path only logged a deprecation warning). Set <code>KNEO_SERV_SPEC_ROOT</code>
+explicitly when your specs / overlays / skill bundles live outside the working
+directory. See <a href="../../user/security_hardening/">security_hardening.md</a>.</p>
 <p>Legacy aliases:</p>
 <ul>
 <li>POST /specs/validate</li>
@@ -6026,8 +6223,8 @@ Each write records a <code>policy.changed</code> audit event.</p>
 </code></pre></div>
 <p>Common error codes: <code>unauthorized</code> (401), <code>forbidden</code> (403),
 <code>invalid_request</code> (400), <code>not_found</code> (404), <code>idempotency_key_conflict</code>
-(409), <code>payload_too_large</code> (413), <code>not_ready</code> (503). Errors map through
-<code>service/errors.py</code>.</p>
+(409), <code>payload_too_large</code> (413), <code>spec_path_confined</code> (422), <code>not_ready</code> (503).
+Errors map through <code>service/errors.py</code>.</p>
 <h3 id="pagination-filtering-and-sorting">Pagination, filtering, and sorting<a class="headerlink" href="#pagination-filtering-and-sorting" title="Permanent link">&para;</a></h3>
 <p>List-style endpoints return the original collection field plus pagination
 metadata:</p>
@@ -6211,7 +6408,10 @@ graph node (<code>E_GRAPH_NODE_FALLBACK_DISABLED</code>).</p>
 <h3 id="async-run-creation-returns-202-accepted">Async run creation returns <code>202 Accepted</code><a class="headerlink" href="#async-run-creation-returns-202-accepted" title="Permanent link">&para;</a></h3>
 <p><code>POST /v1/runs</code> with <code>async_mode=true</code> returns <strong><code>202 Accepted</code></strong>: the run is
 dispatched to the worker queue and the caller polls <code>GET /runs/{id}</code> for
-progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>.</p>
+progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>. <strong><code>POST
+/v1/specs/run</code></strong> shares the same contract as of 0.12.0 — <code>async_mode=true</code>
+returns <code>202</code> + a queued <code>run_id</code> to poll, <code>async_mode=false</code> runs inline at
+<code>200</code>.</p>
 <p><strong>0.11.0 breaking change:</strong> through 0.10.x this returned <code>200</code>; the <code>200 → 202</code>
 move was held for the contract-stability boundary and shipped in 0.11.0 (see
 contract_stability.md and
@@ -6315,6 +6515,11 @@ above.)</p>
 </tr>
 <tr>
 <td>422</td>
+<td><code>spec_path_confined</code></td>
+<td>A caller-supplied <code>spec_path</code> / overlay / <code>skills[].source</code> resolved outside the spec root (<code>KNEO_SERV_SPEC_ROOT</code>, or the working directory by default). Default-on as of <code>1.0.0</code>.</td>
+</tr>
+<tr>
+<td>422</td>
 <td><em>(native envelope)</em></td>
 <td>Request-shape validation errors.</td>
 </tr>
@@ -6366,8 +6571,8 @@ in <a href="#platform-service-api"><code>service_api.md</code></a>.</p>
 </tr>
 <tr>
 <td><code>KNEO_SERV_SPEC_ROOT</code></td>
-<td>unset</td>
-<td>Allow-listed root for caller-supplied <code>spec_path</code> / <code>overlays</code>. When set, any spec/overlay read (run, resume, <code>/v1/specs/*</code>) resolving outside it — absolute, <code>..</code>-traversal, or symlink escape — is rejected <code>422 spec_path_confined</code>. Unset = unchanged behavior except an absolute path logs a <code>DeprecationWarning</code>; confinement is default-on at <code>1.0.0</code>. See <a href="../../user/security_hardening/">security_hardening.md</a>.</td>
+<td>process working directory</td>
+<td>Allow-listed root for caller-supplied <code>spec_path</code> / <code>overlays</code> / <code>skills[].source</code>. Any such read (run, resume, <code>/v1/specs/*</code>) resolving outside the root — absolute, <code>..</code>-traversal, or symlink escape — is rejected <code>422 spec_path_confined</code>. Confinement is <strong>default-on as of <code>1.0.0</code></strong> (opt-in through <code>0.12.x</code>, where an out-of-root absolute path only logged a <code>DeprecationWarning</code>); when unset, the root is the process working directory. Set it explicitly when specs/skills live outside the working directory. See <a href="../../user/security_hardening/">security_hardening.md</a>.</td>
 </tr>
 </tbody>
 </table>
@@ -7059,23 +7264,37 @@ cyclic reference is rejected at <code>validate</code>, not at runtime.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-108-1" name="__codelineno-108-1" href="#__codelineno-108-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/declarative_spec.yaml
 <a id="__codelineno-108-2" name="__codelineno-108-2" href="#__codelineno-108-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/declarative_spec.yaml
 </code></pre></div>
-<p>The skills surface is a runtime/API feature rather than a spec field. List the
-discoverable skills and overlay them per run against a running service:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a><span class="c1"># Read-only catalog (auth scope: specs:read)</span>
-<a id="__codelineno-109-2" name="__codelineno-109-2" href="#__codelineno-109-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>http://127.0.0.1:8000/v1/skills
-<a id="__codelineno-109-3" name="__codelineno-109-3" href="#__codelineno-109-3"></a>
-<a id="__codelineno-109-4" name="__codelineno-109-4" href="#__codelineno-109-4"></a><span class="c1"># Per-request overlay on a run — add/disable within your scope; audited.</span>
-<a id="__codelineno-109-5" name="__codelineno-109-5" href="#__codelineno-109-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-109-6" name="__codelineno-109-6" href="#__codelineno-109-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-109-7" name="__codelineno-109-7" href="#__codelineno-109-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;input&quot;: &quot;hi&quot;, &quot;spec&quot;: {...}, &quot;skills&quot;: {&quot;disable&quot;: [&quot;risky_skill&quot;]}}&#39;</span>
+<p>Skills have two surfaces. <strong>Declared skills are a spec field</strong>: a top-level
+<code>skills:</code> block maps a name to a <code>SkillSpec</code> with a <code>source</code> (the bundle's
+filesystem path), and an agent references them by name in its <code>skills:</code> list. A
+declared <code>skills[].source</code> is a caller-supplied path, so it is confined to the
+spec root (<code>KNEO_SERV_SPEC_ROOT</code>, or the working directory by default) like
+<code>spec_path</code>/<code>overlays</code> — an out-of-root source is rejected <code>422 spec_path_confined</code>.</p>
+<p>A runnable example: <a href="../../examples/skills_spec.yaml"><code>examples/skills_spec.yaml</code></a>
+declares a <code>code_review</code> skill sourced from the bundle at
+<a href="../../examples/skills/code_review/"><code>examples/skills/code_review/</code></a> and activates
+it on the agent. Compile it <strong>from the repo root</strong> so the relative <code>source</code>
+resolves inside the spec root:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-109-1" name="__codelineno-109-1" href="#__codelineno-109-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/skills_spec.yaml
+<a id="__codelineno-109-2" name="__codelineno-109-2" href="#__codelineno-109-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>examples/skills_spec.yaml
+</code></pre></div>
+<p>Separately, the <strong>runtime/API surface</strong> lets you list the discoverable skills and
+toggle them per run against a running service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a><span class="c1"># Read-only catalog (auth scope: specs:read)</span>
+<a id="__codelineno-110-2" name="__codelineno-110-2" href="#__codelineno-110-2"></a>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>http://127.0.0.1:8000/v1/skills
+<a id="__codelineno-110-3" name="__codelineno-110-3" href="#__codelineno-110-3"></a>
+<a id="__codelineno-110-4" name="__codelineno-110-4" href="#__codelineno-110-4"></a><span class="c1"># Per-request overlay on a run — add/disable within your scope; audited.</span>
+<a id="__codelineno-110-5" name="__codelineno-110-5" href="#__codelineno-110-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>http://127.0.0.1:8000/v1/runs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-110-6" name="__codelineno-110-6" href="#__codelineno-110-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-110-7" name="__codelineno-110-7" href="#__codelineno-110-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;input&quot;: &quot;hi&quot;, &quot;spec&quot;: {...}, &quot;skills&quot;: {&quot;disable&quot;: [&quot;risky_skill&quot;]}}&#39;</span>
 </code></pre></div>
 <h3 id="project-config">Project config<a class="headerlink" href="#project-config" title="Permanent link">&para;</a></h3>
 <h4 id="project_configyaml"><a href="../../examples/project_config.yaml"><code>project_config.yaml</code></a><a class="headerlink" href="#project_configyaml" title="Permanent link">&para;</a></h4>
 <p>Reference <code>.kneo/config.yaml</code> content showing project metadata, service
 defaults, runtime defaults, and per-environment policy enforcement
 overlays. Copy into <code>.kneo/config.yaml</code> to bootstrap a new project, or use:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-110-1" name="__codelineno-110-1" href="#__codelineno-110-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
-<a id="__codelineno-110-2" name="__codelineno-110-2" href="#__codelineno-110-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a>kneo<span class="w"> </span>config<span class="w"> </span>init<span class="w"> </span>--name<span class="w"> </span>research-agent-demo
+<a id="__codelineno-111-2" name="__codelineno-111-2" href="#__codelineno-111-2"></a>kneo<span class="w"> </span>config<span class="w"> </span>show
 </code></pre></div>
 <p>The schema and overlay rules are in
 <a href="#project-kneo-config"><code>project_config.md</code></a>.</p>
@@ -7105,13 +7324,13 @@ redact.</p>
    through <code>ToolRegistry</code> or MCP servers (see
    <code>extending.md</code>).</li>
 <li>Validate against your target environment:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-111-1" name="__codelineno-111-1" href="#__codelineno-111-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>my_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div></li>
 <li>Compile to confirm the workflow builds:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>compile<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 <li>Run locally before deploying:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a>kneo<span class="w"> </span>run<span class="w"> </span>--input<span class="w"> </span><span class="s2">&quot;&lt;prompt&gt;&quot;</span><span class="w"> </span>--target<span class="w"> </span>workflow<span class="w"> </span>my_agent.yaml
 </code></pre></div></li>
 </ol>
 <p>For deployment to a service, see <a href="../../user/deployment/"><code>deployment.md</code></a>.</p>
@@ -7197,11 +7416,11 @@ direct adapter call) — the YAML/script headers say which.</p>
 generated artifacts, and logs. This page covers the contents and the
 overlay/policy story; for the runtime variables read from the environment
 (rather than from project config), see <a href="#environment-variables">environment.md</a>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a>.kneo/
-<a id="__codelineno-114-2" name="__codelineno-114-2" href="#__codelineno-114-2"></a>  config.yaml
-<a id="__codelineno-114-3" name="__codelineno-114-3" href="#__codelineno-114-3"></a>  README.md
-<a id="__codelineno-114-4" name="__codelineno-114-4" href="#__codelineno-114-4"></a>  artifacts/.gitkeep
-<a id="__codelineno-114-5" name="__codelineno-114-5" href="#__codelineno-114-5"></a>  logs/.gitkeep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a>.kneo/
+<a id="__codelineno-115-2" name="__codelineno-115-2" href="#__codelineno-115-2"></a>  config.yaml
+<a id="__codelineno-115-3" name="__codelineno-115-3" href="#__codelineno-115-3"></a>  README.md
+<a id="__codelineno-115-4" name="__codelineno-115-4" href="#__codelineno-115-4"></a>  artifacts/.gitkeep
+<a id="__codelineno-115-5" name="__codelineno-115-5" href="#__codelineno-115-5"></a>  logs/.gitkeep
 </code></pre></div>
 <p>The <code>.kneo/config.yaml</code> demonstrates:</p>
 <ul>
@@ -7218,21 +7437,21 @@ overlay/policy story; for the runtime variables read from the environment
 </ul>
 <p>Environment-specific policy enforcement can be configured under
 <code>environments.&lt;name&gt;.policy_enforcement</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="nt">environments</span><span class="p">:</span>
-<a id="__codelineno-115-2" name="__codelineno-115-2" href="#__codelineno-115-2"></a><span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
-<a id="__codelineno-115-3" name="__codelineno-115-3" href="#__codelineno-115-3"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-115-4" name="__codelineno-115-4" href="#__codelineno-115-4"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-115-5" name="__codelineno-115-5" href="#__codelineno-115-5"></a><span class="w">  </span><span class="nt">staging</span><span class="p">:</span>
-<a id="__codelineno-115-6" name="__codelineno-115-6" href="#__codelineno-115-6"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-115-7" name="__codelineno-115-7" href="#__codelineno-115-7"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-115-8" name="__codelineno-115-8" href="#__codelineno-115-8"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-115-9" name="__codelineno-115-9" href="#__codelineno-115-9"></a><span class="w">  </span><span class="nt">prod</span><span class="p">:</span>
-<a id="__codelineno-115-10" name="__codelineno-115-10" href="#__codelineno-115-10"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
-<a id="__codelineno-115-11" name="__codelineno-115-11" href="#__codelineno-115-11"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-115-12" name="__codelineno-115-12" href="#__codelineno-115-12"></a><span class="w">      </span><span class="nt">deny_unrestricted_tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-115-13" name="__codelineno-115-13" href="#__codelineno-115-13"></a><span class="w">      </span><span class="nt">require_human_review</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-115-14" name="__codelineno-115-14" href="#__codelineno-115-14"></a><span class="w">      </span><span class="nt">require_guardrails</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-115-15" name="__codelineno-115-15" href="#__codelineno-115-15"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="nt">environments</span><span class="p">:</span>
+<a id="__codelineno-116-2" name="__codelineno-116-2" href="#__codelineno-116-2"></a><span class="w">  </span><span class="nt">dev</span><span class="p">:</span>
+<a id="__codelineno-116-3" name="__codelineno-116-3" href="#__codelineno-116-3"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-116-4" name="__codelineno-116-4" href="#__codelineno-116-4"></a><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-116-5" name="__codelineno-116-5" href="#__codelineno-116-5"></a><span class="w">  </span><span class="nt">staging</span><span class="p">:</span>
+<a id="__codelineno-116-6" name="__codelineno-116-6" href="#__codelineno-116-6"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-116-7" name="__codelineno-116-7" href="#__codelineno-116-7"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-116-8" name="__codelineno-116-8" href="#__codelineno-116-8"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-116-9" name="__codelineno-116-9" href="#__codelineno-116-9"></a><span class="w">  </span><span class="nt">prod</span><span class="p">:</span>
+<a id="__codelineno-116-10" name="__codelineno-116-10" href="#__codelineno-116-10"></a><span class="w">    </span><span class="nt">policy_enforcement</span><span class="p">:</span>
+<a id="__codelineno-116-11" name="__codelineno-116-11" href="#__codelineno-116-11"></a><span class="w">      </span><span class="nt">require_tool_permissions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-116-12" name="__codelineno-116-12" href="#__codelineno-116-12"></a><span class="w">      </span><span class="nt">deny_unrestricted_tools</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-116-13" name="__codelineno-116-13" href="#__codelineno-116-13"></a><span class="w">      </span><span class="nt">require_human_review</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-116-14" name="__codelineno-116-14" href="#__codelineno-116-14"></a><span class="w">      </span><span class="nt">require_guardrails</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-116-15" name="__codelineno-116-15" href="#__codelineno-116-15"></a><span class="w">      </span><span class="nt">blocked_diagnostic_codes</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">E_UNSAFE_TOOL_IMPORT</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">E_UNSAFE_FUNCTION_IMPORT</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 <p>Policy enforcement runs after spec overlays and project defaults are applied.
 <code>kneo spec validate --env prod</code>, <code>kneo spec compile --env prod</code>,
@@ -7243,14 +7462,14 @@ honor the resolved environment policy.</p>
 audit events, artifacts, and log files live in a top-level <code>retention:</code>
 block. Each field is a count of days to keep; unset fields disable
 pruning for that category. Values must be zero or greater.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a><span class="nt">retention</span><span class="p">:</span>
-<a id="__codelineno-116-2" name="__codelineno-116-2" href="#__codelineno-116-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<a id="__codelineno-116-3" name="__codelineno-116-3" href="#__codelineno-116-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
-<a id="__codelineno-116-4" name="__codelineno-116-4" href="#__codelineno-116-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
-<a id="__codelineno-116-5" name="__codelineno-116-5" href="#__codelineno-116-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
-<a id="__codelineno-116-6" name="__codelineno-116-6" href="#__codelineno-116-6"></a><span class="w">  </span><span class="nt">audit_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
-<a id="__codelineno-116-7" name="__codelineno-116-7" href="#__codelineno-116-7"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
-<a id="__codelineno-116-8" name="__codelineno-116-8" href="#__codelineno-116-8"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="nt">retention</span><span class="p">:</span>
+<a id="__codelineno-117-2" name="__codelineno-117-2" href="#__codelineno-117-2"></a><span class="w">  </span><span class="nt">runs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-117-3" name="__codelineno-117-3" href="#__codelineno-117-3"></a><span class="w">  </span><span class="nt">checkpoints_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">14</span>
+<a id="__codelineno-117-4" name="__codelineno-117-4" href="#__codelineno-117-4"></a><span class="w">  </span><span class="nt">queue_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span>
+<a id="__codelineno-117-5" name="__codelineno-117-5" href="#__codelineno-117-5"></a><span class="w">  </span><span class="nt">continuations_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">21</span>
+<a id="__codelineno-117-6" name="__codelineno-117-6" href="#__codelineno-117-6"></a><span class="w">  </span><span class="nt">audit_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">45</span>
+<a id="__codelineno-117-7" name="__codelineno-117-7" href="#__codelineno-117-7"></a><span class="w">  </span><span class="nt">artifacts_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60</span>
+<a id="__codelineno-117-8" name="__codelineno-117-8" href="#__codelineno-117-8"></a><span class="w">  </span><span class="nt">logs_days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
 </code></pre></div>
 <p><code>audit_days</code> prunes the audit-event log purely by age (it reaps events
 with no associated run too); the audit table grows unbounded otherwise,
@@ -7270,17 +7489,17 @@ workflow, manual operator action).</p>
 <p>The native (<code>openai</code>) runtime can target any OpenAI-compatible server —
 <strong>Ollama, vLLM, llama.cpp, LocalAI</strong> — by setting <code>base_url</code> (and, if the
 server requires one, an API key) under the agent spec's <code>model.extra</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a><span class="nt">agent</span><span class="p">:</span>
-<a id="__codelineno-117-2" name="__codelineno-117-2" href="#__codelineno-117-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-prem-assistant</span>
-<a id="__codelineno-117-3" name="__codelineno-117-3" href="#__codelineno-117-3"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
-<a id="__codelineno-117-4" name="__codelineno-117-4" href="#__codelineno-117-4"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
-<a id="__codelineno-117-5" name="__codelineno-117-5" href="#__codelineno-117-5"></a><span class="w">    </span><span class="nt">native_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<a id="__codelineno-117-6" name="__codelineno-117-6" href="#__codelineno-117-6"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
-<a id="__codelineno-117-7" name="__codelineno-117-7" href="#__codelineno-117-7"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
-<a id="__codelineno-117-8" name="__codelineno-117-8" href="#__codelineno-117-8"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span><span class="w">            </span><span class="c1"># the model the local server serves</span>
-<a id="__codelineno-117-9" name="__codelineno-117-9" href="#__codelineno-117-9"></a><span class="w">    </span><span class="nt">extra</span><span class="p">:</span>
-<a id="__codelineno-117-10" name="__codelineno-117-10" href="#__codelineno-117-10"></a><span class="w">      </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434/v1</span><span class="w">   </span><span class="c1"># e.g. Ollama</span>
-<a id="__codelineno-117-11" name="__codelineno-117-11" href="#__codelineno-117-11"></a><span class="w">      </span><span class="nt">api_key_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOCAL_LLM_KEY</span><span class="w">            </span><span class="c1"># resolved from the env (see below)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a><span class="nt">agent</span><span class="p">:</span>
+<a id="__codelineno-118-2" name="__codelineno-118-2" href="#__codelineno-118-2"></a><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">on-prem-assistant</span>
+<a id="__codelineno-118-3" name="__codelineno-118-3" href="#__codelineno-118-3"></a><span class="w">  </span><span class="nt">runtime_preferences</span><span class="p">:</span>
+<a id="__codelineno-118-4" name="__codelineno-118-4" href="#__codelineno-118-4"></a><span class="w">    </span><span class="nt">preferred_mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<a id="__codelineno-118-5" name="__codelineno-118-5" href="#__codelineno-118-5"></a><span class="w">    </span><span class="nt">native_provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-118-6" name="__codelineno-118-6" href="#__codelineno-118-6"></a><span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<a id="__codelineno-118-7" name="__codelineno-118-7" href="#__codelineno-118-7"></a><span class="w">    </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">openai</span>
+<a id="__codelineno-118-8" name="__codelineno-118-8" href="#__codelineno-118-8"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">llama3</span><span class="w">            </span><span class="c1"># the model the local server serves</span>
+<a id="__codelineno-118-9" name="__codelineno-118-9" href="#__codelineno-118-9"></a><span class="w">    </span><span class="nt">extra</span><span class="p">:</span>
+<a id="__codelineno-118-10" name="__codelineno-118-10" href="#__codelineno-118-10"></a><span class="w">      </span><span class="nt">base_url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://localhost:11434/v1</span><span class="w">   </span><span class="c1"># e.g. Ollama</span>
+<a id="__codelineno-118-11" name="__codelineno-118-11" href="#__codelineno-118-11"></a><span class="w">      </span><span class="nt">api_key_ref</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LOCAL_LLM_KEY</span><span class="w">            </span><span class="c1"># resolved from the env (see below)</span>
 </code></pre></div>
 <ul>
 <li><strong><code>base_url</code></strong> — the OpenAI-compatible endpoint. Omit it to use the hosted

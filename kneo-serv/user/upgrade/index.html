@@ -1286,6 +1286,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1620,6 +1631,8 @@
           
         
       
+        
+      
     
     
     
@@ -1656,6 +1669,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
@@ -1669,6 +1687,192 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/code_review/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code review
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code review
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/code_review/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Review skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
           </ul>
@@ -1947,6 +2151,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#100" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.0.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2006,19 +2221,24 @@ release_checklist.md. For the supported
   add new tables or columns with migrations; routes and CLI may add new
   surfaces. Existing surfaces remain available with the same shape unless
   the release notes call out an exception.</li>
-<li><strong>Major</strong> (<code>0.x</code> → <code>1.0</code>): may remove or change surfaces. Read the release
+<li><strong>Major</strong> (<code>1.x</code> → <code>2.0</code>): may remove or change surfaces. Read the release
   notes before upgrading; expect to update calling code.</li>
 </ul>
+<p><strong>As of <code>1.0.0</code> (GA),</strong> the <code>/v1</code> HTTP API and the <code>kneo</code> CLI are stable contracts
+under semantic versioning: additive changes within the major, deprecation windows
+before any removal, and no silent <code>/v1</code> breaks. (Pre-<code>1.0</code>, behavior corrections
+could land in a minor under the fixes-vs-breaks policy; that latitude is retired.)</p>
 <p>The HTTP API is also versioned at the URL prefix (<code>/v1</code>); legacy unversioned
 routes remain available alongside <code>/v1</code>. See
-design.md § 13.</p>
+design.md § 13 and
+contract_stability.md.</p>
 <h2 id="standard-upgrade-procedure">Standard upgrade procedure<a class="headerlink" href="#standard-upgrade-procedure" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Read the release notes</strong> for every minor/major version between your
    current and target version. Patch upgrades only need the latest patch's
    notes. The reading-order index (newest first) is
    releases/README.md; the current release's
-   notes are release_notes_0.12.0.md.</li>
+   notes are release_notes_1.0.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -2784,6 +3004,48 @@ retention-race hardening). See the CHANGELOG.</p>
 persistence-safe. (A run blocked inside a graph/orchestration workflow on 0.12.0
 cannot be resumed after a rollback to 0.11.x, which lacks the continuation
 support — drain in-flight blocked runs before rolling back.)</p>
+<h3 id="100">1.0.0<a class="headerlink" href="#100" title="Permanent link">&para;</a></h3>
+<p><strong>BREAKING — spec-path confinement is default-on.</strong> Through <code>0.12.x</code>,
+<code>KNEO_SERV_SPEC_ROOT</code> was opt-in: with it unset, an absolute or out-of-root
+<code>spec_path</code>/<code>overlays</code> was accepted and only logged a <code>DeprecationWarning</code>. At
+<code>1.0.0</code> the default flips to <strong>reject</strong>: a caller-supplied path that resolves
+outside the confinement root is refused with <code>422 spec_path_confined</code>. When
+<code>KNEO_SERV_SPEC_ROOT</code> is unset, the confinement root is the <strong>process working
+directory</strong>.</p>
+<p>This break now also covers <strong><code>skills[].source</code></strong> — a declared skill bundle's
+filesystem path, which through <code>0.12.x</code> was read unconfined (the sibling path
+that bypassed the <code>spec_path</code>/<code>overlays</code> confinement and left an authenticated
+arbitrary-file-read oracle open). At <code>1.0.0</code> an out-of-root skill source is
+rejected like any other spec read, and a <code>..</code>/<code>~</code> traversal in a skill source is
+rejected at spec validation.</p>
+<p><strong>Action.</strong> Pick one:</p>
+<ul>
+<li><strong>Set <code>KNEO_SERV_SPEC_ROOT</code></strong> to the directory that holds your specs, overlays,
+  and skill bundles (the recommended posture — an explicit allow-listed root).
+  Everything you load by <code>spec_path</code> / <code>overlays</code> / <code>skills[].source</code> must resolve
+  inside it.</li>
+<li><strong>Or keep specs under the service's working directory</strong> and leave
+  <code>KNEO_SERV_SPEC_ROOT</code> unset (the working directory is the default root).</li>
+</ul>
+<p>If you deploy with out-of-tree spec or skill paths (e.g. absolute paths to a
+shared bundle directory), move them under the root or add the root to
+<code>KNEO_SERV_SPEC_ROOT</code> <strong>before</strong> upgrading — otherwise those requests begin
+returning <code>422 spec_path_confined</code>. Inline specs (<code>spec</code> in the request body) and
+per-run skill overlays are unaffected; only caller-supplied filesystem paths are
+confined.</p>
+<p><strong>Local CLI is operator-trusted.</strong> Spec-path confinement applies to the
+<strong>service's</strong> reads of caller-supplied paths (the <code>/v1</code> surface, run, resume). The
+local <code>kneo</code> CLI reads the operator's own filesystem directly and is <strong>not</strong>
+confined to <code>KNEO_SERV_SPEC_ROOT</code> — a local operator already owns the filesystem,
+so <code>kneo spec validate /any/path.yaml</code> keeps working from any directory. (When the
+CLI targets a remote service with <code>--service-url</code>, it sends the resolved spec
+inline; the service applies its own confinement.)</p>
+<p><strong><code>kneo spec validate</code> now exits <code>1</code> on an invalid spec</strong> (was exit <code>0</code>, with the
+diagnostics only in the body). It now works as a CI gate, consistent with
+<code>kneo spec lint</code>; <code>--json</code> still prints <code>valid</code> + diagnostics. Update any pipeline
+that relied on exit <code>0</code> for an invalid spec.</p>
+<p><strong>Persistence schemas</strong>: no migration — these are request-validation + CLI
+changes only.</p>
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

@@ -1416,6 +1416,8 @@
           
         
       
+        
+      
     
     
     
@@ -1452,6 +1454,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
@@ -1465,6 +1472,192 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/code_review/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code review
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code review
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/code_review/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Review skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
           </ul>
@@ -1727,7 +1920,10 @@ graph node (<code>E_GRAPH_NODE_FALLBACK_DISABLED</code>).</p>
 <h2 id="async-run-creation-returns-202-accepted">Async run creation returns <code>202 Accepted</code><a class="headerlink" href="#async-run-creation-returns-202-accepted" title="Permanent link">&para;</a></h2>
 <p><code>POST /v1/runs</code> with <code>async_mode=true</code> returns <strong><code>202 Accepted</code></strong>: the run is
 dispatched to the worker queue and the caller polls <code>GET /runs/{id}</code> for
-progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>.</p>
+progress. Synchronous creates (<code>async_mode=false</code>) return <code>200</code>. <strong><code>POST
+/v1/specs/run</code></strong> shares the same contract as of 0.12.0 — <code>async_mode=true</code>
+returns <code>202</code> + a queued <code>run_id</code> to poll, <code>async_mode=false</code> runs inline at
+<code>200</code>.</p>
 <p><strong>0.11.0 breaking change:</strong> through 0.10.x this returned <code>200</code>; the <code>200 → 202</code>
 move was held for the contract-stability boundary and shipped in 0.11.0 (see
 contract_stability.md and
@@ -1828,6 +2024,11 @@ above.)</p>
 <td>422</td>
 <td><code>guardrail_violation</code></td>
 <td>A guardrail blocked the content (violation type included).</td>
+</tr>
+<tr>
+<td>422</td>
+<td><code>spec_path_confined</code></td>
+<td>A caller-supplied <code>spec_path</code> / overlay / <code>skills[].source</code> resolved outside the spec root (<code>KNEO_SERV_SPEC_ROOT</code>, or the working directory by default). Default-on as of <code>1.0.0</code>.</td>
 </tr>
 <tr>
 <td>422</td>

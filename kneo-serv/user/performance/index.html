@@ -1032,6 +1032,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#minimum-sizing-a-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum sizing (a starting point)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#choosing-a-store-for-capacity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1483,6 +1494,8 @@
           
         
       
+        
+      
     
     
     
@@ -1519,6 +1532,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
@@ -1532,6 +1550,192 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Skills
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Skills
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/skills/code_review/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code review
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_2_2" id="__nav_4_2_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_4_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Code review
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/skills/code_review/SKILL/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Review skill
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
           </ul>
@@ -1605,6 +1809,17 @@
     <span class="md-ellipsis">
       
         Sustained-load soak (resource stability)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimum-sizing-a-starting-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum sizing (a starting point)
       
     </span>
   </a>
@@ -1968,6 +2183,34 @@ double-claim / idempotency, prune liveness), operability/durable-queue, and MCP
 transports — all passed. The procedure is in
 bench_soak_runbook.md; run it with
 dev/release_soak.md.</p>
+<h2 id="minimum-sizing-a-starting-point">Minimum sizing (a starting point)<a class="headerlink" href="#minimum-sizing-a-starting-point" title="Permanent link">&para;</a></h2>
+<p>The numbers above are reference baselines, not a guarantee for your workload —
+but they do bound the <strong>service process's own footprint</strong>, which is the part you
+can size confidently:</p>
+<ul>
+<li><strong>Memory</strong> — peak RSS is flat at <strong>~57–62 MiB</strong> across every bench shape and
+  held at <strong>61.3 → 61.8 MiB over the 1-hour / 158,745-run soak</strong> (no leak).
+  Memory is not the bottleneck. <strong>Start with 512 MiB</strong> for the service container
+  (≈8× the measured peak) and only revisit if your own profile shows otherwise.</li>
+<li><strong>CPU</strong> — a run's wall-clock is dominated by the model provider's network
+  latency, not service CPU; platform overhead per run is sub-millisecond-to-low-ms
+  (see the table above). <strong>Start with 1 vCPU</strong> for a single-team deployment; add
+  cores/<strong>processes</strong> (not just threads) when you need write-concurrent
+  throughput on PostgreSQL.</li>
+<li><strong>Workers</strong> — one process runs <code>KNEO_SERV_WORKER_CONCURRENCY</code> worker threads
+  (the soak ran 16). Raise it for more in-flight runs, bounded by your provider's
+  rate limits; for write-concurrent scale beyond one process, run multiple
+  service processes against shared PostgreSQL (see
+  <a href="../deployment/#workers-scaling-and-graceful-shutdown">deployment.md § Workers, scaling</a>).</li>
+<li><strong>Persistence</strong> — SQLite suits a single node at low write concurrency
+  (throughput is flat ~51 runs/s — single writer); use PostgreSQL for concurrent
+  runs / multiple workers, and size it for your retention window and connection
+  count. <strong>This sizing covers the service process only</strong> — budget your PostgreSQL
+  (and any provider-side resources) separately.</li>
+</ul>
+<p>This is a floor to deploy against, then <strong>measure on your own hardware</strong> with the
+bench harness before committing capacity (see the reference-profile warning
+above).</p>
 <h2 id="choosing-a-store-for-capacity">Choosing a store for capacity<a class="headerlink" href="#choosing-a-store-for-capacity" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

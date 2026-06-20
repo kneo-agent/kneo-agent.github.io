@@ -7,8 +7,11 @@ version: v1
 #   2. Agent-as-tool      — a tool backed by another agent (`tool.agent`)
 #   3. Workflow-as-agent  — an agent backed by a workflow (`agent.as_agent`)
 #
-# (The per-request skills overlay and the `GET /v1/skills` catalog are runtime /
-# API features, not spec fields — see docs/user/examples.md for those.)
+# (Declared skills ARE a spec field: a top-level `skills:` block of
+# `{name: {source: <path>}}` that agents reference by name; a declared
+# `skills[].source` is confined to KNEO_SERV_SPEC_ROOT. The per-request skills
+# overlay and the `GET /v1/skills` catalog are the separate runtime / API
+# surface — see docs/user/examples.md for those.)
 
 agent:
   name: orchestrator
