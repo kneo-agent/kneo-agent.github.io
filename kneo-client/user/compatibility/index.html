@@ -1097,18 +1097,25 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.9.0</code></td>
+<td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
+<td><code>kneo_serv</code> <code>1.0.x</code> line</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>Current</td>
+</tr>
+<tr>
 <td><code>0.8.0</code></td>
 <td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.11.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Current</td>
+<td>Previous</td>
 </tr>
 <tr>
 <td><code>0.7.0</code></td>
 <td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.9.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Previous</td>
+<td>Older</td>
 </tr>
 <tr>
 <td><code>0.6.0</code></td>
@@ -1133,6 +1140,11 @@
 </tr>
 </tbody>
 </table>
+<p><code>kneo_serv</code> declared general availability at <code>v1.0.0</code> — the <code>/v1</code> HTTP API and
+<code>kneo</code> CLI are stable contracts across the <code>1.x</code> line. <code>kneo-client 0.9.0</code> is the
+GA-candidate uptake of that contract (the <code>/v1</code> delta from <code>v0.11.0</code> is tiny:
+<code>POST /v1/specs/run</code> gains a <code>202</code>, and a new <code>422 spec_path_confined</code> code — see
+the floor note below).</p>
 <p>The pinned <code>kneo_serv</code> version is recorded in <code>schemas/SOURCE.md</code> — that's the source of truth for which platform version generated the committed <code>_generated/</code> tree.</p>
 <h2 id="how-pinning-works-in-practice">How pinning works in practice<a class="headerlink" href="#how-pinning-works-in-practice" title="Permanent link">&para;</a></h2>
 <p>The pin is the input to the generated layer. When you bump it:</p>
@@ -1164,6 +1176,10 @@
 </thead>
 <tbody>
 <tr>
+<td><code>0.12.x</code> / <code>1.0.x</code></td>
+<td><code>0.9.0</code> (pinned to <code>v1.0.0</code>). Takes up the GA contract: <code>async_mode</code> now honored on <code>POST /v1/specs/run</code> (<code>202</code>), the <code>spec_path_confined</code> <code>422</code> from default-on spec-path confinement, and consolidated client API-stability docs. A <code>v0.11.0</code>-pinned client (<code>0.8.0</code>) also works against <code>0.12.x</code>/<code>1.0.x</code> for everything it wraps — <code>specs.run</code> async just surfaces the queued run via the same <code>RunCreateResponse</code>, and an out-of-root <code>spec_path</code> draws the <code>422</code> either way.</td>
+</tr>
+<tr>
 <td><code>0.10.x</code> / <code>0.11.x</code></td>
 <td><code>0.8.0</code> (pinned to <code>v0.11.0</code>). Absorbs the <code>kneo_serv 0.11.0</code> <code>/v1</code> breaks (async run-create <code>202</code>, unknown-query-param <code>422</code> rejection, guardrail-block run terminalization) and adds a versioned <code>User-Agent</code> + <code>Retry-After</code> HTTP-date parsing. <code>v0.10.0</code> introduced no <code>/v1</code> change, so a <code>v0.9.0</code>-pinned client (<code>0.7.0</code>) also works against <code>0.10.x</code> for everything it wraps.</td>
 </tr>
@@ -1193,6 +1209,7 @@
 <li><strong>Skill catalog requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>client.agent.skills.list()</code> 404s against older servers. The per-request <code>skills</code> overlay on <code>runs.create</code> requires <code>&gt;= 0.9.0</code>.</li>
 <li><strong>Human-task <code>status</code> filter requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>human_tasks.list(status=...)</code> is silently ignored by older servers (honored from 0.8.0, contractual in the 0.9.0 spec).</li>
 <li><strong>Spec-explain envelope requires <code>kneo_serv &gt;= 0.9.0</code>.</strong> The <code>environment</code> / <code>overlays</code> / <code>overrides</code> fields on <code>specs.explain</code> (including the explain leg of <code>dry_run</code>) draw a 422 from older servers.</li>
+<li><strong>Spec-path confinement is default-on from <code>kneo_serv &gt;= 1.0.0</code>.</strong> A caller-supplied <code>spec_path</code>, <code>overlays</code> entry, or <code>skills[].source</code> that resolves outside the server's allow-listed root (<code>KNEO_SERV_SPEC_ROOT</code>, defaulting to the server's working directory) — including absolute, <code>..</code>-traversal, <code>~</code>, or symlink-escape paths — is rejected <code>422 spec_path_confined</code> (surfaced as <code>KneoValidationError</code> with <code>.code == "spec_path_confined"</code>). Through <code>0.12.x</code> this was opt-in (out-of-root paths only logged a deprecation warning); at <code>1.0.0</code> the warn-and-allow path is removed. The client sends these fields unchanged either way — keep your specs under an allow-listed root, or have the operator set <code>KNEO_SERV_SPEC_ROOT</code>. See <a href="../errors/">error handling</a>.</li>
 </ul>
 <h2 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
 <p>A breaking change in either direction triggers a major bump:</p>
@@ -1200,7 +1217,7 @@
 <li><strong><code>kneo-client</code> major</strong> — the public Python API (<code>kneo_client.*</code> namespace) changes incompatibly. Very rare.</li>
 <li><strong><code>kneo_serv</code> major</strong> — i.e., introduction of <code>/v2</code>. <code>kneo-client</code> may need a major bump if <code>/v1</code> is sunset; otherwise it ships a new minor that supports both.</li>
 </ul>
-<p>Within a major, deprecated surfaces keep aliases for at least one minor. See <code>docs/dev/contributing.md</code> for the deprecation policy.</p>
+<p>Within a major, deprecated surfaces keep aliases for at least one minor. See the API stability contract for the full SemVer + deprecation policy.</p>
 <h2 id="verifying-compatibility-yourself">Verifying compatibility yourself<a class="headerlink" href="#verifying-compatibility-yourself" title="Permanent link">&para;</a></h2>
 <p>The simplest smoke is the bundled examples. They ship in the repository (not in the wheel), so run them from a checkout:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install a specific kneo-client version</span>
