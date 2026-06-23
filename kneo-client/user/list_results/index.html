@@ -1378,11 +1378,12 @@ public <code>client.request()</code> escape hatch and parse the body yourself:</
 <p><code>client.request(...)</code> is the supported forward-compat path (full pipeline,
 raw <code>httpx.Response</code>); prefer a typed <code>.platform</code> / <code>.agent</code> wrapper whenever
 one exists.</p>
-<p><code>_transport</code> is the underlying <code>Transport</code>; the leading underscore
-signals it's an escape hatch, not part of the recommended surface.
-Anything you build on top of it tracks the generated layer directly
-and won't follow public-API compatibility — re-evaluate at each
-<code>kneo_serv</code> pin bump.</p>
+<p><code>client.request()</code> is part of the stable <code>1.x</code> contract; you parse the raw
+<code>httpx.Response</code> yourself, so anything you build on top of an unwrapped endpoint
+tracks the <code>/v1</code> payload directly and won't get a typed model — re-evaluate at
+each <code>kneo_serv</code> pin bump, and switch to a typed <code>.platform</code> / <code>.agent</code> wrapper
+once one exists. (The older <code>client._transport.request(...)</code> still works but is
+<strong>internal and unsupported</strong> — prefer <code>client.request(...)</code>.)</p>
 <h2 id="auto-walking-is-not-on-the-roadmap">Auto-walking is <em>not</em> on the roadmap<a class="headerlink" href="#auto-walking-is-not-on-the-roadmap" title="Permanent link">&para;</a></h2>
 <p><code>client.platform.runs.list_all()</code> returning an async iterator — i.e.
 auto-paged at the adapter layer — is intentionally <em>not</em> planned. The

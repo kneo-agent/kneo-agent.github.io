@@ -911,7 +911,7 @@
 
 <h1 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h1>
 <p>Seven end-to-end scripts demonstrating the operational and Studio
-surfaces of <code>kneo-client</code>. Each script is small (≤ 65 LOC) and
+surfaces of <code>kneo-client</code>. Each script is small (≤ 75 LOC) and
 self-contained — runs against a real Kneo Agent Platform instance, no
 mocks. Designed to be read top-to-bottom in order; later scripts assume
 the patterns from earlier ones.</p>
@@ -933,7 +933,7 @@ needs beyond the connection ones.</p>
 <th>#</th>
 <th>Script</th>
 <th>What it shows</th>
-<th>0.2.0 helpers used</th>
+<th>Key helpers used</th>
 </tr>
 </thead>
 <tbody>
@@ -991,13 +991,13 @@ basic-run example creates a run you can then inspect with the audit
 example; the human-task example needs a paused human-review task,
 which usually means you've started a run that hit one.</p>
 <h2 id="pre-helper-patterns">"Pre-helper" patterns<a class="headerlink" href="#pre-helper-patterns" title="Permanent link">&para;</a></h2>
-<p>Each example that uses a new 0.2.0 helper keeps the <strong>pre-helper
+<p>Each example that uses a convenience helper keeps the <strong>pre-helper
 manual decomposition</strong> in a trailing comment block, so:</p>
 <ul>
 <li>You can see what the helper bundles (and copy the manual version
   if you want different semantics).</li>
-<li>A reader on 0.1.0 has a reference for what their version of the
-  code looks like alongside the recommended 0.2.0 path.</li>
+<li>You have a reference for the lower-level path alongside the
+  recommended helper-based one.</li>
 </ul>
 <h2 id="related-docs">Related docs<a class="headerlink" href="#related-docs" title="Permanent link">&para;</a></h2>
 <ul>
