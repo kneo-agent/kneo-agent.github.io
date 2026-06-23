@@ -2267,6 +2267,31 @@ run offline in CI (no provider keys, no network).</p>
 <td><code>custom_middleware_demo.py</code></td>
 <td>A custom middleware's <code>ToolResult.metadata</code> reaches the SDK; OTel context survives the worker-thread hop.</td>
 </tr>
+<tr>
+<td>Spec-path confinement <em>(1.0.0 default-on)</em></td>
+<td><code>confinement_demo.py</code></td>
+<td>Caller-supplied <code>spec_path</code> / <code>overlays</code> / <code>skills[].source</code> outside the spec root (<code>KNEO_SERV_SPEC_ROOT</code>, or the working dir) are rejected <code>422 spec_path_confined</code>.</td>
+</tr>
+<tr>
+<td>MCP HTTP/SSE transport</td>
+<td><code>mcp_http_workflow.yaml</code></td>
+<td>The <code>http</code> (and <code>sse</code>) MCP transport shape, compile-only — complements the runnable stdio proof.</td>
+</tr>
+<tr>
+<td>Guardrail input/output stages</td>
+<td><code>guardrail_stages.yaml</code></td>
+<td>The two request/response-boundary stages: input fail-closed block + output PII redaction (companion to <code>guardrails_complete.yaml</code>).</td>
+</tr>
+<tr>
+<td>Guardrail workflow stage <em>(0.11.0)</em></td>
+<td><code>guardrail_workflow_stage.yaml</code></td>
+<td>The fourth stage — a per-step <code>workflow</code>-stage guardrail enforced on each step's output (was rejected at validate before 0.11.0).</td>
+</tr>
+<tr>
+<td>Human request taxonomy</td>
+<td><code>human_task_taxonomy.yaml</code></td>
+<td><code>request_type</code> (review / correction / selection / freeform), <code>options</code>/<code>default_option</code>, <code>context</code>, and <code>timeout_seconds</code> + <code>on_timeout</code> policy on a <code>kind: human</code> step.</td>
+</tr>
 </tbody>
 </table>
 <h2 id="spec-files">Spec files<a class="headerlink" href="#spec-files" title="Permanent link">&para;</a></h2>

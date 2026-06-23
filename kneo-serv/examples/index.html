@@ -1775,6 +1775,14 @@ quick index; when the two differ, <code>docs/user/examples.md</code> wins.</p>
 <td><code>custom_middleware_demo.py</code></td>
 </tr>
 <tr>
+<td>Spec-path confinement <em>(1.0.0 default-on)</em></td>
+<td><code>confinement_demo.py</code></td>
+</tr>
+<tr>
+<td>Declared skills (spec <code>skills:</code> field)</td>
+<td><code>skills_spec.yaml</code> + <code>skills/code_review/</code></td>
+</tr>
+<tr>
 <td>Project config / overlays</td>
 <td><code>project_config.yaml</code></td>
 </tr>
@@ -1918,9 +1926,20 @@ concepts the previous one introduces.</p>
     completion, then the run blocks on the human, and siblings are never re-run
     on resume). Non-human nodes use canned functions so each runs end-to-end
     without a provider.</li>
+<li><strong><a href="confinement_demo.py"><code>confinement_demo.py</code></a></strong> — a runnable script (not a
+    spec) for the headline <strong>1.0.0</strong> break: caller-supplied <code>spec_path</code> /
+    <code>overlays</code> / <code>skills[].source</code> are confined to the spec root
+    (<code>KNEO_SERV_SPEC_ROOT</code>, or the working dir by default), so an absolute,
+    <code>..</code>-traversal, or symlink-escape path is rejected <code>422 spec_path_confined</code>.
+    Run it with <code>python examples/confinement_demo.py</code>.</li>
 </ol>
+<p>Declared skills have their own pair: <strong><a href="skills_spec.yaml"><code>skills_spec.yaml</code></a></strong>
+declares a <code>code_review</code> skill sourced from the bundle at
+<strong><a href="skills/code_review/"><code>skills/code_review/</code></a></strong> and activates it on the agent —
+compile it <strong>from the repo root</strong> so the relative <code>source</code> resolves inside the
+spec root (<code>kneo spec compile examples/skills_spec.yaml</code>).</p>
 <p>These specs run offline in CI (<code>tests/test_examples_e2e.py</code>) — they are
-the executable regressions for the surfaces the 0.9.0 through 0.12.0 cuts fixed.</p>
+the executable regressions for the surfaces the 0.9.0 through 1.0.0 cuts fixed.</p>
 <h2 id="subsections">Subsections<a class="headerlink" href="#subsections" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="skills/">Skills/</a></li>
