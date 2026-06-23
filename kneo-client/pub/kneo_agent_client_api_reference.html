@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v0.9.0 · 2026-06-21</div>
+    <div class="version">v1.0.0 · 2026-06-23</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v0.9.0</a>
+    <a href="#whats-new">What's new in v1.0.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -645,7 +645,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v0.9.0</div>
+      <div class="cover-card-value">v1.0.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
@@ -682,7 +682,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v0.9.0</a></li>
+        <li><a href="#whats-new">What's new in v1.0.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -741,7 +741,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v0.9.0</span>
+    <span class="badge badge-blue">v1.0.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
     <span class="badge badge-purple">kneo_serv /v1 · 1.0.x</span>
   </div>
@@ -749,19 +749,16 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v0.9.0</h2>
-  <p>The <strong>GA candidate</strong> — the last <code>0.x</code> before a thin <code>1.0.0</code> banner. A <code>kneo_serv v1.0.0</code> (GA) spec-pin uptake plus GA hardening. <strong>No breaking changes to the client API</strong>; one caller-visible behavior change (the idempotency-key normalization fix, below).</p>
-  <p>Headline pieces:</p>
+  <h2>What's new in v1.0.0</h2>
+  <p><strong>General Availability.</strong> <code>kneo-client</code> is stable: the public Python API — the curated <code>__all__</code> of <code>kneo_client</code>, <code>kneo_client.core</code>, <code>kneo_client.types</code>, <code>kneo_client.platform</code>, and <code>kneo_client.agent</code> — and SemVer are <strong>frozen across the whole <code>1.x</code> line</strong>, pinned to the <code>kneo_serv v1.0.0</code> <code>/v1</code> contract. The full stability promise lives in the stability contract. This is a <strong>thin posture banner — no new features and no behavioral change over <code>0.10.0</code></strong>; upgrading from <code>0.10.0</code> requires nothing.</p>
+  <p>All the GA substance shipped in the two preceding cuts:</p>
   <ul style="margin-left: 1.5em;">
-    <li><strong>Spec pin refreshed <code>v0.11.0</code> → <code>kneo_serv v1.0.0</code>.</strong> The machine-readable <code>/v1</code> delta is a single <code>202</code> added to <code>POST /v1/specs/run</code>; the regen touched that endpoint plus the embedded <code>ErrorDetail</code> docstrings (a new <code>spec_path_confined</code> token).</li>
-    <li><strong><code>async_mode</code> on <code>agent.specs.run</code> (behavior).</strong> Since <code>kneo_serv 0.12.0/1.0.0</code>, <code>async_mode=true</code> on <code>POST /v1/specs/run</code> is accepted with HTTP <code>202</code> and dispatched — parity with <code>runs.create</code>. The wrapper returns the same <code>RunCreateResponse</code> carrying the <code>run_id</code>.</li>
-    <li><strong><code>spec_path_confined</code> (<code>422</code>).</strong> From <code>kneo_serv 1.0.0</code>, spec-path confinement is default-on: an out-of-root <code>spec_path</code> / <code>overlays</code> / <code>skills[].source</code> is rejected, surfaced as <a href="#exceptions"><code>KneoValidationError</code></a> with <code>.code == "spec_path_confined"</code>.</li>
-    <li><strong>Idempotency-key normalization (caller-visible wire change).</strong> A whitespace-only <code>Idempotency-Key</code> now raises <code>ValueError</code>, and surrounding whitespace is stripped before send (a padded key is transmitted, and echoed on <code>KneoError</code>, in its stripped form) — matching the server's normalization, which treats a whitespace-only key as <em>no</em> key.</li>
-    <li><strong>API stability contract.</strong> Consolidated into <code>docs/dev/contract_stability.md</code> — SemVer meaning, the curated <code>__all__</code> public surface, the deprecation policy, and how the contract is enforced.</li>
-    <li><strong>Hardening.</strong> Coverage floor raised <code>85 → 95</code> (actual ≈98%, single-sourced in <code>pyproject.toml</code>); a per-<code>(method, path)</code> 2xx success-status contract meta-gate; the generator-glue helpers consolidated into <code>core.serialization</code> (internal, no public-surface change).</li>
+    <li><strong><code>0.9.0</code></strong> — the <code>kneo_serv v1.0.0</code> (GA) <code>/v1</code> contract uptake plus GA hardening.</li>
+    <li><strong><code>0.10.0</code></strong> — the pre-freeze surface corrections: consistent <code>*Error</code> exception names (old names kept as deprecated aliases through <code>1.x</code>, removed at <code>2.0</code>), the <code>kneo_client.types</code> re-export module, the public <code>KneoClient.request()</code> forward-compat hatch, the truthful error contract (<a href="#exceptions"><code>KneoProtocolError</code></a> for a bodyless <code>202</code>), retry control, and a machine-enforced <code>__all__</code> golden-snapshot guard.</li>
   </ul>
+  <p><code>1.0.0</code> itself flips <code>Development Status</code> to <code>5 - Production/Stable</code> (enforced for every <code>1.x</code> tag by a release-time gate), moves <code>SECURITY.md</code> to a <code>1.x</code> support posture, and records a <code>sha256</code> pin-provenance digest for the OpenAPI spec.</p>
   <p>
-    See the 0.9.0 release notes for the full summary including the upgrade notes. The 0.8.0 release notes cover the prior cut's <code>kneo_serv v0.11.0</code> uptake.
+    See the 1.0.0 release notes for the full summary. The 0.10.0 and 0.9.0 notes cover the surface corrections and the <code>kneo_serv v1.0.0</code> uptake.
   </p>
 </section>
 
@@ -1206,17 +1203,18 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <div class="exc-tree">
 <span class="exc-base">KneoError</span>
 ├── <span class="exc-child">KneoNetworkError</span>          <span class="exc-sub"># transport-level: DNS / connect / TLS / read timeout</span>
+├── <span class="exc-child">KneoProtocolError</span>         <span class="exc-sub"># success status with a missing / non-JSON body (e.g. a bodyless 202)</span>
 ├── <span class="exc-child">KneoBadRequestError</span>       <span class="exc-sub"># HTTP 400 — semantically rejected (branch on .code)</span>
 ├── <span class="exc-child">KneoAuthError</span>             <span class="exc-sub"># HTTP 401</span>
 ├── <span class="exc-child">KneoPermissionError</span>       <span class="exc-sub"># HTTP 403</span>
 ├── <span class="exc-child">KneoNotFoundError</span>         <span class="exc-sub"># HTTP 404</span>
 ├── <span class="exc-child">KneoConflictError</span>         <span class="exc-sub"># HTTP 409 (carries .retry_after; branch on .code)</span>
 │   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 with code idempotency_key_conflict</span>
-├── <span class="exc-child">KneoPayloadTooLarge</span>       <span class="exc-sub"># HTTP 413 (carries .max_body_bytes)</span>
+├── <span class="exc-child">KneoPayloadTooLargeError</span>       <span class="exc-sub"># HTTP 413 (carries .max_body_bytes)</span>
 ├── <span class="exc-child">KneoValidationError</span>       <span class="exc-sub"># HTTP 422 — request validation failed</span>
-├── <span class="exc-child">KneoRateLimited</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
+├── <span class="exc-child">KneoRateLimitedError</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
 └── <span class="exc-child">KneoServerError</span>           <span class="exc-sub"># HTTP 5xx</span>
-    └── <span class="exc-child">KneoServiceUnavailable</span> <span class="exc-sub"># HTTP 503 — backpressure / overload (carries .retry_after)</span>
+    └── <span class="exc-child">KneoServiceUnavailableError</span> <span class="exc-sub"># HTTP 503 — backpressure / overload (carries .retry_after)</span>
   </div>
 
   <h3 class="api-class">class KneoError <span class="tag tag-exception">exception</span></h3>
@@ -1243,7 +1241,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h3 class="api-class">class KneoIdempotencyMismatchError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 409 caused by an <code>Idempotency-Key</code> replay with a different payload — almost always a caller bug. A subclass of <code>KneoConflictError</code>. Raised only for the <code>idempotency_key_conflict</code> envelope code (or, against pre-0.6.0 servers whose bodies carry no code, for any 409 on a keyed request); other 409 causes raise the <code>KneoConflictError</code> base instead.</p>
 
-  <h3 class="api-class">class KneoPayloadTooLarge <span class="tag tag-exception">exception</span></h3>
+  <h3 class="api-class">class KneoPayloadTooLargeError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 413 — the request body exceeds the server's size cap (<code>kneo_serv</code> enforces <code>KNEO_SERV_MAX_BODY_BYTES</code>, chunked bodies included). Not retryable — shrink the payload. Adds one attribute on top of <code>KneoError</code>:</p>
   <table class="param-table">
     <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
@@ -1253,14 +1251,14 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h3 class="api-class">class KneoValidationError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 422 — request validation failed. Two body shapes reach this: the platform's error envelope (stable codes such as <code>guardrail_violation</code>), and FastAPI's list-shaped request-validation detail (<code>{"detail": [{loc, msg, type}, …]}</code>), whose first entry is summarized into the exception message. The full diagnostics stay available on <code>KneoError.body</code>.</p>
 
-  <h3 class="api-class">class KneoRateLimited <span class="tag tag-exception">exception</span></h3>
+  <h3 class="api-class">class KneoRateLimitedError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">Adds one attribute on top of <code>KneoError</code>:</p>
   <table class="param-table">
     <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
     <tr><td class="param-name">retry_after</td><td class="param-type">float | None</td><td class="param-desc">Seconds parsed from the <code>Retry-After</code> header.</td></tr>
   </table>
 
-  <h3 class="api-class">class KneoServiceUnavailable <span class="tag tag-exception">exception</span></h3>
+  <h3 class="api-class">class KneoServiceUnavailableError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 503 — the platform is temporarily unavailable or shedding load (notably <code>kneo_serv</code>'s run-queue backpressure on <code>POST /v1/runs</code>). A <strong>subclass of <code>KneoServerError</code></strong>, so <code>except KneoServerError</code> still catches it. The transport already auto-retries 503 (honoring <code>Retry-After</code>); this surfaces only once retries are exhausted. Adds one attribute on top of <code>KneoError</code>:</p>
   <table class="param-table">
     <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
@@ -1279,17 +1277,18 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="col-dim">404</td><td><code>KneoNotFoundError</code></td><td>Resource missing.</td></tr>
     <tr><td class="col-dim">409, code <code>idempotency_key_conflict</code></td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload. Also raised for code-less legacy bodies (pre-0.6.0 servers) on keyed requests.</td></tr>
     <tr><td class="col-dim">409 (other codes)</td><td><code>KneoConflictError</code></td><td><code>run_state_conflict</code> / <code>resource_locked</code>; <code>idempotency_key_in_progress</code> is auto-retried by the transport and surfaces here with <code>retry_after</code> once exhausted.</td></tr>
-    <tr><td class="col-dim">413</td><td><code>KneoPayloadTooLarge</code></td><td>Body exceeds the server's size cap; carries <code>max_body_bytes</code>.</td></tr>
+    <tr><td class="col-dim">413</td><td><code>KneoPayloadTooLargeError</code></td><td>Body exceeds the server's size cap; carries <code>max_body_bytes</code>.</td></tr>
     <tr><td class="col-dim">422</td><td><code>KneoValidationError</code></td><td>Envelope codes (e.g. <code>guardrail_violation</code>) or FastAPI list-shaped detail, summarized into the message.</td></tr>
-    <tr><td class="col-dim">429</td><td><code>KneoRateLimited</code></td><td>Carries <code>retry_after</code>.</td></tr>
-    <tr><td class="col-dim">503</td><td><code>KneoServiceUnavailable</code></td><td>Backpressure / overload. <code>KneoServerError</code> subclass; carries <code>retry_after</code>.</td></tr>
+    <tr><td class="col-dim">429</td><td><code>KneoRateLimitedError</code></td><td>Carries <code>retry_after</code>.</td></tr>
+    <tr><td class="col-dim">503</td><td><code>KneoServiceUnavailableError</code></td><td>Backpressure / overload. <code>KneoServerError</code> subclass; carries <code>retry_after</code>.</td></tr>
     <tr><td class="col-dim">5xx (other)</td><td><code>KneoServerError</code></td><td>Server-side failure.</td></tr>
     <tr><td class="col-dim">Other</td><td><code>KneoError</code></td><td>Catch-all.</td></tr>
     <tr><td class="col-dim">Transport</td><td><code>KneoNetworkError</code></td><td>Wrapped from <code>httpx.HTTPError</code>.</td></tr>
+    <tr><td class="col-dim">Protocol</td><td><code>KneoProtocolError</code></td><td>Success status with a missing / non-JSON body the client must parse (e.g. a bodyless <code>202</code>).</td></tr>
   </table>
 
   <p><strong>Example</strong></p>
-<pre><code><span class="kw">from</span> kneo_client.core.errors <span class="kw">import</span> KneoError, KneoIdempotencyMismatchError, KneoRateLimited
+<pre><code><span class="kw">from</span> kneo_client.core.errors <span class="kw">import</span> KneoError, KneoIdempotencyMismatchError, KneoRateLimitedError
 
 <span class="kw">try</span>:
     run = <span class="kw">await</span> client.platform.runs.create(payload, idempotency_key=key)
@@ -1297,7 +1296,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <span class="cm"># Same key reused with a different payload — almost always a caller bug.</span>
     log.error(<span class="st">"mismatch on key=%r body=%r"</span>, exc.idempotency_key, exc.body)
     <span class="kw">raise</span>
-<span class="kw">except</span> KneoRateLimited <span class="kw">as</span> exc:
+<span class="kw">except</span> KneoRateLimitedError <span class="kw">as</span> exc:
     <span class="kw">await</span> asyncio.sleep(exc.retry_after <span class="kw">or</span> <span class="nm">10</span>)
 <span class="kw">except</span> KneoError <span class="kw">as</span> exc:
     log.error(<span class="st">"create_run failed status=%s rid=%s"</span>, exc.status, exc.request_id)
@@ -1611,8 +1610,10 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">0.9.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.8.0</td><td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td><td><code>kneo_serv</code> <code>0.11.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">1.0.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">0.10.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.9.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
+    <tr><td class="col-dim">0.8.0</td><td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td><td><code>kneo_serv</code> <code>0.11.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.7.0</td><td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td><td><code>kneo_serv</code> <code>0.9.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.6.0</td><td><code>v0.7.0</code> (<code>info.version</code> <code>0.7.0</code>)</td><td><code>kneo_serv</code> <code>0.7.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.5.0</td><td><code>v0.5.0</code> (<code>info.version</code> <code>0.5.0</code>)</td><td><code>kneo_serv</code> <code>0.5.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
@@ -1680,7 +1681,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v0.9.0 · 2026-06-21 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v1.0.0 · 2026-06-23 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 

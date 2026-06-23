@@ -1249,7 +1249,7 @@ discloses one (see <a href="#window-and-the-true-total">below</a>).</p>
 <p>For the fully-paginating endpoints, <code>iterate_all()</code> walks pages
 transparently. Pass a <code>fetch_page(limit, offset)</code> callable that returns
 the next <code>Page</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.results</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterate_all</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterate_all</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">fetch</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="k">return</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="s2">&quot;running&quot;</span><span class="p">)</span>
@@ -1367,18 +1367,17 @@ items. Use <code>.keys()</code> or <code>.items.items()</code> if you need keys.
 <h2 id="drop-to-the-raw-response">Drop to the raw response<a class="headerlink" href="#drop-to-the-raw-response" title="Permanent link">&para;</a></h2>
 <p>If you need a field the wrapper doesn't expose — for example the
 <code>run_id</code> echo on <code>CheckpointListResponse</code> / <code>TraceResponse</code>, or a
-field the platform adds in a newer release — bypass the wrapper and
-call the transport directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client._generated.models.checkpoint_list_response</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">CheckpointListResponse</span><span class="p">,</span>
+field the platform adds in a newer release — bypass the wrapper with the
+public <code>client.request()</code> escape hatch and parse the body yourself:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/v1/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/checkpoints&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">)</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">_transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;/v1/runs/</span><span class="si">{</span><span class="n">run_id</span><span class="si">}</span><span class="s2">/checkpoints&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">}</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="p">)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">raw</span> <span class="o">=</span> <span class="n">CheckpointListResponse</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">run_id</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">checkpoints</span><span class="p">,</span> <span class="n">raw</span><span class="o">.</span><span class="n">total</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">raw</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s2">&quot;run_id&quot;</span><span class="p">],</span> <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;checkpoints&quot;</span><span class="p">],</span> <span class="n">raw</span><span class="p">[</span><span class="s2">&quot;total&quot;</span><span class="p">])</span>
 </code></pre></div>
+<p><code>client.request(...)</code> is the supported forward-compat path (full pipeline,
+raw <code>httpx.Response</code>); prefer a typed <code>.platform</code> / <code>.agent</code> wrapper whenever
+one exists.</p>
 <p><code>_transport</code> is the underlying <code>Transport</code>; the leading underscore
 signals it's an escape hatch, not part of the recommended surface.
 Anything you build on top of it tracks the generated layer directly

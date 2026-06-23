@@ -1097,18 +1097,32 @@
 </thead>
 <tbody>
 <tr>
-<td><code>0.9.0</code></td>
+<td><code>1.0.0</code></td>
 <td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
 <td><code>kneo_serv</code> <code>1.0.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
 <td>Current</td>
 </tr>
 <tr>
+<td><code>0.10.0</code></td>
+<td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
+<td><code>kneo_serv</code> <code>1.0.x</code> line</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>Previous</td>
+</tr>
+<tr>
+<td><code>0.9.0</code></td>
+<td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
+<td><code>kneo_serv</code> <code>1.0.x</code> line</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>Older</td>
+</tr>
+<tr>
 <td><code>0.8.0</code></td>
 <td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td>
 <td><code>kneo_serv</code> <code>0.11.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Previous</td>
+<td>Older</td>
 </tr>
 <tr>
 <td><code>0.7.0</code></td>
@@ -1141,10 +1155,13 @@
 </tbody>
 </table>
 <p><code>kneo_serv</code> declared general availability at <code>v1.0.0</code> — the <code>/v1</code> HTTP API and
-<code>kneo</code> CLI are stable contracts across the <code>1.x</code> line. <code>kneo-client 0.9.0</code> is the
-GA-candidate uptake of that contract (the <code>/v1</code> delta from <code>v0.11.0</code> is tiny:
-<code>POST /v1/specs/run</code> gains a <code>202</code>, and a new <code>422 spec_path_confined</code> code — see
-the floor note below).</p>
+<code>kneo</code> CLI are stable contracts across the <code>1.x</code> line. <strong><code>kneo-client</code> is GA at
+<code>1.0.0</code></strong>: it pins that <code>v1.0.0</code> contract and freezes its own public Python API
+(the curated <code>__all__</code>) + SemVer across the <code>1.x</code> line (see
+contract_stability.md). The GA surface was
+landed across <code>0.9.0</code> (the <code>v1.0.0</code> contract uptake) and <code>0.10.0</code> (the
+pre-freeze surface corrections); <code>1.0.0</code> is the posture declaration over that
+corrected, machine-pinned surface.</p>
 <p>The pinned <code>kneo_serv</code> version is recorded in <code>schemas/SOURCE.md</code> — that's the source of truth for which platform version generated the committed <code>_generated/</code> tree.</p>
 <h2 id="how-pinning-works-in-practice">How pinning works in practice<a class="headerlink" href="#how-pinning-works-in-practice" title="Permanent link">&para;</a></h2>
 <p>The pin is the input to the generated layer. When you bump it:</p>
@@ -1157,13 +1174,13 @@ the floor note below).</p>
 <p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. Patches don't change pins. A pin bump can land in any minor / patch — versioning is independent.</p>
 <h2 id="forward-compatibility-newer-kneo_serv-than-the-pin">Forward compatibility — newer <code>kneo_serv</code> than the pin<a class="headerlink" href="#forward-compatibility-newer-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h2>
 <p><code>kneo-client</code> ships an explicit list of every <code>(method, path)</code> it wraps. A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps — you just won't have wrappers for the new endpoints until the next <code>kneo-client</code> release.</p>
-<p>If you need access to a new endpoint before that release, drop to the raw transport:</p>
+<p>If you need access to a new endpoint before that release, use the public <code>KneoClient.request()</code> escape hatch:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">async</span> <span class="k">with</span> <span class="n">KneoClient</span><span class="o">.</span><span class="n">from_profile</span><span class="p">()</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="c1"># Call an endpoint that doesn&#39;t have a wrapper yet:</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">_transport</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/some/new/endpoint&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;/v1/some/new/endpoint&quot;</span><span class="p">)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">payload</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
 </code></pre></div>
-<p>The <code>_transport</code> attribute is informally accessible (single-underscore prefix). It's not part of the documented stability surface, but the API has been stable since <code>0.1.0</code> and is unlikely to churn. The transport handles auth, retries, idempotency, request-ID injection, and error mapping just like the wrapped methods do — you just lose the typed response model.</p>
+<p><code>KneoClient.request(method, path, ...)</code> is <strong>part of the stable <code>1.x</code> contract</strong> — the supported forward-compatibility path. It runs the full pipeline (auth, retries, idempotency, request-ID injection, and error mapping, just like the wrapped methods) and hands back the raw <code>httpx.Response</code> for you to parse — you just lose the typed response model. Prefer a typed <code>.platform</code> / <code>.agent</code> wrapper whenever one exists. (The older <code>client._transport.request(...)</code> still works but is <strong>internal and unsupported</strong>; migrate to <code>client.request(...)</code>.)</p>
 <h2 id="backward-compatibility-older-kneo_serv-than-the-pin">Backward compatibility — older <code>kneo_serv</code> than the pin<a class="headerlink" href="#backward-compatibility-older-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h2>
 <p><code>kneo-client X.Y.Z</code> is <strong>not</strong> guaranteed against <code>kneo_serv</code> releases older than its pin. Wrappers may rely on response fields that older <code>kneo_serv</code> versions don't emit, and the client's error mapping assumes the current platform error shape. A <code>KeyError</code> on <code>from_dict()</code> is the typical symptom — the wrapper expects a field that wasn't in the older platform's response.</p>
 <p>If you have to talk to an older <code>kneo_serv</code>, pin to a matching <code>kneo-client</code> minor:</p>
@@ -1193,7 +1210,7 @@ the floor note below).</p>
 </tr>
 <tr>
 <td><code>0.5.x</code></td>
-<td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailable</code> for the new <code>503</code> backpressure path.</td>
+<td><code>0.5.0</code> (pinned to <code>v0.5.0</code>). Because the <code>/v1</code> contract is byte-identical to <code>v0.4.0</code>, a <code>v0.4.0</code>-pinned client (<code>0.1.x</code>–<code>0.4.x</code>) also works against <code>0.5.x</code> — you just won't surface the typed <code>KneoServiceUnavailableError</code> for the new <code>503</code> backpressure path.</td>
 </tr>
 <tr>
 <td><code>0.4.x</code></td>

@@ -1133,7 +1133,7 @@
 <li><strong>You want cross-process correlation.</strong> Two services submitting the same logical request can dedupe by agreeing on the key (e.g. derive it from a hash of the request payload + a request ID from your application).</li>
 <li><strong>You're testing.</strong> A stable key makes test fixtures deterministic.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.idempotency</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">key</span> <span class="o">=</span> <span class="n">new_idempotency_key</span><span class="p">()</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">body</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;spec_id&quot;</span><span class="p">:</span> <span class="s2">&quot;my-spec&quot;</span><span class="p">}</span>
@@ -1154,7 +1154,7 @@
 <h2 id="catching-409-mismatch">Catching 409 mismatch<a class="headerlink" href="#catching-409-mismatch" title="Permanent link">&para;</a></h2>
 <p>The platform's 409s carry a stable envelope code (<code>KneoError.code</code>), and the client classifies on it. Only <code>idempotency_key_conflict</code> — the <em>same key reused with a different payload</em> — raises <code>KneoIdempotencyMismatchError</code> (plus, against pre-0.6.0 servers whose bodies carry no code, any 409 on a keyed request). Other codes raise the <code>KneoConflictError</code> base: <code>run_state_conflict</code> (a lifecycle fence, e.g. cancelling an already-terminal run) and <code>resource_locked</code> (held by another operation), both carrying <code>.retry_after</code> when the server hints one. <code>idempotency_key_in_progress</code> is auto-retried by the transport per its <code>Retry-After</code> and only surfaces as <code>KneoConflictError</code> once retries exhaust.</p>
 <p>A mismatch is almost always a caller bug. Surface it loudly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoIdempotencyMismatchError</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">runs</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">idempotency_key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
@@ -1196,8 +1196,8 @@
 <h2 id="customizing-the-policy">Customizing the policy<a class="headerlink" href="#customizing-the-policy" title="Permanent link">&para;</a></h2>
 <p>Pass a custom policy when constructing the client:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.profiles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.retries</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryPolicy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_profile</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryPolicy</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">profile</span> <span class="o">=</span> <span class="n">load_profile</span><span class="p">()</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
@@ -1232,11 +1232,11 @@
 <tbody>
 <tr>
 <td>HTTP 429</td>
-<td><code>KneoRateLimited</code> (carries <code>.retry_after</code>)</td>
+<td><code>KneoRateLimitedError</code> (carries <code>.retry_after</code>)</td>
 </tr>
 <tr>
 <td>HTTP 503</td>
-<td><code>KneoServiceUnavailable</code> (a <code>KneoServerError</code> subclass; carries <code>.retry_after</code>)</td>
+<td><code>KneoServiceUnavailableError</code> (a <code>KneoServerError</code> subclass; carries <code>.retry_after</code>)</td>
 </tr>
 <tr>
 <td>HTTP 502 / 504</td>
@@ -1268,10 +1268,10 @@
 <p>There is no supported way to send a <code>POST</code> <em>without</em> a key. The platform's contract assumes the header is present, and the auto-injection is exactly what makes <code>POST</code> retries safe — an opt-out would quietly disable that.</p>
 <h2 id="putting-it-together-a-robust-pattern">Putting it together — a robust pattern<a class="headerlink" href="#putting-it-together-a-robust-pattern" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KneoClient</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.errors</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="n">KneoIdempotencyMismatchError</span><span class="p">,</span> <span class="n">KneoNetworkError</span><span class="p">,</span> <span class="n">KneoServerError</span><span class="p">,</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core.idempotency</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_client.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">new_idempotency_key</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_run_robust</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="n">KneoClient</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">key</span> <span class="o">=</span> <span class="n">new_idempotency_key</span><span class="p">()</span>  <span class="c1"># one key, used across application-level retries</span>
