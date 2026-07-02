@@ -207,14 +207,108 @@
         "title": "CheckpointListResponse",
         "type": "object"
       },
+      "CredentialEntry": {
+        "additionalProperties": false,
+        "description": "One credential reference's redacted health (relay #10).\n\n`status` is the real signal kneo_serv has for an env-var-backed secret:\n`present` (configured) vs `missing`. `expires_at` / `last_checked` are typed\nreserved slots — env-var references carry no rotation/expiry metadata, so\nthey are `null` today and reserved for a future secret backend that does.",
+        "properties": {
+          "env_var": {
+            "title": "Env Var",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "last_checked": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Checked"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "present": {
+            "title": "Present",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "present",
+              "missing"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "name",
+          "env_var",
+          "present",
+          "status"
+        ],
+        "title": "CredentialEntry",
+        "type": "object"
+      },
+      "CredentialInventory": {
+        "additionalProperties": false,
+        "description": "Typed credential inventory (relay #10 — was `additionalProperties: true`).",
+        "properties": {
+          "extra": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CredentialEntry"
+            },
+            "title": "Extra",
+            "type": "object"
+          },
+          "providers": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CredentialEntry"
+            },
+            "title": "Providers",
+            "type": "object"
+          },
+          "service_tokens": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CredentialEntry"
+            },
+            "title": "Service Tokens",
+            "type": "object"
+          }
+        },
+        "title": "CredentialInventory",
+        "type": "object"
+      },
       "CredentialInventoryResponse": {
         "additionalProperties": false,
-        "description": "GET /v1/security/credentials response body (redacted inventory).",
+        "description": "GET /v1/security/credentials response body (redacted, typed inventory).",
         "properties": {
           "inventory": {
-            "additionalProperties": true,
-            "title": "Inventory",
-            "type": "object"
+            "$ref": "#/components/schemas/CredentialInventory"
           }
         },
         "required": [
@@ -245,6 +339,51 @@
           "count"
         ],
         "title": "EnvironmentPolicyListResponse",
+        "type": "object"
+      },
+      "EnvironmentPolicyPreviewResponse": {
+        "additionalProperties": false,
+        "description": "POST /v1/policies/environment/{name}/preview response body (relay #9).\n\n`diff` is the field-level change vs the stored policy; `affected_run_ids` are\nexisting runs whose block outcome would change under the candidate, and\n`newly_blocking` the subset that go from allowed → blocked. `runs_evaluated`\nis how many runs in the environment were replayed (bounded).",
+        "properties": {
+          "affected_run_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Affected Run Ids",
+            "type": "array"
+          },
+          "diff": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Diff",
+            "type": "object"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "newly_blocking": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Newly Blocking",
+            "type": "array"
+          },
+          "runs_evaluated": {
+            "title": "Runs Evaluated",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environment",
+          "diff",
+          "affected_run_ids",
+          "newly_blocking",
+          "runs_evaluated"
+        ],
+        "title": "EnvironmentPolicyPreviewResponse",
         "type": "object"
       },
       "EnvironmentPolicyRequest": {
@@ -657,6 +796,17 @@
             "title": "Overrides",
             "type": "object"
           },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
           "skills": {
             "anyOf": [
               {
@@ -763,6 +913,104 @@
           "status"
         ],
         "title": "RunCreateResponse",
+        "type": "object"
+      },
+      "RunGraphResponse": {
+        "additionalProperties": false,
+        "description": "GET /v1/runs/{id}/graph response body — static DAG + live highlight.\n\nThe `nodes` / `edges` / `start` static topology (same shape as\n`SpecGraphResponse`) plus the run's live position: `current` (the node /\nstep in progress) and `visited` (those already executed). The id spaces\ncoincide, so a dashboard highlights `current` / `visited` directly over the\nstatic graph.",
+        "properties": {
+          "current": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current"
+          },
+          "edges": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "max_steps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Steps"
+          },
+          "nodes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "visited": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Visited",
+            "type": "array"
+          },
+          "workflow_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Kind"
+          },
+          "workflow_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Name"
+          }
+        },
+        "required": [
+          "run_id",
+          "status"
+        ],
+        "title": "RunGraphResponse",
         "type": "object"
       },
       "RunListResponse": {
@@ -1132,6 +1380,17 @@
             "title": "Run Id",
             "type": "string"
           },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
           "status": {
             "title": "Status",
             "type": "string"
@@ -1140,6 +1399,16 @@
             "default": 0,
             "title": "Trace Event Count",
             "type": "integer"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "visited_nodes": {
             "items": {
@@ -1183,6 +1452,29 @@
           "status"
         ],
         "title": "RunStatusResponse",
+        "type": "object"
+      },
+      "RunUsage": {
+        "additionalProperties": false,
+        "description": "Per-run token usage (relay #2). Tokens only — cost (tokens × a pricing\nsheet) is a dashboard/presentation concern, deliberately not computed here.",
+        "properties": {
+          "input_tokens": {
+            "default": 0,
+            "title": "Input Tokens",
+            "type": "integer"
+          },
+          "output_tokens": {
+            "default": 0,
+            "title": "Output Tokens",
+            "type": "integer"
+          },
+          "total_tokens": {
+            "default": 0,
+            "title": "Total Tokens",
+            "type": "integer"
+          }
+        },
+        "title": "RunUsage",
         "type": "object"
       },
       "SkillsListResponse": {
@@ -1434,6 +1726,128 @@
         "title": "SpecExplainResponse",
         "type": "object"
       },
+      "SpecGraphRequest": {
+        "additionalProperties": false,
+        "description": "POST /v1/specs/graph request body.\n\nSubclasses `SpecValidateRequest` for the shared envelope + its size\nvalidators (like compile / explain / policy-report).",
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "overlays": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Overlays",
+            "type": "array"
+          },
+          "overrides": {
+            "additionalProperties": true,
+            "title": "Overrides",
+            "type": "object"
+          },
+          "spec": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec"
+          },
+          "spec_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Path"
+          }
+        },
+        "title": "SpecGraphRequest",
+        "type": "object"
+      },
+      "SpecGraphResponse": {
+        "additionalProperties": false,
+        "description": "POST /v1/specs/graph response body — a workflow's static node/edge DAG.\n\n`workflow_kind` is `graph` / `sequential` / `null` (an orchestration,\nhandoff, group-chat, or agent-only spec has no renderable DAG and returns\nempty `nodes` / `edges`).",
+        "properties": {
+          "edges": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "max_steps": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Steps"
+          },
+          "nodes": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Nodes",
+            "type": "array"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "workflow_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Kind"
+          },
+          "workflow_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Workflow Name"
+          }
+        },
+        "title": "SpecGraphResponse",
+        "type": "object"
+      },
       "SpecPolicyReportRequest": {
         "additionalProperties": false,
         "description": "POST /v1/specs/policy-report request body.",
@@ -1590,9 +2004,19 @@
         "additionalProperties": false,
         "description": "GET /v1/runs/{id}/trace response body.",
         "properties": {
+          "complete": {
+            "default": true,
+            "title": "Complete",
+            "type": "boolean"
+          },
           "count": {
             "default": 0,
             "title": "Count",
+            "type": "integer"
+          },
+          "dropped": {
+            "default": 0,
+            "title": "Dropped",
             "type": "integer"
           },
           "events": {
@@ -1706,7 +2130,7 @@
   "info": {
     "description": "Platform service API for Kneo Agent runs, specs, traces, checkpoints, and human-in-the-loop tasks.",
     "title": "Kneo Agent Platform API",
-    "version": "1.0.0"
+    "version": "1.2.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -2826,6 +3250,141 @@
         ]
       }
     },
+    "/policies/environment/{environment}/preview": {
+      "post": {
+        "description": "Preview a candidate policy's impact without persisting it (relay #9).",
+        "operationId": "preview_environment_policy_policies_environment__environment__preview_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "title": "Environment",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnvironmentPolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentPolicyPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Preview Environment Policy",
+        "tags": [
+          "policies"
+        ]
+      }
+    },
     "/readyz": {
       "get": {
         "operationId": "readyz_readyz_get",
@@ -2875,6 +3434,118 @@
                 }
               ],
               "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workflow_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Workflow Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workflow_name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Workflow Name"
+            }
+          },
+          {
+            "in": "query",
+            "name": "session_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "has_error",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Has Error"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
             }
           },
           {
@@ -3893,6 +4564,129 @@
           }
         },
         "summary": "Continue Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/runs/{run_id}/graph": {
+      "get": {
+        "description": "Return the run's static workflow DAG + its live position (W9 #7).\n\nThe static `nodes` / `edges` (recompiled from the run's frozen spec\nsnapshot — no re-execution) plus the live `current` / `visited` highlight\nread off the run's state. Consolidates the static structure with the\nlive-position fields already on `GET /runs/{id}`; no new persisted state.",
+        "operationId": "get_run_graph_runs__run_id__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunGraphResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Get Run Graph",
         "tags": [
           "runs"
         ]
@@ -5011,6 +5805,128 @@
           }
         },
         "summary": "Explain Spec",
+        "tags": [
+          "specs"
+        ]
+      }
+    },
+    "/specs/graph": {
+      "post": {
+        "description": "Return a spec's static workflow DAG (nodes + edges) — W9 #7.\n\nConvenience consolidation over `compile`: derives the topology from the\ncompiled `root_workflow`. No new state; see `GET /v1/runs/{id}/graph` for\nthe same DAG with a run's live highlight.",
+        "operationId": "graph_spec_specs_graph_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecGraphRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecGraphResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Graph Spec",
         "tags": [
           "specs"
         ]
@@ -6495,6 +7411,141 @@
         ]
       }
     },
+    "/v1/policies/environment/{environment}/preview": {
+      "post": {
+        "description": "Preview a candidate policy's impact without persisting it (relay #9).",
+        "operationId": "preview_environment_policy_v1_policies_environment__environment__preview_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "maxLength": 128,
+              "minLength": 1,
+              "title": "Environment",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnvironmentPolicyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentPolicyPreviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Preview Environment Policy",
+        "tags": [
+          "policies"
+        ]
+      }
+    },
     "/v1/readyz": {
       "get": {
         "operationId": "readyz_v1_readyz_get",
@@ -6544,6 +7595,118 @@
                 }
               ],
               "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workflow_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Workflow Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workflow_name",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Workflow Name"
+            }
+          },
+          {
+            "in": "query",
+            "name": "session_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Session Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "has_error",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Has Error"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
             }
           },
           {
@@ -7562,6 +8725,129 @@
           }
         },
         "summary": "Continue Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/v1/runs/{run_id}/graph": {
+      "get": {
+        "description": "Return the run's static workflow DAG + its live position (W9 #7).\n\nThe static `nodes` / `edges` (recompiled from the run's frozen spec\nsnapshot — no re-execution) plus the live `current` / `visited` highlight\nread off the run's state. Consolidates the static structure with the\nlive-position fields already on `GET /runs/{id}`; no new persisted state.",
+        "operationId": "get_run_graph_v1_runs__run_id__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunGraphResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Get Run Graph",
         "tags": [
           "runs"
         ]
@@ -8680,6 +9966,128 @@
           }
         },
         "summary": "Explain Spec",
+        "tags": [
+          "specs"
+        ]
+      }
+    },
+    "/v1/specs/graph": {
+      "post": {
+        "description": "Return a spec's static workflow DAG (nodes + edges) — W9 #7.\n\nConvenience consolidation over `compile`: derives the topology from the\ncompiled `root_workflow`. No new state; see `GET /v1/runs/{id}/graph` for\nthe same DAG with a run's live highlight.",
+        "operationId": "graph_spec_v1_specs_graph_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpecGraphRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpecGraphResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Invalid request."
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Authentication required."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Insufficient scope for this operation."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Resource not found."
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Conflict (resource locked or idempotency key in progress)."
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Request body exceeds the configured size limit (`KNEO_SERV_MAX_BODY_BYTES`); returned by the body-limit middleware."
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Internal server error."
+          },
+          "503": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "Service unavailable — the run queue is full (`KNEO_SERV_MAX_QUEUE_DEPTH` backpressure); retry after the `Retry-After` interval. Readiness 503s are on the unauthenticated `/readyz` route only."
+          }
+        },
+        "summary": "Graph Spec",
         "tags": [
           "specs"
         ]

@@ -2729,6 +2729,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -5235,6 +5257,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6083,7 +6127,7 @@ environment variable referenced below, see
 <p>Pull the published image from GitHub Container Registry:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/kneo-agent/kneo-serv:latest
 </code></pre></div>
-<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>0.9.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>0.9</code>),
+<p>Tag conventions: <code>&lt;version&gt;</code> (e.g. <code>1.0.0</code>), <code>&lt;major&gt;.&lt;minor&gt;</code> (<code>1.0</code>),
 and <code>latest</code>. amd64-only; arm64 is deferred to
 2.0. From 0.3.0 onward the image
 is keyless-signed via cosign and ships with a CycloneDX SBOM
@@ -7962,7 +8006,7 @@ contract_stability.md.</p>
    current and target version. Patch upgrades only need the latest patch's
    notes. The reading-order index (newest first) is
    releases/README.md; the current release's
-   notes are release_notes_1.0.0.md.</li>
+   notes are release_notes_1.2.0.md.</li>
 <li><strong>Pin the target version</strong> in your dependency manifest:
    <div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>kneo-serv[deploy]==X.Y.Z
 </code></pre></div></li>
@@ -8770,6 +8814,130 @@ diagnostics only in the body). It now works as a CI gate, consistent with
 that relied on exit <code>0</code> for an invalid spec.</p>
 <p><strong>Persistence schemas</strong>: no migration — these are request-validation + CLI
 changes only.</p>
+<h4 id="110">1.1.0<a class="headerlink" href="#110" title="Permanent link">&para;</a></h4>
+<p>A normal additive minor on the <code>1.x</code> line — no <code>/v1</code> contract break. It does
+tighten <strong>spec validation</strong> under the <em>reject-don't-drop</em> policy: controls that
+were previously accepted and then silently dropped, ignored, or crashed at runtime
+now fail fast at <code>/v1/specs/validate</code> (and at run-create). All are validation
+behavior, not <code>/v1</code> shape changes; a spec that was already correct is unaffected.</p>
+<p><strong><code>GET /v1/runs/{id}/policy-report</code> now requires the <code>runs:read</code> scope</strong> (was
+<code>specs:read</code>), aligning it with every other per-run read (<code>get</code> / <code>recovery</code> /
+<code>replay</code> / <code>trace</code> / <code>checkpoints</code> / <code>graph</code>). The <code>operator</code>, <code>service</code>, and
+<code>viewer</code> roles already carry both scopes and are unaffected; the <code>reviewer</code> role
+(<code>runs:read</code>, no <code>specs:read</code>) <strong>gains</strong> access. <em>Action:</em> a custom API key that
+read this endpoint with <strong>only</strong> <code>specs:read</code> must add <code>runs:read</code>.</p>
+<p><strong>Unknown spec keys are now rejected (<code>extra='forbid'</code>).</strong> A typo'd or stray key
+anywhere in a spec block (<code>tols:</code>, <code>systme_prompt:</code>, an unknown sub-block) was
+silently discarded — so an agent could ship missing the tool/prompt/governance the
+author intended. Every <code>v1</code> spec block now rejects unknown keys with an <code>E_SCHEMA</code>
+validation error. Blocks that are intentionally open carry a dedicated field for
+loose values — put provider-specific inference params under <code>model.extra</code>, not as
+unknown keys on <code>model:</code>.
+<em>Action:</em> run <code>kneo spec validate</code> (or <code>kneo spec lint</code>) over your specs before
+upgrading; fix or remove any flagged stray keys. A common one: a runtime selector
+must use <code>runtime_preferences.preferred_mode</code> (+ <code>allowed_modes</code>), not a bare
+<code>runtime:</code> key (which never took effect and is now rejected).</p>
+<p><strong>Guardrail <code>action</code> is validated against its stage.</strong> An <code>action</code> the stage's
+runtime does not honor now fails validation (<code>E_GUARDRAIL_ACTION_UNSUPPORTED</code>)
+instead of crashing (HTTP 500) or silently degrading at runtime. Specifically:
+<code>redact</code> is rejected on the <code>input</code>/<code>output</code> stages (it is a <code>tool</code>/<code>workflow</code>
+action), and <code>revise</code> is rejected on <code>input</code> (it only applies on <code>output</code>/<code>tool</code>/
+<code>workflow</code>). Supported per stage: input — warn/block/retry/escalate/human_review;
+output — those + revise; tool/workflow — those + redact. <code>action</code> still defaults
+to <code>block</code>. <em>Action:</em> for output PII handling use <code>block</code> (fail-closed) or
+<code>revise</code>; redaction belongs on the tool/workflow stage.</p>
+<p><strong>Participant fallback is rejected.</strong> A <code>concurrent</code> / <code>handoff</code> / <code>group-chat</code>
+participant declaring <code>on_error: fallback</code> or <code>fallback_ref</code> now fails validation
+(<code>E_PARTICIPANT_FALLBACK_UNSUPPORTED</code>) — orchestration never honored participant
+fallback, so it was a silent no-op. <em>Action:</em> remove the participant fallback, or
+use a <code>sequential</code> / <code>graph</code> workflow where fallback is enforced.</p>
+<p><strong>Tool domain gating is now enforced; binary capability flags are advisory.</strong>
+<code>tools.permissions.allowed_domains</code> (and the newly-wired <code>denied_domains</code>) are now
+<strong>enforced at tool-call time</strong>: a URL-shaped argument whose host is in
+<code>denied_domains</code> — or, when <code>allowed_domains</code> is set, is not in it — fails the call
+(<code>422</code> sync / failed async). <em>Action:</em> if a tool legitimately calls a host, add it
+to <code>allowed_domains</code> before upgrading. The binary capability flags
+(<code>allow_network</code> / <code>allow_filesystem_read|write</code> / <code>allow_shell</code>) remain a
+<strong>declared static-governance posture</strong> — they drive the policy report and the
+<code>deny_unrestricted_tools</code> env-policy gate, but are <strong>not</strong> runtime-enforced against
+arbitrary in-process tool code (a real sandbox is a future <code>2.0</code> item; see
+<code>capability_enforcement_design.md</code>). Treat them as governance signals, not a
+runtime sandbox.</p>
+<p><strong>Run spec is frozen at create.</strong> A run now captures its resolved base + overlay
+spec <strong>inputs at creation</strong> and compiles every execute/resume from that snapshot.
+Editing, moving, or deleting the source spec/overlay files after a run is created
+— or restarting the service against a changed tree — <strong>no longer changes or breaks
+that run</strong> (it ran against a possibly-mutated file before). The reload-on-resume
+behavior is gone: editing a spec file and resuming will <strong>not</strong> apply the edit to
+an existing run; start a new run instead. Runs created before <code>1.1.0</code> keep the old
+recompile-from-source behavior (no snapshot). The snapshot now also captures the
+declared <strong>skill bundles' content</strong> (instructions + metadata) at create, so a
+run's skill prompts are durable too — editing, moving, or deleting a skill
+bundle after a run is created no longer changes that run. <em>Remaining limit:</em> tool
+<code>implementation</code> code (Python import paths) and a skill bundle's <em>tool callables</em>
+are code, not data, and are still resolved at build — a tool whose code changes
+under a restart can still change behavior (the package-version pin / fingerprint
+mitigations remain the deferred audit/drift work).</p>
+<p><strong>Resuming an expired human task is now refused.</strong> <code>POST
+/v1/human-tasks/{id}/resume</code> returns <strong><code>409 human_task_expired</code></strong> when the
+task's deadline (<code>expires_at</code>) has already passed — previously a resume landing
+in the window between expiry and the next <code>prune_expired_human_tasks</code> sweep
+could complete a task the deadline said was over, and whether the resume or the
+sweep won was a race. The deadline is now authoritative: the configured
+<code>on_timeout</code> policy (fail / continue) governs an expired task. <strong>Exception:</strong>
+<code>on_timeout: escalate</code> tasks remain resumable past their deadline — escalation
+deliberately keeps the run blocked for a manual late resume. <em>Action:</em> none for
+well-behaved reviewers; clients that resumed past the deadline must handle the
+<code>409</code> (the task timed out — inspect the run's terminal state).</p>
+<p><strong>Persistence schemas</strong>: a single automatic, backward-compatible SQLite/
+PostgreSQL migration (v4) adds a nullable <code>runs.session_id</code> column (W9 #6) plus
+filter indexes; it applies on first connect with no operator action and leaves
+existing rows intact. The remaining changes are additive run-metadata +
+validation/gating behavior.</p>
+<h4 id="120">1.2.0<a class="headerlink" href="#120" title="Permanent link">&para;</a></h4>
+<p>A normal additive minor on the <code>1.x</code> line — <strong>no <code>/v1</code> contract break</strong>. Theme:
+<em>sibling-parity &amp; contract-fidelity hardening</em>. It does tighten a few
+validate-/config-/runtime behaviors under the <em>reject-don't-drop</em> policy;
+controls previously accepted-then-dropped, silently-ignored, or a prod no-op now
+fail fast or take effect. A deployment that was already correctly configured is
+unaffected.</p>
+<p><strong><code>allow_filesystem_read</code> now requires human approval like <code>allow_filesystem_write</code>.</strong>
+An agent whose tool policy sets <code>allow_filesystem_read</code> is now flagged as a
+privileged surface (<code>W_TOOL_FILESYSTEM_READ_ALLOWED</code>) and, with no human-review
+step, trips <code>W_HUMAN_APPROVAL_MISSING</code> — matching the write flag and the policy
+report, which already counted read-any-file as unrestricted. <em>Action:</em> add a human
+approval step to such specs (or document the exemption), as you already do for
+write-capable agents.</p>
+<p><strong>A mistyped role/scope — or a stray <code>:</code> — in <code>KNEO_SERV_API_KEYS</code> now fails at
+startup.</strong> A token that is neither a known role nor a scope some role grants
+(e.g. <code>reviewr</code>, <code>runs:reed</code>, or a <code>:</code> inside the key value, which is the field
+delimiter) previously parsed as an inert explicit scope, silently giving the key
+<em>fewer</em> privileges than intended. It now raises a <code>RuntimeError</code> at config parse.
+<em>Action:</em> if a key fails to load, fix the typo; keys themselves must not contain a
+<code>:</code>.</p>
+<p><strong>Retention status overrides must be terminal.</strong> <code>KNEO_SERV_RETENTION_RUN_STATUSES</code>
+/ <code>_QUEUE_STATUSES</code> (and programmatic <code>RetentionPolicy</code>) now reject any
+non-terminal status — a value like <code>running</code> would have let a prune pass delete
+live in-flight records. <em>Action:</em> set only terminal statuses
+(<code>completed</code>/<code>failed</code>/<code>cancelled</code>/<code>timed_out</code>/<code>expired</code> for runs;
+<code>completed</code>/<code>failed</code> for the queue).</p>
+<p><strong><code>redact_tool_results</code> is now enforced.</strong> The <code>tools.permissions.redact_tool_results</code>
+policy flag was only honored by an unwired middleware — a no-op in production. It
+now runs on the live tool path and scrubs secrets from tool output via <code>redact_data</code>
+(per its docstring), not a blanket marker. <em>Action:</em> none required; if you set this
+flag expecting it to take effect, it now does (secret values in tool results are
+scrubbed).</p>
+<p><strong>Unknown query parameters: <code>403</code> now precedes <code>422</code>.</strong> An authenticated but
+under-scoped caller sending an unrecognized query param now gets <code>403</code> (missing
+scope) before the <code>422</code> (unknown param), so the error no longer discloses which
+params a route accepts to a caller not authorized for it. <em>Action:</em> none.</p>
+<p><strong>New additive surface</strong> (no action; opt-in): <code>GET /v1/runs?q=</code> bounded content
+search; a first-class <code>usage</code> field on the run status; a typed
+<code>GET /v1/security/credentials</code> inventory with a health <code>status</code>;
+<code>POST /v1/policies/environment/{env}/preview</code>; and <code>dropped</code>/<code>complete</code> on
+<code>GET /v1/runs/{id}/trace</code>.</p>
+<p><strong>SDK floor</strong>: unchanged (<code>kneo-agent&gt;=2.2.0,&lt;3.0.0</code>). 1.2.0 consumes no new SDK
+surface.</p>
 <h3 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h3>
 <p>Schema-forward migrations make in-place downgrade unsafe; the only
 supported rollback path is <strong>restore from the pre-upgrade backup</strong>, then

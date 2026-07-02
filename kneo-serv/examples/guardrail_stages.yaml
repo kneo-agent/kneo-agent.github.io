@@ -5,8 +5,12 @@
 #
 #   - input stage:  block the run before the model is called if the prompt
 #                   matches a forbidden pattern (a fail-closed safety gate).
-#   - output stage: redact PII (an SSN shape) from the final answer before it
-#                   reaches the caller.
+#   - output stage: block the response if the final answer contains a PII shape
+#                   (an SSN) — a fail-closed gate before it reaches the caller.
+#
+# Note: the output stage honors warn / block / revise. `redact` is a tool- and
+# workflow-stage action (see guardrails_complete.yaml); surgical pattern-level
+# redaction of the final answer is not an output-stage capability.
 #
 # (The tool stage is in guardrails_complete.yaml; workflow-stage guardrails —
 # enforced per step as of 0.11.0 — are demonstrated in a workflow spec.)
@@ -37,8 +41,8 @@ agent:
           # Reject prompts that try to smuggle an API key in.
           patterns: ['sk-[A-Za-z0-9]{16,}']
     output:
-      - id: redact-ssn
+      - id: block-ssn-in-output
         type: regex
-        action: redact
+        action: block
         config:
           patterns: ['\d{3}-\d{2}-\d{4}']
