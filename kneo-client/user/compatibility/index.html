@@ -1097,18 +1097,25 @@
 </thead>
 <tbody>
 <tr>
+<td><code>1.1.0</code></td>
+<td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td>
+<td><code>kneo_serv</code> <code>1.2.x</code> line (E2E) + <code>1.0.x</code>/<code>1.1.x</code> per the floors below</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>Current</td>
+</tr>
+<tr>
 <td><code>1.0.0</code></td>
 <td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
 <td><code>kneo_serv</code> <code>1.0.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Current</td>
+<td>Previous</td>
 </tr>
 <tr>
 <td><code>0.10.0</code></td>
 <td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
 <td><code>kneo_serv</code> <code>1.0.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Previous</td>
+<td>Older</td>
 </tr>
 <tr>
 <td><code>0.9.0</code></td>
@@ -1171,7 +1178,7 @@ corrected, machine-pinned surface.</p>
 <li>The filtered spec replaces <code>schemas/openapi.json</code>, <code>schemas/SOURCE.md</code> is updated, and <code>_generated/</code> is regenerated.</li>
 <li>The hand-rolled adapter layer (<code>platform/</code>, <code>agent/</code>) may need updates if endpoints were added, renamed, or had their shapes change. The contract test <code>tests/contract/test_path_coverage.py</code> catches both sides of that drift.</li>
 </ol>
-<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. Patches don't change pins. A pin bump can land in any minor / patch — versioning is independent.</p>
+<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. A pin bump lands in a <strong>minor</strong>; patches never change pins (aligned with contract_stability.md — the earlier "any minor / patch" wording here contradicted it).</p>
 <h2 id="forward-compatibility-newer-kneo_serv-than-the-pin">Forward compatibility — newer <code>kneo_serv</code> than the pin<a class="headerlink" href="#forward-compatibility-newer-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h2>
 <p><code>kneo-client</code> ships an explicit list of every <code>(method, path)</code> it wraps. A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps — you just won't have wrappers for the new endpoints until the next <code>kneo-client</code> release.</p>
 <p>If you need access to a new endpoint before that release, use the public <code>KneoClient.request()</code> escape hatch:</p>
@@ -1192,6 +1199,10 @@ corrected, machine-pinned surface.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>1.0.x</code> / <code>1.1.x</code></td>
+<td><code>1.1.0</code> (pinned to <code>v1.2.0</code>) is deliberately older-serv-safe for this uptake: the credential inventory is normalized client-side (<code>status</code> derived from <code>present</code> against pre-<code>1.2.0</code> servers), and the new surfaces degrade explicitly per the <a href="#server-version-floors-and-behavior-changes">server-version floors</a> below (<code>422 unknown_query_parameters</code> for filter kwargs the server doesn't know, 404 for the graph/preview endpoints, absent <code>usage</code>/trace flags). <code>1.0.0</code> (pinned to <code>v1.0.0</code>) also works for everything it wraps.</td>
+</tr>
 <tr>
 <td><code>0.12.x</code> / <code>1.0.x</code></td>
 <td><code>0.9.0</code> (pinned to <code>v1.0.0</code>). Takes up the GA contract: <code>async_mode</code> now honored on <code>POST /v1/specs/run</code> (<code>202</code>), the <code>spec_path_confined</code> <code>422</code> from default-on spec-path confinement, and consolidated client API-stability docs. A <code>v0.11.0</code>-pinned client (<code>0.8.0</code>) also works against <code>0.12.x</code>/<code>1.0.x</code> for everything it wraps — <code>specs.run</code> async just surfaces the queued run via the same <code>RunCreateResponse</code>, and an out-of-root <code>spec_path</code> draws the <code>422</code> either way.</td>
@@ -1226,6 +1237,10 @@ corrected, machine-pinned surface.</p>
 <li><strong>Skill catalog requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>client.agent.skills.list()</code> 404s against older servers. The per-request <code>skills</code> overlay on <code>runs.create</code> requires <code>&gt;= 0.9.0</code>.</li>
 <li><strong>Human-task <code>status</code> filter requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>human_tasks.list(status=...)</code> is silently ignored by older servers (honored from 0.8.0, contractual in the 0.9.0 spec).</li>
 <li><strong>Spec-explain envelope requires <code>kneo_serv &gt;= 0.9.0</code>.</strong> The <code>environment</code> / <code>overlays</code> / <code>overrides</code> fields on <code>specs.explain</code> (including the explain leg of <code>dry_run</code>) draw a 422 from older servers.</li>
+<li><strong>Run-list filters, <code>session_id</code>, and the graph endpoints require <code>kneo_serv &gt;= 1.1.0</code>; <code>q</code>, <code>usage</code>, policy preview, the typed credential-inventory fields, and the trace <code>complete</code>/<code>dropped</code> flags require <code>&gt;= 1.2.0</code>.</strong> Older servers <strong>hard-reject</strong> unknown query params with <code>422 unknown_query_parameters</code> (they never silently ignore them), 404 the graph/preview endpoints, and simply don't emit the new response fields. A body <code>session_id</code> on <code>runs.create</code>/<code>specs.run</code> draws a body-validation <code>422</code> from <code>kneo_serv 1.0.x</code> (<code>extra='forbid'</code>), and <code>POST /v1/specs/run</code> silently dropped it until the <code>1.2.0</code> parity fix.</li>
+<li><strong>Timestamp filters compare lexically on <code>kneo_serv 1.1.x</code>.</strong> <code>created_after</code>/<code>created_before</code> are validated + UTC-normalized (malformed values → <code>422 invalid_timestamp</code>) only from <code>1.2.0</code>; on <code>1.1.x</code> a malformed or non-<code>+00:00</code>-form value silently misfilters. Pass <code>datetime.isoformat()</code> of a tz-aware UTC datetime.</li>
+<li><strong>Resuming an expired human task raises <code>KneoHumanTaskExpiredError</code> from <code>kneo_serv &gt;= 1.1.0</code></strong> (409 <code>human_task_expired</code>; tasks with <code>on_timeout: escalate</code> stay resumable late). Older servers could let a late resume race the expiry sweep and succeed.</li>
+<li><strong><code>kneo_serv</code> behavior changes worth auditing before a server upgrade to <code>1.1.x</code>/<code>1.2.x</code></strong> (no client code change; listed here because runs that used to pass may fail): spec <em>content</em> now rejects unknown keys (<code>extra='forbid'</code> → <code>E_SCHEMA</code> diagnostics; provider-specific params belong under <code>model.extra</code>); tool <code>allowed_domains</code>/<code>denied_domains</code> are <strong>enforced</strong> at call time (<code>422 guardrail_violation</code> sync / <code>failed</code> async); a run's spec + skills are <strong>frozen at create</strong> (edit-then-resume no longer applies the edit, from <code>1.1.0</code>); the per-run policy-report scope changed <code>specs:read</code> → <code>runs:read</code>; <code>GET /v1/skills</code> <code>path</code> values are now root-relative.</li>
 <li><strong>Spec-path confinement is default-on from <code>kneo_serv &gt;= 1.0.0</code>.</strong> A caller-supplied <code>spec_path</code>, <code>overlays</code> entry, or <code>skills[].source</code> that resolves outside the server's allow-listed root (<code>KNEO_SERV_SPEC_ROOT</code>, defaulting to the server's working directory) — including absolute, <code>..</code>-traversal, <code>~</code>, or symlink-escape paths — is rejected <code>422 spec_path_confined</code> (surfaced as <code>KneoValidationError</code> with <code>.code == "spec_path_confined"</code>). Through <code>0.12.x</code> this was opt-in (out-of-root paths only logged a deprecation warning); at <code>1.0.0</code> the warn-and-allow path is removed. The client sends these fields unchanged either way — keep your specs under an allow-listed root, or have the operator set <code>KNEO_SERV_SPEC_ROOT</code>. See <a href="../errors/">error handling</a>.</li>
 </ul>
 <h2 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>

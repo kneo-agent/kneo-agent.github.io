@@ -1202,7 +1202,9 @@ supports it.</p>
 </tbody>
 </table>
 <p>The item / value types (<code>Run</code>, <code>Checkpoint</code>, <code>Credential</code>, etc.) are
-the generated models from <code>kneo_client._generated.models</code>. Several are
+the generated models <strong>re-exported from <code>kneo_client.types</code></strong> — import
+them from there (<code>kneo_client._generated</code> is private and unsupported).
+Several are
 <em>open</em> objects in the pinned spec (no declared fields), in which case
 fields are reached via bracket lookup — <code>run["run_id"]</code> rather than
 <code>run.run_id</code>. The <a href="../../pub/kneo_agent_client_api_reference.html">API Reference</a>

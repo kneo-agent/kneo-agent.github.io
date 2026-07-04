@@ -3437,7 +3437,9 @@ supports it.</p>
 </tbody>
 </table>
 <p>The item / value types (<code>Run</code>, <code>Checkpoint</code>, <code>Credential</code>, etc.) are
-the generated models from <code>kneo_client._generated.models</code>. Several are
+the generated models <strong>re-exported from <code>kneo_client.types</code></strong> — import
+them from there (<code>kneo_client._generated</code> is private and unsupported).
+Several are
 <em>open</em> objects in the pinned spec (no declared fields), in which case
 fields are reached via bracket lookup — <code>run["run_id"]</code> rather than
 <code>run.run_id</code>. The <a href="../kneo_agent_client_api_reference.html">API Reference</a>
@@ -3859,14 +3861,15 @@ easy to misuse. Pattern:</p>
 <a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>├── KneoPermissionError               # HTTP 403 — scope denied, or environment_policy_blocked
 <a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a>├── KneoNotFoundError                 # HTTP 404 — resource does not exist
 <a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a>├── KneoConflictError                 # HTTP 409 — state conflict, classified by .code (carries .retry_after)
-<a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a>│   └── KneoIdempotencyMismatchError  # HTTP 409 with code idempotency_key_conflict
-<a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a>├── KneoPayloadTooLargeError          # HTTP 413 — body over the server&#39;s cap (carries .max_body_bytes)
-<a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a>├── KneoValidationError               # HTTP 422 — request validation failed
-<a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a>├── KneoRateLimitedError              # HTTP 429 (carries .retry_after)
-<a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a>└── KneoServerError                   # HTTP 5xx — server-side failure
-<a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a>    └── KneoServiceUnavailableError   # HTTP 503 — backpressure / store down (carries .retry_after)
+<a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a>│   ├── KneoIdempotencyMismatchError  # HTTP 409 with code idempotency_key_conflict
+<a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a>│   └── KneoHumanTaskExpiredError     # HTTP 409 with code human_task_expired (carries .continuation_id / .expires_at)
+<a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a>├── KneoPayloadTooLargeError          # HTTP 413 — body over the server&#39;s cap (carries .max_body_bytes)
+<a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a>├── KneoValidationError               # HTTP 422 — request validation failed
+<a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a>├── KneoRateLimitedError              # HTTP 429 (carries .retry_after)
+<a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a>└── KneoServerError                   # HTTP 5xx — server-side failure
+<a id="__codelineno-47-15" name="__codelineno-47-15" href="#__codelineno-47-15"></a>    └── KneoServiceUnavailableError   # HTTP 503 — backpressure / store down (carries .retry_after)
 </code></pre></div>
-<p><code>KneoIdempotencyMismatchError</code> is a <em>subclass</em> of <code>KneoConflictError</code> (catching <code>KneoConflictError</code> also catches the mismatch case). Everything else is parallel.</p>
+<p><code>KneoIdempotencyMismatchError</code> and <code>KneoHumanTaskExpiredError</code> are <em>subclasses</em> of <code>KneoConflictError</code> (catching <code>KneoConflictError</code> also catches both). Everything else is parallel.</p>
 <blockquote>
 <p><strong>Renamed in 0.10.0.</strong> <code>KneoRateLimitedError</code>, <code>KneoPayloadTooLargeError</code>, and
 <code>KneoServiceUnavailableError</code> were previously <code>KneoRateLimited</code>,
@@ -3883,7 +3886,7 @@ through the <code>1.x</code> line and are removed at <code>2.0</code>. Migrate t
 <a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a>    <span class="n">idempotency_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="c1"># Idempotency-Key sent on the failing request (POSTs)</span>
 <a id="__codelineno-48-6" name="__codelineno-48-6" href="#__codelineno-48-6"></a>    <span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>            <span class="c1"># Stable snake_case code from the error envelope (kneo_serv 0.6.0+)</span>
 </code></pre></div>
-<p><code>KneoConflictError</code> (409), <code>KneoRateLimitedError</code> (429), and <code>KneoServiceUnavailableError</code> (503) each add a <code>retry_after</code> field; <code>KneoPayloadTooLargeError</code> (413) adds <code>max_body_bytes</code>:</p>
+<p><code>KneoConflictError</code> (409), <code>KneoRateLimitedError</code> (429), and <code>KneoServiceUnavailableError</code> (503) each add a <code>retry_after</code> field; <code>KneoPayloadTooLargeError</code> (413) adds <code>max_body_bytes</code>; <code>KneoHumanTaskExpiredError</code> (409 <code>human_task_expired</code>) additionally adds <code>continuation_id</code> and <code>expires_at</code> (float epoch seconds):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">KneoConflictError</span><span class="p">(</span><span class="n">KneoError</span><span class="p">):</span>
 <a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>   <span class="c1"># Seconds parsed from the Retry-After header</span>
 <a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>
@@ -3936,6 +3939,11 @@ through the <code>1.x</code> line and are removed at <code>2.0</code>. Migrate t
 <td>409 with code <code>idempotency_key_conflict</code></td>
 <td><code>KneoIdempotencyMismatchError</code></td>
 <td>Same key reused with a different payload — see <a href="#idempotency-and-retries">idempotency</a>. Also raised for code-less legacy 409 bodies (pre-0.6.0 servers) on keyed requests.</td>
+</tr>
+<tr>
+<td>409 with code <code>human_task_expired</code></td>
+<td><code>KneoHumanTaskExpiredError</code></td>
+<td>Resuming a human task past its deadline (<code>kneo_serv &gt;= 1.1.0</code>). Carries <code>.continuation_id</code> / <code>.expires_at</code> (float epoch); never auto-retried. Tasks with <code>on_timeout: escalate</code> stay resumable late and don't raise this.</td>
 </tr>
 <tr>
 <td>413</td>
@@ -4071,6 +4079,16 @@ through the <code>1.x</code> line and are removed at <code>2.0</code>. Migrate t
 <td><code>idempotency_key_conflict</code></td>
 <td>409</td>
 <td>Key replayed with a different payload → <code>KneoIdempotencyMismatchError</code>.</td>
+</tr>
+<tr>
+<td><code>human_task_expired</code></td>
+<td>409</td>
+<td>Human-task resume past the deadline → <code>KneoHumanTaskExpiredError</code> (<code>kneo_serv &gt;= 1.1.0</code>).</td>
+</tr>
+<tr>
+<td><code>invalid_timestamp</code></td>
+<td>422</td>
+<td>Malformed <code>created_after</code>/<code>created_before</code> run filter (<code>kneo_serv &gt;= 1.2.0</code>; older servers compare lexically without validating) → <code>KneoValidationError</code>.</td>
 </tr>
 <tr>
 <td><code>payload_too_large</code></td>
@@ -4223,7 +4241,7 @@ through the <code>1.x</code> line and are removed at <code>2.0</code>. Migrate t
 </code></pre></div>
 <h3 id="why-a-typed-hierarchy">Why a typed hierarchy<a class="headerlink" href="#why-a-typed-hierarchy" title="Permanent link">&para;</a></h3>
 <p>A single <code>KneoError</code> would force callers to inspect <code>.status</code> everywhere they want to branch. A flat enum of error codes would lose the natural <code>isinstance</code> ergonomics. The hierarchy lets you catch broadly (<code>except KneoError</code>) for logging and narrowly (<code>except KneoAuthError</code>) for recovery — without losing the underlying response context, which stays attached to the exception instance.</p>
-<p>Subclasses are added when the platform introduces a new HTTP status that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 1.0.0: <code>0.5.0</code> added run-queue backpressure (<code>503</code> + <code>Retry-After</code>, surfaced as <code>KneoServiceUnavailableError</code>), <code>0.6.0</code> standardized the error envelope (surfaced as <code>.code</code>), and the <code>0.8.0</code> / <code>0.9.0</code> surfaces brought the <code>400</code> / <code>413</code> / <code>422</code> shapes now typed as <code>KneoBadRequestError</code>, <code>KneoPayloadTooLargeError</code>, and <code>KneoValidationError</code>. <code>kneo_serv</code> 0.11.0 added two new <code>422</code> codes — <code>unknown_query_parameters</code> and a terminalizing <code>guardrail_violation</code> — and <code>1.0.0</code> added a third, <code>spec_path_confined</code> (default-on spec-path confinement); all slot into the existing <code>KneoValidationError</code> via <code>.code</code> (no new subclass needed).</p>
+<p>Subclasses are added when the platform introduces a new HTTP status <strong>or a stable error code</strong> that warrants its own catch site, and not before. The set above is sufficient for <code>/v1</code> as it stands at <code>kneo_serv</code> 1.0.0: <code>0.5.0</code> added run-queue backpressure (<code>503</code> + <code>Retry-After</code>, surfaced as <code>KneoServiceUnavailableError</code>), <code>0.6.0</code> standardized the error envelope (surfaced as <code>.code</code>), and the <code>0.8.0</code> / <code>0.9.0</code> surfaces brought the <code>400</code> / <code>413</code> / <code>422</code> shapes now typed as <code>KneoBadRequestError</code>, <code>KneoPayloadTooLargeError</code>, and <code>KneoValidationError</code>. <code>kneo_serv</code> 0.11.0 added two new <code>422</code> codes — <code>unknown_query_parameters</code> and a terminalizing <code>guardrail_violation</code> — and <code>1.0.0</code> added a third, <code>spec_path_confined</code> (default-on spec-path confinement); all slot into the existing <code>KneoValidationError</code> via <code>.code</code> (no new subclass needed). <code>kneo_serv</code> 1.1.0 added the 409 <code>human_task_expired</code> code, typed as the <code>KneoHumanTaskExpiredError</code> subclass (a deadline miss is a distinct catch site: operators surface it rather than retry it), and 1.2.0 added the 422 <code>invalid_timestamp</code> code, which slots into <code>KneoValidationError</code> via <code>.code</code>.</p>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4265,18 +4283,25 @@ through the <code>1.x</code> line and are removed at <code>2.0</code>. Migrate t
 </thead>
 <tbody>
 <tr>
+<td><code>1.1.0</code></td>
+<td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td>
+<td><code>kneo_serv</code> <code>1.2.x</code> line (E2E) + <code>1.0.x</code>/<code>1.1.x</code> per the floors below</td>
+<td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
+<td>Current</td>
+</tr>
+<tr>
 <td><code>1.0.0</code></td>
 <td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
 <td><code>kneo_serv</code> <code>1.0.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Current</td>
+<td>Previous</td>
 </tr>
 <tr>
 <td><code>0.10.0</code></td>
 <td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td>
 <td><code>kneo_serv</code> <code>1.0.x</code> line</td>
 <td><code>&gt;=3.12</code> (3.12 / 3.13 / 3.14 in CI)</td>
-<td>Previous</td>
+<td>Older</td>
 </tr>
 <tr>
 <td><code>0.9.0</code></td>
@@ -4339,7 +4364,7 @@ corrected, machine-pinned surface.</p>
 <li>The filtered spec replaces <code>schemas/openapi.json</code>, <code>schemas/SOURCE.md</code> is updated, and <code>_generated/</code> is regenerated.</li>
 <li>The hand-rolled adapter layer (<code>platform/</code>, <code>agent/</code>) may need updates if endpoints were added, renamed, or had their shapes change. The contract test <code>tests/contract/test_path_coverage.py</code> catches both sides of that drift.</li>
 </ol>
-<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. Patches don't change pins. A pin bump can land in any minor / patch — versioning is independent.</p>
+<p>A <code>kneo-client</code> minor release ships exactly one <code>kneo_serv</code> pin. A pin bump lands in a <strong>minor</strong>; patches never change pins (aligned with contract_stability.md — the earlier "any minor / patch" wording here contradicted it).</p>
 <h3 id="forward-compatibility-newer-kneo_serv-than-the-pin">Forward compatibility — newer <code>kneo_serv</code> than the pin<a class="headerlink" href="#forward-compatibility-newer-kneo_serv-than-the-pin" title="Permanent link">&para;</a></h3>
 <p><code>kneo-client</code> ships an explicit list of every <code>(method, path)</code> it wraps. A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps — you just won't have wrappers for the new endpoints until the next <code>kneo-client</code> release.</p>
 <p>If you need access to a new endpoint before that release, use the public <code>KneoClient.request()</code> escape hatch:</p>
@@ -4360,6 +4385,10 @@ corrected, machine-pinned surface.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>1.0.x</code> / <code>1.1.x</code></td>
+<td><code>1.1.0</code> (pinned to <code>v1.2.0</code>) is deliberately older-serv-safe for this uptake: the credential inventory is normalized client-side (<code>status</code> derived from <code>present</code> against pre-<code>1.2.0</code> servers), and the new surfaces degrade explicitly per the <a href="#server-version-floors-and-behavior-changes">server-version floors</a> below (<code>422 unknown_query_parameters</code> for filter kwargs the server doesn't know, 404 for the graph/preview endpoints, absent <code>usage</code>/trace flags). <code>1.0.0</code> (pinned to <code>v1.0.0</code>) also works for everything it wraps.</td>
+</tr>
 <tr>
 <td><code>0.12.x</code> / <code>1.0.x</code></td>
 <td><code>0.9.0</code> (pinned to <code>v1.0.0</code>). Takes up the GA contract: <code>async_mode</code> now honored on <code>POST /v1/specs/run</code> (<code>202</code>), the <code>spec_path_confined</code> <code>422</code> from default-on spec-path confinement, and consolidated client API-stability docs. A <code>v0.11.0</code>-pinned client (<code>0.8.0</code>) also works against <code>0.12.x</code>/<code>1.0.x</code> for everything it wraps — <code>specs.run</code> async just surfaces the queued run via the same <code>RunCreateResponse</code>, and an out-of-root <code>spec_path</code> draws the <code>422</code> either way.</td>
@@ -4394,6 +4423,10 @@ corrected, machine-pinned surface.</p>
 <li><strong>Skill catalog requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>client.agent.skills.list()</code> 404s against older servers. The per-request <code>skills</code> overlay on <code>runs.create</code> requires <code>&gt;= 0.9.0</code>.</li>
 <li><strong>Human-task <code>status</code> filter requires <code>kneo_serv &gt;= 0.8.0</code>.</strong> <code>human_tasks.list(status=...)</code> is silently ignored by older servers (honored from 0.8.0, contractual in the 0.9.0 spec).</li>
 <li><strong>Spec-explain envelope requires <code>kneo_serv &gt;= 0.9.0</code>.</strong> The <code>environment</code> / <code>overlays</code> / <code>overrides</code> fields on <code>specs.explain</code> (including the explain leg of <code>dry_run</code>) draw a 422 from older servers.</li>
+<li><strong>Run-list filters, <code>session_id</code>, and the graph endpoints require <code>kneo_serv &gt;= 1.1.0</code>; <code>q</code>, <code>usage</code>, policy preview, the typed credential-inventory fields, and the trace <code>complete</code>/<code>dropped</code> flags require <code>&gt;= 1.2.0</code>.</strong> Older servers <strong>hard-reject</strong> unknown query params with <code>422 unknown_query_parameters</code> (they never silently ignore them), 404 the graph/preview endpoints, and simply don't emit the new response fields. A body <code>session_id</code> on <code>runs.create</code>/<code>specs.run</code> draws a body-validation <code>422</code> from <code>kneo_serv 1.0.x</code> (<code>extra='forbid'</code>), and <code>POST /v1/specs/run</code> silently dropped it until the <code>1.2.0</code> parity fix.</li>
+<li><strong>Timestamp filters compare lexically on <code>kneo_serv 1.1.x</code>.</strong> <code>created_after</code>/<code>created_before</code> are validated + UTC-normalized (malformed values → <code>422 invalid_timestamp</code>) only from <code>1.2.0</code>; on <code>1.1.x</code> a malformed or non-<code>+00:00</code>-form value silently misfilters. Pass <code>datetime.isoformat()</code> of a tz-aware UTC datetime.</li>
+<li><strong>Resuming an expired human task raises <code>KneoHumanTaskExpiredError</code> from <code>kneo_serv &gt;= 1.1.0</code></strong> (409 <code>human_task_expired</code>; tasks with <code>on_timeout: escalate</code> stay resumable late). Older servers could let a late resume race the expiry sweep and succeed.</li>
+<li><strong><code>kneo_serv</code> behavior changes worth auditing before a server upgrade to <code>1.1.x</code>/<code>1.2.x</code></strong> (no client code change; listed here because runs that used to pass may fail): spec <em>content</em> now rejects unknown keys (<code>extra='forbid'</code> → <code>E_SCHEMA</code> diagnostics; provider-specific params belong under <code>model.extra</code>); tool <code>allowed_domains</code>/<code>denied_domains</code> are <strong>enforced</strong> at call time (<code>422 guardrail_violation</code> sync / <code>failed</code> async); a run's spec + skills are <strong>frozen at create</strong> (edit-then-resume no longer applies the edit, from <code>1.1.0</code>); the per-run policy-report scope changed <code>specs:read</code> → <code>runs:read</code>; <code>GET /v1/skills</code> <code>path</code> values are now root-relative.</li>
 <li><strong>Spec-path confinement is default-on from <code>kneo_serv &gt;= 1.0.0</code>.</strong> A caller-supplied <code>spec_path</code>, <code>overlays</code> entry, or <code>skills[].source</code> that resolves outside the server's allow-listed root (<code>KNEO_SERV_SPEC_ROOT</code>, defaulting to the server's working directory) — including absolute, <code>..</code>-traversal, <code>~</code>, or symlink-escape paths — is rejected <code>422 spec_path_confined</code> (surfaced as <code>KneoValidationError</code> with <code>.code == "spec_path_confined"</code>). Through <code>0.12.x</code> this was opt-in (out-of-root paths only logged a deprecation warning); at <code>1.0.0</code> the warn-and-allow path is removed. The client sends these fields unchanged either way — keep your specs under an allow-listed root, or have the operator set <code>KNEO_SERV_SPEC_ROOT</code>. See <a href="#error-handling">error handling</a>.</li>
 </ul>
 <h3 id="breaking-changes">Breaking changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h3>

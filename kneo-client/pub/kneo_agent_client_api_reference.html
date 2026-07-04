@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v1.0.0 · 2026-06-23</div>
+    <div class="version">v1.1.0 · 2026-07-04</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v1.0.0</a>
+    <a href="#whats-new">What's new in v1.1.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -645,11 +645,11 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v1.0.0</div>
+      <div class="cover-card-value">v1.1.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
-      <div class="cover-card-value">v1.0.0 (/v1 only)</div>
+      <div class="cover-card-value">v1.2.0 (/v1 only)</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Python</div>
@@ -682,7 +682,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v1.0.0</a></li>
+        <li><a href="#whats-new">What's new in v1.1.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -741,7 +741,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v1.0.0</span>
+    <span class="badge badge-blue">v1.1.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
     <span class="badge badge-purple">kneo_serv /v1 · 1.0.x</span>
   </div>
@@ -749,17 +749,19 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v1.0.0</h2>
-  <p><strong>General Availability.</strong> <code>kneo-client</code> is stable: the public Python API — the curated <code>__all__</code> of <code>kneo_client</code>, <code>kneo_client.core</code>, <code>kneo_client.types</code>, <code>kneo_client.platform</code>, and <code>kneo_client.agent</code> — and SemVer are <strong>frozen across the whole <code>1.x</code> line</strong>, pinned to the <code>kneo_serv v1.0.0</code> <code>/v1</code> contract. The full stability promise lives in the stability contract. This is a <strong>thin posture banner — no new features and no behavioral change over <code>0.10.0</code></strong>; upgrading from <code>0.10.0</code> requires nothing.</p>
-  <p>All the GA substance shipped in the two preceding cuts:</p>
-  <ul style="margin-left: 1.5em;">
-    <li><strong><code>0.9.0</code></strong> — the <code>kneo_serv v1.0.0</code> (GA) <code>/v1</code> contract uptake plus GA hardening.</li>
-    <li><strong><code>0.10.0</code></strong> — the pre-freeze surface corrections: consistent <code>*Error</code> exception names (old names kept as deprecated aliases through <code>1.x</code>, removed at <code>2.0</code>), the <code>kneo_client.types</code> re-export module, the public <code>KneoClient.request()</code> forward-compat hatch, the truthful error contract (<a href="#exceptions"><code>KneoProtocolError</code></a> for a bodyless <code>202</code>), retry control, and a machine-enforced <code>__all__</code> golden-snapshot guard.</li>
+  <h2>What's new in v1.1.0</h2>
+  <p><strong>First post-GA minor.</strong> The driver is the <strong><code>kneo_serv v1.0.0 → v1.2.0</code> spec-pin uptake</strong> — a fully additive <code>/v1</code> delta — plus remediation of the <code>v1.0.0</code> deep audit. <strong>Zero breaking change</strong> to the frozen <code>1.x</code> public API.</p>
+  <ul>
+    <li><strong>Run filtering + search</strong> — <code>runs.list(workflow_kind=…, workflow_name=…, session_id=…, has_error=…, created_after=…, created_before=…, q=…)</code> (filters need <code>kneo_serv ≥ 1.1.0</code>; <code>q</code> needs <code>≥ 1.2.0</code>).</li>
+    <li><strong>Session grouping</strong> — <code>session_id</code> on the create body (both paths), echoed on status, filterable.</li>
+    <li><strong>Graphs + policy preview</strong> — <code>runs.graph()</code>, <code>specs.graph()</code>, <code>policies.environment_preview()</code>.</li>
+    <li><strong>Usage + trace flags</strong> — <code>RunStatusResponse.usage</code> (<code>RunUsage</code>), <code>Page.complete</code>/<code>Page.dropped</code>.</li>
+    <li><strong>Typed expiry</strong> — <code>KneoHumanTaskExpiredError</code> (a <code>KneoConflictError</code> subclass) for 409 <code>human_task_expired</code>.</li>
+    <li><strong>Behavior fixes</strong> — malformed API keys fail fast (and never reach logs); <code>KneoProtocolError</code> is uniform across every wrapper; <code>tail_trace</code> stops cleanly at the paging window; <code>credentials.list</code> reflects the real section-keyed shape (with client-side <code>status</code> normalization for older servers).</li>
+    <li><strong><code>kneo_client.types</code> grows</strong> — new response models, typed credential models, <code>RunUsage</code>, <code>Unset</code>/<code>UNSET</code>, and the request-construction models.</li>
   </ul>
-  <p><code>1.0.0</code> itself flips <code>Development Status</code> to <code>5 - Production/Stable</code> (enforced for every <code>1.x</code> tag by a release-time gate), moves <code>SECURITY.md</code> to a <code>1.x</code> support posture, and records a <code>sha256</code> pin-provenance digest for the OpenAPI spec.</p>
-  <p>
-    See the 1.0.0 release notes for the full summary. The 0.10.0 and 0.9.0 notes cover the surface corrections and the <code>kneo_serv v1.0.0</code> uptake.
-  </p>
+  <p class="note">
+    See the 1.1.0 release notes for the full summary, including the serv-side behavior changes worth auditing before a server upgrade. The 1.0.0 notes cover the GA freeze.</p>
 </section>
 
 <!-- ── INTRODUCTION ───────────────────────────────────────── -->
@@ -1374,6 +1376,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">replay</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunReplayResponse</span></h4>
   <p>GET <code>/v1/runs/{run_id}/replay</code> — fetch a deterministic replay view derived from the run's checkpoints + trace.</p>
 
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">graph</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunGraphResponse</span></h4>
+  <p>GET <code>/v1/runs/{run_id}/graph</code> — the run's workflow DAG (static topology recompiled from the frozen spec snapshot) plus the live <code>current</code>/<code>visited</code> position. Requires <code>kneo_serv &gt;= 1.1.0</code>; <code>nodes</code>/<code>edges</code> are free-form objects (plain dicts).</p>
+
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"timestamp"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"asc"</span>) <span class="ret">→ Page[TraceResponseEventsItem]</span></h4>
   <p>GET <code>/v1/runs/{run_id}/trace</code> — fetch the event trace for a run (tool calls, model calls, middleware decisions, etc.).</p>
 
@@ -1495,6 +1500,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_put</span>(<span class="param">environment</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">EnvironmentPolicyRequest | dict</span>) <span class="ret">→ EnvironmentPolicyResponse</span></h4>
   <p>PUT <code>/v1/policies/environment/{environment}</code> — replace an environment's policy.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">environment_preview</span>(<span class="param">environment</span>: <span class="typ">str</span>, <span class="param">body</span>: <span class="typ">EnvironmentPolicyRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ EnvironmentPolicyPreviewResponse</span></h4>
+  <p>POST <code>/v1/policies/environment/{environment}/preview</code> — dry-run a candidate policy against the environment's current runs without persisting: returns the <code>diff</code> vs the active policy plus <code>affected_run_ids</code> / <code>newly_blocking</code> / <code>runs_evaluated</code>. Requires <code>kneo_serv &gt;= 1.2.0</code>. Preview first, then <code>environment_put</code>.</p>
   <div class="note">
     <strong>Note.</strong> <code>PUT</code> is idempotent by HTTP semantics; the transport does not inject an <code>Idempotency-Key</code> for it.
   </div>
@@ -1539,6 +1547,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">explain</span>(<span class="param">body</span>: <span class="typ">SpecExplainRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecExplainResponse</span></h4>
   <p>POST <code>/v1/specs/explain</code> — human-readable summary of a spec.</p>
+
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">graph</span>(<span class="param">body</span>: <span class="typ">SpecGraphRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecGraphResponse</span></h4>
+  <p>POST <code>/v1/specs/graph</code> — the spec's static workflow DAG (<code>nodes</code>/<code>edges</code>/<code>start</code>) without executing anything; the consolidated alternative to assembling topology from <code>compile</code> + <code>explain</code>. Requires <code>kneo_serv &gt;= 1.1.0</code>. For a live run's graph use <code>platform.runs.graph(run_id)</code>.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">policy_report</span>(<span class="param">body</span>: <span class="typ">SpecPolicyReportRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ SpecPolicyReportResponse</span></h4>
   <p>POST <code>/v1/specs/policy-report</code> — preview policy outcomes for a spec.</p>
@@ -1610,8 +1621,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">1.0.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">0.10.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">1.1.0</td><td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td><td><code>kneo_serv</code> <code>1.2.x</code> line (E2E); <code>1.0.x</code>/<code>1.1.x</code> per the documented floors</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">1.0.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">0.10.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.9.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.8.0</td><td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td><td><code>kneo_serv</code> <code>0.11.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.7.0</td><td><code>v0.9.0</code> (<code>info.version</code> <code>0.9.0</code>)</td><td><code>kneo_serv</code> <code>0.9.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
@@ -1681,7 +1693,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v1.0.0 · 2026-06-23 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v1.1.0 · 2026-07-04 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 
