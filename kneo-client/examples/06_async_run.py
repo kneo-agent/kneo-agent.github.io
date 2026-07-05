@@ -12,11 +12,11 @@ Run with::
 
     KNEO_URL=https://kneo.example.com \\
     KNEO_API_KEY=... \\
-    python examples/06_async_run.py SPEC_REFERENCE
+    python examples/06_async_run.py SPEC_PATH
 
-Replace ``SPEC_REFERENCE`` with a spec ID known to your kneo_serv
-instance, or pre-configure a profile at ``~/.config/kneo/client.toml``
-and drop the env vars.
+Replace ``SPEC_PATH`` with a spec path your kneo_serv instance can
+resolve (under its configured spec root), or pre-configure a profile at
+``~/.config/kneo/client.toml`` and drop the env vars.
 """
 
 from __future__ import annotations
@@ -26,14 +26,18 @@ import sys
 
 from kneo_client import KneoClient
 
+# The run's task input — replace with your own. A run needs an ``input``
+# plus a spec (server-side ``spec_path`` here); there is no ``spec_id``.
+RUN_INPUT = "Summarize the latest activity."
 
-async def main(spec_reference: str) -> None:
+
+async def main(spec_path: str) -> None:
     async with KneoClient.from_profile() as client:
         # async_mode=true: the server returns 202 and runs in the
         # background. The wrapper parses the 202 body exactly like the
         # old 200, so we still get the run_id back here.
         created = await client.platform.runs.create(
-            {"spec_id": spec_reference, "async_mode": True}
+            {"input": RUN_INPUT, "spec_path": spec_path, "async_mode": True}
         )
         run_id = created.run_id
         print(f"accepted async run {run_id!r} (status={created.status!r})")
@@ -51,6 +55,6 @@ async def main(spec_reference: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print(f"usage: python {sys.argv[0]} SPEC_REFERENCE", file=sys.stderr)
+        print(f"usage: python {sys.argv[0]} SPEC_PATH", file=sys.stderr)
         sys.exit(2)
     asyncio.run(main(sys.argv[1]))

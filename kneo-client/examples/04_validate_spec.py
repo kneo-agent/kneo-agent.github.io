@@ -20,14 +20,15 @@ from __future__ import annotations
 
 import asyncio
 import sys
-from pathlib import Path
 
 from kneo_client import KneoClient
 
 
-async def main(spec_path: Path) -> None:
-    spec_text = spec_path.read_text(encoding="utf-8")
-    payload = {"spec": spec_text}
+async def main(spec_path: str) -> None:
+    # ``spec_path`` is resolved server-side (under the instance's spec root).
+    # To validate an inline spec instead, parse it to a dict and pass
+    # ``{"spec": <dict>}`` — the ``spec`` field is an object, not raw text.
+    payload = {"spec_path": spec_path}
 
     async with KneoClient.from_profile() as client:
         result = await client.agent.specs.validate_then_compile(payload)
@@ -68,4 +69,4 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print(f"usage: python {sys.argv[0]} SPEC_PATH", file=sys.stderr)
         sys.exit(2)
-    asyncio.run(main(Path(sys.argv[1])))
+    asyncio.run(main(sys.argv[1]))

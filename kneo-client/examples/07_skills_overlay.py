@@ -12,7 +12,7 @@ Run with::
 
     KNEO_URL=https://kneo.example.com \\
     KNEO_API_KEY=... \\
-    python examples/07_skills_overlay.py SPEC_REFERENCE [SKILL_NAME ...]
+    python examples/07_skills_overlay.py SPEC_PATH [SKILL_NAME ...]
 
 With no ``SKILL_NAME`` args the script just prints the catalog. Pass one
 or more skill names to overlay them onto the run's ``add`` list.
@@ -25,8 +25,12 @@ import sys
 
 from kneo_client import KneoClient
 
+# The run's task input — replace with your own. A run needs an ``input``
+# plus a spec (server-side ``spec_path`` here); there is no ``spec_id``.
+RUN_INPUT = "Summarize the latest activity."
 
-async def main(spec_reference: str, overlay_add: list[str]) -> None:
+
+async def main(spec_path: str, overlay_add: list[str]) -> None:
     async with KneoClient.from_profile() as client:
         # The catalog: valid targets for a SkillsOverlay "add" list.
         catalog = await client.agent.skills.list(limit=50)
@@ -42,7 +46,8 @@ async def main(spec_reference: str, overlay_add: list[str]) -> None:
             return
 
         body = {
-            "spec_id": spec_reference,
+            "input": RUN_INPUT,
+            "spec_path": spec_path,
             "skills": {"add": overlay_add, "disable": []},
         }
         created = await client.platform.runs.create(body)
@@ -55,7 +60,7 @@ async def main(spec_reference: str, overlay_add: list[str]) -> None:
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(
-            f"usage: python {sys.argv[0]} SPEC_REFERENCE [SKILL_NAME ...]",
+            f"usage: python {sys.argv[0]} SPEC_PATH [SKILL_NAME ...]",
             file=sys.stderr,
         )
         sys.exit(2)

@@ -570,14 +570,14 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="sidebar-header">
     <div class="product-name">Kneo Agent Client</div>
     <h1>API Reference</h1>
-    <div class="version">v1.1.0 · 2026-07-04</div>
+    <div class="version">v1.2.0 · 2026-07-05</div>
   </div>
 
   <div class="nav-section">
     <div class="nav-section-label">Front matter</div>
     <a href="#front-cover">Cover</a>
     <a href="#front-toc">Table of Contents</a>
-    <a href="#whats-new">What's new in v1.1.0</a>
+    <a href="#whats-new">What's new in v1.2.0</a>
     <a href="#introduction">Introduction</a>
   </div>
 
@@ -645,7 +645,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
   <div class="cover-meta">
     <div class="cover-card">
       <div class="cover-card-label">Version</div>
-      <div class="cover-card-value">v1.1.0</div>
+      <div class="cover-card-value">v1.2.0</div>
     </div>
     <div class="cover-card">
       <div class="cover-card-label">Pinned to kneo_serv</div>
@@ -682,7 +682,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     <div class="toc-group">
       <h3>Front matter</h3>
       <ul class="toc-list">
-        <li><a href="#whats-new">What's new in v1.1.0</a></li>
+        <li><a href="#whats-new">What's new in v1.2.0</a></li>
         <li><a href="#introduction">Introduction</a></li>
       </ul>
       <h3 style="margin-top: 1.2rem;">Top-level</h3>
@@ -741,27 +741,25 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
     dark-themed layout; rendered to PDF via the same Puppeteer pipeline.
   </p>
   <div class="badge-row">
-    <span class="badge badge-blue">v1.1.0</span>
+    <span class="badge badge-blue">v1.2.0</span>
     <span class="badge badge-green">Python ≥ 3.12</span>
-    <span class="badge badge-purple">kneo_serv /v1 · 1.0.x</span>
+    <span class="badge badge-purple">kneo_serv /v1 · 1.2.x</span>
   </div>
 </div>
 
 <!-- ── WHAT'S NEW ─────────────────────────────────────────── -->
 <section class="section" id="whats-new">
-  <h2>What's new in v1.1.0</h2>
-  <p><strong>First post-GA minor.</strong> The driver is the <strong><code>kneo_serv v1.0.0 → v1.2.0</code> spec-pin uptake</strong> — a fully additive <code>/v1</code> delta — plus remediation of the <code>v1.0.0</code> deep audit. <strong>Zero breaking change</strong> to the frozen <code>1.x</code> public API.</p>
+  <h2>What's new in v1.2.0</h2>
+  <p><strong>Hardening + doc-fidelity minor.</strong> No <code>kneo_serv</code> spec-pin driver — the pin stays <code>v1.2.0</code> and the <code>/v1</code> contract (and the generated tree) are unchanged; scope came entirely from a deep audit of the shipped <code>v1.1.0</code>. <strong>Zero breaking change</strong> to the frozen <code>1.x</code> public API.</p>
   <ul>
-    <li><strong>Run filtering + search</strong> — <code>runs.list(workflow_kind=…, workflow_name=…, session_id=…, has_error=…, created_after=…, created_before=…, q=…)</code> (filters need <code>kneo_serv ≥ 1.1.0</code>; <code>q</code> needs <code>≥ 1.2.0</code>).</li>
-    <li><strong>Session grouping</strong> — <code>session_id</code> on the create body (both paths), echoed on status, filterable.</li>
-    <li><strong>Graphs + policy preview</strong> — <code>runs.graph()</code>, <code>specs.graph()</code>, <code>policies.environment_preview()</code>.</li>
-    <li><strong>Usage + trace flags</strong> — <code>RunStatusResponse.usage</code> (<code>RunUsage</code>), <code>Page.complete</code>/<code>Page.dropped</code>.</li>
-    <li><strong>Typed expiry</strong> — <code>KneoHumanTaskExpiredError</code> (a <code>KneoConflictError</code> subclass) for 409 <code>human_task_expired</code>.</li>
-    <li><strong>Behavior fixes</strong> — malformed API keys fail fast (and never reach logs); <code>KneoProtocolError</code> is uniform across every wrapper; <code>tail_trace</code> stops cleanly at the paging window; <code>credentials.list</code> reflects the real section-keyed shape (with client-side <code>status</code> normalization for older servers).</li>
-    <li><strong><code>kneo_client.types</code> grows</strong> — new response models, typed credential models, <code>RunUsage</code>, <code>Unset</code>/<code>UNSET</code>, and the request-construction models.</li>
+    <li><strong>Granular <code>httpx.Timeout</code></strong> — <code>Profile.timeout</code> (and the <code>load_profile</code> / <code>KneoClient.from_profile</code> <code>timeout=</code> kwargs) accept an <code>httpx.Timeout</code> for distinct connect/read/write/pool deadlines, in addition to a plain <code>float</code>. Config-file and <code>$KNEO_TIMEOUT</code> values stay strictly numeric.</li>
+    <li><strong><code>SyncTransport(http_client_factory=…)</code></strong> — the synchronous-side analogue of the async <code>Transport(http_client=…)</code> escape hatch (custom TLS / proxies / a mock transport): a zero-arg factory invoked on the background portal loop, owned + closed by the <code>SyncTransport</code>.</li>
+    <li><strong>Contract-gate hardening</strong> — a spec-keyed non-2xx error-status drift gate, a per-wrapper wire-forwarding gate, a sync-method doc-coverage walker, and a nested-<code>types</code>-export staleness guard.</li>
+    <li><strong>Supply chain</strong> — the <code>id-token</code>-bearing release/sign lane pins its build toolchain via <code>release-constraints.txt</code> + <code>PIP_CONSTRAINT</code>.</li>
+    <li><strong>Docs</strong> — a pre-publish fidelity audit corrected the run-create examples/docs to the real <code>input</code> + <code>spec_path</code> body and brought this reference up to date.</li>
   </ul>
   <p class="note">
-    See the 1.1.0 release notes for the full summary, including the serv-side behavior changes worth auditing before a server upgrade. The 1.0.0 notes cover the GA freeze.</p>
+    See the 1.2.0 release notes for the full summary. The 1.1.0 notes cover the <code>kneo_serv v1.2.0</code> uptake.</p>
 </section>
 
 <!-- ── INTRODUCTION ───────────────────────────────────────── -->
@@ -845,7 +843,7 @@ pre code { background: none; padding: 0; border-radius: 0; font-size: 0.83rem; }
         ready = <span class="kw">await</span> client.platform.health.readyz()
         print(<span class="st">f"ok={ready.ok}"</span>)
 
-        run = <span class="kw">await</span> client.platform.runs.create({<span class="st">"spec_id"</span>: <span class="st">"my-spec"</span>})
+        run = <span class="kw">await</span> client.platform.runs.create({<span class="st">"input"</span>: <span class="st">"Summarize the incident."</span>, <span class="st">"spec_path"</span>: <span class="st">"my-agent.yaml"</span>})
         terminal = <span class="kw">await</span> client.platform.runs.wait_for_completion(run.run_id, timeout=<span class="nm">120</span>)
         print(<span class="st">f"final={terminal.status}"</span>)
 
@@ -876,7 +874,7 @@ asyncio.run(main())</code></pre>
   </table>
 
   <div id="transport-request"></div>
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>: <span class="typ">Any</span> = <span class="nm">None</span>, <span class="param">params</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">headers</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">request_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>: <span class="typ">Any</span> = <span class="nm">None</span>, <span class="param">params</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">headers</span>: <span class="typ">Mapping | None</span> = <span class="nm">None</span>, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">request_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
   <p>Send an HTTP request with auth, retries, idempotency, and error mapping.</p>
   <table class="param-table">
     <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
@@ -887,6 +885,7 @@ asyncio.run(main())</code></pre>
     <tr><td class="param-name">headers</td><td class="param-type">Mapping[str, str] | None</td><td class="param-default">None</td><td class="param-desc">Extra headers. Auth, <code>Idempotency-Key</code>, and <code>X-Request-ID</code> are added automatically and override anything in this mapping.</td></tr>
     <tr><td class="param-name">idempotency_key</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Override the auto-generated <code>POST</code> idempotency key. Validated against the 256-character platform limit. Ignored on non-<code>POST</code> methods.</td></tr>
     <tr><td class="param-name">request_id</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Override the auto-generated request ID.</td></tr>
+    <tr><td class="param-name">retry_policy</td><td class="param-type">RetryPolicy | None</td><td class="param-default">None</td><td class="param-desc">Per-call override of the transport's <a href="#retrypolicy"><code>RetryPolicy</code></a> for this one request (e.g. <code>RetryPolicy(max_attempts=1)</code> to disable retries for a readiness probe).</td></tr>
   </table>
   <div class="returns-label">Returns</div>
   <p class="desc"><code>httpx.Response</code> — the successful response (status &lt; 400).</p>
@@ -934,10 +933,11 @@ asyncio.run(main())</code></pre>
 
   <h3 class="api-class">class SyncTransport <span class="tag tag-class">class</span></h3>
 
-  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">profile</span>: <span class="typ">Profile</span>, *, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>) <span class="ret">→ None</span></h4>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">__init__</span>(<span class="param">profile</span>: <span class="typ">Profile</span>, *, <span class="param">retry_policy</span>: <span class="typ">RetryPolicy | None</span> = <span class="nm">None</span>, <span class="param">http_client_factory</span>: <span class="typ">Callable[[], httpx.AsyncClient] | None</span> = <span class="nm">None</span>) <span class="ret">→ None</span></h4>
+  <p>Synchronous facade over <code>Transport</code> (backed by a background portal + event loop). <code>http_client_factory</code> is the sync-side analogue of <code>Transport</code>'s <code>http_client</code> escape hatch (custom TLS / proxies / a mock transport): it must be a zero-arg <em>factory</em>, not a pre-built client, because the <code>httpx.AsyncClient</code> has to be created on the background portal's loop. The factory-built client is owned by the <code>SyncTransport</code> and closed by <code>close()</code>; as with <code>Transport.http_client</code>, the factory must set <code>base_url</code> + <code>auth</code> itself.</p>
 
-  <h4 class="api-method"><span class="kw">def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>=<span class="nm">None</span>, <span class="param">params</span>=<span class="nm">None</span>, <span class="param">headers</span>=<span class="nm">None</span>, <span class="param">idempotency_key</span>=<span class="nm">None</span>, <span class="param">request_id</span>=<span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
-  <p>Synchronous version of <code>Transport.request</code>. Same arguments, same semantics; blocks until done.</p>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">request</span>(<span class="param">method</span>: <span class="typ">str</span>, <span class="param">path</span>: <span class="typ">str</span>, *, <span class="param">json</span>=<span class="nm">None</span>, <span class="param">params</span>=<span class="nm">None</span>, <span class="param">headers</span>=<span class="nm">None</span>, <span class="param">idempotency_key</span>=<span class="nm">None</span>, <span class="param">request_id</span>=<span class="nm">None</span>, <span class="param">retry_policy</span>=<span class="nm">None</span>) <span class="ret">→ httpx.Response</span></h4>
+  <p>Synchronous version of <code>Transport.request</code>. Same arguments (incl. the per-call <code>retry_policy</code> override), same semantics; blocks until done.</p>
 
   <h4 class="api-method"><span class="kw">def</span> <span class="fn">close</span>() <span class="ret">→ None</span> · <span class="kw">def</span> <span class="fn">__enter__</span>() · <span class="kw">def</span> <span class="fn">__exit__</span>(*<span class="param">exc</span>)</h4>
   <p>Lifecycle. Use <code>with SyncTransport(profile) as t:</code> to close the background portal on exit.</p>
@@ -1109,8 +1109,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <h4 class="api-method"><span class="kw">def</span> <span class="fn">new_idempotency_key</span>() <span class="ret">→ str</span></h4>
   <p>Return a fresh UUID4-based idempotency key as a string.</p>
 
-  <h4 class="api-method"><span class="kw">def</span> <span class="fn">validate_idempotency_key</span>(<span class="param">key</span>: <span class="typ">str</span>) <span class="ret">→ None</span></h4>
-  <p>Validate an externally-supplied key. Raises <code>ValueError</code> if empty or longer than <code>MAX_KEY_LENGTH</code>.</p>
+  <h4 class="api-method"><span class="kw">def</span> <span class="fn">validate_idempotency_key</span>(<span class="param">key</span>: <span class="typ">str</span>) <span class="ret">→ str</span></h4>
+  <p>Validate an externally-supplied key and return it <strong>stripped</strong> of surrounding whitespace (the stripped form is what gets transmitted + echoed on <code>KneoError.idempotency_key</code>). Raises <code>ValueError</code> if the stripped key is empty or longer than <code>MAX_KEY_LENGTH</code> (256).</p>
 </section>
 
 <!-- ── List-method results (Page + Map) ──────────────────── -->
@@ -1211,7 +1211,8 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 ├── <span class="exc-child">KneoPermissionError</span>       <span class="exc-sub"># HTTP 403</span>
 ├── <span class="exc-child">KneoNotFoundError</span>         <span class="exc-sub"># HTTP 404</span>
 ├── <span class="exc-child">KneoConflictError</span>         <span class="exc-sub"># HTTP 409 (carries .retry_after; branch on .code)</span>
-│   └── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 with code idempotency_key_conflict</span>
+│   ├── <span class="exc-child">KneoIdempotencyMismatchError</span> <span class="exc-sub"># HTTP 409 with code idempotency_key_conflict</span>
+│   └── <span class="exc-child">KneoHumanTaskExpiredError</span> <span class="exc-sub"># HTTP 409 code human_task_expired (carries .continuation_id / .expires_at)</span>
 ├── <span class="exc-child">KneoPayloadTooLargeError</span>       <span class="exc-sub"># HTTP 413 (carries .max_body_bytes)</span>
 ├── <span class="exc-child">KneoValidationError</span>       <span class="exc-sub"># HTTP 422 — request validation failed</span>
 ├── <span class="exc-child">KneoRateLimitedError</span>           <span class="exc-sub"># HTTP 429 (carries .retry_after)</span>
@@ -1242,6 +1243,14 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <h3 class="api-class">class KneoIdempotencyMismatchError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 409 caused by an <code>Idempotency-Key</code> replay with a different payload — almost always a caller bug. A subclass of <code>KneoConflictError</code>. Raised only for the <code>idempotency_key_conflict</code> envelope code (or, against pre-0.6.0 servers whose bodies carry no code, for any 409 on a keyed request); other 409 causes raise the <code>KneoConflictError</code> base instead.</p>
+
+  <h3 class="api-class">class KneoHumanTaskExpiredError <span class="tag tag-exception">exception</span></h3>
+  <p class="desc">HTTP 409 with code <code>human_task_expired</code> — resuming a human task past its deadline (<code>kneo_serv &gt;= 1.1.0</code>). A subclass of <code>KneoConflictError</code>, dispatched code-first (so it never collides with the code-less legacy 409 heuristic); never auto-retried (a deadline miss won't clear on retry). Tasks whose step sets <code>on_timeout: escalate</code> stay resumable late and do <em>not</em> raise this. Adds two attributes on top of <code>KneoConflictError</code>:</p>
+  <table class="param-table">
+    <tr><th>Attribute</th><th>Type</th><th>Description</th></tr>
+    <tr><td class="param-name">continuation_id</td><td class="param-type">str | None</td><td class="param-desc">The continuation whose deadline elapsed, when disclosed in the error envelope.</td></tr>
+    <tr><td class="param-name">expires_at</td><td class="param-type">float | None</td><td class="param-desc">The deadline as a Unix epoch (seconds), when disclosed.</td></tr>
+  </table>
 
   <h3 class="api-class">class KneoPayloadTooLargeError <span class="tag tag-exception">exception</span></h3>
   <p class="desc">HTTP 413 — the request body exceeds the server's size cap (<code>kneo_serv</code> enforces <code>KNEO_SERV_MAX_BODY_BYTES</code>, chunked bodies included). Not retryable — shrink the payload. Adds one attribute on top of <code>KneoError</code>:</p>
@@ -1278,6 +1287,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
     <tr><td class="col-dim">403</td><td><code>KneoPermissionError</code></td><td>Key valid; insufficient scope.</td></tr>
     <tr><td class="col-dim">404</td><td><code>KneoNotFoundError</code></td><td>Resource missing.</td></tr>
     <tr><td class="col-dim">409, code <code>idempotency_key_conflict</code></td><td><code>KneoIdempotencyMismatchError</code></td><td>Idempotency-key replay with different payload. Also raised for code-less legacy bodies (pre-0.6.0 servers) on keyed requests.</td></tr>
+    <tr><td class="col-dim">409, code <code>human_task_expired</code></td><td><code>KneoHumanTaskExpiredError</code></td><td>Resuming a human task past its deadline (<code>kneo_serv &gt;= 1.1.0</code>). Carries <code>continuation_id</code> / <code>expires_at</code>; never auto-retried.</td></tr>
     <tr><td class="col-dim">409 (other codes)</td><td><code>KneoConflictError</code></td><td><code>run_state_conflict</code> / <code>resource_locked</code>; <code>idempotency_key_in_progress</code> is auto-retried by the transport and surfaces here with <code>retry_after</code> once exhausted.</td></tr>
     <tr><td class="col-dim">413</td><td><code>KneoPayloadTooLargeError</code></td><td>Body exceeds the server's size cap; carries <code>max_body_bytes</code>.</td></tr>
     <tr><td class="col-dim">422</td><td><code>KneoValidationError</code></td><td>Envelope codes (e.g. <code>guardrail_violation</code>) or FastAPI list-shaped detail, summarized into the message.</td></tr>
@@ -1354,15 +1364,15 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 <!-- ── RunsClient ─────────────────────────────────────────── -->
 <section class="section" id="runsclient">
   <h2>RunsClient</h2>
-  <p>The largest sub-client — 12 endpoints + one convenience helper (<code>wait_for_completion</code>). Covers the full run lifecycle: create, list, get, cancel, continue, replay, trace, checkpoints, policy reports, recovery.</p>
+  <p>The largest sub-client — 12 endpoints + two convenience helpers (<code>wait_for_completion</code>, <code>tail_trace</code>). Covers the full run lifecycle: create, list, get, cancel, continue, replay, trace, checkpoints, graph, policy reports, recovery.</p>
 
   <h3 class="api-class">class RunsClient <span class="tag tag-class">class</span></h3>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">create</span>(<span class="param">body</span>: <span class="typ">RunCreateRequest | dict</span>, *, <span class="param">idempotency_key</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ RunCreateResponse</span></h4>
   <p>POST <code>/v1/runs</code> — start a new run. Idempotency key is auto-generated unless caller supplies one.</p>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"updated_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ Page[RunListResponseRunsItem]</span></h4>
-  <p>GET <code>/v1/runs</code> — list runs with limit/offset pagination.</p>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">list</span>(*, <span class="param">status</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_kind</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">workflow_name</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">session_id</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">has_error</span>: <span class="typ">bool | None</span> = <span class="nm">None</span>, <span class="param">created_after</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">created_before</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">q</span>: <span class="typ">str | None</span> = <span class="nm">None</span>, <span class="param">limit</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">sort_by</span>: <span class="typ">str</span> = <span class="st">"updated_at"</span>, <span class="param">sort_order</span>: <span class="typ">str</span> = <span class="st">"desc"</span>) <span class="ret">→ Page[RunListResponseRunsItem]</span></h4>
+  <p>GET <code>/v1/runs</code> — list runs with limit/offset pagination. The <code>workflow_kind</code> / <code>workflow_name</code> / <code>session_id</code> / <code>has_error</code> / <code>created_after</code> / <code>created_before</code> filters need <code>kneo_serv &gt;= 1.1.0</code>; the <code>q</code> free-text search needs <code>&gt;= 1.2.0</code>. Older servers reject an unknown filter with <code>422 unknown_query_parameters</code>. Timestamps should be tz-aware UTC ISO strings.</p>
 
   <h4 class="api-method"><span class="kw">async def</span> <span class="fn">get</span>(<span class="param">run_id</span>: <span class="typ">str</span>) <span class="ret">→ RunStatusResponse</span></h4>
   <p>GET <code>/v1/runs/{run_id}</code> — fetch the current status of a run.</p>
@@ -1409,15 +1419,16 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <p><strong>Module constant:</strong> <code>DEFAULT_TERMINAL_STATUSES = frozenset({"completed", "failed", "cancelled", "timed_out", "expired"})</code>.</p>
 
-  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">tail_trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">poll_interval</span>: <span class="typ">float</span> = <span class="nm">1.0</span>, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>, <span class="param">terminal_statuses</span>: <span class="typ">Iterable[str] | None</span> = <span class="nm">None</span>, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>) <span class="ret">→ AsyncIterator[TraceResponseEventsItem]</span></h4>
+  <h4 class="api-method"><span class="kw">async def</span> <span class="fn">tail_trace</span>(<span class="param">run_id</span>: <span class="typ">str</span>, *, <span class="param">start_offset</span>: <span class="typ">int</span> = <span class="nm">0</span>, <span class="param">page_size</span>: <span class="typ">int</span> = <span class="nm">100</span>, <span class="param">poll_interval</span>: <span class="typ">float</span> = <span class="nm">1.0</span>, <span class="param">timeout</span>: <span class="typ">float | None</span> = <span class="nm">None</span>, <span class="param">terminal_statuses</span>: <span class="typ">Iterable[str] | None</span> = <span class="nm">None</span>, <span class="param">event_type</span>: <span class="typ">str | None</span> = <span class="nm">None</span>) <span class="ret">→ AsyncIterator[TraceResponseEventsItem]</span></h4>
   <p>Stream trace events as they arrive. Polls <code>trace(run_id)</code> with ascending offset, yields each new event as the page arrives, then performs one final drain pass after the run reaches a terminal status to capture any events emitted between the last poll and the status transition. Returns when the drain pass finds no new events. Convenience helper; not a separate platform endpoint.</p>
   <table class="param-table">
     <tr><th>Parameter</th><th>Type</th><th>Default</th><th>Description</th></tr>
+    <tr><td class="param-name">start_offset</td><td class="param-type">int</td><td class="param-default">0</td><td class="param-desc">Offset to start from. Use a saved checkpoint to resume mid-trace.</td></tr>
+    <tr><td class="param-name">page_size</td><td class="param-type">int</td><td class="param-default">100</td><td class="param-desc">Per-poll page size; clamped server-side to 1000.</td></tr>
     <tr><td class="param-name">poll_interval</td><td class="param-type">float</td><td class="param-default">1.0</td><td class="param-desc">Seconds to sleep between polls.</td></tr>
     <tr><td class="param-name">timeout</td><td class="param-type">float | None</td><td class="param-default">None</td><td class="param-desc">Total time budget. <code>None</code> means wait indefinitely.</td></tr>
     <tr><td class="param-name">terminal_statuses</td><td class="param-type">Iterable[str] | None</td><td class="param-default">None</td><td class="param-desc">Status set that ends streaming. Defaults to <code>{"completed", "failed", "cancelled", "timed_out", "expired"}</code>; include <code>"blocked"</code> to stop at a human-review pause.</td></tr>
-    <tr><td class="param-name">start_offset</td><td class="param-type">int</td><td class="param-default">0</td><td class="param-desc">Offset to start from. Use a saved checkpoint to resume mid-trace.</td></tr>
-    <tr><td class="param-name">page_size</td><td class="param-type">int</td><td class="param-default">100</td><td class="param-desc">Per-poll page size; clamped server-side to 1000.</td></tr>
+    <tr><td class="param-name">event_type</td><td class="param-type">str | None</td><td class="param-default">None</td><td class="param-desc">Filter to a single trace event type (forwarded to <code>trace</code>'s <code>event_type</code> query param); <code>None</code> streams all events.</td></tr>
   </table>
   <div class="raises-label">Raises</div>
   <p class="desc"><code>TimeoutError</code> if <code>timeout</code> elapses before a terminal status is reached.</p>
@@ -1426,7 +1437,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <p><strong>Example: end-to-end run with live trace</strong></p>
 <pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
-    created = <span class="kw">await</span> client.platform.runs.create({<span class="st">"spec_id"</span>: <span class="st">"my-spec"</span>})
+    created = <span class="kw">await</span> client.platform.runs.create({<span class="st">"input"</span>: <span class="st">"Summarize the incident."</span>, <span class="st">"spec_path"</span>: <span class="st">"my-agent.yaml"</span>})
     <span class="kw">async for</span> ev <span class="kw">in</span> client.platform.runs.tail_trace(created.run_id, timeout=<span class="nm">600</span>):
         print(<span class="st">f"{ev['sequence']}: {ev['event_type']}"</span>)
     <span class="cm"># tail_trace returned → the run reached a terminal status and the drain pass found no more events.</span>
@@ -1621,8 +1632,9 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
 
   <table class="cmp-table">
     <tr><th>kneo-client</th><th>Pinned to kneo_serv</th><th>Tested against</th><th>Python</th><th>Status</th></tr>
-    <tr><td class="col-dim">1.1.0</td><td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td><td><code>kneo_serv</code> <code>1.2.x</code> line (E2E); <code>1.0.x</code>/<code>1.1.x</code> per the documented floors</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
-    <tr><td class="col-dim">1.0.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">1.2.0</td><td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td><td><code>kneo_serv</code> <code>1.2.x</code> line (E2E); <code>1.0.x</code>/<code>1.1.x</code> per the documented floors</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Current</td></tr>
+    <tr><td class="col-dim">1.1.0</td><td><code>v1.2.0</code> (<code>info.version</code> <code>1.2.0</code>)</td><td><code>kneo_serv</code> <code>1.2.x</code> line (E2E); <code>1.0.x</code>/<code>1.1.x</code> per the documented floors</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Previous</td></tr>
+    <tr><td class="col-dim">1.0.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.10.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.9.0</td><td><code>v1.0.0</code> (<code>info.version</code> <code>1.0.0</code>)</td><td><code>kneo_serv</code> <code>1.0.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
     <tr><td class="col-dim">0.8.0</td><td><code>v0.11.0</code> (<code>info.version</code> <code>0.11.0</code>)</td><td><code>kneo_serv</code> <code>0.11.x</code> line</td><td>≥ 3.12 (3.12 / 3.13 / 3.14 in CI)</td><td>Older</td></tr>
@@ -1635,7 +1647,7 @@ client = KneoClient(profile, retry_policy=RetryPolicy(max_attempts=<span class="
   <p><strong>Forward compatibility</strong></p>
   <p>A newer <code>kneo_serv</code> that adds endpoints will still work for everything <code>kneo-client</code> already wraps. New endpoints are available via the drop-to-transport escape hatch until the next <code>kneo-client</code> release wraps them:</p>
 <pre><code><span class="kw">async with</span> KneoClient.from_profile() <span class="kw">as</span> client:
-    resp = <span class="kw">await</span> client._transport.request(<span class="st">"GET"</span>, <span class="st">"/v1/some/new/endpoint"</span>)
+    resp = <span class="kw">await</span> client.request(<span class="st">"GET"</span>, <span class="st">"/v1/some/new/endpoint"</span>)
     payload = resp.json()</code></pre>
 
   <p><strong>Backward compatibility</strong></p>
@@ -1693,7 +1705,7 @@ shared = httpx.AsyncClient(
 </section>
 
 <div class="page-footer">
-  <p>Kneo Agent Client — API Reference Manual · v1.1.0 · 2026-07-04 · MIT license</p>
+  <p>Kneo Agent Client — API Reference Manual · v1.2.0 · 2026-07-05 · MIT license</p>
   <p>Adapted layout and style from the kneo_agent SDK API reference.</p>
 </div>
 
