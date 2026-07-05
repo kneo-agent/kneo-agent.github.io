@@ -2622,7 +2622,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a> Usage: kneo spec validate [OPTIONS] [SPEC_PATH]
 <a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a> Arguments
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>   [spec_path]      PATH
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>   spec_path      [SPEC_PATH]
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
 <a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a> Options
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a> --env                TEXT
@@ -2635,7 +2635,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a> Usage: kneo spec compile [OPTIONS] [SPEC_PATH]
 <a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
 <a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a> Arguments
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>   [spec_path]      PATH
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>   spec_path      [SPEC_PATH]
 <a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
 <a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a> Options
 <a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a> --env                TEXT
@@ -2648,7 +2648,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a> Usage: kneo spec resolve [OPTIONS] [SPEC_PATH]
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a> Arguments
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>   [spec_path]      PATH
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>   spec_path      [SPEC_PATH]
 <a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a> Options
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a> *  --output  -o      PATH  [required]
@@ -2675,7 +2675,7 @@
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a> Generate a policy evaluation report for a spec.
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a> Arguments
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>   [spec_path]      PATH
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>   spec_path      [SPEC_PATH]
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a> Options
 <a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a> --env                TEXT
@@ -2726,12 +2726,12 @@
 <a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a> --help                 Show this message and exit.
 </code></pre></div>
 <h2 id="kneo-run"><code>kneo run</code><a class="headerlink" href="#kneo-run" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a> Usage: kneo run [OPTIONS] [SPEC_PATH] COMMAND [ARGS]...
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a> Usage: kneo run [OPTIONS] [SPEC_PATH] [COMMAND] [ARGS]...
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
 <a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a> Run agent/workflow specs
 <a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
 <a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a> Arguments
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>   [spec_path]      PATH  Path to Kneo YAML spec
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>   spec_path      [SPEC_PATH]  Path to Kneo YAML spec
 <a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>
 <a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a> Options
 <a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a> *  --input        -i      TEXT  Input text [required]

@@ -2030,6 +2030,11 @@ in <a href="../service_api/"><code>service_api.md</code></a>.</p>
 <td>In-process worker threads draining the run queue. Raise for provider-bound workloads so runs overlap on provider I/O. See <a href="../performance/">performance.md</a>.</td>
 </tr>
 <tr>
+<td><code>KNEO_SERV_WORKER_IDLE_POLL_SECONDS</code></td>
+<td><code>1.0</code></td>
+<td>How long an idle worker waits before re-polling the queue when it finds no claimable run. Must be a finite number &gt; 0. Lower for snappier pickup at the cost of more idle queue queries; raise to reduce store load on a mostly-idle deployment.</td>
+</tr>
+<tr>
 <td><code>KNEO_SERV_WORKER_LEASE_SECONDS</code></td>
 <td><code>300</code></td>
 <td>Queue-lease <strong>liveness window</strong> per claimed run (not a run-time cap). A running worker renews its lease every ~<code>1/3</code> of this interval (the lease heartbeat), so a healthy long run keeps its lease; only a dead or starved worker lets it expire, after which the run is re-claimed. Set it above a single step's wall-clock, not the whole run.</td>

@@ -1814,9 +1814,10 @@ them from anywhere you can reach the service port.</p>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/readyz<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.checks&#39;</span>
 </code></pre></div>
 <h2 id="readyz-failure-matrix"><code>/readyz</code> failure matrix<a class="headerlink" href="#readyz-failure-matrix" title="Permanent link">&para;</a></h2>
-<p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code> with
-<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code>. The keys you
-will see and what each means:
+<p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code>. The body is
+wrapped in FastAPI's <code>detail</code> envelope:
+<code>{"detail": {"error": "not_ready", "message": "…", "metadata": {"ready": false, "manager": "…", "checks": {...}}}}</code>
+(<code>jq '.detail.metadata.checks'</code>). The keys you will see and what each means:
 (<code>kneo_serv/service/routes_health.py</code>)</p>
 <table>
 <thead>
@@ -1878,10 +1879,11 @@ will see and what each means:
 </tr>
 </tbody>
 </table>
-<p>The payload includes per-check <code>error</code> (exception class) and <code>message</code>
-for failed checks, so you usually don't have to guess which subsystem
-is at fault — copy the message into the relevant troubleshooting
-section.</p>
+<p>A failed check reports <code>{"name": …, "ok": false, "error": "check_failed"}</code> —
+<code>error</code> is a fixed literal (the probe deliberately does not leak the exception
+class or a detail message to an unauthenticated caller). The specific failure
+detail is server-side, on the <code>kneo_serv.service</code> logger; use the check <code>name</code>
+to jump to the matching troubleshooting section below.</p>
 <h2 id="common-production-incidents">Common production incidents<a class="headerlink" href="#common-production-incidents" title="Permanent link">&para;</a></h2>
 <p>If <code>/healthz</code> and <code>/readyz</code> are both green but the service is "wrong":</p>
 <table>

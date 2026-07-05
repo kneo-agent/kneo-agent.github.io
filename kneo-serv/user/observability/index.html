@@ -2053,6 +2053,11 @@ that does not expose <code>/metrics</code> publicly), or disable it with
 <td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
 </tr>
 <tr>
+<td><code>kneo_runs_rejected_total</code></td>
+<td>counter</td>
+<td>Runs rejected by queue-depth backpressure (terminalized <code>failed{queue_full}</code> → <code>503</code>). The direct load-shed signal.</td>
+</tr>
+<tr>
 <td><code>kneo_tokens_input_total</code></td>
 <td>counter</td>
 <td>Input/prompt tokens consumed across runs (from each run's <code>metadata["usage"]</code>, when the runtime reports it).</td>

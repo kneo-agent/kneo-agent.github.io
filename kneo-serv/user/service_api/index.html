@@ -2831,8 +2831,10 @@ present without exposing values.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="err">GET /v1/security/credentials?providers=openai&amp;include_service_tokens=false</span>
 </code></pre></div>
 <p>This endpoint requires <code>credentials:read</code>. The response reports configured
-provider, extra, and service-token references with <code>present</code> flags and
-redacted values:</p>
+provider, extra, and service-token references as a typed inventory (relay #10) —
+each entry carries <code>present</code>, a redacted <code>value</code>, a derived health <code>status</code>
+(<code>present</code> | <code>missing</code>), and reserved <code>expires_at</code> / <code>last_checked</code> slots (env-var
+secrets carry no rotation metadata, so these are <code>null</code>):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;inventory&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="nt">&quot;providers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2840,12 +2842,15 @@ redacted values:</p>
 <a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;provider:openai&quot;</span><span class="p">,</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">        </span><span class="nt">&quot;env_var&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">,</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">        </span><span class="nt">&quot;present&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="nt">&quot;extra&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="p">}</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">        </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;[REDACTED]&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;present&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">        </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="nt">&quot;last_checked&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="nt">&quot;extra&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="p">}</span>
 </code></pre></div>
 <p>Every successful credential inventory request records a
 <code>credential.inventory_accessed</code> audit event. Audit metadata includes counts and
@@ -2853,9 +2858,10 @@ which reference names were present; raw secret values are never included.</p>
 <h2 id="environment-policy-management">Environment policy management<a class="headerlink" href="#environment-policy-management" title="Permanent link">&para;</a></h2>
 <p>Environment policy enforcement can be managed through the service when a
 deployment needs operator-controlled gates outside checked-in project config:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="err">GET /v1/policies/environment</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="err">GET /v1/policies/environment/prod</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="err">PUT /v1/policies/environment/prod</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="err">GET  /v1/policies/environment</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="err">GET  /v1/policies/environment/prod</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="err">PUT  /v1/policies/environment/prod</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="err">POST /v1/policies/environment/prod/preview</span>
 </code></pre></div>
 <p>Reads require <code>policies:read</code>; writes require <code>policies:write</code>. A policy
 update stores validated <code>EnvironmentPolicyEnforcement</code> settings in the run
@@ -2874,6 +2880,13 @@ state store's <code>project_metadata</code> table/key-value area:</p>
 when one existed. Each successful update records a <code>policy.changed</code> audit event
 with the policy surface, environment, previous/current redacted policy payloads,
 and changed field names.</p>
+<p><code>POST /v1/policies/environment/{environment}/preview</code> (scope <code>policies:read</code>,
+relay #9) evaluates a <em>candidate</em> policy without persisting it: it returns the
+<code>diff</code> versus the stored policy, the <code>affected_run_ids</code>, which of those become
+<code>newly_blocking</code> under the candidate (by replaying them through the enforcement
+engine), and <code>runs_evaluated</code>. Only the control plane can answer this honestly —
+it owns the policy engine and the run corpus — so a dashboard can't compute it
+client-side.</p>
 <h2 id="request-limits">Request limits<a class="headerlink" href="#request-limits" title="Permanent link">&para;</a></h2>
 <p>The service rejects oversized request bodies before route handling and applies
 strict request-model validation for inline payloads. Unknown request fields are
@@ -3098,6 +3111,7 @@ deployment-level filesystem backups when those paths are used.</p>
 <li>GET /v1/runs/{run_id}/policy-report</li>
 <li>GET /v1/runs/{run_id}/recovery</li>
 <li>GET /v1/runs/{run_id}/replay</li>
+<li>GET /v1/runs/{run_id}/graph</li>
 <li>POST /v1/runs/{run_id}/continue</li>
 <li>GET /v1/runs/{run_id}/checkpoints</li>
 <li>GET /v1/runs/{run_id}/checkpoints/diff</li>
@@ -3133,12 +3147,14 @@ deployment-level filesystem backups when those paths are used.</p>
 <li>POST /v1/specs/validate</li>
 <li>POST /v1/specs/compile</li>
 <li>POST /v1/specs/explain</li>
+<li>POST /v1/specs/graph</li>
 <li>POST /v1/specs/policy-report</li>
 <li>POST /v1/specs/run</li>
 </ul>
-<p>The four read-only endpoints (<code>validate</code>, <code>compile</code>, <code>explain</code>, <code>policy-report</code>)
-accept the same envelope (<code>spec_path</code> or inline <code>spec</code>, plus <code>environment</code>,
-<code>overlays</code>, and <code>overrides</code>); <code>compile</code> additionally honors <code>strict</code>. The
+<p>The five read-only endpoints (<code>validate</code>, <code>compile</code>, <code>explain</code>, <code>graph</code>,
+<code>policy-report</code>) accept the same envelope (<code>spec_path</code> or inline <code>spec</code>, plus
+<code>environment</code>, <code>overlays</code>, and <code>overrides</code>); <code>compile</code> additionally honors
+<code>strict</code>; <code>graph</code> (scope <code>specs:read</code>) returns the static workflow DAG. The
 overlays/overrides layer the effective spec the same way a run does. An invalid
 spec returns <code>400 spec_invalid</code> carrying the diagnostic list (it is not a <code>500</code>).</p>
 <p><code>POST /specs/run</code> takes the <code>POST /runs</code> envelope and, as of <strong>0.12.0</strong>, honors
@@ -3160,6 +3176,7 @@ directory. See <a href="../security_hardening/">security_hardening.md</a>.</p>
 <li>POST /specs/validate</li>
 <li>POST /specs/compile</li>
 <li>POST /specs/explain</li>
+<li>POST /specs/graph</li>
 <li>POST /specs/policy-report</li>
 <li>POST /specs/run</li>
 </ul>
@@ -3191,6 +3208,7 @@ cannot inject an undeclared skill.</p>
 <li>GET /v1/policies/environment</li>
 <li>GET /v1/policies/environment/{environment}</li>
 <li>PUT /v1/policies/environment/{environment}</li>
+<li>POST /v1/policies/environment/{environment}/preview</li>
 </ul>
 <p>Legacy aliases:</p>
 <ul>
@@ -3208,7 +3226,7 @@ common endpoints. The full schema is in
 <a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KEY</span><span class="o">=</span>operator-token<span class="w">   </span><span class="c1"># an entry from KNEO_SERV_API_KEYS</span>
 </code></pre></div>
 <h3 id="health">Health<a class="headerlink" href="#health" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/livez&quot;</span><span class="w">     </span><span class="c1"># {&quot;ok&quot;: true, &quot;metadata&quot;: {}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/livez&quot;</span><span class="w">     </span><span class="c1"># {&quot;ok&quot;: true, &quot;metadata&quot;: {&quot;status&quot;: &quot;alive&quot;}}</span>
 <a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/readyz&quot;</span><span class="w">    </span><span class="c1"># 200 with checks: {} or 503 with not_ready details</span>
 </code></pre></div>
 <p><code>/livez</code> and <code>/readyz</code> are intentionally unauthenticated. See
@@ -3230,7 +3248,7 @@ the failure shape.</p>
 <p>Synchronous response (run finished within the request):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">{</span>
 <a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_2026-05-10T12:34:56_a1b2c3d4&quot;</span><span class="p">,</span>
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
 <a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nvidia&#39;s AI strategy hinges on …&quot;</span><span class="p">,</span>
 <a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
@@ -3244,9 +3262,13 @@ the failure shape.</p>
 <a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;pending_human_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve the draft?&quot;</span><span class="p">}}</span>
+<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve the draft?&quot;</span><span class="p">}}</span>
 <a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="p">}</span>
 </code></pre></div>
+<p>The pending human request rides the run's <code>metadata.request</code> (its id is under
+<code>request.id</code>). On <code>GET /v1/runs/{run_id}</code> a blocked run also exposes a top-level
+<code>pending_human_request</code> object (populated from run state, redacted) — see <em>Get run
+state</em>.</p>
 <p>For retry-safe submissions, send an <code>Idempotency-Key</code> header. Reusing
 the same key with the same body replays the original response;
 mismatched bodies return <code>409 idempotency_key_conflict</code>.</p>
@@ -3272,12 +3294,17 @@ mismatched bodies return <code>409 idempotency_key_conflict</code>.</p>
 <p>For terminal status:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="p">{</span>
 <a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
 <a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;…&quot;</span><span class="p">,</span>
 <a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span><span class="nt">&quot;visited_steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;retrieve&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;analyze&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;summarize&quot;</span><span class="p">],</span>
-<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span><span class="nt">&quot;trace_event_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span>
-<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="p">}</span>
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span><span class="nt">&quot;trace_event_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span>
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="w">  </span><span class="nt">&quot;usage&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;input_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1840</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;output_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">320</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;total_tokens&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2160</span><span class="p">}</span>
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a><span class="p">}</span>
 </code></pre></div>
+<p>The first-class <code>usage</code> object (relay #2) carries per-run token counts once the
+run has produced them (<code>null</code> until then). Tokens only — cost is a
+pricing-sheet concern for the dashboard. The same counts are also mirrored under
+<code>metadata.usage</code>.</p>
 <h3 id="list-runs-paginated">List runs (paginated)<a class="headerlink" href="#list-runs-paginated" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/runs?status=running&amp;limit=20&amp;sort_by=created_at&amp;sort_order=desc&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$KEY</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq
@@ -3301,7 +3328,7 @@ mismatched bodies return <code>409 idempotency_key_conflict</code>.</p>
 </code></pre></div>
 <p>The run transitions to <code>cancelled</code>; cancellation is cooperative —
 in-flight steps stop at unit-of-work boundaries. See
-<a href="../troubleshooting/#52-cancelled-run-still-finishes-as-succeeded">troubleshooting.md § 5.2</a>.</p>
+<a href="../troubleshooting/#52-cancelled-run-still-finishes-as-completed">troubleshooting.md § 5.2</a>.</p>
 <h3 id="validate-a-spec">Validate a spec<a class="headerlink" href="#validate-a-spec" title="Permanent link">&para;</a></h3>
 <p>Required scope: <code>specs:read</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$BASE</span><span class="s2">/v1/specs/validate&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -3339,13 +3366,13 @@ in-flight steps stop at unit-of-work boundaries. See
 <div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="p">{</span>
 <a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">      </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;cont_…&quot;</span><span class="p">,</span>
 <a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="w">      </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">      </span><span class="nt">&quot;request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">        </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="w">        </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve the draft?&quot;</span><span class="p">,</span>
-<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="w">        </span><span class="nt">&quot;deadline_epoch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1715432400</span>
-<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">      </span><span class="nt">&quot;workflow_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;research-pipeline&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">      </span><span class="nt">&quot;workflow_kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sequential&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="w">      </span><span class="nt">&quot;pending_human_request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span>
+<a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="w">      </span><span class="nt">&quot;pending_human_request&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;prompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Approve the draft?&quot;</span><span class="p">},</span>
+<a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="w">      </span><span class="nt">&quot;expires_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1715432400.0</span>
 <a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a><span class="w">  </span><span class="p">],</span>
 <a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a><span class="w">  </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
@@ -3369,7 +3396,7 @@ retries.</p>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
 <a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">&quot;run_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;run_…&quot;</span><span class="p">,</span>
-<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
 <a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="w">  </span><span class="nt">&quot;output_text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Published. https://…&quot;</span><span class="p">,</span>
 <a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="w">  </span><span class="nt">&quot;human_intervention_required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
 <a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="w">  </span><span class="nt">&quot;continuation_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
@@ -3395,7 +3422,7 @@ PII patterns never appear.</p>
 <a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="w">        </span><span class="nt">&quot;request_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;req_…&quot;</span><span class="p">,</span>
 <a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="w">        </span><span class="nt">&quot;decision&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;approved&quot;</span><span class="p">,</span>
 <a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="w">        </span><span class="nt">&quot;selected_option&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;succeeded&quot;</span><span class="p">,</span>
+<a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a><span class="w">        </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;completed&quot;</span><span class="p">,</span>
 <a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a><span class="w">        </span><span class="nt">&quot;has_content&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
 <a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a><span class="w">      </span><span class="p">}</span>
 <a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a><span class="w">    </span><span class="p">}</span>
@@ -3486,7 +3513,14 @@ archival access), and <code>sort_order=asc</code> orders <em>within</em> the win
 does not surface the oldest rows overall.</p>
 <p>Supported query parameters:</p>
 <ul>
-<li><code>GET /v1/runs</code>: <code>status</code>, <code>limit</code>, <code>offset</code>, <code>sort_by</code>, <code>sort_order</code></li>
+<li><code>GET /v1/runs</code>: <code>status</code>, <code>workflow_kind</code>, <code>workflow_name</code>, <code>session_id</code>,
+  <code>has_error</code>, <code>created_after</code>, <code>created_before</code>, <code>q</code>, <code>limit</code>, <code>offset</code>,
+  <code>sort_by</code>, <code>sort_order</code>. The filters AND-combine; <code>q</code> is a bounded,
+  case-insensitive substring search over each run's <code>output_text</code> +
+  <code>error.message</code> (relay #4); <code>has_error</code> is a tri-state boolean;
+  <code>created_after</code>/<code>created_before</code> compare against the stored ISO-8601
+  <code>created_at</code>. The same filter is applied to both the page and its reported
+  <code>total</code>, so the count can't drift from the window.</li>
 <li><code>GET /v1/runs/{run_id}/checkpoints</code>: <code>type</code>, <code>limit</code>, <code>offset</code>,
   <code>sort_by</code>, <code>sort_order</code></li>
 <li><code>GET /v1/runs/{run_id}/trace</code>: <code>event_type</code>, <code>limit</code>, <code>offset</code>,

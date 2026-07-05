@@ -1356,10 +1356,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+  <a href="#52-cancelled-run-still-finishes-as-completed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Cancelled run still finishes as succeeded
+        5.2 Cancelled run still finishes as completed
       
     </span>
   </a>
@@ -2472,10 +2472,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+  <a href="#52-cancelled-run-still-finishes-as-completed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Cancelled run still finishes as succeeded
+        5.2 Cancelled run still finishes as completed
       
     </span>
   </a>
@@ -2846,12 +2846,14 @@ one of its check entries.</p>
   production_readiness_review.md § Role Boundary Review.</li>
 </ul>
 <h3 id="12-readyz-returns-503">1.2 <code>/readyz</code> returns 503<a class="headerlink" href="#12-readyz-returns-503" title="Permanent link">&para;</a></h3>
-<p><code>GET /readyz</code> returns
-<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code> when any dependency
-check fails. <code>service/routes_health.py</code></p>
+<p><code>GET /readyz</code> returns <code>503</code> wrapped in FastAPI's <code>detail</code> envelope —
+<code>{"detail": {"error": "not_ready", "message": "…", "metadata": {"checks": {...}}}}</code> —
+when any dependency check fails. <code>service/routes_health.py</code></p>
 <ul>
-<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq</code>. Each per-dependency
-  entry has <code>ok: false</code> plus <code>error</code> and <code>message</code> for failed checks.</li>
+<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq '.detail.metadata.checks'</code>.
+  Each failed per-dependency entry is <code>{"ok": false, "error": "check_failed"}</code>
+  (a fixed literal — the real detail is server-side on the <code>kneo_serv.service</code>
+  logger, not in the response).</li>
 <li>Fix: the per-check failure matrix (which check maps to which recovery
   action) lives in
   <a href="../incident_response/#readyz-failure-matrix"><code>incident_response.md § /readyz failure matrix</code></a>.
@@ -2993,7 +2995,7 @@ embedding skips <code>manager.start_worker()</code>, queued runs never drain.</p
 <li>Fix: ensure <code>start_worker()</code> is called in the host process after
   constructing <code>PlatformManager</code> directly, or use the default factory.</li>
 </ul>
-<h3 id="52-cancelled-run-still-finishes-as-succeeded">5.2 Cancelled run still finishes as <code>succeeded</code><a class="headerlink" href="#52-cancelled-run-still-finishes-as-succeeded" title="Permanent link">&para;</a></h3>
+<h3 id="52-cancelled-run-still-finishes-as-completed">5.2 Cancelled run still finishes as <code>completed</code><a class="headerlink" href="#52-cancelled-run-still-finishes-as-completed" title="Permanent link">&para;</a></h3>
 <p>Cancellation is cooperative through <code>CancellationToken</code> and propagates only
 at unit-of-work boundaries. A step that completes between the cancel
 request and the next checkpoint will record its result, but <code>RunState</code>
@@ -3002,7 +3004,7 @@ completed results.</p>
 <ul>
 <li>Confirm: <code>GET /runs/{run_id}</code> should still report <code>status: cancelled</code>
   even if the last checkpoint shows completion of a step.</li>
-<li>If <code>status</code> shows <code>succeeded</code> after a cancel, file an issue with the run
+<li>If <code>status</code> shows <code>completed</code> after a cancel, file an issue with the run
   id, the checkpoint timeline (<code>/runs/{run_id}/checkpoints</code>), and the trace
   (<code>/runs/{run_id}/trace</code>).</li>
 </ul>
@@ -3089,7 +3091,7 @@ in-process <code>Tracer</code>, independent of OTel. Missing events most often m
 the run was never executed (e.g. queued and abandoned) or the spec
 disabled tracing.</p>
 <ul>
-<li>Fix: confirm the run reached <code>running</code>/<code>succeeded</code>. If the workflow
+<li>Fix: confirm the run reached <code>running</code>/<code>completed</code>. If the workflow
   middleware list omits <code>TracingMiddleware</code>, restore it (the default chain
   includes it).</li>
 </ul>

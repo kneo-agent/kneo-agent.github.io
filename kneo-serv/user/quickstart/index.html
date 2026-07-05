@@ -1905,8 +1905,9 @@ stdout by default. Use <code>--json</code> to get the full structured response.<
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--input<span class="w"> </span><span class="s2">&quot;draft the launch announcement&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>workflow<span class="w"> </span>--json
 </code></pre></div>
-<p>The JSON response includes a top-level <code>continuation_id</code>; the <code>request_id</code>
-is nested under <code>metadata.pending_human_request</code>. Resume with an approval:</p>
+<p>The JSON response includes a top-level <code>continuation_id</code>; the human request
+rides <code>metadata.request</code>, so its id is <code>metadata.request.id</code>. Resume with an
+approval:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kneo<span class="w"> </span>human<span class="w"> </span>resume<span class="w"> </span>&lt;continuation_id&gt;<span class="w"> </span>--request-id<span class="w"> </span>&lt;request_id&gt;<span class="w"> </span>--approve
 </code></pre></div>
 <p>For a deeper end-to-end walkthrough, see

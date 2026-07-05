@@ -2312,9 +2312,11 @@ analyzes, and summarizes.</p>
 <li><a href="../../examples/research_agent.prod.yaml"><code>research_agent.prod.yaml</code></a> —
   conservative temperature, more iterations, step checkpointing, tracing.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>kneo<span class="w"> </span>spec<span class="w"> </span>bundle<span class="w"> </span>sign<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--output<span class="w"> </span>bundles/research_agent.prod.json<span class="w"> </span>--approved-by<span class="w"> </span>release-manager<span class="w"> </span>--env<span class="w"> </span>prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># `bundle sign` requires the signing key in the environment.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_SERV_SPEC_SIGNING_KEY</span><span class="o">=</span>…
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>kneo<span class="w"> </span>spec<span class="w"> </span>validate<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span>--env<span class="w"> </span>prod
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>kneo<span class="w"> </span>spec<span class="w"> </span>bundle<span class="w"> </span>sign<span class="w"> </span>examples/research_agent.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>bundles/research_agent.prod.json<span class="w"> </span>--approved-by<span class="w"> </span>release-manager<span class="w"> </span>--env<span class="w"> </span>prod
 </code></pre></div>
 <h3 id="graph_review_workflowyaml"><a href="../../examples/graph_review_workflow.yaml"><code>graph_review_workflow.yaml</code></a><a class="headerlink" href="#graph_review_workflowyaml" title="Permanent link">&para;</a></h3>
 <p>A graph workflow with conditional edges: retrieve → analyze → review →
@@ -2383,7 +2385,7 @@ platform dispatches per <a href="../human_in_the_loop/#9-timeouts-and-escalation
 <td><code>escalate</code></td>
 <td>Run stays <code>blocked</code>; <code>escalated_at</code> stamped on the continuation; subsequent prune calls skip it (escalation fires once)</td>
 <td><code>human.escalated</code></td>
-<td>preserved (operator reassigns + resumes via the normal <code>/continuations/{id}/resume</code> path)</td>
+<td>preserved (operator reassigns + resumes via the normal <code>/human-tasks/{continuation_id}/resume</code> path)</td>
 </tr>
 </tbody>
 </table>

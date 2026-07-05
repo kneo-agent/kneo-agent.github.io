@@ -1951,7 +1951,7 @@ above.)</p>
 <tr>
 <td><code>checkpoints_days</code></td>
 <td>Checkpoint rows</td>
-<td>By <code>created_at</code>.</td>
+<td>By <code>created_at</code>, <strong>except</strong> checkpoints of live runs (<code>running</code>/<code>blocked</code>/<code>created</code>/<code>paused</code>) — those are retained regardless of age so an aged pause can still resume.</td>
 </tr>
 <tr>
 <td><code>queue_days</code></td>

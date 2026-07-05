@@ -3135,10 +3135,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+  <a href="#52-cancelled-run-still-finishes-as-completed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Cancelled run still finishes as succeeded
+        5.2 Cancelled run still finishes as completed
       
     </span>
   </a>
@@ -5663,10 +5663,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-cancelled-run-still-finishes-as-succeeded" class="md-nav__link">
+  <a href="#52-cancelled-run-still-finishes-as-completed" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2 Cancelled run still finishes as succeeded
+        5.2 Cancelled run still finishes as completed
       
     </span>
   </a>
@@ -6258,7 +6258,7 @@ ephemeral volume.</p>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># {&quot;ok&quot;:true,&quot;service&quot;:&quot;kneo-serv-platform&quot;,&quot;version&quot;:&quot;...&quot;,...}</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>http://127.0.0.1:8000/readyz
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># {&quot;ok&quot;:true,...,&quot;checks&quot;:{&quot;run_state_store&quot;:{&quot;name&quot;:&quot;run_state_store&quot;,&quot;ok&quot;:true},...}}</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># {&quot;ok&quot;:true,...,&quot;metadata&quot;:{&quot;checks&quot;:{&quot;run_state_store&quot;:{&quot;name&quot;:&quot;run_state_store&quot;,&quot;ok&quot;:true},...}}}</span>
 </code></pre></div>
 <p>Run state lives at <code>/app/.kneo/kneo_runs.sqlite</code> inside the container and
 disappears when <code>--rm</code> cleans the container up. Don't use this shape for
@@ -6771,6 +6771,11 @@ that does not expose <code>/metrics</code> publicly), or disable it with
 <td>Runs dead-lettered after exceeding <code>KNEO_SERV_QUEUE_MAX_ATTEMPTS</code>.</td>
 </tr>
 <tr>
+<td><code>kneo_runs_rejected_total</code></td>
+<td>counter</td>
+<td>Runs rejected by queue-depth backpressure (terminalized <code>failed{queue_full}</code> → <code>503</code>). The direct load-shed signal.</td>
+</tr>
+<tr>
 <td><code>kneo_tokens_input_total</code></td>
 <td>counter</td>
 <td>Input/prompt tokens consumed across runs (from each run's <code>metadata["usage"]</code>, when the runtime reports it).</td>
@@ -7060,7 +7065,8 @@ workers are wedged. <strong>Do:</strong> check <code>kneo_worker_count</code> is
 <code>kneo_runs_running</code> is moving; scale <code>KNEO_SERV_WORKER_CONCURRENCY</code> or add
 instances; if a deployment runs with <code>KNEO_SERV_MAX_QUEUE_DEPTH</code> set,
 sustained backlog at the cap means clients are getting <code>503</code> load-shed
-(those runs are terminalized <code>failed{queue_full}</code>, not silently dropped).</p>
+(those runs are terminalized <code>failed{queue_full}</code>, not silently dropped) — alert
+on <code>rate(kneo_runs_rejected_total[5m]) &gt; 0</code>, the direct load-shed counter.</p>
 <h4 id="worker-starvation">Worker starvation<a class="headerlink" href="#worker-starvation" title="Permanent link">&para;</a></h4>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">kneo_worker_count</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="ow">and</span><span class="w"> </span><span class="nv">kneo_runs_queued</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
 </code></pre></div>
@@ -8996,9 +9002,10 @@ them from anywhere you can reach the service port.</p>
 <a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://&lt;host&gt;:&lt;port&gt;/readyz<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.checks&#39;</span>
 </code></pre></div>
 <h3 id="readyz-failure-matrix"><code>/readyz</code> failure matrix<a class="headerlink" href="#readyz-failure-matrix" title="Permanent link">&para;</a></h3>
-<p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code> with
-<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code>. The keys you
-will see and what each means:
+<p><code>/readyz</code> runs eight checks; when any fails, the response is <code>503</code>. The body is
+wrapped in FastAPI's <code>detail</code> envelope:
+<code>{"detail": {"error": "not_ready", "message": "…", "metadata": {"ready": false, "manager": "…", "checks": {...}}}}</code>
+(<code>jq '.detail.metadata.checks'</code>). The keys you will see and what each means:
 (<code>kneo_serv/service/routes_health.py</code>)</p>
 <table>
 <thead>
@@ -9060,10 +9067,11 @@ will see and what each means:
 </tr>
 </tbody>
 </table>
-<p>The payload includes per-check <code>error</code> (exception class) and <code>message</code>
-for failed checks, so you usually don't have to guess which subsystem
-is at fault — copy the message into the relevant troubleshooting
-section.</p>
+<p>A failed check reports <code>{"name": …, "ok": false, "error": "check_failed"}</code> —
+<code>error</code> is a fixed literal (the probe deliberately does not leak the exception
+class or a detail message to an unauthenticated caller). The specific failure
+detail is server-side, on the <code>kneo_serv.service</code> logger; use the check <code>name</code>
+to jump to the matching troubleshooting section below.</p>
 <h3 id="common-production-incidents">Common production incidents<a class="headerlink" href="#common-production-incidents" title="Permanent link">&para;</a></h3>
 <p>If <code>/healthz</code> and <code>/readyz</code> are both green but the service is "wrong":</p>
 <table>
@@ -9193,12 +9201,14 @@ one of its check entries.</p>
   production_readiness_review.md § Role Boundary Review.</li>
 </ul>
 <h4 id="12-readyz-returns-503">1.2 <code>/readyz</code> returns 503<a class="headerlink" href="#12-readyz-returns-503" title="Permanent link">&para;</a></h4>
-<p><code>GET /readyz</code> returns
-<code>{"error": "not_ready", "metadata": {"checks": {...}}}</code> when any dependency
-check fails. <code>service/routes_health.py</code></p>
+<p><code>GET /readyz</code> returns <code>503</code> wrapped in FastAPI's <code>detail</code> envelope —
+<code>{"detail": {"error": "not_ready", "message": "…", "metadata": {"checks": {...}}}}</code> —
+when any dependency check fails. <code>service/routes_health.py</code></p>
 <ul>
-<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq</code>. Each per-dependency
-  entry has <code>ok: false</code> plus <code>error</code> and <code>message</code> for failed checks.</li>
+<li>Confirm: <code>curl -sf http://&lt;host&gt;:&lt;port&gt;/readyz | jq '.detail.metadata.checks'</code>.
+  Each failed per-dependency entry is <code>{"ok": false, "error": "check_failed"}</code>
+  (a fixed literal — the real detail is server-side on the <code>kneo_serv.service</code>
+  logger, not in the response).</li>
 <li>Fix: the per-check failure matrix (which check maps to which recovery
   action) lives in
   <a href="#readyz-failure-matrix"><code>incident_response.md § /readyz failure matrix</code></a>.
@@ -9340,7 +9350,7 @@ embedding skips <code>manager.start_worker()</code>, queued runs never drain.</p
 <li>Fix: ensure <code>start_worker()</code> is called in the host process after
   constructing <code>PlatformManager</code> directly, or use the default factory.</li>
 </ul>
-<h4 id="52-cancelled-run-still-finishes-as-succeeded">5.2 Cancelled run still finishes as <code>succeeded</code><a class="headerlink" href="#52-cancelled-run-still-finishes-as-succeeded" title="Permanent link">&para;</a></h4>
+<h4 id="52-cancelled-run-still-finishes-as-completed">5.2 Cancelled run still finishes as <code>completed</code><a class="headerlink" href="#52-cancelled-run-still-finishes-as-completed" title="Permanent link">&para;</a></h4>
 <p>Cancellation is cooperative through <code>CancellationToken</code> and propagates only
 at unit-of-work boundaries. A step that completes between the cancel
 request and the next checkpoint will record its result, but <code>RunState</code>
@@ -9349,7 +9359,7 @@ completed results.</p>
 <ul>
 <li>Confirm: <code>GET /runs/{run_id}</code> should still report <code>status: cancelled</code>
   even if the last checkpoint shows completion of a step.</li>
-<li>If <code>status</code> shows <code>succeeded</code> after a cancel, file an issue with the run
+<li>If <code>status</code> shows <code>completed</code> after a cancel, file an issue with the run
   id, the checkpoint timeline (<code>/runs/{run_id}/checkpoints</code>), and the trace
   (<code>/runs/{run_id}/trace</code>).</li>
 </ul>
@@ -9436,7 +9446,7 @@ in-process <code>Tracer</code>, independent of OTel. Missing events most often m
 the run was never executed (e.g. queued and abandoned) or the spec
 disabled tracing.</p>
 <ul>
-<li>Fix: confirm the run reached <code>running</code>/<code>succeeded</code>. If the workflow
+<li>Fix: confirm the run reached <code>running</code>/<code>completed</code>. If the workflow
   middleware list omits <code>TracingMiddleware</code>, restore it (the default chain
   includes it).</li>
 </ul>
