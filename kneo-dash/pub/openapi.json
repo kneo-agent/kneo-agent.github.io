@@ -1,0 +1,5456 @@
+{
+  "components": {
+    "schemas": {
+      "AccessMapUpdate": {
+        "description": "Set the `role \u2192 capabilities` map \u2014 `PUT /api/settings/access`. `version` is `0` to\ncreate the first override and the current version to update (optimistic concurrency).\nUnknown roles/capabilities are rejected `400`.",
+        "properties": {
+          "capabilities": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Capabilities",
+            "type": "object"
+          },
+          "version": {
+            "minimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "capabilities",
+          "version"
+        ],
+        "title": "AccessMapUpdate",
+        "type": "object"
+      },
+      "AccessMapView": {
+        "description": "The effective `role \u2192 capabilities` policy (Settings \u203a Access; ADR-009 \u00a71/\u00a75).\n`is_default` is true when no admin override is stored (the built-in policy);\n`version` is the map version (`0` for the default) that drives session re-auth.",
+        "properties": {
+          "capabilities": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Capabilities",
+            "type": "object"
+          },
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "capabilities",
+          "version",
+          "is_default"
+        ],
+        "title": "AccessMapView",
+        "type": "object"
+      },
+      "AnnotationCreate": {
+        "description": "Create a run annotation \u2014 `POST /api/runs/{run_id}/annotations`.",
+        "properties": {
+          "body": {
+            "maxLength": 10000,
+            "minLength": 1,
+            "title": "Body",
+            "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          }
+        },
+        "required": [
+          "body"
+        ],
+        "title": "AnnotationCreate",
+        "type": "object"
+      },
+      "AnnotationUpdate": {
+        "description": "Edit an annotation \u2014 `PUT /api/annotations/{id}`. `version` must match the\ncurrent row (optimistic concurrency) or the write is rejected with `409`.",
+        "properties": {
+          "body": {
+            "maxLength": 10000,
+            "minLength": 1,
+            "title": "Body",
+            "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "version": {
+            "minimum": 1.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "body",
+          "version"
+        ],
+        "title": "AnnotationUpdate",
+        "type": "object"
+      },
+      "AnnotationView": {
+        "description": "A run annotation (dashboard-local state store; ADR-005/006). `created_by` is\nthe operator identity once auth lands, `system` until then; `version` is the\noptimistic-concurrency guard the SPA echoes on update/delete.",
+        "properties": {
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "tags": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "type": "array"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "run_id",
+          "body",
+          "created_by",
+          "created_at",
+          "updated_at",
+          "version"
+        ],
+        "title": "AnnotationView",
+        "type": "object"
+      },
+      "AuditListView": {
+        "description": "Audit list envelope \u2014 offset pagination with a `window` cap (like Runs).",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/AuditRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "window": {
+            "title": "Window",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rows",
+          "count",
+          "total",
+          "limit",
+          "offset",
+          "window"
+        ],
+        "title": "AuditListView",
+        "type": "object"
+      },
+      "AuditLogItem": {
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "operator": {
+            "title": "Operator",
+            "type": "string"
+          },
+          "outcome": {
+            "title": "Outcome",
+            "type": "string"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          }
+        },
+        "required": [
+          "id",
+          "operator",
+          "action",
+          "outcome",
+          "created_at"
+        ],
+        "title": "AuditLogItem",
+        "type": "object"
+      },
+      "AuditLogView": {
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/AuditLogItem"
+            },
+            "title": "Entries",
+            "type": "array"
+          }
+        },
+        "required": [
+          "entries"
+        ],
+        "title": "AuditLogView",
+        "type": "object"
+      },
+      "AuditRow": {
+        "description": "One audit event (`GET /api/audit` item) \u2014 kneo_serv `AuditEvent`: who did what,\nwhen, on which run. `metadata` is the event's open dict (keys vary by\n`event_type`), passed through for detail display.",
+        "properties": {
+          "actor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor"
+          },
+          "continuation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Continuation Id"
+          },
+          "created_at": {
+            "default": "",
+            "title": "Created At",
+            "type": "string"
+          },
+          "event_type": {
+            "title": "Event Type",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Metadata",
+            "type": "object"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          }
+        },
+        "required": [
+          "id",
+          "event_type"
+        ],
+        "title": "AuditRow",
+        "type": "object"
+      },
+      "CheckpointDiffEntry": {
+        "description": "One state change between two checkpoints. `value` for added/removed keys;\n`from_value`/`to_value` for changed keys. Values are stringified for display.",
+        "properties": {
+          "from_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Value"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "to_value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Value"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "key"
+        ],
+        "title": "CheckpointDiffEntry",
+        "type": "object"
+      },
+      "CheckpointDiffView": {
+        "description": "Time-travel diff between two checkpoint sequences (`runs.checkpoints_diff`).",
+        "properties": {
+          "added": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CheckpointDiffEntry"
+            },
+            "title": "Added",
+            "type": "array"
+          },
+          "change_count": {
+            "default": 0,
+            "title": "Change Count",
+            "type": "integer"
+          },
+          "changed": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CheckpointDiffEntry"
+            },
+            "title": "Changed",
+            "type": "array"
+          },
+          "from_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Sequence"
+          },
+          "removed": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CheckpointDiffEntry"
+            },
+            "title": "Removed",
+            "type": "array"
+          },
+          "to_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "To Sequence"
+          },
+          "truncated": {
+            "default": false,
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "title": "CheckpointDiffView",
+        "type": "object"
+      },
+      "CheckpointView": {
+        "properties": {
+          "age": {
+            "title": "Age",
+            "type": "string"
+          },
+          "node": {
+            "title": "Node",
+            "type": "string"
+          },
+          "sequence": {
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sequence",
+          "type",
+          "node",
+          "age"
+        ],
+        "title": "CheckpointView",
+        "type": "object"
+      },
+      "ConnectionUpsert": {
+        "description": "Create/update a connection \u2014 `PUT /api/settings/connections/{env}`. `version` is\n`0` to create a new env and the current row version to update (optimistic\nconcurrency; a mismatch is `409`, `create-over-existing` is `409`).",
+        "properties": {
+          "label": {
+            "default": "",
+            "maxLength": 200,
+            "title": "Label",
+            "type": "string"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile"
+          },
+          "version": {
+            "minimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "ConnectionUpsert",
+        "type": "object"
+      },
+      "ConnectionView": {
+        "description": "One environment \u2192 `kneo_client` profile mapping (Settings \u203a Connections;\nADR-009 \u00a72). `profile` is `None` when the env uses the client's default resolution.\n`version` drives optimistic-concurrency edits.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "env": {
+            "title": "Env",
+            "type": "string"
+          },
+          "label": {
+            "default": "",
+            "title": "Label",
+            "type": "string"
+          },
+          "profile": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "env",
+          "created_by",
+          "created_at",
+          "updated_at",
+          "version"
+        ],
+        "title": "ConnectionView",
+        "type": "object"
+      },
+      "CredentialEntryView": {
+        "description": "One credential *reference* \u2014 presence/metadata only. Deliberately **no\n`value`** field: the inventory never carries secret material to the SPA (even the\nupstream redacted `[REDACTED]` is dropped at the BFF). `status` is `present`/\n`missing`; `expires_at`/`last_checked` are reserved (null for env-var refs).",
+        "properties": {
+          "env_var": {
+            "title": "Env Var",
+            "type": "string"
+          },
+          "expires_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expires At"
+          },
+          "last_checked": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Checked"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "present": {
+            "title": "Present",
+            "type": "boolean"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "env_var",
+          "present",
+          "status"
+        ],
+        "title": "CredentialEntryView",
+        "type": "object"
+      },
+      "CredentialInventoryView": {
+        "description": "Credential-reference inventory (`GET /api/credentials`) \u2014 sections + a\npresence rollup. Read-only; no secrets, no mutation (relay #10).",
+        "properties": {
+          "missing_count": {
+            "title": "Missing Count",
+            "type": "integer"
+          },
+          "present_count": {
+            "title": "Present Count",
+            "type": "integer"
+          },
+          "sections": {
+            "items": {
+              "$ref": "#/components/schemas/CredentialSectionView"
+            },
+            "title": "Sections",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sections",
+          "present_count",
+          "missing_count"
+        ],
+        "title": "CredentialInventoryView",
+        "type": "object"
+      },
+      "CredentialSectionView": {
+        "description": "A named inventory section (`providers` | `extra` | `service_tokens`).",
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/CredentialEntryView"
+            },
+            "title": "Entries",
+            "type": "array"
+          },
+          "section": {
+            "title": "Section",
+            "type": "string"
+          }
+        },
+        "required": [
+          "section",
+          "entries"
+        ],
+        "title": "CredentialSectionView",
+        "type": "object"
+      },
+      "DeployDiagnostic": {
+        "properties": {
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          },
+          "source": {
+            "title": "Source",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "severity",
+          "message"
+        ],
+        "title": "DeployDiagnostic",
+        "type": "object"
+      },
+      "DeployView": {
+        "description": "Deploy verdict \u2014 validate + compile(strict) + policy-report against the target\nenv, combined into one \"ready to run?\" answer (RFC \u00a77 Launch).",
+        "properties": {
+          "blocking": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Blocking",
+            "type": "array"
+          },
+          "compiled": {
+            "title": "Compiled",
+            "type": "boolean"
+          },
+          "diagnostics": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DeployDiagnostic"
+            },
+            "title": "Diagnostics",
+            "type": "array"
+          },
+          "policy_ok": {
+            "title": "Policy Ok",
+            "type": "boolean"
+          },
+          "ready": {
+            "title": "Ready",
+            "type": "boolean"
+          },
+          "valid": {
+            "title": "Valid",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "valid",
+          "compiled",
+          "policy_ok",
+          "ready"
+        ],
+        "title": "DeployView",
+        "type": "object"
+      },
+      "EnvGrantsUpdate": {
+        "description": "Set the role \u2192 allowed-environments grants \u2014 `PUT /api/settings/access/environments`.\n`version` is `0` to create and the current version to update. Unknown roles are `400`;\nenv names are free-form (validated against Connections at use). Admin always has access\nto every env regardless of this map (no env lockout).",
+        "properties": {
+          "environments": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Environments",
+            "type": "object"
+          },
+          "version": {
+            "minimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environments",
+          "version"
+        ],
+        "title": "EnvGrantsUpdate",
+        "type": "object"
+      },
+      "EnvGrantsView": {
+        "description": "Role \u2192 allowed-environments grants (Settings \u203a Access; ADR-009 \u00a72). `is_default`\nis true when unconfigured \u2014 **unrestricted** (every role may use every env). A role\nmay hold `\"*\"` (all envs). `version` drives optimistic-concurrency edits.",
+        "properties": {
+          "environments": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Environments",
+            "type": "object"
+          },
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "environments",
+          "version",
+          "is_default"
+        ],
+        "title": "EnvGrantsView",
+        "type": "object"
+      },
+      "ErrorGroup": {
+        "description": "A cluster of failed runs sharing a workflow (cross-run triage).",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "sample_run_ids": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sample Run Ids",
+            "type": "array"
+          },
+          "workflow_kind": {
+            "title": "Workflow Kind",
+            "type": "string"
+          },
+          "workflow_name": {
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "workflow_kind",
+          "workflow_name",
+          "count"
+        ],
+        "title": "ErrorGroup",
+        "type": "object"
+      },
+      "ErrorSummaryView": {
+        "description": "Failed-run clustering (`GET /api/runs/error-summary`) \u2014 BFF-aggregated over a\nrecent window of `status=failed` runs, grouped by workflow, most-failing first.",
+        "properties": {
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/ErrorGroup"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "scanned": {
+            "title": "Scanned",
+            "type": "integer"
+          },
+          "total_failed": {
+            "title": "Total Failed",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "groups",
+          "total_failed",
+          "scanned"
+        ],
+        "title": "ErrorSummaryView",
+        "type": "object"
+      },
+      "GraphEdgeView": {
+        "properties": {
+          "source": {
+            "title": "Source",
+            "type": "string"
+          },
+          "target": {
+            "title": "Target",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source",
+          "target"
+        ],
+        "title": "GraphEdgeView",
+        "type": "object"
+      },
+      "GraphNodeView": {
+        "properties": {
+          "current": {
+            "default": false,
+            "title": "Current",
+            "type": "boolean"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "visited": {
+            "default": false,
+            "title": "Visited",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "GraphNodeView",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthProbes": {
+        "properties": {
+          "healthz": {
+            "title": "Healthz",
+            "type": "boolean"
+          },
+          "livez": {
+            "title": "Livez",
+            "type": "boolean"
+          },
+          "readyz": {
+            "title": "Readyz",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "livez",
+          "readyz",
+          "healthz"
+        ],
+        "title": "HealthProbes",
+        "type": "object"
+      },
+      "HealthView": {
+        "description": "Health (`GET /api/health`) \u2014 subsystems derived adaptively from metadata.",
+        "properties": {
+          "probes": {
+            "$ref": "#/components/schemas/HealthProbes"
+          },
+          "service": {
+            "title": "Service",
+            "type": "string"
+          },
+          "subsystems": {
+            "items": {
+              "$ref": "#/components/schemas/SubsystemView"
+            },
+            "title": "Subsystems",
+            "type": "array"
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "service",
+          "version",
+          "probes",
+          "subsystems"
+        ],
+        "title": "HealthView",
+        "type": "object"
+      },
+      "HumanMessageView": {
+        "properties": {
+          "at": {
+            "title": "At",
+            "type": "string"
+          },
+          "content": {
+            "title": "Content",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "content",
+          "at"
+        ],
+        "title": "HumanMessageView",
+        "type": "object"
+      },
+      "HumanResumeInput": {
+        "description": "Resume decision from the SPA (`POST /api/human-tasks/{cid}/resume`).",
+        "properties": {
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          },
+          "decision": {
+            "title": "Decision",
+            "type": "string"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "selected_option": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Selected Option"
+          }
+        },
+        "required": [
+          "decision"
+        ],
+        "title": "HumanResumeInput",
+        "type": "object"
+      },
+      "HumanTaskDetailView": {
+        "description": "A single HITL task (`human_tasks.get`) \u2014 request + message thread, for review.",
+        "properties": {
+          "continuation_id": {
+            "title": "Continuation Id",
+            "type": "string"
+          },
+          "messages": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/HumanMessageView"
+            },
+            "title": "Messages",
+            "type": "array"
+          },
+          "options": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Options",
+            "type": "array"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "request_summary": {
+            "default": "\u2014",
+            "title": "Request Summary",
+            "type": "string"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "status": {
+            "default": "",
+            "title": "Status",
+            "type": "string"
+          },
+          "workflow_name": {
+            "default": "",
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "continuation_id"
+        ],
+        "title": "HumanTaskDetailView",
+        "type": "object"
+      },
+      "HumanTaskListView": {
+        "description": "HITL queue envelope \u2014 offset pagination with a `window` cap.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/HumanTaskRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "window": {
+            "title": "Window",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rows",
+          "count",
+          "total",
+          "limit",
+          "offset",
+          "window"
+        ],
+        "title": "HumanTaskListView",
+        "type": "object"
+      },
+      "HumanTaskResumeResult": {
+        "description": "Result of resuming a HITL task.",
+        "properties": {
+          "continuation_id": {
+            "title": "Continuation Id",
+            "type": "string"
+          },
+          "idempotency_key": {
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "continuation_id",
+          "status",
+          "idempotency_key"
+        ],
+        "title": "HumanTaskResumeResult",
+        "type": "object"
+      },
+      "HumanTaskRow": {
+        "description": "A row in the HITL queue (`GET /api/human-tasks`).",
+        "properties": {
+          "continuation_id": {
+            "title": "Continuation Id",
+            "type": "string"
+          },
+          "created_age": {
+            "title": "Created Age",
+            "type": "string"
+          },
+          "deadline_age": {
+            "title": "Deadline Age",
+            "type": "string"
+          },
+          "near_deadline": {
+            "title": "Near Deadline",
+            "type": "boolean"
+          },
+          "request_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Id"
+          },
+          "request_summary": {
+            "title": "Request Summary",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "workflow_kind": {
+            "title": "Workflow Kind",
+            "type": "string"
+          },
+          "workflow_name": {
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "continuation_id",
+          "run_id",
+          "workflow_name",
+          "workflow_kind",
+          "status",
+          "request_summary",
+          "request_id",
+          "deadline_age",
+          "near_deadline",
+          "created_age"
+        ],
+        "title": "HumanTaskRow",
+        "type": "object"
+      },
+      "LaunchHistoryItem": {
+        "description": "A past operational launch (MRU) \u2014 **reference only** (ADR-009 / HIGH-4). Never\ncarries the verbatim inline spec. Path launches re-populate the Launch form from\n`spec_path`; `digest` is a provenance hash of an inline launch's spec (`None` for a\npath launch), so inline rows show provenance but cannot re-populate the form.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "default": "",
+            "title": "Created By",
+            "type": "string"
+          },
+          "digest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Digest"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "mode": {
+            "title": "Mode",
+            "type": "string"
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Id"
+          },
+          "spec_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Path"
+          }
+        },
+        "required": [
+          "id",
+          "mode",
+          "label",
+          "created_at"
+        ],
+        "title": "LaunchHistoryItem",
+        "type": "object"
+      },
+      "LaunchHistoryView": {
+        "description": "Recent operational launches, newest first (`GET /api/launch/history`).",
+        "properties": {
+          "entries": {
+            "items": {
+              "$ref": "#/components/schemas/LaunchHistoryItem"
+            },
+            "title": "Entries",
+            "type": "array"
+          }
+        },
+        "required": [
+          "entries"
+        ],
+        "title": "LaunchHistoryView",
+        "type": "object"
+      },
+      "LaunchRunInput": {
+        "description": "Run request \u2014 a spec (as in Load/Deploy) plus the run `input_text`. The\ntyped-confirm prod gate is enforced in the SPA (re-type the env); RBAC / the\nplatform scope is the real authority.",
+        "properties": {
+          "async_mode": {
+            "default": true,
+            "title": "Async Mode",
+            "type": "boolean"
+          },
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "input_text": {
+            "title": "Input Text",
+            "type": "string"
+          },
+          "spec": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec"
+          },
+          "spec_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Path"
+          }
+        },
+        "required": [
+          "input_text"
+        ],
+        "title": "LaunchRunInput",
+        "type": "object"
+      },
+      "LaunchRunResult": {
+        "description": "Result of starting a run from Launch \u2014 the SPA routes to the run's detail.",
+        "properties": {
+          "idempotency_key": {
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "status",
+          "idempotency_key"
+        ],
+        "title": "LaunchRunResult",
+        "type": "object"
+      },
+      "LaunchSpecInput": {
+        "description": "Launch request body \u2014 an existing spec (Studio-produced) to operate. Either\nan inline `spec` object or a server-visible `spec_path`, targeting `environment`.\nThe Dashboard does not author specs (ADR-003) \u2014 it compiles + runs an existing one.",
+        "properties": {
+          "environment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Environment"
+          },
+          "spec": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec"
+          },
+          "spec_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spec Path"
+          }
+        },
+        "title": "LaunchSpecInput",
+        "type": "object"
+      },
+      "LoadView": {
+        "description": "Load preview (`agent.specs.explain`) \u2014 what the agent *is*, before any env\ngating. `summary` is the platform's free-form explain summary, passed through.",
+        "properties": {
+          "summary": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Summary",
+            "type": "object"
+          }
+        },
+        "title": "LoadView",
+        "type": "object"
+      },
+      "OverviewTile": {
+        "description": "One Overview tile \u2014 a BFF-derived count with a drill-down target. `value` is\n`None` when the source count is unavailable (older server / filter unsupported).",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          },
+          "tone": {
+            "default": "neutral",
+            "title": "Tone",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          }
+        },
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "OverviewTile",
+        "type": "object"
+      },
+      "OverviewView": {
+        "description": "Overview landing (`GET /api/overview`) \u2014 BFF-derived tiles aggregated from\n`runs.list`/`human_tasks.list`/`health` (ADR-005: lightweight, not a TSDB). Real\ntime-series live in Grafana (`grafana_url` deep-link when configured).",
+        "properties": {
+          "error_rate": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Rate"
+          },
+          "grafana_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Grafana Url"
+          },
+          "ready": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ready"
+          },
+          "tiles": {
+            "items": {
+              "$ref": "#/components/schemas/OverviewTile"
+            },
+            "title": "Tiles",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tiles"
+        ],
+        "title": "OverviewView",
+        "type": "object"
+      },
+      "PolicyDiagnosticView": {
+        "description": "One policy diagnostic (open-dict item from the run's policy report).",
+        "properties": {
+          "code": {
+            "default": "",
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "default": "",
+            "title": "Message",
+            "type": "string"
+          },
+          "severity": {
+            "default": "",
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "title": "PolicyDiagnosticView",
+        "type": "object"
+      },
+      "PolicyDiffEntry": {
+        "description": "One field's before\u2192after change in an environment policy (stringified).",
+        "properties": {
+          "after": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "After"
+          },
+          "before": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Before"
+          },
+          "key": {
+            "title": "Key",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key"
+        ],
+        "title": "PolicyDiffEntry",
+        "type": "object"
+      },
+      "PolicyListRow": {
+        "description": "One environment in the policy list (`GET /api/policies`).",
+        "properties": {
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          }
+        },
+        "required": [
+          "environment",
+          "enabled"
+        ],
+        "title": "PolicyListRow",
+        "type": "object"
+      },
+      "PolicyListView": {
+        "properties": {
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/PolicyListRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          }
+        },
+        "required": [
+          "rows"
+        ],
+        "title": "PolicyListView",
+        "type": "object"
+      },
+      "PolicyPreviewView": {
+        "description": "Dry-run of a policy change (`POST /api/policies/{env}/preview`) \u2014 the field\n`diff` vs the active policy + the runs it would affect. Persists nothing.",
+        "properties": {
+          "affected_count": {
+            "default": 0,
+            "title": "Affected Count",
+            "type": "integer"
+          },
+          "affected_run_ids": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Affected Run Ids",
+            "type": "array"
+          },
+          "diff": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PolicyDiffEntry"
+            },
+            "title": "Diff",
+            "type": "array"
+          }
+        },
+        "title": "PolicyPreviewView",
+        "type": "object"
+      },
+      "PolicyReportView": {
+        "description": "Per-run policy report (`GET /api/runs/{id}/policy-report` \u2192\n`runs.policy_report`) \u2014 the compiled spec's policy outcomes for this run. A `404`\n(older server / no report) degrades to `available=False` like the graph tab.",
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "diagnostics": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PolicyDiagnosticView"
+            },
+            "title": "Diagnostics",
+            "type": "array"
+          },
+          "human_review_missing": {
+            "default": false,
+            "title": "Human Review Missing",
+            "type": "boolean"
+          },
+          "human_review_required": {
+            "default": false,
+            "title": "Human Review Required",
+            "type": "boolean"
+          },
+          "summary": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Summary",
+            "type": "object"
+          },
+          "valid": {
+            "default": true,
+            "title": "Valid",
+            "type": "boolean"
+          },
+          "version": {
+            "default": "",
+            "title": "Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "available"
+        ],
+        "title": "PolicyReportView",
+        "type": "object"
+      },
+      "PolicyUpdateInput": {
+        "description": "Environment-policy update body (`PUT`/preview) \u2014 the kneo_serv policy knobs.\nA **platform-authoritative** mutation: the `/v1` scope is the real gate (`403`).",
+        "properties": {
+          "blocked_diagnostic_codes": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Blocked Diagnostic Codes",
+            "type": "array"
+          },
+          "deny_unrestricted_tools": {
+            "default": false,
+            "title": "Deny Unrestricted Tools",
+            "type": "boolean"
+          },
+          "enabled": {
+            "default": true,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "fail_on_warnings": {
+            "default": false,
+            "title": "Fail On Warnings",
+            "type": "boolean"
+          },
+          "require_guardrails": {
+            "default": false,
+            "title": "Require Guardrails",
+            "type": "boolean"
+          },
+          "require_human_review": {
+            "default": false,
+            "title": "Require Human Review",
+            "type": "boolean"
+          },
+          "require_tool_permissions": {
+            "default": false,
+            "title": "Require Tool Permissions",
+            "type": "boolean"
+          }
+        },
+        "title": "PolicyUpdateInput",
+        "type": "object"
+      },
+      "PolicyView": {
+        "description": "One environment's policy (`GET`/`PUT /api/policies/{env}`). `diff` is the\nbefore/after vs `previous_policy` the platform returns (empty when there's no\nprior). `policy` is passed through (open) so unknown knobs still render.",
+        "properties": {
+          "diff": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PolicyDiffEntry"
+            },
+            "title": "Diff",
+            "type": "array"
+          },
+          "environment": {
+            "title": "Environment",
+            "type": "string"
+          },
+          "policy": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Policy",
+            "type": "object"
+          },
+          "previous_policy": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Previous Policy"
+          }
+        },
+        "required": [
+          "environment"
+        ],
+        "title": "PolicyView",
+        "type": "object"
+      },
+      "PreferencesUpdate": {
+        "description": "Set the current operator's UI preferences \u2014 `PUT /api/settings/preferences`.\n`version` is `0` to create and the current version to update (optimistic concurrency).",
+        "properties": {
+          "preferences": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Preferences",
+            "type": "object"
+          },
+          "version": {
+            "minimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "PreferencesUpdate",
+        "type": "object"
+      },
+      "PreferencesView": {
+        "description": "The **current operator's** UI preferences (Settings \u203a Preferences). `preferences`\nis an opaque JSON blob the SPA owns and the BFF round-trips verbatim (like a saved\nfilter). `is_default` is true when the operator has none stored yet; `version` drives\noptimistic-concurrency edits.",
+        "properties": {
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          },
+          "preferences": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Preferences",
+            "type": "object"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version",
+          "is_default"
+        ],
+        "title": "PreferencesView",
+        "type": "object"
+      },
+      "PriceBookUpdate": {
+        "description": "Set the price book \u2014 `PUT /api/settings/pricing`. `blended_per_1k` (`>= 0`, or `null`\nto disable pricing) is USD per 1000 total tokens. `version` is `0` to create and the\ncurrent version to update (optimistic concurrency).",
+        "properties": {
+          "blended_per_1k": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blended Per 1K"
+          },
+          "currency": {
+            "default": "USD",
+            "maxLength": 8,
+            "title": "Currency",
+            "type": "string"
+          },
+          "version": {
+            "minimum": 0.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "title": "PriceBookUpdate",
+        "type": "object"
+      },
+      "PriceBookView": {
+        "description": "The blended price book (Settings \u203a Pricing; Cost \u00a7D). `blended_per_1k` is the cost\nper 1000 total tokens (`None` = pricing disabled \u2192 runs show tokens only). `is_default`\nis true when unconfigured; `version` drives optimistic-concurrency edits.",
+        "properties": {
+          "blended_per_1k": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blended Per 1K"
+          },
+          "currency": {
+            "default": "USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "is_default": {
+            "title": "Is Default",
+            "type": "boolean"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "blended_per_1k",
+          "version",
+          "is_default"
+        ],
+        "title": "PriceBookView",
+        "type": "object"
+      },
+      "ReplayTimelineItem": {
+        "properties": {
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "node": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Node"
+          },
+          "sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequence"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "title": "ReplayTimelineItem",
+        "type": "object"
+      },
+      "RunActionResult": {
+        "description": "Result of a run-control action \u2014 Stop (`runs.cancel`) or Resume\n(`runs.continue_`). The `idempotency_key` is echoed so the SPA can display it\nand a retry is provably safe.",
+        "properties": {
+          "action": {
+            "title": "Action",
+            "type": "string"
+          },
+          "continuation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Continuation Id"
+          },
+          "idempotency_key": {
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "new_run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "New Run Id"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "action",
+          "status",
+          "idempotency_key"
+        ],
+        "title": "RunActionResult",
+        "type": "object"
+      },
+      "RunChainItem": {
+        "description": "A sibling run in the same session (continuation lineage).",
+        "properties": {
+          "created_age": {
+            "title": "Created Age",
+            "type": "string"
+          },
+          "current": {
+            "default": false,
+            "title": "Current",
+            "type": "boolean"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "workflow_name": {
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "status",
+          "workflow_name",
+          "created_age"
+        ],
+        "title": "RunChainItem",
+        "type": "object"
+      },
+      "RunChainView": {
+        "description": "A run's continuation chain \u2014 the runs sharing its `session_id`, oldest first\n(walk paused\u2192resumed across run boundaries). `available=False` when the run has\nno `session_id` or the server can't filter by it (older serv).",
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "runs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RunChainItem"
+            },
+            "title": "Runs",
+            "type": "array"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "truncated": {
+            "default": false,
+            "title": "Truncated",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "available"
+        ],
+        "title": "RunChainView",
+        "type": "object"
+      },
+      "RunDetail": {
+        "description": "Run detail (`GET /api/runs/{id}`) \u2014 RunStatusResponse fields + derived.",
+        "properties": {
+          "agent_name": {
+            "title": "Agent Name",
+            "type": "string"
+          },
+          "checkpoints": {
+            "items": {
+              "$ref": "#/components/schemas/CheckpointView"
+            },
+            "title": "Checkpoints",
+            "type": "array"
+          },
+          "continuation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Continuation Id"
+          },
+          "current_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Node Id"
+          },
+          "current_step_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step Index"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "input_redacted": {
+            "title": "Input Redacted",
+            "type": "boolean"
+          },
+          "is_terminal": {
+            "title": "Is Terminal",
+            "type": "boolean"
+          },
+          "output_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Text"
+          },
+          "path": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Path",
+            "type": "array"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "session_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Session Id"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "trace": {
+            "items": {
+              "$ref": "#/components/schemas/TraceEventView"
+            },
+            "title": "Trace",
+            "type": "array"
+          },
+          "trace_complete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trace Complete"
+          },
+          "trace_dropped": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trace Dropped"
+          },
+          "trace_event_count": {
+            "title": "Trace Event Count",
+            "type": "integer"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workflow_kind": {
+            "title": "Workflow Kind",
+            "type": "string"
+          },
+          "workflow_name": {
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "status",
+          "agent_name",
+          "workflow_name",
+          "workflow_kind",
+          "current_node_id",
+          "current_step_index",
+          "continuation_id",
+          "session_id",
+          "trace_event_count",
+          "input_redacted",
+          "output_text",
+          "error",
+          "path",
+          "is_terminal",
+          "trace",
+          "checkpoints"
+        ],
+        "title": "RunDetail",
+        "type": "object"
+      },
+      "RunGraphView": {
+        "description": "Run workflow DAG (`runs.graph`, kneo_serv >= 1.1.0). `available=False` when the\nserver predates the endpoint (404) \u2014 the SPA falls back to the path breadcrumb.",
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current"
+          },
+          "edges": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/GraphEdgeView"
+            },
+            "title": "Edges",
+            "type": "array"
+          },
+          "nodes": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/GraphNodeView"
+            },
+            "title": "Nodes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "available"
+        ],
+        "title": "RunGraphView",
+        "type": "object"
+      },
+      "RunListView": {
+        "description": "Runs list envelope \u2014 offset pagination with a `window` cap (not cursor).",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/RunRow"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "unsupported_filters": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Unsupported Filters",
+            "type": "array"
+          },
+          "window": {
+            "title": "Window",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rows",
+          "count",
+          "total",
+          "limit",
+          "offset",
+          "window"
+        ],
+        "title": "RunListView",
+        "type": "object"
+      },
+      "RunRecoveryView": {
+        "description": "Recovery panel (`runs.recovery`) \u2014 where a failed/interrupted run stopped and\nwhether it can be resumed.",
+        "properties": {
+          "checkpoint_count": {
+            "default": 0,
+            "title": "Checkpoint Count",
+            "type": "integer"
+          },
+          "continuation_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Continuation Id"
+          },
+          "current_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Node Id"
+          },
+          "current_step_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step Index"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "recoverable": {
+            "default": false,
+            "title": "Recoverable",
+            "type": "boolean"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "visited_nodes": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Visited Nodes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "run_id",
+          "status"
+        ],
+        "title": "RunRecoveryView",
+        "type": "object"
+      },
+      "RunReplayView": {
+        "description": "Replay reconstruction (`runs.replay`) \u2014 the run's timeline for step-through.",
+        "properties": {
+          "checkpoint_count": {
+            "default": 0,
+            "title": "Checkpoint Count",
+            "type": "integer"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "timeline": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ReplayTimelineItem"
+            },
+            "title": "Timeline",
+            "type": "array"
+          }
+        },
+        "required": [
+          "run_id",
+          "status"
+        ],
+        "title": "RunReplayView",
+        "type": "object"
+      },
+      "RunRow": {
+        "description": "One row in the Runs list (`GET /api/runs` item).",
+        "properties": {
+          "agent_name": {
+            "title": "Agent Name",
+            "type": "string"
+          },
+          "blocked": {
+            "title": "Blocked",
+            "type": "boolean"
+          },
+          "current_node_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Node Id"
+          },
+          "current_step_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Step Index"
+          },
+          "has_error": {
+            "title": "Has Error",
+            "type": "boolean"
+          },
+          "run_id": {
+            "title": "Run Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "stuck": {
+            "title": "Stuck",
+            "type": "boolean"
+          },
+          "stuck_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stuck Reason"
+          },
+          "updated_age": {
+            "title": "Updated Age",
+            "type": "string"
+          },
+          "usage": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/UsageView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workflow_kind": {
+            "title": "Workflow Kind",
+            "type": "string"
+          },
+          "workflow_name": {
+            "title": "Workflow Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id",
+          "status",
+          "workflow_name",
+          "workflow_kind",
+          "agent_name",
+          "current_node_id",
+          "current_step_index",
+          "updated_age",
+          "blocked",
+          "has_error",
+          "stuck",
+          "stuck_reason"
+        ],
+        "title": "RunRow",
+        "type": "object"
+      },
+      "SavedFilterCreate": {
+        "description": "Create a saved filter \u2014 `POST /api/saved-filters`.",
+        "properties": {
+          "filters": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Filters",
+            "type": "object"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "SavedFilterCreate",
+        "type": "object"
+      },
+      "SavedFilterUpdate": {
+        "description": "Edit a saved filter \u2014 `PUT /api/saved-filters/{id}`. `version` must match the\ncurrent row (optimistic concurrency) or the write is rejected `409`.",
+        "properties": {
+          "filters": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Filters",
+            "type": "object"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "version": {
+            "minimum": 1.0,
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "title": "SavedFilterUpdate",
+        "type": "object"
+      },
+      "SavedFilterView": {
+        "description": "A named, org-shared Runs filter (dashboard-local state store). `filters` is an\nopaque `RunFilters` blob the SPA owns; the BFF stores/returns it verbatim.",
+        "properties": {
+          "created_at": {
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "title": "Created By",
+            "type": "string"
+          },
+          "filters": {
+            "additionalProperties": true,
+            "default": {},
+            "title": "Filters",
+            "type": "object"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "created_by",
+          "created_at",
+          "updated_at",
+          "version"
+        ],
+        "title": "SavedFilterView",
+        "type": "object"
+      },
+      "SpendView": {
+        "description": "Per-env spend rollup over a trailing window (Cost \u00a7D). Summed over `runs.list` for\nthe active env, **newest scanned up to a page budget** \u2014 so `truncated` is `True` when\nthe window has more runs than the budget scanned (`total_cost_usd` is then a lower\nbound; the UI shows \"N of M runs \u00b7 window truncated\", never a silent whole-history\ntotal). `total_cost_usd` is `None` (and `priced`/`approximate` false) when no price book\nis configured; when priced it is always **approximate** (blended rate).",
+        "properties": {
+          "approximate": {
+            "title": "Approximate",
+            "type": "boolean"
+          },
+          "counted": {
+            "title": "Counted",
+            "type": "integer"
+          },
+          "currency": {
+            "default": "USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "priced": {
+            "title": "Priced",
+            "type": "boolean"
+          },
+          "scanned": {
+            "title": "Scanned",
+            "type": "integer"
+          },
+          "total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total"
+          },
+          "total_cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Cost Usd"
+          },
+          "truncated": {
+            "title": "Truncated",
+            "type": "boolean"
+          },
+          "window": {
+            "title": "Window",
+            "type": "string"
+          }
+        },
+        "required": [
+          "window",
+          "counted",
+          "scanned",
+          "truncated",
+          "priced",
+          "approximate"
+        ],
+        "title": "SpendView",
+        "type": "object"
+      },
+      "SubsystemView": {
+        "properties": {
+          "checked_age": {
+            "title": "Checked Age",
+            "type": "string"
+          },
+          "degraded": {
+            "default": false,
+            "title": "Degraded",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "ok": {
+            "title": "Ok",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "ok",
+          "detail",
+          "checked_age"
+        ],
+        "title": "SubsystemView",
+        "type": "object"
+      },
+      "TraceEventView": {
+        "properties": {
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "node": {
+            "title": "Node",
+            "type": "string"
+          },
+          "ts": {
+            "title": "Ts",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ts",
+          "type",
+          "node",
+          "duration_ms",
+          "kind"
+        ],
+        "title": "TraceEventView",
+        "type": "object"
+      },
+      "TraceListView": {
+        "description": "Trace list envelope \u2014 the mandated paged shape (api_contract \u00a7Success), plus\nthe collector completeness/loss flags (audit-0002 L-4 + M-5).",
+        "properties": {
+          "complete": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Complete"
+          },
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "dropped": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dropped"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/TraceEventView"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "window": {
+            "title": "Window",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "rows",
+          "count",
+          "total",
+          "limit",
+          "offset",
+          "window"
+        ],
+        "title": "TraceListView",
+        "type": "object"
+      },
+      "UsageView": {
+        "description": "Per-run token usage (`RunStatusResponse.usage` / `RunUsage`). All `None` until\nthe platform produces usage \u2014 the UI renders \"\u2014\", never a fabricated 0.\n\n`cost_usd` is a **blended, approximate** estimate (single per-1K rate \u00d7 total tokens;\n`RunUsage` is tokens-only + model-blind upstream), present only when a price book is\nconfigured **and** total tokens are known; `cost_approximate` is then `True` so the UI\nalways labels it. `currency` names the price-book unit.",
+        "properties": {
+          "cost_approximate": {
+            "default": false,
+            "title": "Cost Approximate",
+            "type": "boolean"
+          },
+          "cost_usd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cost Usd"
+          },
+          "currency": {
+            "default": "USD",
+            "title": "Currency",
+            "type": "string"
+          },
+          "input_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Tokens"
+          },
+          "output_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Tokens"
+          },
+          "total_tokens": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Tokens"
+          }
+        },
+        "title": "UsageView",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Kneo Agent Dashboard BFF",
+    "version": "0.5.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/annotations/{annotation_id}": {
+      "delete": {
+        "description": "Delete an annotation. `version` (query) guards against clobbering a concurrent\nedit \u2014 a stale value is `409`, a missing row `404`.",
+        "operationId": "delete_annotation_api_annotations__annotation_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "annotation_id",
+            "required": true,
+            "schema": {
+              "title": "Annotation Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "title": "Version",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Annotation",
+        "tags": [
+          "annotations"
+        ]
+      },
+      "put": {
+        "description": "Edit an annotation. `body.version` must match the current row or the write is\nrejected `409 dashboard_state_conflict` (optimistic concurrency); a missing row is\n`404`.",
+        "operationId": "update_annotation_api_annotations__annotation_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "annotation_id",
+            "required": true,
+            "schema": {
+              "title": "Annotation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Annotation",
+        "tags": [
+          "annotations"
+        ]
+      }
+    },
+    "/api/audit": {
+      "get": {
+        "description": "Paged, filterable audit events (`platform.audit.list`).\n\nDefaults to all events, newest first (the server sorts `created_at desc`). Optional\n`event_type` (e.g. `run.created`) and `run_id` narrow the timeline; empty strings\n(`\"\"` \u2192 `None`) mean \"no filter\". Offset pagination to the `window` cap, like Runs.",
+        "operationId": "list_events_api_audit_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "event_type",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Event Type",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "run_id",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditListView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Events",
+        "tags": [
+          "audit"
+        ]
+      }
+    },
+    "/api/audit-log": {
+      "get": {
+        "description": "Recent dashboard-local audit entries, newest first (admin only).",
+        "operationId": "read_audit_log_api_audit_log_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Read Audit Log",
+        "tags": [
+          "audit-log"
+        ]
+      }
+    },
+    "/api/callback": {
+      "get": {
+        "description": "OIDC callback \u2014 Authlib validates state/nonce + the ID token (JWKS), we map the\nclaims \u2192 role (**default-deny**), mint a **server-side session**, set the signed\ncookie, and redirect the SPA. An identity with no mapped role gets ``403``.",
+        "operationId": "callback_api_callback_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Callback",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/credentials": {
+      "get": {
+        "description": "The credential-reference inventory (`platform.credentials.list`).\n\nSections (`providers` / `extra` / `service_tokens`) of references with a\n`present`/`missing` status + a presence rollup. No secrets: the view carries no\n`value`, only presence + reserved metadata (`expires_at`/`last_checked`, null for\nenv-var references today).",
+        "operationId": "list_credentials_api_credentials_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CredentialInventoryView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Credentials",
+        "tags": [
+          "credentials"
+        ]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "description": "Aggregate livez/readyz/healthz of the target platform.",
+        "operationId": "health_api_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/api/healthz": {
+      "get": {
+        "description": "Full BFF status \u2014 **always 200**; degradation is reported in the body (never a\n``503``). Reports liveness, readiness (state store), and dependency status (OIDC).",
+        "operationId": "healthz_api_healthz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Healthz Api Healthz Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Healthz",
+        "tags": [
+          "ops",
+          "ops"
+        ]
+      }
+    },
+    "/api/human-tasks": {
+      "get": {
+        "description": "List human tasks (`platform.human_tasks.list`), **deadline-first**.\n\nDefaults to **all actionable** tasks \u2014 `status=\"\"` (\u2192 `None`) returns both\n`pending` and `escalated` (the serv `status` filter accepts only those two open\nstates; resolved tasks aren't listed), so escalated (timed-out, manually\nresumable) tasks stay visible in the queue instead of being dropped by a\n`pending`-only filter (pre-rc1 audit). Pass `status=pending`/`escalated` to\nnarrow. Sorted by `expires_at` asc so the most urgent (and overdue/escalated) is\non top; the row projection derives the `escalated` label and degrades gracefully\nwhen a field is absent.",
+        "operationId": "list_tasks_api_human_tasks_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "",
+              "title": "Status",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanTaskListView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Tasks",
+        "tags": [
+          "human-tasks"
+        ]
+      }
+    },
+    "/api/human-tasks/{continuation_id}": {
+      "get": {
+        "description": "Human-task detail + message thread (`platform.human_tasks.get`).\n\nBacks the task-detail view: the request prompt, any `options` (for a `selected`\ndecision), and the redacted `messages[]` thread \u2014 so a reviewer can resume with a\nreal decision. `messages` is `None`/absent on older servers \u2192 empty.",
+        "operationId": "get_task_api_human_tasks__continuation_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "continuation_id",
+            "required": true,
+            "schema": {
+              "title": "Continuation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanTaskDetailView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Task",
+        "tags": [
+          "human-tasks"
+        ]
+      }
+    },
+    "/api/human-tasks/{continuation_id}/resume": {
+      "post": {
+        "description": "Resume a paused run with a decision (`platform.human_tasks.resume`).\n\nThe SPA sends the `decision` (+ optional `content`/`selected_option`) and echoes\nthe task's `request_id`; the BFF mints one if absent. The `Idempotency-Key`\n(per attempt) makes a retry safe. Resuming past the deadline raises\n`KneoHumanTaskExpiredError` \u2192 `409 human_task_expired` via the envelope (\u00a712);\nthe SPA surfaces \"task expired\" and refreshes the queue.\n\nOn `request_id`: the platform's `HumanResumeRequest.request_id` is a **required**\nfield, but the queue row's `request_id` is best-effort (`str | None`) \u2014 so when the\nrow carried none, the BFF mints a `dash-` correlation tag to satisfy the contract.\nThe **`continuation_id` path param is the real task selector**; `request_id` is a\ncorrelation/audit tag, so a minted value is a safe fallback (deep-audit CONTRACT-3:\na local `400` was rejected \u2014 it would wrongly block resuming a legitimately\n`request_id`-less task).",
+        "operationId": "resume_task_api_human_tasks__continuation_id__resume_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "continuation_id",
+            "required": true,
+            "schema": {
+              "title": "Continuation Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HumanResumeInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HumanTaskResumeResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Resume Task",
+        "tags": [
+          "human-tasks"
+        ]
+      }
+    },
+    "/api/launch/deploy": {
+      "post": {
+        "description": "**Deploy** \u2014 validate + compile(strict) + policy-report against the target env,\ncombined into one \"ready to run?\" verdict. Still non-mutating: it verifies, it\ndoes not start a run. An invalid spec comes back as `valid/compiled/policy_ok`\nfalse with `blocking[]` reasons (not an error); a platform failure surfaces via\nthe \u00a712 envelope.",
+        "operationId": "deploy_api_launch_deploy_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LaunchSpecInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeployView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Deploy",
+        "tags": [
+          "launch"
+        ]
+      }
+    },
+    "/api/launch/history": {
+      "get": {
+        "description": "Recent operational launches (MRU) \u2014 the dashboard-local launch history, newest\nfirst, for one-click re-launch. Dashboard-local state (no platform call); oidc requires\na session (no session \u2192 `401`).\n\n**Env-scoped** (deep-audit / external review): rows are filtered to the environments the\noperator's role may use (:func:`access.allowed_envs`), so an env-restricted role can't\nenumerate launch provenance (spec_path/digest/run_id/created_by) for environments it is\ndenied elsewhere. An unrestricted role (admin / no grants) sees all rows.",
+        "operationId": "history_api_launch_history_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LaunchHistoryView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "History",
+        "tags": [
+          "launch"
+        ]
+      }
+    },
+    "/api/launch/load": {
+      "post": {
+        "description": "**Load** \u2014 a static, env-independent preview of what the agent is\n(`agent.specs.explain`). No mutation; the preview is env-independent, but the effective\nenv is still forwarded to ``explain``, so it is reconciled with the active env and\nauthorized against the role's grants like Deploy/Run (sibling parity).",
+        "operationId": "load_api_launch_load_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LaunchSpecInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoadView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Load",
+        "tags": [
+          "launch"
+        ]
+      }
+    },
+    "/api/launch/run": {
+      "post": {
+        "description": "**Run** \u2014 start an operational run of the spec (`platform.runs.create`).\n\nThe **mutating** phase. The SPA gates it behind a typed-confirm (re-type the env)\nand only enables it after a green Deploy; RBAC / the platform scope is the real\nauthority. The `Idempotency-Key` (per attempt) makes a retry safe \u2014 a resend\nwon't double-launch. Validation/compile/policy failures should have blocked Run\nat Deploy; if the platform still rejects `create`, it surfaces via the \u00a712\nenvelope. The SPA routes to the new run's detail.",
+        "operationId": "run_api_launch_run_post",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LaunchRunInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LaunchRunResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run",
+        "tags": [
+          "launch"
+        ]
+      }
+    },
+    "/api/livez": {
+      "get": {
+        "description": "Liveness \u2014 the process is up. **No dependency checks** (safe as a restart probe).",
+        "operationId": "livez_api_livez_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Livez Api Livez Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Livez",
+        "tags": [
+          "ops",
+          "ops"
+        ]
+      }
+    },
+    "/api/login": {
+      "get": {
+        "description": "Begin OIDC login \u2014 redirect to the provider (Authorization Code + PKCE; state +\nnonce are stashed in the transient Starlette session). oidc mode only.",
+        "operationId": "login_api_login_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Login",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/logout": {
+      "post": {
+        "description": "Revoke the current session (delete the server-side row) and clear the cookie.\nIdempotent \u2014 safe with no/expired session.",
+        "operationId": "logout_api_logout_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Logout",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/me": {
+      "get": {
+        "description": "The current operator (identity + role) \u2014 drives SPA UX gating. `401` if no valid\nsession (oidc mode); always resolves in static mode.",
+        "operationId": "me_api_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Me Api Me Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Me",
+        "tags": [
+          "auth"
+        ]
+      }
+    },
+    "/api/overview": {
+      "get": {
+        "description": "BFF-derived Overview tiles (status counts, pending HITL, readiness) + a Grafana\ndeep-link. Counts are authoritative `total`s from filtered `runs.list` calls, run\nconcurrently; readiness comes from `health.readyz`.",
+        "operationId": "get_overview_api_overview_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverviewView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Overview",
+        "tags": [
+          "overview"
+        ]
+      }
+    },
+    "/api/policies": {
+      "get": {
+        "description": "List environment policies (`policies.environment_list`), by environment.",
+        "operationId": "list_policies_api_policies_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyListView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Policies",
+        "tags": [
+          "policies"
+        ]
+      }
+    },
+    "/api/policies/{environment}": {
+      "get": {
+        "description": "One environment's policy + the before/after vs its `previous_policy`.",
+        "operationId": "get_policy_api_policies__environment__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "title": "Environment",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Policy",
+        "tags": [
+          "policies"
+        ]
+      },
+      "put": {
+        "description": "Replace an environment's policy (`environment_put`). Server-side authz\n(`POLICY_WRITE`) + the platform `403` as a second layer; the response's\n`previous_policy` drives the before/after the SPA shows.",
+        "operationId": "put_policy_api_policies__environment__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "title": "Environment",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicyUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Policy",
+        "tags": [
+          "policies"
+        ]
+      }
+    },
+    "/api/policies/{environment}/preview": {
+      "post": {
+        "description": "Dry-run a policy change before the mutating `PUT` \u2014 the field diff vs the active\npolicy + the runs it would affect. Persists nothing (`environment_preview`). Gated by\n`POLICY_WRITE` (admin) like the `PUT` it previews \u2014 it's the policy-authoring flow, not\na general read (Phase-5 audit: was reachable by any operator).",
+        "operationId": "preview_policy_api_policies__environment__preview_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "environment",
+            "required": true,
+            "schema": {
+              "title": "Environment",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicyUpdateInput"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyPreviewView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Policy",
+        "tags": [
+          "policies"
+        ]
+      }
+    },
+    "/api/readyz": {
+      "get": {
+        "description": "Readiness \u2014 the BFF can serve: the dashboard **state store** answers a trivial\nquery. ``200`` when ready, ``503`` otherwise (traffic/rollout gate).",
+        "operationId": "readyz_api_readyz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Readyz",
+        "tags": [
+          "ops",
+          "ops"
+        ]
+      }
+    },
+    "/api/runs": {
+      "get": {
+        "description": "List runs (`platform.runs.list`) with the server-side filter facets.\n\n`status` is the base facet; `has_error`/`workflow_kind`/`created_after|before`\nneed a live `kneo_serv >= 1.1.0`, and `q` (content search over output) needs\n`>= 1.2.0`. An older server rejects an unknown facet with `422\nunknown_query_parameters` \u2014 so rather than error the page, the BFF **drops the\nbelow-floor facets tier-by-tier and retries**, reporting each dropped one in\n`unsupported_filters` so the SPA disables that chip (audit-0002 M-9). No `env`\nfacet (the global switcher scopes the session).\n\n`stuck` is a BFF heuristic with no server facet. When `stuck_only` is set the BFF\n**scans up to `_STUCK_SCAN_MAX_PAGES \u00d7 _STUCK_SCAN_PAGE` runs** and returns every\nstuck one found (not just page 1) \u2014 so the honest answer to \"what's stuck\" isn't\nlimited to the first page (audit-0002 M-3 real fix).",
+        "operationId": "list_runs_api_runs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "has_error",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Has Error"
+            }
+          },
+          {
+            "in": "query",
+            "name": "workflow_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Workflow Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_after",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created After"
+            }
+          },
+          {
+            "in": "query",
+            "name": "created_before",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Created Before"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stuck_only",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Stuck Only",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunListView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Runs",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/error-summary": {
+      "get": {
+        "description": "Cluster recent **failed** runs by workflow (cross-run triage: *what's failing?*).\n\nBFF-aggregates one bounded window of `runs.list(status=failed)` into per-workflow\ngroups (count + sample run ids), most-failing first. Declared before `/{run_id}` so\nthe literal path isn't captured as a run id.",
+        "operationId": "get_error_summary_api_runs_error_summary_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorSummaryView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Error Summary",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}": {
+      "get": {
+        "description": "Run detail view-model: status + trace + checkpoints, composed.",
+        "operationId": "get_run_api_runs__run_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/annotations": {
+      "get": {
+        "description": "All annotations on a run, oldest first. Read is open to any resolved operator; oidc\nrequires a session (no session \u2192 `401`).",
+        "operationId": "list_annotations_api_runs__run_id__annotations_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AnnotationView"
+                  },
+                  "title": "Response List Annotations Api Runs  Run Id  Annotations Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Annotations",
+        "tags": [
+          "annotations"
+        ]
+      },
+      "post": {
+        "description": "Attach a note + tags to a run \u2014 server-side authz (ANNOTATE), stamped with the\noperator identity (`created_by`).",
+        "operationId": "create_annotation_api_runs__run_id__annotations_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnotationView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Annotation",
+        "tags": [
+          "annotations"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/cancel": {
+      "post": {
+        "description": "**Stop** \u2014 cooperatively cancel a run (`platform.runs.cancel`).\n\nVisibility is UX-gated in the SPA (only when the run is non-terminal); the\nplatform is the authority. A `409` (already terminal / state changed) or\n`503`/`429` surfaces via the standard envelope (\u00a712). The idempotency key makes\na retry safe.",
+        "operationId": "cancel_run_api_runs__run_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunActionResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Cancel Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/chain": {
+      "get": {
+        "description": "Continuation chain \u2014 the runs sharing this run's `session_id` (walk\npaused\u2192resumed across run boundaries).\n\nFetches the run to read its `session_id`, then lists that session oldest-first.\nDegrades to `available=False` when the run has no `session_id`, or when the\nserver can't filter by it (`session_id` needs kneo_serv >= 1.1.0 \u2192 `422\nunknown_query_parameters`). Any *other* 400/422 (a real bad-request, a genuine\nvalidation error, contract drift) is re-raised to the \u00a712 envelope rather than\nmasked as an empty chain \u2014 mirrors `_list_page`'s code check (pre-rc1 audit).",
+        "operationId": "get_run_chain_api_runs__run_id__chain_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunChainView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run Chain",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/checkpoints/diff": {
+      "get": {
+        "description": "Time-travel diff between two checkpoint sequences (`runs.checkpoints_diff`).\n\nThe SPA passes two `sequence`s picked from the run-detail checkpoint list;\nreturns added/changed/removed state with `truncated` honored. A `404` (older\nserver without the diff endpoint) propagates via the \u00a712 envelope so the SPA can\nnote it's unavailable.",
+        "operationId": "get_checkpoint_diff_api_runs__run_id__checkpoints_diff_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from_sequence",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From Sequence"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to_sequence",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To Sequence"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckpointDiffView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Checkpoint Diff",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/continue": {
+      "post": {
+        "description": "**Resume** \u2014 continue a paused/blocked run (`platform.runs.continue_`).\n\nThe SPA shows this only when the run is `blocked`. This resumes the run at the\nplatform level; a HITL task that needs an explicit *decision* is resumed from\nthe Human-tasks queue (`human_tasks.resume`, later in 0.2.0). A `409`\n(`KneoHumanTaskExpiredError` / state changed) surfaces via the envelope.",
+        "operationId": "continue_run_api_runs__run_id__continue_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Idempotency-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunActionResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Continue Run",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/graph": {
+      "get": {
+        "description": "Run workflow DAG (`platform.runs.graph`, kneo_serv >= 1.1.0).\n\nReturns nodes+edges with visited/current highlighting. A `404` (older server /\nno graph for this run) degrades to `available=False` so the SPA falls back to\nthe path breadcrumb rather than erroring the tab.",
+        "operationId": "get_run_graph_api_runs__run_id__graph_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunGraphView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run Graph",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/policy-report": {
+      "get": {
+        "description": "Per-run **policy report** (`platform.runs.policy_report`) \u2014 the compiled spec's\npolicy outcomes (human-review requirements, tool permissions, guardrails,\ndiagnostics) for this run. A `404` (older server / no report) degrades to\n`available=False` so the tab shows \"no report\" rather than erroring.",
+        "operationId": "get_run_policy_report_api_runs__run_id__policy_report_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyReportView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run Policy Report",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/recovery": {
+      "get": {
+        "description": "Recovery panel (`platform.runs.recovery`) \u2014 where a failed/interrupted run\nstopped and whether it can be resumed (a `continuation_id`/checkpoints mean yes).\nPairs with **Resume** (`runs.continue_`) when recoverable.",
+        "operationId": "get_run_recovery_api_runs__run_id__recovery_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunRecoveryView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run Recovery",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/replay": {
+      "get": {
+        "description": "Replay reconstruction (`platform.runs.replay`) \u2014 the run's timeline for\nstep-through. A `404`/platform error surfaces via the \u00a712 envelope.",
+        "operationId": "get_run_replay_api_runs__run_id__replay_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunReplayView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Run Replay",
+        "tags": [
+          "runs"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/trace": {
+      "get": {
+        "description": "Paged trace events for a run (`platform.runs.trace`).\n\nReturns the mandated paged envelope (`{rows,count,total,limit,offset,window}`\n+ collector `complete`/`dropped`), not a bare array (audit-0002 L-4).",
+        "operationId": "get_trace_api_runs__run_id__trace_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "event_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event Type"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TraceListView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Trace",
+        "tags": [
+          "traces"
+        ]
+      }
+    },
+    "/api/runs/{run_id}/trace/stream": {
+      "get": {
+        "description": "SSE live trace tail \u2014 `platform.runs.tail_trace` framed as Server-Sent Events.\n\nStreams `trace` frames as events arrive, an `end` frame at terminal status, or a\n`stream_error` frame on a platform failure; the SPA consumes it with `EventSource`.\nThe per-request client (`get_client`) stays open until the stream finishes.\n\nSEC-1 hardening: (a) an explicit `send_timeout` tears the stream down if the consumer\nstalls (freeing the writer + client) \u2014 *not* a max duration (a blocked run's tail is\nintended); (b) a **per-operator concurrent-stream cap** via the `_stream_slot`\ndependency \u2014 a stream over the cap is refused `503` + `Retry-After` before the response\nstarts, and the slot release rides the request exit stack (leak-free even on a\ndisconnect before the first frame; Phase-5 audit).",
+        "operationId": "stream_trace_api_runs__run_id__trace_stream_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "run_id",
+            "required": true,
+            "schema": {
+              "title": "Run Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "event_type",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Event Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Stream Trace",
+        "tags": [
+          "traces"
+        ]
+      }
+    },
+    "/api/saved-filters": {
+      "get": {
+        "description": "All saved filters, by name. Read is open to any resolved operator; oidc requires a\nsession (no session \u2192 `401`).",
+        "operationId": "list_saved_filters_api_saved_filters_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SavedFilterView"
+                  },
+                  "title": "Response List Saved Filters Api Saved Filters Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Saved Filters",
+        "tags": [
+          "saved-filters"
+        ]
+      },
+      "post": {
+        "description": "Save the current Runs filter under a name \u2014 server-side authz (FILTER_WRITE),\nstamped with the operator identity (`created_by`).",
+        "operationId": "create_saved_filter_api_saved_filters_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedFilterCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedFilterView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Saved Filter",
+        "tags": [
+          "saved-filters"
+        ]
+      }
+    },
+    "/api/saved-filters/{filter_id}": {
+      "delete": {
+        "description": "Delete a saved filter. `version` (query) guards a concurrent edit \u2014 a stale\nvalue is `409`, a missing row `404`.",
+        "operationId": "delete_saved_filter_api_saved_filters__filter_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "title": "Filter Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "title": "Version",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Saved Filter",
+        "tags": [
+          "saved-filters"
+        ]
+      },
+      "put": {
+        "description": "Rename/redefine a saved filter. `body.version` must match or the write is\nrejected `409 dashboard_state_conflict`; a missing row is `404`.",
+        "operationId": "update_saved_filter_api_saved_filters__filter_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "title": "Filter Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavedFilterUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SavedFilterView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Saved Filter",
+        "tags": [
+          "saved-filters"
+        ]
+      }
+    },
+    "/api/sessions/{session_id}": {
+      "get": {
+        "description": "The runs in a session, oldest-first (`runs.list(session_id=\u2026)`).\n\nDegrades to `available=False` when the server can't filter by `session_id`\n(needs kneo_serv >= 1.1.0 \u2192 `422 unknown_query_parameters`); any *other* 400/422\nis re-raised to the \u00a712 envelope rather than masked as an empty timeline\n(mirrors the Chain tab, pre-rc1 audit).",
+        "operationId": "get_session_api_sessions__session_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunChainView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Session",
+        "tags": [
+          "sessions"
+        ]
+      }
+    },
+    "/api/settings/access": {
+      "get": {
+        "description": "The effective `role \u2192 capabilities` map \u2014 the stored override, else the built-in\ndefault (`is_default=true`, `version=0`). Read is open to any resolved operator; in\noidc mode a valid session is required (no session \u2192 `401`).",
+        "operationId": "get_access_map_api_settings_access_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessMapView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Access Map",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Override the capability map \u2014 admin-only. Unknown roles/capabilities are `400`; a\nstale `version` (or a create over an existing map) is `409`. The write bumps the map\nversion (existing sessions must re-authenticate) and is audited.",
+        "operationId": "put_access_map_api_settings_access_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessMapUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessMapView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Access Map",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/settings/access/environments": {
+      "get": {
+        "description": "The role \u2192 allowed-environments grants. Unconfigured \u2192 `is_default=true`,\n`version=0` (unrestricted: every role may use every env; ADR-009 \u00a72).",
+        "operationId": "get_env_grants_api_settings_access_environments_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvGrantsView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Env Grants",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Set the role \u2192 allowed-environments grants \u2014 admin-only. Unknown roles are `400`;\na stale `version` (or create-over-existing) is `409`. Audited. (Admin always retains\naccess to every env, so this can't lock admins out.)",
+        "operationId": "put_env_grants_api_settings_access_environments_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnvGrantsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvGrantsView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Env Grants",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/settings/connections": {
+      "get": {
+        "description": "All configured environment connections (env-ordered) \u2014 drives the env switcher.\nRead is open to any resolved operator; oidc requires a session (no session \u2192 `401`).",
+        "operationId": "list_connections_api_settings_connections_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ConnectionView"
+                  },
+                  "title": "Response List Connections Api Settings Connections Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Connections",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/settings/connections/{env}": {
+      "delete": {
+        "description": "Remove an env connection \u2014 admin-only. `version` (query) guards a concurrent edit\n(stale \u2192 `409`, missing \u2192 `404`); the write is audited.",
+        "operationId": "delete_connection_api_settings_connections__env__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "env",
+            "required": true,
+            "schema": {
+              "title": "Env",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "title": "Version",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Connection",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Create (`version=0`) or update an env \u2192 profile mapping \u2014 admin-only. A create over\nan existing env, or a stale `version`, is `409`; the write is audited.",
+        "operationId": "upsert_connection_api_settings_connections__env__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "env",
+            "required": true,
+            "schema": {
+              "title": "Env",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectionUpsert"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upsert Connection",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/settings/preferences": {
+      "get": {
+        "description": "The current operator's stored preferences, or an empty default (`is_default=true`,\n`version=0`).",
+        "operationId": "get_preferences_api_settings_preferences_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreferencesView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Preferences",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Upsert the current operator's preferences (keyed by their identity). `version` is\n`0` to create and the current version to update; a stale `version` (or create-over-\nexisting) is `409`.",
+        "operationId": "put_preferences_api_settings_preferences_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreferencesView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Preferences",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/settings/pricing": {
+      "get": {
+        "description": "The blended price book \u2014 unconfigured \u2192 `is_default=true`, `version=0`,\n`blended_per_1k=null` (pricing disabled). Read is open to any resolved operator; oidc\nrequires a session (no session \u2192 `401`).",
+        "operationId": "get_pricing_api_settings_pricing_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceBookView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Pricing",
+        "tags": [
+          "settings"
+        ]
+      },
+      "put": {
+        "description": "Set the blended price book \u2014 admin-only. A negative rate is `400`; a stale `version`\n(or create-over-existing) is `409`. Audited.",
+        "operationId": "put_pricing_api_settings_pricing_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceBookUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceBookView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Pricing",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
+    "/api/spend": {
+      "get": {
+        "description": "Blended, approximate spend for the active env over ``window`` (``24h``|``7d``|\n``30d``). Unknown window \u2192 ``400``. `truncated` marks a window larger than the scan\nbudget (the total is then a lower bound).",
+        "operationId": "get_spend_api_spend_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "window",
+            "required": false,
+            "schema": {
+              "default": "7d",
+              "title": "Window",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpendView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Spend",
+        "tags": [
+          "spend"
+        ]
+      }
+    }
+  }
+}

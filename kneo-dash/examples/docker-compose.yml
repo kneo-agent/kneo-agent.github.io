@@ -1,0 +1,44 @@
+# Evaluation stack — the Dashboard + an ephemeral in-memory kneo-serv.
+#
+#   docker compose up        # then open http://localhost:8090
+#
+# STATIC DEV auth: a single, UNAUTHENTICATED admin operator (no login). Evaluation
+# only — the app refuses to start in static mode without KNEO_DASH_DEV_MODE=1
+# (ADR-009 §5). For a real deployment use docker-compose.prod.yml (OIDC + Postgres).
+services:
+  kneo-serv:
+    image: ghcr.io/kneo-agent/kneo-serv:1.2.0 # dashboard is compatible with >=1.2.0,<2
+    environment:
+      KNEO_SERV_ADMIN_API_KEY: dev-admin-key
+      # No DATABASE_URL → in-memory platform: runs/specs reset on restart (fine for eval).
+    expose: ["8000"] # reachable on the compose network only, not published to the host
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request as u,sys; sys.exit(0 if u.urlopen('http://localhost:8000/v1/healthz').status==200 else 1)
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  kneo-dash:
+    image: ghcr.io/kneo-agent/kneo-dash:0.5.0
+    depends_on:
+      kneo-serv:
+        condition: service_healthy
+    environment:
+      # Reach the platform over the compose network (kneo_client reads KNEO_URL/KNEO_API_KEY).
+      KNEO_URL: http://kneo-serv:8000
+      KNEO_API_KEY: dev-admin-key
+      # Dev-only single-admin mode.
+      KNEO_DASH_AUTH_MODE: static
+      KNEO_DASH_DEV_MODE: "1"
+    ports: ["8090:8090"]
+    volumes:
+      # Dashboard-local SQLite state (launch history, annotations, saved filters). The
+      # image defaults KNEO_DASH_DB_URL to sqlite:////var/lib/kneo-dash/state.db.
+      - dash-state:/var/lib/kneo-dash
+
+volumes:
+  dash-state:

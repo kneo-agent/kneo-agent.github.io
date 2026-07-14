@@ -6,11 +6,9 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Kneo Agent SDK and Kneo Agent Platform documentation">
+        <meta name="description" content="Kneo Agent Dashboard — operations and admin UI for the Kneo Agent Platform">
       
       
-      
-        <link rel="canonical" href="https://kneo-agent.github.io/">
       
       
       
@@ -18,19 +16,19 @@
         
       
       
-      <link rel="icon" href="assets/k_logo.png">
+      <link rel="icon" href="/kneo-dash/assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Kneo Agent</title>
+        <title>Kneo Agent Dashboard</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="/kneo-dash/assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="/kneo-dash/assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -49,9 +47,7 @@
       
     
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
-    
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("/kneo-dash/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,11 +69,6 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
-        
-        <a href="#_1" class="md-skip">
-          Skip to content
-        </a>
-      
     </div>
     <div data-md-component="announce">
       
@@ -88,9 +79,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://www.kneron.com/" title="Kneron Inc." target="_blank" rel="noopener" class="md-header__button md-logo" aria-label="Kneo Agent" data-md-component="logo">
+    <a href="/kneo-dash/." title="Kneo Agent Dashboard" class="md-header__button md-logo" aria-label="Kneo Agent Dashboard" data-md-component="logo">
       
-  <img src="assets/logo.png" alt="logo">
+  <img src="/kneo-dash/assets/kneo_agent_wordmark.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -100,12 +91,14 @@
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
-          <span class="md-ellipsis"><img src="assets/kneo_agent_wordmark.png" alt="Kneo Agent" class="md-header__wordmark"></span>
+          <span class="md-ellipsis">
+            Kneo Agent Dashboard
+          </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Home
+              
             
           </span>
         </div>
@@ -181,87 +174,9 @@
   
   
   
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="." class="md-tabs__link">
-        
-  
-  
-    
-  
-  Home
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
   
     <li class="md-tabs__item">
-      <a href="https://kneo-agent.github.io/kneo-agent/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Kneo Agent SDK
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://kneo-agent.github.io/kneo-serv/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Kneo Agent Platform
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://kneo-agent.github.io/kneo-client/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Kneo Agent Client
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="https://kneo-agent.github.io/kneo-dash/" class="md-tabs__link">
+      <a href="/kneo-dash/." class="md-tabs__link">
         
   
   
@@ -271,6 +186,72 @@
 
       </a>
     </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="/kneo-dash/user/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="/kneo-dash/pub/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="/kneo-dash/examples/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
   
 
       
@@ -296,12 +277,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://www.kneron.com/" title="Kneron Inc." target="_blank" rel="noopener" class="md-nav__button md-logo" aria-label="Kneo Agent" data-md-component="logo">
+    <a href="/kneo-dash/." title="Kneo Agent Dashboard" class="md-nav__button md-logo" aria-label="Kneo Agent Dashboard" data-md-component="logo">
       
-  <img src="assets/logo.png" alt="logo">
+  <img src="/kneo-dash/assets/kneo_agent_wordmark.png" alt="logo">
 
     </a>
-    Kneo Agent
+    Kneo Agent Dashboard
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -310,128 +291,10 @@
       
   
   
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="." class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Home
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
   
   
     <li class="md-nav__item">
-      <a href="https://kneo-agent.github.io/kneo-agent/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent SDK
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://kneo-agent.github.io/kneo-serv/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Platform
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://kneo-agent.github.io/kneo-client/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Kneo Agent Client
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="https://kneo-agent.github.io/kneo-dash/" class="md-nav__link">
+      <a href="/kneo-dash/." class="md-nav__link">
         
   
   
@@ -447,6 +310,404 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="/kneo-dash/user/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/connecting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Connecting to the platform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/runs_and_debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runs &amp; debugging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/human_in_the_loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Human-in-the-loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/audit_and_health/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audit &amp; health
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/kneo-dash/user/policies_and_credentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Policies &amp; credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="/kneo-dash/pub/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="/kneo-dash/examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -468,8 +729,6 @@
   
   
   
-    
-  
   
 </nav>
                   </div>
@@ -482,63 +741,8 @@
               
               <article class="md-content__inner md-typeset">
                 
-                  
+  <h1>404 - Not found</h1>
 
-
-
-<h1 id="_1"><img alt="Kneo Agent" class="hero-wordmark" src="assets/kneo_agent_wordmark.png" /><a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<p><strong>Production-grade agent infrastructure for AI applications.</strong>
-Build, deploy, and operate LLM-powered agents with the Kneo Agent SDK
-and the Kneo Agent Platform.</p>
-<div class="grid cards">
-<ul>
-<li>
-<p><strong>Kneo Agent SDK</strong></p>
-<hr />
-<p>A framework-agnostic Python library for building agents with
-composable tools, MCP integrations, middleware, streaming,
-human-in-the-loop control, and observability.</p>
-<p><a href="kneo-agent/">Read the SDK docs</a></p>
-</li>
-<li>
-<p><strong>Kneo Agent Platform</strong></p>
-<hr />
-<p>A service and control plane that runs agents in production —
-YAML spec compiler, FastAPI service, Typer CLI, durable run state,
-pause/resume, and pluggable persistence.</p>
-<p><a href="kneo-serv/">Read the platform docs</a></p>
-</li>
-<li>
-<p><strong>Kneo Agent Client</strong></p>
-<hr />
-<p>A typed Python SDK and adapter toolkit for talking to a Kneo Agent
-Platform instance — auth, profiles, retries, idempotency, typed
-result pages, run polling, request IDs, and normalized errors.</p>
-<p><a href="kneo-client/">Read the client docs</a></p>
-</li>
-<li>
-<p><strong>Kneo Agent Dashboard</strong></p>
-<hr />
-<p>An operations and admin UI for the Kneo Agent Platform — launch
-agents into staging/production, monitor runs, resolve human tasks,
-and review audit and health, gated by per-environment policies.</p>
-<p><a href="kneo-dash/">Read the dashboard docs</a></p>
-</li>
-</ul>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-                
               </article>
             </div>
           
@@ -559,10 +763,6 @@ and review audit and health, gated by per-environment policies.</p>
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
-  
-    <div class="md-copyright__highlight">
-      Copyright &copy; 2026 Kneron, Inc.
-    </div>
   
   
     Made with
@@ -585,10 +785,10 @@ and review audit and health, gated by per-environment policies.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.top", "content.code.copy", "search.highlight", "search.share"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "/kneo-dash/", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "/kneo-dash/assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="/kneo-dash/assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

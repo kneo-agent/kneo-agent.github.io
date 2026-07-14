@@ -1,0 +1,61 @@
+# Production-shape stack — the Dashboard with **OIDC auth**, a **Postgres** state store,
+# behind a **same-origin TLS reverse proxy** (see nginx.conf), pointed at an **external**
+# kneo-serv you already run.
+#
+#   cp .env.example .env      # fill in the real values (secret, OIDC, KNEO_URL/KEY)
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d
+#
+# ⚠ SINGLE-INSTANCE. Multi-replica (shared session_secret, rolling migrations, secret
+# rotation) is **best-effort, not yet mature** — tracked in ADR-012. Run one replica until
+# that ADR is accepted.
+services:
+  kneo-dash:
+    image: ghcr.io/kneo-agent/kneo-dash:0.5.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # --- platform (the external kneo-serv you operate) ---
+      KNEO_URL: ${KNEO_URL:?set KNEO_URL to your kneo-serv base URL}
+      KNEO_API_KEY: ${KNEO_API_KEY:?set KNEO_API_KEY (per-env service account)}
+      # --- auth: real OIDC (Authorization Code + PKCE) ---
+      KNEO_DASH_AUTH_MODE: oidc
+      KNEO_DASH_SESSION_SECRET: ${KNEO_DASH_SESSION_SECRET:?32+ char random secret}
+      KNEO_DASH_OIDC_ISSUER: ${KNEO_DASH_OIDC_ISSUER}
+      KNEO_DASH_OIDC_CLIENT_ID: ${KNEO_DASH_OIDC_CLIENT_ID}
+      KNEO_DASH_OIDC_CLIENT_SECRET: ${KNEO_DASH_OIDC_CLIENT_SECRET}
+      KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL} # https://<host>/api/auth/callback
+      # role mapping: IdP group/claim → viewer|operator|admin (see .env.example)
+      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP}
+      # --- dashboard-local state: Postgres (needs the [postgres] extra, baked in the image) ---
+      KNEO_DASH_DB_URL: postgresql://kneo:${POSTGRES_PASSWORD}@db:5432/kneo_dash
+      # served same-origin behind the proxy, so no CORS needed
+    expose: ["8090"] # published only via the reverse proxy, not to the host
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kneo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: kneo_dash
+    volumes:
+      - dash-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kneo"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  proxy:
+    image: nginx:1.27
+    restart: unless-stopped
+    depends_on: [kneo-dash]
+    ports: ["443:443", "80:80"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/kneo-dash.conf:ro
+      - ./tls:/etc/nginx/tls:ro # drop your fullchain.pem + privkey.pem here
+
+volumes:
+  dash-db:
