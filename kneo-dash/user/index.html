@@ -352,6 +352,14 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -577,6 +585,118 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Environment-variable reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="security_hardening/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security hardening &amp; auth operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="backup_and_recovery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backup, restore &amp; recovery
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -668,6 +788,8 @@
           
         
       
+        
+      
     
     
     
@@ -704,6 +826,11 @@
 
             </a>
             
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
           </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
@@ -717,6 +844,78 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../examples/e2e/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    E2e
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
               
             
           </ul>
@@ -760,6 +959,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Reading order">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operating-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operating in production
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -807,11 +1023,23 @@ running deployed Kneo agents.</p>
 <li><a href="policies_and_credentials/">Policies &amp; credentials</a> — environment policy (view /
    dry-run / apply) and the presence-only credential inventory.</li>
 </ol>
+<h3 id="operating-in-production">Operating in production<a class="headerlink" href="#operating-in-production" title="Permanent link">&para;</a></h3>
+<ol>
+<li><a href="deployment/">Deployment</a> — run the BFF (container / <code>pip install</code>), state store
+   (SQLite vs Postgres), liveness/readiness probes, non-root.</li>
+<li><a href="environment/">Environment variables</a> — every setting the BFF reads, grouped by concern.</li>
+<li><a href="security_hardening/">Security hardening &amp; auth operations</a> — the pre-launch checklist,
+   OIDC vs static mode, sessions + secret rotation, reverse-proxy/TLS, and what an
+   expired-session / cross-origin / role-escalation attempt does.</li>
+<li><a href="backup_and_recovery/">Backup, restore &amp; recovery</a> — backing up the state store, the
+    fail-safe restore procedure (<code>recover</code> → <code>--reconcile</code>), rollback, RPO/RTO, DR checklist.</li>
+</ol>
 <blockquote>
-<p>Covers the <strong>0.5.0</strong> operator surface — including OIDC auth, server-side RBAC, the live
-env switcher, approximate cost, and Settings (Connections/Access/Pricing/Preferences).
-<em>(That operator surface landed in 0.4.0; 0.5.0 is a packaging-trust + review-hardening cut —
-its headline user-facing change is the container-free <code>pip install kneo-dash</code> full app.)</em></p>
+<p>Covers the <strong>0.6.0</strong> operator surface — OIDC auth, server-side RBAC, the live env switcher,
+approximate cost, and Settings (Connections/Access/Pricing/Preferences), plus 0.6.0's
+beta-readiness additions: the fail-safe <strong>recovery / break-glass</strong> path, the opt-in
+<strong><code>/metrics</code></strong> operational-telemetry surface, and <strong>server-truth capability gating</strong>
+(<code>/api/me</code>). <em>(0.6.0 ships <code>:: 3 - Alpha</code>; the operator surface landed across 0.4.0–0.6.0.)</em></p>
 </blockquote>
 <h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
 <ul>
@@ -821,6 +1049,10 @@ its headline user-facing change is the container-free <code>pip install kneo-das
 <li><a href="human_in_the_loop/">Human-in-the-loop</a></li>
 <li><a href="audit_and_health/">Audit &amp; health</a></li>
 <li><a href="policies_and_credentials/">Policies &amp; credentials</a></li>
+<li><a href="deployment/">Deployment guide</a></li>
+<li><a href="environment/">Environment-variable reference</a></li>
+<li><a href="security_hardening/">Security hardening &amp; auth operations</a></li>
+<li><a href="backup_and_recovery/">Backup, restore &amp; recovery</a></li>
 </ul>
 
 

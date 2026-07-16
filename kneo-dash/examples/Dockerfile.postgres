@@ -1,0 +1,12 @@
+# Best-effort Postgres image (ADR-012: Postgres is best-effort, NOT certified — SQLite is
+# the supported topology). The published image ships base-only; this layers the [postgres]
+# extra (psycopg) on top so KNEO_DASH_DB_URL can point at Postgres. Build via
+# docker-compose.prod-postgres.yml (`docker compose -f … build`).
+#
+# BASE_IMAGE is the published dash image to layer on — bumped in lockstep with the compose
+# recipes at each release (see docs/plan/release_checklist.md version sweep).
+ARG BASE_IMAGE=ghcr.io/kneo-agent/kneo-dash:0.5.0
+FROM ${BASE_IMAGE}
+USER root
+RUN pip install --no-cache-dir "psycopg[binary]>=3.1,<4"
+USER kneo

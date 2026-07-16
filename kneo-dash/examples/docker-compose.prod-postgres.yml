@@ -1,0 +1,77 @@
+# ⚠ BEST-EFFORT / NOT CERTIFIED (ADR-012). Multi-replica/HA Postgres variant of the prod
+# stack. Unlike docker-compose.prod.yml (supported SQLite), this BUILDS a local image with
+# the [postgres] extra (Dockerfile.postgres) because the published image is base-only.
+#
+#   docker compose -f docker-compose.prod-postgres.yml --env-file .env up -d --build
+#
+# Same OIDC + TLS proxy as the SQLite recipe; only the store differs. Set POSTGRES_PASSWORD.
+services:
+  # ADR-012 §7 deployment gate (external re-review HIGH) — refuse to serve a
+  # restored-but-unreconciled store. Same one-shot pattern as the SQLite recipe; waits for
+  # Postgres to be healthy first since the marker lives in the shared store. See the restore
+  # runbook (docs/user/backup_and_recovery.md).
+  recover-gate:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+      args:
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+    entrypoint: ["kneo-dash"]
+    command: ["recover", "--status"]
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      KNEO_DASH_DB_URL: postgresql://kneo:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/kneo_dash
+    restart: "no"
+
+  kneo-dash:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+      args:
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      recover-gate:
+        condition: service_completed_successfully # won't start while in recovery
+    environment:
+      KNEO_URL: ${KNEO_URL:?set KNEO_URL}
+      KNEO_API_KEY: ${KNEO_API_KEY:?set KNEO_API_KEY}
+      KNEO_DASH_AUTH_MODE: oidc
+      KNEO_DASH_SESSION_SECRET: ${KNEO_DASH_SESSION_SECRET:?32+ char random secret}
+      KNEO_DASH_OIDC_ISSUER: ${KNEO_DASH_OIDC_ISSUER}
+      KNEO_DASH_OIDC_CLIENT_ID: ${KNEO_DASH_OIDC_CLIENT_ID}
+      KNEO_DASH_OIDC_CLIENT_SECRET: ${KNEO_DASH_OIDC_CLIENT_SECRET}
+      KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL}
+      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP}
+      KNEO_DASH_DB_URL: postgresql://kneo:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/kneo_dash
+    expose: ["8090"]
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kneo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: kneo_dash
+    volumes: [dash-db:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kneo"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  proxy:
+    image: nginx:1.27
+    restart: unless-stopped
+    depends_on: [kneo-dash]
+    ports: ["443:443", "80:80"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/kneo-dash.conf:ro
+      - ./tls:/etc/nginx/tls:ro
+
+volumes:
+  dash-db:

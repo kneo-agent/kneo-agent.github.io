@@ -1,0 +1,59 @@
+# E2E / staging-OIDC stack (0.6.0 B5) — mock OIDC IdP + kneo-serv + the Dashboard in
+# **real OIDC mode**, so the production auth path is exercised (the eval stack is
+# static/dev only). Scaffolding-first: this file first proves the mock-OIDC ↔ dash login
+# works; the Playwright role-matrix / live-SSE / negative-auth suites build on it.
+#
+#   docker compose -f examples/e2e/docker-compose.yml up -d
+#
+# Pinned by tag here for readability; the real gate pins by digest (promotion equivalence).
+services:
+  mock-oidc:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.10
+    environment:
+      # Bind so the discovery doc advertises a host+network-reachable issuer. `mock-oidc`
+      # resolves on the compose network (dash → discovery/token); the same name is published
+      # to the host for the browser redirect (see the docs note on the dual-network issue).
+      SERVER_PORT: "8080"
+      JSON_CONFIG_PATH: /config/mock-oidc.json
+    volumes:
+      - ./mock-oidc.json:/config/mock-oidc.json:ro
+    ports: ["8080:8080"]
+    # No container healthcheck: the image is distroless (no sh/wget/curl to run one). The
+    # dash only contacts the IdP at *login*, not startup, so `service_started` is enough;
+    # the boot/validation waits for discovery from the host.
+
+  kneo-serv:
+    image: ghcr.io/kneo-agent/kneo-serv:1.2.0
+    environment:
+      KNEO_SERV_ADMIN_API_KEY: dev-admin-key
+    expose: ["8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u,sys; sys.exit(0 if u.urlopen('http://localhost:8000/v1/healthz').status==200 else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  kneo-dash:
+    image: ghcr.io/kneo-agent/kneo-dash:0.5.0 # scaffolding validates the fixture on the released image; the real gate builds the cut
+    depends_on:
+      mock-oidc:
+        condition: service_started
+      kneo-serv:
+        condition: service_healthy
+    environment:
+      KNEO_URL: http://kneo-serv:8000
+      KNEO_API_KEY: dev-admin-key
+      # --- REAL OIDC auth (the point of this stack) ---
+      KNEO_DASH_AUTH_MODE: oidc
+      KNEO_DASH_SESSION_SECRET: e2e-session-secret-at-least-32-chars-long
+      # Issuer resolvable from BOTH the dash container and the host browser (same name).
+      KNEO_DASH_OIDC_ISSUER: http://mock-oidc:8080/dash
+      KNEO_DASH_OIDC_CLIENT_ID: kneo-dash
+      KNEO_DASH_OIDC_CLIENT_SECRET: e2e-client-secret
+      KNEO_DASH_OIDC_REDIRECT_URL: http://localhost:8090/api/callback
+      KNEO_DASH_OIDC_ROLE_CLAIM: roles
+      # claim value → dashboard role (role_for_claims takes the highest-privilege match).
+      KNEO_DASH_OIDC_ROLE_MAP: '{"dash-admin":"admin","dash-operator":"operator","dash-viewer":"viewer"}'
+    ports: ["8090:8090"]
+
+# No named volume: E2E state is disposable (fresh SQLite each run).

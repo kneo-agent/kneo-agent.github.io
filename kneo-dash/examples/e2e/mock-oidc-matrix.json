@@ -1,0 +1,51 @@
+{
+  "interactiveLogin": false,
+  "httpServer": "NettyWrapper",
+  "tokenCallbacks": [
+    {
+      "issuerId": "dash-admin",
+      "requestMappings": [
+        {
+          "requestParam": "grant_type",
+          "match": "authorization_code",
+          "claims": {
+            "sub": "e2e-admin",
+            "email": "e2e-admin@example.test",
+            "email_verified": true,
+            "roles": ["dash-admin"]
+          }
+        }
+      ]
+    },
+    {
+      "issuerId": "dash-operator",
+      "requestMappings": [
+        {
+          "requestParam": "grant_type",
+          "match": "authorization_code",
+          "claims": {
+            "sub": "e2e-operator",
+            "email": "e2e-operator@example.test",
+            "email_verified": true,
+            "roles": ["dash-operator"]
+          }
+        }
+      ]
+    },
+    {
+      "issuerId": "dash-viewer",
+      "requestMappings": [
+        {
+          "requestParam": "grant_type",
+          "match": "authorization_code",
+          "claims": {
+            "sub": "e2e-viewer",
+            "email": "e2e-viewer@example.test",
+            "email_verified": true,
+            "roles": ["dash-viewer"]
+          }
+        }
+      ]
+    }
+  ]
+}

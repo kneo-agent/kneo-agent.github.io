@@ -1,20 +1,47 @@
-# Production-shape stack — the Dashboard with **OIDC auth**, a **Postgres** state store,
-# behind a **same-origin TLS reverse proxy** (see nginx.conf), pointed at an **external**
-# kneo-serv you already run.
+# Production-shape stack — the Dashboard with **OIDC auth**, the **supported single-instance
+# SQLite** state store (ADR-012: SQLite is the certified topology), behind a **same-origin TLS
+# reverse proxy** (see nginx.conf), pointed at an **external** kneo-serv you already run.
 #
 #   cp .env.example .env      # fill in the real values (secret, OIDC, KNEO_URL/KEY)
 #   docker compose -f docker-compose.prod.yml --env-file .env up -d
 #
-# ⚠ SINGLE-INSTANCE. Multi-replica (shared session_secret, rolling migrations, secret
-# rotation) is **best-effort, not yet mature** — tracked in ADR-012. Run one replica until
-# that ADR is accepted.
+# ⚠ SINGLE-INSTANCE. This is the topology the release smokes + supports. An external
+# **Postgres** store (multi-replica/HA) is **best-effort, not certified**: the published
+# image ships base-only, so Postgres needs an image built with the `[postgres]` extra
+# (`pip install 'kneo-dash[postgres]'`) — see docker-compose.prod-postgres.yml / ADR-012.
+#
+# ⚠ AFTER A RESTORE, recovery is ENFORCED, not optional (ADR-012 §7). The `recover-gate`
+# service below runs `kneo-dash recover --status` on every `up`; the server `depends_on` it, so
+# it won't start when recovery is required. The gate blocks (and arms recovery) when the store
+# is already in recovery OR when its restore-detection sentinel finds this DB is an older copy
+# than last served — so a **file-level restore** (the documented `cp state.db` procedure) is
+# caught even with no marker. (Caveats — see backup_and_recovery.md: a whole-VOLUME-snapshot
+# restore carries the sidecar so it isn't distinguished, and Postgres has no local sidecar; both
+# keep the manual `recover` step.) Restore runbook: restore the DB → `up` is blocked by the gate
+# → `docker compose … run --rm recover-gate recover --reconcile …` → `up` starts the server.
 services:
+  # ADR-012 §7 deployment gate (external re-review HIGH — mechanical, not just a runbook).
+  # A one-shot that exits 0 only when it's safe to serve — NOT in recovery AND the sentinel
+  # doesn't flag this DB as an older (restored) copy; `kneo-dash` depends on it completing
+  # successfully. Shares the state volume + DB URL with the server so it reads the same store
+  # (and its sidecar). Also the entrypoint for the operator's recover/reconcile steps:
+  # `docker compose … run --rm recover-gate recover …`.
+  recover-gate:
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+    entrypoint: ["kneo-dash"]
+    command: ["recover", "--status"]
+    environment:
+      KNEO_DASH_DB_URL: ${KNEO_DASH_DB_URL:-sqlite:////var/lib/kneo-dash/state.db}
+    volumes:
+      - dash-state:/var/lib/kneo-dash
+    restart: "no"
+
   kneo-dash:
-    image: ghcr.io/kneo-agent/kneo-dash:0.5.0
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
     restart: unless-stopped
     depends_on:
-      db:
-        condition: service_healthy
+      recover-gate:
+        condition: service_completed_successfully # won't start while in recovery
     environment:
       # --- platform (the external kneo-serv you operate) ---
       KNEO_URL: ${KNEO_URL:?set KNEO_URL to your kneo-serv base URL}
@@ -25,28 +52,16 @@ services:
       KNEO_DASH_OIDC_ISSUER: ${KNEO_DASH_OIDC_ISSUER}
       KNEO_DASH_OIDC_CLIENT_ID: ${KNEO_DASH_OIDC_CLIENT_ID}
       KNEO_DASH_OIDC_CLIENT_SECRET: ${KNEO_DASH_OIDC_CLIENT_SECRET}
-      KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL} # https://<host>/api/auth/callback
+      KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL} # https://<host>/api/callback
       # role mapping: IdP group/claim → viewer|operator|admin (see .env.example)
       KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP}
-      # --- dashboard-local state: Postgres (needs the [postgres] extra, baked in the image) ---
-      KNEO_DASH_DB_URL: postgresql://kneo:${POSTGRES_PASSWORD}@db:5432/kneo_dash
+      # --- dashboard-local state: SQLite on a persistent volume. The image already defaults
+      # KNEO_DASH_DB_URL to sqlite:////var/lib/kneo-dash/state.db; the volume makes it durable.
+      KNEO_DASH_DB_URL: ${KNEO_DASH_DB_URL:-sqlite:////var/lib/kneo-dash/state.db}
       # served same-origin behind the proxy, so no CORS needed
-    expose: ["8090"] # published only via the reverse proxy, not to the host
-
-  db:
-    image: postgres:16
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: kneo
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
-      POSTGRES_DB: kneo_dash
     volumes:
-      - dash-db:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "kneo"]
-      interval: 5s
-      timeout: 3s
-      retries: 12
+      - dash-state:/var/lib/kneo-dash # the SQLite state DB — survives restarts
+    expose: ["8090"] # published only via the reverse proxy, not to the host
 
   proxy:
     image: nginx:1.27
@@ -58,4 +73,4 @@ services:
       - ./tls:/etc/nginx/tls:ro # drop your fullchain.pem + privkey.pem here
 
 volumes:
-  dash-db:
+  dash-state:

@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://kneo-agent.github.io/kneo-dash/user/quickstart/">
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-dash/user/deployment/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../policies_and_credentials/">
       
       
-        <link rel="next" href="../connecting/">
+        <link rel="next" href="../environment/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>Quickstart - Kneo Agent Dashboard</title>
+        <title>Deployment guide - Kneo Agent Dashboard</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#quickstart" class="md-skip">
+        <a href="#deployment-guide" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quickstart
+              Deployment guide
             
           </span>
         </div>
@@ -421,37 +421,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quickstart
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
         
   
   
@@ -467,81 +440,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Prerequisites
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#run-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Run it
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-posture-read-before-exposing-it" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Security posture (read before exposing it)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#where-next" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Where next
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -691,10 +589,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../deployment/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment guide
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -710,6 +635,109 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#two-ways-to-run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two ways to run it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compose-with-a-tls-terminating-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose (with a TLS-terminating proxy)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-store-sqlite-vs-postgres" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State store: SQLite vs Postgres
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State store: SQLite vs Postgres">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-store-growth-disk-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State-store growth &amp; disk sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health probes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operational-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1054,10 +1082,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#prerequisites" class="md-nav__link">
+  <a href="#two-ways-to-run-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Prerequisites
+        Two ways to run it
       
     </span>
   </a>
@@ -1065,10 +1093,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#run-it" class="md-nav__link">
+  <a href="#compose-with-a-tls-terminating-proxy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Run it
+        Compose (with a TLS-terminating proxy)
       
     </span>
   </a>
@@ -1076,10 +1104,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#state-store-sqlite-vs-postgres" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        State store: SQLite vs Postgres
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="State store: SQLite vs Postgres">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#state-store-growth-disk-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State-store growth &amp; disk sizing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-probes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health probes
       
     </span>
   </a>
@@ -1087,10 +1143,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-posture-read-before-exposing-it" class="md-nav__link">
+  <a href="#operational-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Security posture (read before exposing it)
+        Operational notes
       
     </span>
   </a>
@@ -1098,10 +1154,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#where-next" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Where next
+        See also
       
     </span>
   </a>
@@ -1125,103 +1181,151 @@
 
 
 
-<h1 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">&para;</a></h1>
-<p>Run the Kneo Agent Dashboard against a Kneo Agent Platform (<code>kneo-serv</code>) in ~10 minutes.
-The Dashboard is one deploy unit — a FastAPI <strong>BFF</strong>; the <strong>container image</strong> also
-bundles and serves the built <strong>SPA</strong> (the browser UI). It talks to the platform
+<h1 id="deployment-guide">Deployment guide<a class="headerlink" href="#deployment-guide" title="Permanent link">&para;</a></h1>
+<p>How to run the <strong>Kneo Agent Dashboard</strong> in production. The dashboard is <strong>one deploy unit</strong> —
+a FastAPI <strong>BFF</strong> that also serves the built <strong>SPA</strong> (browser UI) same-origin; there is no
+separate frontend to host (ADR-008). It reaches the <a href="../connecting/">Kneo Agent Platform</a>
 through <code>kneo-client</code> over <code>/v1</code>.</p>
-<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
-<ul>
-<li>A reachable <strong>kneo-serv</strong> endpoint (its URL) and an <strong>API key</strong> for it.</li>
-<li>Python 3.12+ <strong>or</strong> Docker (for the container image).</li>
-</ul>
-<h2 id="run-it">Run it<a class="headerlink" href="#run-it" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Authentication — trial vs. production</p>
-<p><code>KNEO_DASH_DEV_MODE=1</code> runs the Dashboard as a <strong>single, unauthenticated operator</strong>
-(static mode, admin role) — fine for a <strong>local trial on a trusted machine</strong>, and the
-Dashboard <strong>refuses to start</strong> in static mode without it so a real deploy can't
-silently be unauthenticated-admin (ADR-009 §5). For any <strong>shared or production</strong>
-deployment, drop <code>KNEO_DASH_DEV_MODE</code> and configure <strong>OIDC</strong> instead
-(<code>KNEO_DASH_AUTH_MODE=oidc</code> + <code>KNEO_DASH_SESSION_SECRET</code> + the OIDC provider settings —
-see <a href="../connecting/">connecting</a> and the deployment/release setup).</p>
-</div>
+<p>For a ~10-minute first run see the <a href="../quickstart/">Quickstart</a>; for the full list of settings
+see the <a href="../environment/">Environment-variable reference</a>.</p>
+<h2 id="two-ways-to-run-it">Two ways to run it<a class="headerlink" href="#two-ways-to-run-it" title="Permanent link">&para;</a></h2>
+<p>The container and the PyPI wheel are <strong>equivalent</strong> — both bundle the BFF <strong>and</strong> the built
+SPA (ADR-011), so <code>pip install</code> gives the full dashboard without Docker.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Container (recommended)</label><label for="__tabbed_1_2">PyPI wheel (no container)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-p<span class="w"> </span><span class="m">8090</span>:8090<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span><span class="s2">&quot;https://kneo-serv.internal&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span><span class="s2">&quot;…&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_DEV_MODE</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-v<span class="w"> </span>kneo-dash-state:/var/lib/kneo-dash<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-dash:latest
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_AUTH_MODE</span><span class="o">=</span>oidc<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_SESSION_SECRET</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_ISSUER</span><span class="o">=</span><span class="s2">&quot;https://idp.example/realms/kneo&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_CLIENT_ID</span><span class="o">=</span>kneo-dash<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;…&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_REDIRECT_URL</span><span class="o">=</span><span class="s2">&quot;https://dash.example/api/callback&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_ROLE_MAP</span><span class="o">=</span><span class="s1">&#39;{&quot;kneo-admins&quot;:&quot;admin&quot;,&quot;kneo-ops&quot;:&quot;operator&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>-v<span class="w"> </span>kneo-dash-state:/var/lib/kneo-dash<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-dash:latest
 </code></pre></div>
-<p>The image bundles the BFF <strong>and</strong> the built SPA (served by the BFF), so there's no
-separate frontend to deploy. The state store (annotations, saved filters, launch
-history) defaults to a SQLite file under <code>/var/lib/kneo-dash</code> — mount a volume there
-(as above) so it survives container restarts, or point <code>KNEO_DASH_DB_URL</code> at Postgres.</p>
+<p>The image serves on <strong>:8090</strong> as a <strong>non-root</strong> user (uid <code>10001</code>), bundles the SPA at
+<code>/app/static</code> (<code>KNEO_DASH_SPA_DIR</code> is preset), and defaults the state store to a SQLite
+file under <code>/var/lib/kneo-dash</code> — <strong>mount a volume there</strong> so it survives restarts (or
+point <code>KNEO_DASH_DB_URL</code> at Postgres). Pin by digest in production.</p>
 </div>
 <div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kneo-dash
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kneo-dash<span class="w">            </span><span class="c1"># or &#39;kneo-dash[postgres]&#39; for an external DB</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span><span class="s2">&quot;https://kneo-serv.internal&quot;</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span><span class="s2">&quot;…&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_DASH_DEV_MODE</span><span class="o">=</span><span class="m">1</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>kneo-dash<span class="w">   </span><span class="c1"># serves the full app (UI + API) on http://127.0.0.1:8090</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_DASH_AUTH_MODE</span><span class="o">=</span>oidc<span class="w"> </span><span class="nv">KNEO_DASH_SESSION_SECRET</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_DASH_OIDC_ISSUER</span><span class="o">=</span><span class="s2">&quot;https://idp.example/realms/kneo&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">       </span><span class="nv">KNEO_DASH_OIDC_CLIENT_ID</span><span class="o">=</span>kneo-dash<span class="w"> </span><span class="nv">KNEO_DASH_OIDC_CLIENT_SECRET</span><span class="o">=</span><span class="s2">&quot;…&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">       </span><span class="nv">KNEO_DASH_OIDC_REDIRECT_URL</span><span class="o">=</span><span class="s2">&quot;https://dash.example/api/callback&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">       </span><span class="nv">KNEO_DASH_OIDC_ROLE_MAP</span><span class="o">=</span><span class="s1">&#39;{&quot;kneo-admins&quot;:&quot;admin&quot;,&quot;kneo-ops&quot;:&quot;operator&quot;}&#39;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>kneo-dash<span class="w">                        </span><span class="c1"># serves UI + API on http://127.0.0.1:8090</span>
 </code></pre></div>
-<p>The published wheel <strong>bundles the browser UI</strong> (ADR-011) — the BFF serves it
-same-origin, so <code>pip install</code> gives the <strong>full dashboard without Docker</strong>, identical
-to the container. <em>(Building the wheel from source needs Node to build the SPA; the
-published wheel already includes it. A <code>pip install -e .</code> dev checkout that hasn't
-built the SPA runs API-only — <code>/api/*</code> with no UI.)</em></p>
+<p>The published wheel <strong>bundles the browser UI</strong> — the BFF serves it same-origin, so
+<code>pip install</code> is the full dashboard, identical to the container. <em>(A <code>pip install -e .</code>
+dev checkout that hasn't built the SPA runs API-only — <code>/api/*</code> with no UI.)</em></p>
 </div>
 </div>
 </div>
-<p>Open <strong>http://localhost:8090</strong> — you land on the <strong>Overview</strong>, the operator's
-at-a-glance answer to <em>what's running · what needs attention · is production healthy</em>.</p>
-<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>The <code>kneo-dash</code> console script runs the server (<code>serve</code>, the default). It also exposes the
+out-of-band <code>kneo-dash recover</code> break-glass path used after a restore — see the backup &amp;
+recovery guide.</p>
+<h2 id="compose-with-a-tls-terminating-proxy">Compose (with a TLS-terminating proxy)<a class="headerlink" href="#compose-with-a-tls-terminating-proxy" title="Permanent link">&para;</a></h2>
+<p><code>examples/docker-compose.prod.yml</code>
+runs the dashboard behind an nginx reverse proxy (<code>examples/nginx.conf</code>)
+that terminates TLS and forwards to <code>:8090</code>. Copy <code>examples/.env.example</code>, fill in the
+platform + OIDC values, and <code>docker compose -f examples/docker-compose.prod.yml up -d</code>. The
+OIDC redirect URL must be the <strong>public</strong> <code>https://…/api/callback</code> the browser reaches.</p>
+<h2 id="state-store-sqlite-vs-postgres">State store: SQLite vs Postgres<a class="headerlink" href="#state-store-sqlite-vs-postgres" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Env var</th>
-<th>What</th>
+<th></th>
+<th>SQLite (default)</th>
+<th>Postgres</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>KNEO_URL</code> + <code>KNEO_API_KEY</code></td>
-<td>The platform endpoint + key (or a <code>kneo-client</code> profile / <code>~/.config/kneo/client.toml</code>). See <a href="../connecting/">Connecting</a>.</td>
+<td>When</td>
+<td>single replica; the common case</td>
+<td>multi-replica / HA</td>
 </tr>
 <tr>
-<td><code>KNEO_DASH_DB_URL</code></td>
-<td>Dashboard-local <strong>state store</strong> (annotations, saved filters). Unset → a local SQLite file (the <strong>container</strong> defaults it to <code>/var/lib/kneo-dash/state.db</code> on a volume); <code>postgresql://…</code> for multi-replica/HA (needs the <code>postgres</code> extra).</td>
+<td>Config</td>
+<td>unset <code>KNEO_DASH_DB_URL</code> (container → <code>/var/lib/kneo-dash/state.db</code> on a volume)</td>
+<td><code>KNEO_DASH_DB_URL=postgresql://…</code> + <code>pip install 'kneo-dash[postgres]'</code></td>
 </tr>
 <tr>
-<td><code>KNEO_DASH_GRAFANA_URL</code></td>
-<td>Optional Grafana base URL for the Overview deep-link (real time-series live in Grafana).</td>
-</tr>
-<tr>
-<td><code>KNEO_DASH_CORS_ORIGINS</code></td>
-<td><strong>Dev only</strong> (the Vite proxy). The shipped image is <strong>same-origin</strong> (BFF serves the SPA), which is the <strong>only supported model once auth lands</strong> — credentialed cross-origin hosting is out of scope (ADR-009).</td>
+<td>Support</td>
+<td><strong>supported</strong></td>
+<td><strong>best-effort</strong></td>
 </tr>
 </tbody>
 </table>
-<h2 id="security-posture-read-before-exposing-it">Security posture (read before exposing it)<a class="headerlink" href="#security-posture-read-before-exposing-it" title="Permanent link">&para;</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Run OIDC mode for any real deployment</p>
-<p>Set <strong><code>KNEO_DASH_AUTH_MODE=oidc</code></strong> (with a strong <code>KNEO_DASH_SESSION_SECRET</code> and your
-provider config) so operators authenticate and the BFF enforces their role server-side
-on every privileged action — the platform credential is a shared per-env service account,
-so the BFF is the real per-operator gate. The default <strong>static mode is unauthenticated
-and dev-only</strong>: the app <strong>refuses to start</strong> in it unless you also set
-<code>KNEO_DASH_DEV_MODE=1</code>. The SPA is served same-origin with an <code>HttpOnly</code>/<code>Secure</code> session
-cookie; a trusted-network / reverse-proxy layer is now optional defence-in-depth, not a
-prerequisite. See ADR-009.</p>
-</div>
-<h2 id="where-next">Where next<a class="headerlink" href="#where-next" title="Permanent link">&para;</a></h2>
+<p>Schema migrations run automatically on startup (forward-only); a database whose schema is
+<strong>newer</strong> than the running image fails fast rather than risk a partial downgrade. Keep the
+image and the database in step across upgrades.</p>
+<h3 id="state-store-growth-disk-sizing">State-store growth &amp; disk sizing<a class="headerlink" href="#state-store-growth-disk-sizing" title="Permanent link">&para;</a></h3>
+<p>The store is <strong>append-heavy</strong> — launch history and the audit log grow over time (sessions
+are purged automatically; see <code>KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS</code>). Size the state
+volume for steady growth and monitor it:</p>
 <ul>
-<li><a href="../connecting/">Connecting</a> — profiles, environments, the state store.</li>
-<li><a href="../runs_and_debugging/">Runs &amp; debugging</a> — the core monitoring loop.</li>
-<li><a href="../human_in_the_loop/">Human-in-the-loop</a> · <a href="../audit_and_health/">Audit &amp; health</a> ·
-  <a href="../policies_and_credentials/">Policies &amp; credentials</a>.</li>
+<li><strong><code>kneo_dash_store_state_bytes</code></strong> (on the <a href="../environment/#observability"><code>/metrics</code></a> surface)
+  reports the <strong>complete SQLite footprint</strong> — the main DB <strong>plus its <code>-wal</code>/<code>-shm</code> sidecars</strong>.
+  Alert on <strong>sustained growth</strong>, not an absolute number. <em>(The series is </em><em>absent</em><em> on Postgres
+  — size the database with your normal PG tooling there.)</em></li>
+<li>No automatic <strong>retention/pruning</strong> ships yet — bounding launch-history/audit growth (a safe
+  prune/export procedure) is a planned post-Alpha operator feature. For now, size the volume
+  generously and watch the metric.</li>
+</ul>
+<h2 id="health-probes">Health probes<a class="headerlink" href="#health-probes" title="Permanent link">&para;</a></h2>
+<p>Three endpoints, with HTTP codes chosen so a <strong>degraded dependency is never mistaken for a
+dead process</strong> — the split exists specifically to avoid a restart-loop footgun:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Use as</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/livez</code></td>
+<td><strong>liveness</strong> probe</td>
+<td><strong>200</strong> iff the process is up — <strong>no dependency checks</strong>. Never fails on a store/OIDC hiccup, so an orchestrator won't restart a healthy process.</td>
+</tr>
+<tr>
+<td><code>GET /api/readyz</code></td>
+<td><strong>readiness</strong> / traffic gate</td>
+<td><strong>200</strong> when the state store answers <strong>and</strong> the instance isn't in recovery mode; <strong>503</strong> otherwise (the proxy de-routes it).</td>
+</tr>
+<tr>
+<td><code>GET /api/healthz</code></td>
+<td>dashboards / humans</td>
+<td><strong>always 200</strong> + a JSON body reporting liveness, readiness, and dependency status (incl. OIDC). A degraded dependency shows <strong>in the body</strong>, never as a <code>503</code> — so it can't be misused as a liveness probe.</td>
+</tr>
+</tbody>
+</table>
+<p>Point the orchestrator's <strong>liveness</strong> probe at <code>/api/livez</code> and its <strong>readiness</strong> probe at
+<code>/api/readyz</code>. <code>/api/healthz</code> is for humans and monitoring, not probes.</p>
+<h2 id="operational-notes">Operational notes<a class="headerlink" href="#operational-notes" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Run as non-root.</strong> The image already does (uid <code>10001</code>); keep it that way behind your
+  orchestrator's security context.</li>
+<li><strong>Authentication.</strong> Use <code>KNEO_DASH_AUTH_MODE=oidc</code> for any shared/production deploy — the
+  default <code>static</code> mode is unauthenticated and <strong>refuses to start</strong> without
+  <code>KNEO_DASH_DEV_MODE=1</code>. See the <a href="../security_hardening/">security-hardening checklist</a>.</li>
+<li><strong>Same-origin only.</strong> The shipped image serves the SPA same-origin; credentialed
+  cross-origin hosting is out of scope (ADR-009). Leave <code>KNEO_DASH_CORS_ORIGINS</code> empty.</li>
+</ul>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../environment/">Environment-variable reference</a> — every setting, grouped by concern.</li>
+<li><a href="../connecting/">Connecting</a> — the <code>kneo-client</code> profile, environments, the state store.</li>
+<li><a href="../quickstart/">Quickstart</a> — the ~10-minute first run.</li>
 </ul>
 
 

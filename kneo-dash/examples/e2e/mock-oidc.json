@@ -1,0 +1,21 @@
+{
+  "interactiveLogin": false,
+  "httpServer": "NettyWrapper",
+  "tokenCallbacks": [
+    {
+      "issuerId": "dash",
+      "requestMappings": [
+        {
+          "requestParam": "grant_type",
+          "match": "authorization_code",
+          "claims": {
+            "sub": "e2e-operator",
+            "email": "e2e-operator@example.test",
+            "email_verified": true,
+            "roles": ["dash-operator"]
+          }
+        }
+      ]
+    }
+  ]
+}
