@@ -5039,7 +5039,7 @@ built the SPA runs API-only — <code>/api/*</code> with no UI.)</em></p>
 at-a-glance answer to <em>what's running · what needs attention · is production healthy</em>.</p>
 <p><img alt="The Overview page you land on — a top summary row (Running, Blocked, Failed, Pending human
 tasks, Total runs) with an error-rate and 7-day spend line, the environment switcher and operator
-chip in the header, and the Operate / Admin navigation down the left." src="../img/overview.png" /></p>
+chip in the header, and the Operate / Admin navigation down the left." src="../../img/overview.png" /></p>
 <p><a id="quickstart--your-first-five-minutes"></a></p>
 <h4 id="your-first-five-minutes">Your first five minutes<a class="headerlink" href="#your-first-five-minutes" title="Permanent link">&para;</a></h4>
 <ol>
@@ -5115,7 +5115,7 @@ prerequisite. See ADR-009.</p>
 credentials, and where dashboard-local state lives.</p>
 <p><img alt="The Overview page of the Kneo Agent Dashboard connected to an environment — the environment
 switcher and operator chip sit in the top bar, above run-status summary tiles (Running, Blocked,
-Failed, Pending human tasks, Total runs)." src="../img/overview.png" /></p>
+Failed, Pending human tasks, Total runs)." src="../../img/overview.png" /></p>
 <p><a id="connecting--the-platform-connection"></a></p>
 <h3 id="the-platform-connection">The platform connection<a class="headerlink" href="#the-platform-connection" title="Permanent link">&para;</a></h3>
 <p>The BFF never talks to <code>kneo-serv</code> directly — it goes through <strong><code>kneo-client</code></strong>, which
@@ -5236,7 +5236,7 @@ view-only error (server-side RBAC, 0.4.0).</p>
 <p>The core monitoring loop: <strong>find</strong> runs, <strong>drill</strong> in, <strong>follow</strong> their execution, <strong>steer</strong>
 them — and get data out for hand-off. This is where an operator spends most of their day.</p>
 <p><img alt="The Runs page: a live-updating, filterable table of runs with Status, Run id, Workflow, Kind,
-Updated, Step, Tokens, and Node columns, a saved-filter bar, and CSV / JSON export buttons." src="../img/runs.png" /></p>
+Updated, Step, Tokens, and Node columns, a saved-filter bar, and CSV / JSON export buttons." src="../../img/runs.png" /></p>
 <p><a id="runs-and-debugging--overview"></a></p>
 <h3 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h3>
 <p>The landing page — the at-a-glance answer to <em>what's running · what needs attention · is
@@ -5409,7 +5409,7 @@ digest — never the inline spec) for one-click <strong>re-launch</strong>.</p>
 <p><em>"What needs human action."</em> When an agent pauses for a human decision, the run
 <code>blocked</code>s and a task appears in the <strong>Human tasks</strong> queue.</p>
 <p><img alt="The Human tasks page — the human-in-the-loop review queue, listing tasks deadline-first with
-the workflow, request summary, and age for each." src="../img/human-tasks.png" /></p>
+the workflow, request summary, and age for each." src="../../img/human-tasks.png" /></p>
 <p><a id="human-in-the-loop--the-queue"></a></p>
 <h3 id="the-queue">The queue<a class="headerlink" href="#the-queue" title="Permanent link">&para;</a></h3>
 <p>Tasks are listed <strong>deadline-first</strong>. Each row shows the workflow, the request summary
@@ -5470,7 +5470,7 @@ surfaces.</p>
 <h3 id="audit">Audit<a class="headerlink" href="#audit" title="Permanent link">&para;</a></h3>
 <p><img alt="The Audit page: a newest-first, filterable table of audit events with When, Event, Run,
 Actor, and Details columns (for example credential.inventory_accessed, run.created,
-spec.compiled), plus CSV / JSON export." src="../img/audit.png" /></p>
+spec.compiled), plus CSV / JSON export." src="../../img/audit.png" /></p>
 <p><strong>Operate → Audit</strong> is a searchable, newest-first timeline of platform audit events —
 run creation/cancellation, human decisions, policy changes, spec actions. It reads the
 platform's audit log (<code>kneo-serv</code> is the store; the Dashboard adds none of its own).
@@ -5511,7 +5511,7 @@ the audit contract.</p>
 <p><img alt="The Health page: Liveness, Readiness, and Health probe cards across the top (each showing an
 up / ready / healthy state), above a table of platform subsystems — api, run_state_store,
 continuation_store, queue, runtime_registry, tool_registry, providers, mcp — with their
-states." src="../img/health.png" /></p>
+states." src="../../img/health.png" /></p>
 <p><strong>Operate → Health</strong> derives the platform's operational health from its probes and
 metadata:</p>
 <ul>
@@ -5674,7 +5674,7 @@ blended per-environment spend figure from run token usage and a price book you s
 <strong>cost estimate for orientation, not a billing source</strong> — the platform's usage is model-blind,
 so the number is intentionally a blended approximation.</p>
 <p><img alt="The Overview page's summary row, where the blended 7-day **Spend** figure appears beside the
-run-status tiles and error rate — the at-a-glance cost orientation." src="../img/overview.png" /></p>
+run-status tiles and error rate — the at-a-glance cost orientation." src="../../img/overview.png" /></p>
 <p><a id="cost--what-its-for"></a></p>
 <h3 id="what-its-for">What it's for<a class="headerlink" href="#what-its-for" title="Permanent link">&para;</a></h3>
 <p>kneo-serv records per-run <strong>token usage</strong> (<code>input</code> / <code>output</code> / <code>total</code>) but <strong>not</strong> cost —
@@ -5812,7 +5812,7 @@ ADR-009).</p>
 <h3 id="credential-inventory">Credential inventory<a class="headerlink" href="#credential-inventory" title="Permanent link">&para;</a></h3>
 <p><img alt="The Credentials page: a presence-only inventory of credential references grouped into
 Providers, Other secrets, and Service tokens — each row shows the name, environment variable,
-and presence / status, never a secret value." src="../img/credentials.png" /></p>
+and presence / status, never a secret value." src="../../img/credentials.png" /></p>
 <p><strong>Credentials</strong> (under the Admin nav group) is a <strong>presence-only</strong> inventory of credential
 <em>references</em>, grouped into <strong>Providers</strong>, <strong>Other secrets</strong>, and <strong>Service tokens</strong>. Each
 entry shows its name, the backing env var, and a <strong>present / missing</strong> status, with a
@@ -5842,7 +5842,7 @@ platform call</strong>. Writing Connections / Access / Pricing needs the <strong
 capability (admin in the built-in default map); <strong>Preferences</strong> is self-scoped and ungated.</p>
 <p><img alt="The Settings page with its four stacked cards — Connections (environment → kneo-client
 profile), Access (a viewer / operator / admin capability matrix plus per-role environment
-grants), Pricing (a blended per-1,000-token rate), and Preferences (theme)." src="../img/settings.png" /></p>
+grants), Pricing (a blended per-1,000-token rate), and Preferences (theme)." src="../../img/settings.png" /></p>
 <p>The four cards:</p>
 <table>
 <thead>
@@ -6935,8 +6935,8 @@ store exposes <code>kneo_dash_store_state_bytes</code> so you can watch it.</p>
 the action still completes — so the log can have gaps under store pressure and is <strong>not</strong> a
 lossless/compliance-grade record. It exists for <strong>per-operator attribution</strong> (kneo-serv only
 sees the shared service account), not as a legal audit of record. Exact coverage + the failure
-signal (<code>kneo_dash_audit_write_failures_total</code>) are the <a href="../dev/kneo_dash-state-store-design.md#local-audit-trail-the-normative-contract">normative audit
-contract</a>
+signal (<code>kneo_dash_audit_write_failures_total</code>) are the normative audit
+contract
 (ADR-012). Alert on the failure counter if attribution completeness matters to you.</p>
 <p><a id="data-handling--backups-deletion"></a></p>
 <h3 id="backups-deletion">Backups &amp; deletion<a class="headerlink" href="#backups-deletion" title="Permanent link">&para;</a></h3>

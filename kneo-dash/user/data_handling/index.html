@@ -1584,8 +1584,8 @@ store exposes <code>kneo_dash_store_state_bytes</code> so you can watch it.</p>
 the action still completes — so the log can have gaps under store pressure and is <strong>not</strong> a
 lossless/compliance-grade record. It exists for <strong>per-operator attribution</strong> (kneo-serv only
 sees the shared service account), not as a legal audit of record. Exact coverage + the failure
-signal (<code>kneo_dash_audit_write_failures_total</code>) are the <a href="../dev/kneo_dash-state-store-design.md#local-audit-trail-the-normative-contract">normative audit
-contract</a>
+signal (<code>kneo_dash_audit_write_failures_total</code>) are the normative audit
+contract
 (ADR-012). Alert on the failure counter if attribution completeness matters to you.</p>
 <h2 id="backups-deletion">Backups &amp; deletion<a class="headerlink" href="#backups-deletion" title="Permanent link">&para;</a></h2>
 <ul>
