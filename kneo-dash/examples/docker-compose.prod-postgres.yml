@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile.postgres
       args:
-        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
     entrypoint: ["kneo-dash"]
     command: ["recover", "--status"]
     depends_on:
@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: Dockerfile.postgres
       args:
-        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
     restart: unless-stopped
     depends_on:
       db:

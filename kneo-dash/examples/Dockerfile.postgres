@@ -5,7 +5,7 @@
 #
 # BASE_IMAGE is the published dash image to layer on — bumped in lockstep with the compose
 # recipes at each release (see docs/plan/release_checklist.md version sweep).
-ARG BASE_IMAGE=ghcr.io/kneo-agent/kneo-dash:0.5.0
+ARG BASE_IMAGE=ghcr.io/kneo-agent/kneo-dash:0.7.0
 FROM ${BASE_IMAGE}
 USER root
 RUN pip install --no-cache-dir "psycopg[binary]>=3.1,<4"

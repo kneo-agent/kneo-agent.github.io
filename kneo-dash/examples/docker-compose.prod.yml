@@ -27,7 +27,7 @@ services:
   # (and its sidecar). Also the entrypoint for the operator's recover/reconcile steps:
   # `docker compose … run --rm recover-gate recover …`.
   recover-gate:
-    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
     entrypoint: ["kneo-dash"]
     command: ["recover", "--status"]
     environment:
@@ -37,7 +37,7 @@ services:
     restart: "no"
 
   kneo-dash:
-    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.5.0}
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
     restart: unless-stopped
     depends_on:
       recover-gate:

@@ -23,7 +23,7 @@ services:
       retries: 12
 
   kneo-dash:
-    image: ghcr.io/kneo-agent/kneo-dash:0.5.0
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
     depends_on:
       kneo-serv:
         condition: service_healthy

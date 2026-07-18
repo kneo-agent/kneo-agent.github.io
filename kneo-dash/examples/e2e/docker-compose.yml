@@ -34,7 +34,7 @@ services:
       retries: 12
 
   kneo-dash:
-    image: ghcr.io/kneo-agent/kneo-dash:0.5.0 # scaffolding validates the fixture on the released image; the real gate builds the cut
+    image: ghcr.io/kneo-agent/kneo-dash:0.7.0 # scaffolding validates the fixture on the released image; the real gate builds the cut
     depends_on:
       mock-oidc:
         condition: service_started

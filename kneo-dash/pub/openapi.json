@@ -3037,7 +3037,7 @@
   },
   "info": {
     "title": "Kneo Agent Dashboard BFF",
-    "version": "0.6.0"
+    "version": "0.7.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -3217,7 +3217,7 @@
     },
     "/api/audit-log": {
       "get": {
-        "description": "Recent dashboard-local audit entries, newest first (admin only).",
+        "description": "Recent dashboard-local audit entries, newest first. Requires the `AUDIT_READ` capability (admin by default).",
         "operationId": "read_audit_log_api_audit_log_get",
         "parameters": [
           {
@@ -3462,7 +3462,7 @@
     },
     "/api/human-tasks/{continuation_id}/resume": {
       "post": {
-        "description": "Resume a paused run with a decision (`platform.human_tasks.resume`).\n\nThe SPA sends the `decision` (+ optional `content`/`selected_option`) and echoes\nthe task's `request_id`; the BFF mints one if absent. The `Idempotency-Key`\n(per attempt) makes a retry safe. Resuming past the deadline raises\n`KneoHumanTaskExpiredError` \u2192 `409 human_task_expired` via the envelope (\u00a712);\nthe SPA surfaces \"task expired\" and refreshes the queue.\n\nOn `request_id`: the platform's `HumanResumeRequest.request_id` is a **required**\nfield, but the queue row's `request_id` is best-effort (`str | None`) \u2014 so when the\nrow carried none, the BFF mints a `dash-` correlation tag to satisfy the contract.\nThe **`continuation_id` path param is the real task selector**; `request_id` is a\ncorrelation/audit tag, so a minted value is a safe fallback (deep-audit CONTRACT-3:\na local `400` was rejected \u2014 it would wrongly block resuming a legitimately\n`request_id`-less task).",
+        "description": "Resume a paused run with a decision (`platform.human_tasks.resume`).\n\nThe SPA sends the `decision` (+ optional `content`/`selected_option`) and echoes\nthe task's `request_id`; the BFF mints one if absent. The `Idempotency-Key`\n(per attempt) makes a retry safe. Resuming past the deadline raises\n`KneoHumanTaskExpiredError` \u2192 `409 human_task_expired` via the envelope (\u00a712);\nthe SPA surfaces \"task expired\" and refreshes the queue.\n\nOn `request_id`: the platform's `HumanResumeRequest.request_id` is a **required**\nfield, but the queue row's `request_id` is best-effort (`str | None`) \u2014 so when the\nrow carried none, the BFF mints a `dash-` correlation tag to satisfy the contract.\nThe **`continuation_id` path param is the real task selector**; `request_id` is a\ncorrelation/audit tag, so a minted value is a safe fallback (deep-audit CONTRACT-3:\na local `400` was rejected \u2014 it would wrongly block resuming a legitimately\n`request_id`-less task).\n\nThis privileged platform mutation attempts a best-effort audit append (persistence\nnot guaranteed) of the operator + outcome.",
         "operationId": "resume_task_api_human_tasks__continuation_id__resume_post",
         "parameters": [
           {
@@ -3595,7 +3595,7 @@
     },
     "/api/launch/load": {
       "post": {
-        "description": "**Load** \u2014 a static, env-independent preview of what the agent is\n(`agent.specs.explain`). No mutation; the preview is env-independent, but the effective\nenv is still forwarded to ``explain``, so it is reconciled with the active env and\nauthorized against the role's grants like Deploy/Run (sibling parity).",
+        "description": "**Load** \u2014 a static, env-independent preview of what the agent is\n(`agent.specs.explain`). No mutation; the preview is env-independent, but the effective\nenv is still forwarded to ``explain``, so it is reconciled with the active env and\nchecked against the operator's **environment grants** (per-role, resolved through the\nAccess map) like Deploy/Run (sibling parity).",
         "operationId": "load_api_launch_load_post",
         "requestBody": {
           "content": {
@@ -3637,7 +3637,7 @@
     },
     "/api/launch/run": {
       "post": {
-        "description": "**Run** \u2014 start an operational run of the spec (`platform.runs.create`).\n\nThe **mutating** phase. The SPA gates it behind a typed-confirm (re-type the env)\nand only enables it after a green Deploy; RBAC / the platform scope is the real\nauthority. **Idempotency:** the SPA mints **one `Idempotency-Key` per launch attempt\nand reuses it across retries** (`LaunchPage` `runKey`; cleared only on success or an\nexplicit re-edit), so a resend after an ambiguous failure carries the **same** key and\n`platform.runs.create` won't double-launch \u2014 the guarantee holds *across* the retry, not\njust within one attempt. Validation/compile/policy failures should have blocked Run\nat Deploy; if the platform still rejects `create`, it surfaces via the \u00a712\nenvelope. The SPA routes to the new run's detail.",
+        "description": "**Run** \u2014 start an operational run of the spec (`platform.runs.create`).\n\nThe **mutating** phase. The SPA gates it behind a typed-confirm (re-type the env)\nand only enables it after a green Deploy; RBAC / the platform scope is the real\nauthority. **Idempotency:** the SPA mints **one `Idempotency-Key` per launch attempt\nand reuses it across retries** (`LaunchPage` `runKey`; cleared only on success or an\nexplicit re-edit), so a resend after an ambiguous failure carries the **same** key and\n`platform.runs.create` won't double-launch \u2014 the guarantee holds *across* the retry, not\njust within one attempt. Validation/compile/policy failures should have blocked Run\nat Deploy; if the platform still rejects `create`, it surfaces via the \u00a712\nenvelope. The SPA routes to the new run's detail. This privileged platform mutation\nattempts a best-effort audit append (persistence not guaranteed) of the operator +\noutcome \u2014 success carries the new `run_id`; a failed launch records an `error` outcome.",
         "operationId": "run_api_launch_run_post",
         "parameters": [
           {
@@ -3871,7 +3871,7 @@
         ]
       },
       "put": {
-        "description": "Replace an environment's policy (`environment_put`). Server-side authz\n(`POLICY_WRITE`) + the platform `403` as a second layer; the response's\n`previous_policy` drives the before/after the SPA shows.",
+        "description": "Replace an environment's policy (`environment_put`). Server-side authz\n(`POLICY_WRITE`) + the platform `403` as a second layer; the response's\n`previous_policy` drives the before/after the SPA shows. This privileged platform\nmutation attempts a best-effort audit append (persistence not guaranteed).",
         "operationId": "put_policy_api_policies__environment__put",
         "parameters": [
           {
@@ -4324,7 +4324,7 @@
     },
     "/api/runs/{run_id}/cancel": {
       "post": {
-        "description": "**Stop** \u2014 cooperatively cancel a run (`platform.runs.cancel`).\n\nVisibility is UX-gated in the SPA (only when the run is non-terminal); the\nplatform is the authority. A `409` (already terminal / state changed) or\n`503`/`429` surfaces via the standard envelope (\u00a712). The idempotency key makes\na retry safe.",
+        "description": "**Stop** \u2014 cooperatively cancel a run (`platform.runs.cancel`).\n\nVisibility is UX-gated in the SPA (only when the run is non-terminal); the\nplatform is the authority. Cancelling an **already-terminal** run is a **`200` no-op**\nthat returns the unchanged terminal state (check `status` to tell whether it did\nanything), not a `409`; `503`/`429` surface via the standard envelope (\u00a712). The\nidempotency key makes a retry safe. *(A `409 run_state_conflict` is real but fires on\n**other** lifecycle fences \u2014 e.g. continuing a non-blocked run \u2014 not on this route;\nkneo-client 1.2.0.)* This privileged platform mutation attempts a\nbest-effort audit append (persistence not guaranteed) of the operator + outcome.",
         "operationId": "cancel_run_api_runs__run_id__cancel_post",
         "parameters": [
           {
@@ -4501,7 +4501,7 @@
     },
     "/api/runs/{run_id}/continue": {
       "post": {
-        "description": "**Resume** \u2014 continue a paused/blocked run (`platform.runs.continue_`).\n\nThe SPA shows this only when the run is `blocked`. This resumes the run at the\nplatform level; a HITL task that needs an explicit *decision* is resumed from\nthe Human-tasks queue (`human_tasks.resume`, later in 0.2.0). A `409`\n(`KneoHumanTaskExpiredError` / state changed) surfaces via the envelope.",
+        "description": "**Resume** \u2014 continue a paused/blocked run (`platform.runs.continue_`).\n\nThe SPA shows this only when the run is `blocked`. This resumes the run at the\nplatform level; a HITL task that needs an explicit *decision* is resumed from\nthe Human-tasks queue (`human_tasks.resume`). Continuing a **non-blocked/terminal**\nrun surfaces as a `409 run_state_conflict` via the envelope (\u00a712); `human_task_expired`\nis the **resume** path's code, not this one. This privileged platform mutation attempts\na best-effort audit append (persistence not guaranteed) of the operator + outcome.",
         "operationId": "continue_run_api_runs__run_id__continue_post",
         "parameters": [
           {
@@ -5097,7 +5097,7 @@
         ]
       },
       "put": {
-        "description": "Override the capability map \u2014 admin-only. Unknown roles/capabilities are `400`; a\nstale `version` (or a create over an existing map) is `409`. The write bumps the map\nversion (existing sessions must re-authenticate) and is audited.",
+        "description": "Override the capability map. Requires `SETTINGS_WRITE` (admin in the built-in default map). Unknown roles/capabilities are `400`; a\nstale `version` (or a create over an existing map) is `409`. The write bumps the map\nversion (existing sessions must re-authenticate); the write attempts a best-effort audit append (persistence not guaranteed).",
         "operationId": "put_access_map_api_settings_access_put",
         "requestBody": {
           "content": {
@@ -5159,7 +5159,7 @@
         ]
       },
       "put": {
-        "description": "Set the role \u2192 allowed-environments grants \u2014 admin-only. Unknown roles are `400`;\na stale `version` (or create-over-existing) is `409`. Audited. (Admin always retains\naccess to every env, so this can't lock admins out.)",
+        "description": "Set the role \u2192 allowed-environments grants. Requires `SETTINGS_WRITE` (admin in the built-in default map). Unknown roles are `400`;\na stale `version` (or create-over-existing) is `409`; attempts a best-effort audit append\n(persistence not guaranteed). (Admin always retains access to every env, so this can't lock admins out.)",
         "operationId": "put_env_grants_api_settings_access_environments_put",
         "requestBody": {
           "content": {
@@ -5227,7 +5227,7 @@
     },
     "/api/settings/connections/{env}": {
       "delete": {
-        "description": "Remove an env connection \u2014 admin-only. `version` (query) guards a concurrent edit\n(stale \u2192 `409`, missing \u2192 `404`); the write is audited.",
+        "description": "Remove an env connection. Requires `SETTINGS_WRITE` (admin in the built-in default map). `version` (query) guards a concurrent edit\n(stale \u2192 `409`, missing \u2192 `404`); the write attempts a best-effort audit append (persistence not guaranteed).",
         "operationId": "delete_connection_api_settings_connections__env__delete",
         "parameters": [
           {
@@ -5271,7 +5271,7 @@
         ]
       },
       "put": {
-        "description": "Create (`version=0`) or update an env \u2192 profile mapping \u2014 admin-only. A create over\nan existing env, or a stale `version`, is `409`; the write is audited.",
+        "description": "Create (`version=0`) or update an env \u2192 profile mapping. Requires `SETTINGS_WRITE` (admin in the built-in default map). A create over\nan existing env, or a stale `version`, is `409`; the write attempts a best-effort audit append (persistence not guaranteed).",
         "operationId": "upsert_connection_api_settings_connections__env__put",
         "parameters": [
           {
@@ -5406,7 +5406,7 @@
         ]
       },
       "put": {
-        "description": "Set the blended price book \u2014 admin-only. A negative rate is `400`; a stale `version`\n(or create-over-existing) is `409`. Audited.",
+        "description": "Set the blended price book. Requires `SETTINGS_WRITE` (admin in the built-in default map). A negative rate is `400`; a stale `version`\n(or create-over-existing) is `409`. Attempts a best-effort audit append (persistence not guaranteed).",
         "operationId": "put_pricing_api_settings_pricing_put",
         "requestBody": {
           "content": {

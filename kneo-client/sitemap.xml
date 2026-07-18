@@ -2,50 +2,50 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/examples/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/pub/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/pub/kneo_agent_client_guide/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/compatibility/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/errors/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/idempotency_and_retries/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/list_results/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/polling_and_waiting/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/profiles_and_auth/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-client/user/quickstart/</loc>
-         <lastmod>2026-07-16</lastmod>
+         <lastmod>2026-07-18</lastmod>
     </url>
 </urlset>
