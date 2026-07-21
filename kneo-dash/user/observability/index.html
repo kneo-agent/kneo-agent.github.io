@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -659,6 +689,17 @@
     <span class="md-ellipsis">
       
         Signals (shipped 0.6.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ready-to-run-monitoring-assets-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready-to-run monitoring assets (0.8.0)
       
     </span>
   </a>
@@ -1216,6 +1257,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1304,6 +1349,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../../examples/e2e/" class="md-nav__link ">
               
   
@@ -1323,12 +1440,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1393,6 +1582,17 @@
     <span class="md-ellipsis">
       
         Signals (shipped 0.6.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ready-to-run-monitoring-assets-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ready-to-run monitoring assets (0.8.0)
       
     </span>
   </a>
@@ -1506,13 +1706,23 @@ is set</strong>:</p>
 <p>Counters are <strong>process-local and reset on restart</strong> (use <code>rate()</code>/<code>increase()</code>, not the raw
 total); on multi-replica each replica exposes its <strong>own</strong> <code>/metrics</code> (no built-in aggregation —
 your Prometheus aggregates). <code>store_state_bytes</code> is <strong>absent</strong> (not <code>0</code>) on Postgres.</p>
-<div class="admonition note">
-<p class="admonition-title">Not yet available (→ 0.8.0)</p>
-<p>A <strong>platform-dependency latency/outcome</strong> histogram (BFF vs the <code>/v1</code> call) and
-<code>kneo_dash_sessions_active</code> are <strong>not instrumented yet</strong> — deferred to the 0.8.0 beta cut.
-Until then, BFF-side latency (<code>http_request_duration_seconds</code>) includes downstream <code>/v1</code>
-time without separating it.</p>
-</div>
+<p>The <strong>platform-dependency</strong> histogram/counter
+(<code>kneo_dash_platform_request_duration_seconds</code> / <code>kneo_dash_platform_requests_total{operation,outcome}</code>)
+land in <strong>0.8.0</strong>: BFF latency minus platform latency isolates BFF-side time, so a <code>/v1</code>-only
+regression points at kneo-serv/network rather than the dashboard.</p>
+<p>State-growth metering (0.8.0): <code>kneo_dash_sessions_active</code> and
+<code>kneo_dash_store_rows{table="audit_log"|"launches"}</code> expose the store's growth at scrape
+time. When the row gauges trend up unbounded, the operator-safe <strong><code>kneo-dash prune</code></strong> CLI
+(export-before-delete, self-auditing — see the deployment guide) is the remediation;
+conservative pre-soak watch guidance: investigate around ~500k audit rows / ~50k
+launches on the certified single-instance topology (tuned thresholds land post-soak).</p>
+<h2 id="ready-to-run-monitoring-assets-080">Ready-to-run monitoring assets (0.8.0)<a class="headerlink" href="#ready-to-run-monitoring-assets-080" title="Permanent link">&para;</a></h2>
+<p><code>examples/monitoring/</code>
+ships a Prometheus scrape config (15s interval, bearer-token file, plus the
+self-scrape the soak's continuity check reads) and <code>alerts.yml</code> — the enforceable form
+of the catalogue below with conservative pre-soak thresholds (tuning happens in those
+files, deployment-side). The 0.8.0 soak harness (<code>scripts/soak/</code>) drives + grades the
+beta acceptance workload against this stack.</p>
 <h2 id="alert-catalogue">Alert catalogue<a class="headerlink" href="#alert-catalogue" title="Permanent link">&para;</a></h2>
 <p><strong>Guidance, not committed SLOs</strong> — the Dashboard ships <strong>no product SLOs</strong>; these are signals to
 watch, with <strong>untuned</strong> thresholds (tune to your traffic; the soak-derived numbers land in
@@ -1548,8 +1758,8 @@ watch, with <strong>untuned</strong> thresholds (tune to your traffic; the soak-
 </tr>
 <tr>
 <td><strong>Disk growth</strong></td>
-<td><code>kneo_dash_store_state_bytes</code> growth rate</td>
-<td>audit + launch-history append indefinitely today (prune is 0.8.0) — size the volume (<a href="../data_handling/#retention">data handling</a>)</td>
+<td><code>kneo_dash_store_state_bytes</code> + <code>kneo_dash_store_rows{table}</code> growth</td>
+<td>audit + launch-history are append-only — bound them with <a href="../cli/#prune-operator-safe-retention-080"><code>kneo-dash prune</code></a> (0.8.0) and size the volume for steady-state between prunes (<a href="../data_handling/#retention">data handling</a>)</td>
 </tr>
 </tbody>
 </table>

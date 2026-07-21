@@ -3037,7 +3037,7 @@
   },
   "info": {
     "title": "Kneo Agent Dashboard BFF",
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "openapi": "3.1.0",
   "paths": {
@@ -5201,7 +5201,7 @@
     },
     "/api/settings/connections": {
       "get": {
-        "description": "All configured environment connections (env-ordered) \u2014 drives the env switcher.\nRead is open to any resolved operator; oidc requires a session (no session \u2192 `401`).",
+        "description": "The operator's usable environment connections (env-ordered) \u2014 drives the env\nswitcher. Read is open to any resolved operator; oidc requires a session (no session\n\u2192 `401`). **Filtered by the operator's env grants** (0.8.0 A8): a restricted role\nsees only its `allowed_envs`, so the switcher can't offer an env whose use would\n`403` (`authorize_env` stays the enforcement layer \u2014 filtering is UX truthfulness,\nnot the security boundary). Unrestricted roles (admin \u00b7 no grants \u00b7 wildcard) see\nevery connection, including in Settings \u203a Connections management.",
         "operationId": "list_connections_api_settings_connections_get",
         "responses": {
           "200": {

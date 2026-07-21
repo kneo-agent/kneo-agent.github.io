@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -1125,6 +1155,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1213,6 +1247,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../examples/e2e/" class="md-nav__link ">
               
   
@@ -1232,12 +1338,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1371,7 +1549,9 @@ running deployed Kneo agents.</p>
 <h2 id="reading-order">Reading order<a class="headerlink" href="#reading-order" title="Permanent link">&para;</a></h2>
 <h3 id="daily-operation">Daily operation<a class="headerlink" href="#daily-operation" title="Permanent link">&para;</a></h3>
 <ol>
-<li><a href="quickstart/">Quickstart</a> — run the BFF + SPA against a Kneo Agent Platform, ~10 min.</li>
+<li><a href="quickstart/">Quickstart</a> — run the BFF + SPA against a Kneo Agent Platform, ~10 min.
+   <em>(Prefer a guided, </em><em>timed</em><em> end-to-end path? The <a href="tutorial_operating/">tutorial</a> walks
+   deploy → connect → launch → live trace → HITL → audit in under an hour — 0.8.0.)</em></li>
 <li><a href="connecting/">Connecting</a> — the <code>kneo-client</code> profile, environments, the state store.</li>
 <li><a href="runs_and_debugging/">Runs &amp; debugging</a> — Overview, the runs list, run detail (trace
    tail · checkpoints · replay/diff · graph · chain), run control, sessions, compare, launch.</li>
@@ -1400,7 +1580,7 @@ running deployed Kneo agents.</p>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ol>
 <li><a href="environment/">Environment variables</a> — every setting the BFF reads, grouped by concern.</li>
-<li><a href="cli/">CLI reference</a> — the <code>kneo-dash</code> commands (<code>serve</code>, <code>recover</code>).</li>
+<li><a href="cli/">CLI reference</a> — the <code>kneo-dash</code> commands (<code>serve</code>, <code>recover</code>, <code>prune</code>).</li>
 <li><a href="api_reference/">API reference</a> — the browsable <code>/api</code> contract (generated from <code>openapi.json</code>).</li>
 <li><a href="examples/">Examples &amp; coverage matrix</a> — worked scenarios + the page/router/capability→doc matrix.</li>
 <li><a href="accessibility/">Accessibility</a> — keyboard navigation, screen-reader support, contrast.</li>
@@ -1416,6 +1596,7 @@ API reference, current-UI screenshots, and the WCAG-AA contrast pass. <em>(Ships
 <h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="quickstart/">Quickstart</a></li>
+<li><a href="tutorial_operating/">Tutorial — zero to operating, timed (0.8.0)</a></li>
 <li><a href="connecting/">Connecting to the platform</a></li>
 <li><a href="runs_and_debugging/">Runs &amp; debugging</a></li>
 <li><a href="human_in_the_loop/">Human-in-the-loop</a></li>

@@ -1,0 +1,40 @@
+# Prometheus scrape config for the Kneo Agent Dashboard (0.8.0 B1 — the soak's
+# monitoring-continuity source; also the recommended production starting point).
+#
+# The soak acceptance gate requires CONTINUOUS scrape with no gap > 5 min; a 15s
+# interval leaves ~20 consecutive failures of headroom before a gap is even possible.
+# The bearer token is the dashboard's KNEO_DASH_METRICS_TOKEN (>= 32 chars) — put it
+# in the token file, never inline in this config.
+#
+# Run (operator-side, e.g. next to the prod compose):
+#   docker run -d --name kneo-prom -p 9090:9090 \
+#     -v $PWD/monitoring:/etc/prometheus:ro prom/prometheus:latest
+#
+# Post-soak threshold TUNING happens in alerts.yml only (TODO-0.8.0 A4 boundary:
+# these files are deployment-side release assets — never baked into the wheel/image).
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  - job_name: kneo-dash
+    metrics_path: /metrics
+    scheme: https
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/kneo_dash_metrics.token
+    tls_config:
+      # The example recipe uses a self-signed cert; replace with real CA config in prod.
+      insecure_skip_verify: true
+    static_configs:
+      - targets: ["dash.example.com:443"]
+
+  # Prometheus self-scrape — the `up`/scrape-health series the soak verifier reads for
+  # the "no scrape gap > 5 min" criterion.
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

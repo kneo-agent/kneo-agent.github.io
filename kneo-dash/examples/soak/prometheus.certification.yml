@@ -1,0 +1,26 @@
+# Prometheus scrape config for THE certification fixture (tp2-R5) — wired to the
+# in-fixture dashboard (compose service name), unlike ../monitoring/prometheus.yml
+# which is the operator TEMPLATE with a placeholder public target. Locked with the
+# fixture; the soak's monitoring-continuity criterion is graded from this scrape.
+#
+# Token: write the dashboard's metrics token next to this file before `up`:
+#   echo -n "$SOAK_METRICS_TOKEN" > examples/soak/metrics.token
+global:
+  scrape_interval: 15s
+  evaluation_interval: 30s
+
+rule_files:
+  - /etc/prometheus/alerts.yml # the committed alert catalogue (A4-tuned post-soak)
+
+scrape_configs:
+  - job_name: kneo-dash
+    scheme: http # in-network scrape of the BFF directly; the proxy is for browsers
+    authorization:
+      type: Bearer
+      credentials_file: /etc/prometheus/metrics.token
+    static_configs:
+      - targets: ["kneo-dash:8090"]
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

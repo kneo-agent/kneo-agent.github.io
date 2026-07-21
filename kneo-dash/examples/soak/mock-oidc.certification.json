@@ -1,0 +1,12 @@
+{
+  "//": "Certification-fixture OIDC config (tp2-R6). ONE issuer 'dash' — the same the",
+  "//1": "dashboard is configured with for the WHOLE soak (no mid-soak config change) —",
+  "//2": "but with interactiveLogin: true, so the login flow chooses the ROLE per login.",
+  "//3": "The three-role preflight and the daily role-login drills each complete the mock",
+  "//4": "login supplying the desired roles claim (dash-viewer|dash-operator|dash-admin),",
+  "//5": "so one deployed fixture performs all three logins. See scripts/soak/",
+  "//6": "three_role_preflight.py and the soak README.",
+  "interactiveLogin": true,
+  "httpServer": "NettyWrapper",
+  "tokenCallbacks": []
+}

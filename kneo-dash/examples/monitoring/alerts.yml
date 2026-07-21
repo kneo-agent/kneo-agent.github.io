@@ -1,0 +1,88 @@
+# Alert rules for the Kneo Agent Dashboard (0.8.0 B1) — the enforceable form of the
+# observability guide's alert catalogue. CONSERVATIVE pre-soak thresholds; the 0.8.0
+# soak tunes the numbers HERE (deployment-side — the TODO-0.8.0 A4 boundary: an in-app
+# default change would reset the soak clock; editing this file does not).
+
+groups:
+  - name: kneo-dash
+    rules:
+      # ── availability (the soak gate's headline criteria) ──────────────────────
+      - alert: KneoDashScrapeDown
+        expr: up{job="kneo-dash"} == 0
+        for: 2m
+        labels: { severity: critical }
+        annotations:
+          summary: "kneo-dash /metrics unreachable (soak gate: no scrape gap > 5m)"
+
+      - alert: KneoDashStoreUnreachable
+        expr: kneo_dash_store_reachable == 0
+        for: 1m
+        labels: { severity: critical }
+        annotations:
+          summary: "state store unreachable — readiness is failing"
+
+      # ── error budget ──────────────────────────────────────────────────────────
+      - alert: KneoDashHigh5xxRate
+        # soak budget: BFF 5xx < 0.5% of APPLICATION requests. The denominator must
+        # exclude the health/scrape probes (livez/readyz/metrics) — high-volume,
+        # always-200 traffic would otherwise dilute the ratio and hide a real spike
+        # (matches soak_verify's app-only 5xx denominator).
+        expr: |
+          sum(rate(kneo_dash_http_requests_total{status_class="5xx", route!~"/api/livez|/api/readyz|/metrics"}[10m]))
+            / sum(rate(kneo_dash_http_requests_total{route!~"/api/livez|/api/readyz|/metrics"}[10m])) > 0.005
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "BFF 5xx rate above the 0.5% soak error budget"
+
+      - alert: KneoDashAuditWriteFailures
+        # the gate requires this flat outside named drills
+        expr: rate(kneo_dash_audit_write_failures_total[5m]) > 0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "local audit appends failing — attribution trail degrading"
+
+      # ── platform dependency (A5 separation: BFF vs /v1 latency) ───────────────
+      - alert: KneoDashPlatformLatencyHigh
+        # pre-soak conservative: p95 of awaited platform calls > 2s sustained
+        expr: |
+          histogram_quantile(0.95,
+            sum(rate(kneo_dash_platform_request_duration_seconds_bucket[10m])) by (le)
+          ) > 2
+        for: 15m
+        labels: { severity: warning }
+        annotations:
+          summary: "kneo-serv dependency p95 > 2s — platform-side, not the BFF"
+
+      - alert: KneoDashPlatformErrors
+        expr: |
+          sum(rate(kneo_dash_platform_requests_total{outcome!~"success|stream"}[10m])) > 0.1
+        for: 10m
+        labels: { severity: warning }
+        annotations:
+          summary: "sustained platform-call errors (see the outcome label for the family)"
+
+      # ── state growth (A4 signals; prune is the remediation) ───────────────────
+      - alert: KneoDashAuditLogGrowth
+        # conservative pre-soak watch level (state-store-design §Prune)
+        expr: kneo_dash_store_rows{table="audit_log"} > 500000
+        for: 30m
+        labels: { severity: info }
+        annotations:
+          summary: "audit_log past the watch level — plan a `kneo-dash prune`"
+
+      - alert: KneoDashLaunchHistoryGrowth
+        expr: kneo_dash_store_rows{table="launches"} > 50000
+        for: 30m
+        labels: { severity: info }
+        annotations:
+          summary: "launch history past the watch level — plan a `kneo-dash prune`"
+
+      - alert: KneoDashSseNearCap
+        # default cap is 5 per operator; alert when total occupancy is sustained-high
+        expr: kneo_dash_sse_active_streams > 20
+        for: 10m
+        labels: { severity: info }
+        annotations:
+          summary: "SSE occupancy sustained-high — check per-operator caps / consumers"

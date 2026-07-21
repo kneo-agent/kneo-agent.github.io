@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -884,6 +914,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#http-response-headers-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP response headers (0.8.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reverse-proxy-tls" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1271,6 +1312,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1359,6 +1404,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../../examples/e2e/" class="md-nav__link ">
               
   
@@ -1378,12 +1495,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1470,6 +1659,17 @@
     <span class="md-ellipsis">
       
         CSRF &amp; the same-origin model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-response-headers-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP response headers (0.8.0)
       
     </span>
   </a>
@@ -1604,13 +1804,61 @@ It is set <strong><code>HttpOnly</code> + <code>Secure</code> + <code>SameSite=L
 </ol>
 <p>Because the check compares <code>Origin</code> to the <strong><code>Host</code></strong> header, your reverse proxy <strong>must forward
 <code>Host</code> unchanged</strong> (see below) — a proxy that rewrites <code>Host</code> will break the guard.</p>
+<h2 id="http-response-headers-080">HTTP response headers (0.8.0)<a class="headerlink" href="#http-response-headers-080" title="Permanent link">&para;</a></h2>
+<p>Every response the BFF emits — the SPA shell, hashed assets, and <code>/api/*</code> (SSE included) —
+carries a browser-security header set, enforced (not report-only) and asserted by tests:</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Content-Security-Policy</code></td>
+<td>the committed policy below</td>
+</tr>
+<tr>
+<td><code>X-Frame-Options</code></td>
+<td><code>DENY</code> (legacy clickjacking fallback; CSP <code>frame-ancestors</code> is the modern control)</td>
+</tr>
+<tr>
+<td><code>X-Content-Type-Options</code></td>
+<td><code>nosniff</code></td>
+</tr>
+<tr>
+<td><code>Referrer-Policy</code></td>
+<td><code>no-referrer</code></td>
+</tr>
+<tr>
+<td><code>Permissions-Policy</code></td>
+<td><code>camera=(), microphone=(), geolocation=(), payment=(), usb=()</code></td>
+</tr>
+<tr>
+<td><code>Cache-Control</code></td>
+<td><code>no-store</code> on <code>/api/*</code> · <code>public, max-age=31536000, immutable</code> on hashed <code>/assets/*</code> · <code>no-cache</code> on the SPA shell</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>committed CSP policy</strong> (the exact emitted value — a test asserts this doc stays
+identical to the code fixture in <code>kneo_dash/security_headers.py</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>default-src &#39;none&#39;; script-src &#39;self&#39;; style-src &#39;self&#39; &#39;unsafe-inline&#39;; img-src &#39;self&#39; data:; font-src &#39;self&#39;; connect-src &#39;self&#39;; frame-ancestors &#39;none&#39;; base-uri &#39;none&#39;; form-action &#39;self&#39;; object-src &#39;none&#39;
+</code></pre></div>
+<p>Why <code>style-src</code> carries <code>'unsafe-inline'</code>: the React components set <code>style={{…}}</code>
+<em>attributes</em>, which CSP treats as inline style; script injection — the attack CSP chiefly
+guards — remains blocked by <code>script-src 'self'</code>. Everything else is deny-by-default. The
+E2E fleet drives the production-built SPA (scripts, styles, assets, <code>/api</code> calls, and the
+SSE trace tail) under this enforced policy, so a directive that broke the app would redden CI.</p>
+<p><strong>Delegated to the reverse proxy</strong> (see below): <code>Strict-Transport-Security</code> (HSTS) and
+login rate-limiting — TLS-terminating concerns the BFF can't own.</p>
 <h2 id="reverse-proxy-tls">Reverse proxy &amp; TLS<a class="headerlink" href="#reverse-proxy-tls" title="Permanent link">&para;</a></h2>
 <p>Terminate TLS at a reverse proxy and forward to the BFF on <code>:8090</code>. The example
 <code>nginx.conf</code> sets the
 headers that matter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w">              </span><span class="nv">$host</span><span class="p">;</span><span class="w">    </span><span class="c1"># load-bearing: the same-origin guard compares Origin↔Host</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span><span class="w">  </span><span class="c1"># tells the BFF the external scheme is https</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w">   </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">Host</span><span class="w">              </span><span class="nv">$host</span><span class="p">;</span><span class="w">    </span><span class="c1"># load-bearing: the same-origin guard compares Origin↔Host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-Proto</span><span class="w"> </span><span class="nv">$scheme</span><span class="p">;</span><span class="w">  </span><span class="c1"># tells the BFF the external scheme is https</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">proxy_set_header</span><span class="w"> </span><span class="s">X-Forwarded-For</span><span class="w">   </span><span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
 </code></pre></div>
 <ul>
 <li><strong><code>Host</code></strong> must be the public host the browser uses — the same-origin guard and the OIDC
@@ -1619,6 +1867,19 @@ headers that matter:</p>
   always <code>Secure</code> regardless, and the OIDC callback is the explicitly-configured public
   <code>KNEO_DASH_OIDC_REDIRECT_URL</code> — so the callback does not rely on scheme sniffing.</li>
 <li>Do <strong>not</strong> expose <code>:8090</code> directly; only the proxy should reach it.</li>
+</ul>
+<p>The recipe <strong>implements</strong> the two controls the BFF delegates to the proxy (0.8.0):</p>
+<ul>
+<li><strong>HSTS</strong> — <code>Strict-Transport-Security: max-age=31536000</code> on the 443 block (<code>always</code>, so
+  error responses carry it too). <code>includeSubDomains</code> ships as a <strong>commented opt-in</strong> —
+  enable it only when every descendant hostname is HTTPS; no <code>preload</code> before GA.</li>
+<li><strong>Login rate-limiting</strong> — <code>/api/login</code> + <code>/api/callback</code> are throttled per client IP
+  (10 req/min, burst 5). An over-limit request gets a <strong><code>429</code> in the standard error
+  envelope</strong> (<code>code: "rate_limited"</code>, <code>retry_after: 6</code>, a proxy-minted <code>request_id</code>
+  correlated across body, <code>X-Request-Id</code> header, and the proxy access log) — see the
+  API contract. BFF-native throttling is deliberately deferred;
+  the proxy is the enforcement point in the supported topology. CI asserts both the
+  rendered config and the live behavior every cut.</li>
 </ul>
 <h2 id="what-an-attack-attempt-does">What an attack attempt does<a class="headerlink" href="#what-an-attack-attempt-does" title="Permanent link">&para;</a></h2>
 <table>

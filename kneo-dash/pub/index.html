@@ -378,6 +378,8 @@
       
         
       
+        
+      
     
     
     
@@ -449,6 +451,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -1125,6 +1155,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1213,6 +1247,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../examples/e2e/" class="md-nav__link ">
               
   
@@ -1232,12 +1338,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1363,7 +1541,7 @@ reviewable on GitHub without a local rebuild.</p>
   <code>generate_combined_docs.py</code>, with cross-guide links rewritten to namespaced
   in-document anchors. <strong>Drift-gated</strong> (<code>--check</code>) in <code>ci.yml</code> + <code>release.yml</code>, and its intra-document
   anchors are guarded by <code>backend/tests/test_combined_docs.py</code>. The <strong>online site is canonical</strong>; this
-  is the offline convenience copy. <em>(A printable PDF is deferred — see <code>script/README</code>.)</em></li>
+  is the offline convenience copy. <em>(The printable </em><em>PDF</em><em> renders at Pre-publish via <code>script/render_pdf.py</code> — generated, not committed; ships as a release attachment.)</em></li>
 </ul>
 <h2 id="not-here">Not here<a class="headerlink" href="#not-here" title="Permanent link">&para;</a></h2>
 <ul>
@@ -1371,8 +1549,8 @@ reviewable on GitHub without a local rebuild.</p>
 <li><strong>Authored user docs</strong> live in <a href="../user/"><code>docs/user/</code></a>.</li>
 </ul>
 <blockquote>
-<p><code>openapi.json</code> is committed and regenerated each cut. The combined handout is
-<strong>not yet produced</strong> (the generator is a scaffold) — planned for the 0.7.0 cut.</p>
+<p>Both artifacts are committed, drift-gated (<code>--check</code>), and regenerated each cut.
+<em>(The printable </em><em>PDF</em><em> renders at Pre-publish via <code>render_pdf.py</code> (0.8.0 E4) — generated, not committed.)</em></p>
 </blockquote>
 <h2 id="pages">Pages<a class="headerlink" href="#pages" title="Permanent link">&para;</a></h2>
 <ul>

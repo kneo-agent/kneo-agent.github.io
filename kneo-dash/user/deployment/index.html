@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -1266,6 +1296,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1354,6 +1388,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../../examples/e2e/" class="md-nav__link ">
               
   
@@ -1373,12 +1479,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1633,9 +1811,12 @@ volume for steady growth and monitor it:</p>
   reports the <strong>complete SQLite footprint</strong> — the main DB <strong>plus its <code>-wal</code>/<code>-shm</code> sidecars</strong>.
   Alert on <strong>sustained growth</strong>, not an absolute number. <em>(The series is </em><em>absent</em><em> on Postgres
   — size the database with your normal PG tooling there.)</em></li>
-<li>No automatic <strong>retention/pruning</strong> ships yet — bounding launch-history/audit growth (a safe
-  prune/export procedure) is a planned post-Alpha operator feature. For now, size the volume
-  generously and watch the metric.</li>
+<li><strong><code>kneo_dash_store_rows{table="audit_log"|"launches"}</code></strong> and <strong><code>kneo_dash_sessions_active</code></strong>
+  (0.8.0) report the row counts behind that footprint — watch these to decide <em>when</em> to prune.</li>
+<li><strong>Retention/pruning ships (0.8.0):</strong> the operator-safe
+  <a href="../cli/#prune-operator-safe-retention-080"><code>kneo-dash prune</code></a> CLI bounds launch-history/audit
+  growth — export-before-delete (versioned + checksummed) with a self-audit record. Size the
+  volume for steady-state between prunes, and prune on the row-count signal above.</li>
 </ul>
 <h2 id="health-probes">Health probes<a class="headerlink" href="#health-probes" title="Permanent link">&para;</a></h2>
 <p>Three endpoints, with HTTP codes chosen so a <strong>degraded dependency is never mistaken for a

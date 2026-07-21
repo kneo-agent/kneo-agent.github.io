@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://kneo-agent.github.io/kneo-dash/user/connecting/">
       
       
-        <link rel="prev" href="../quickstart/">
+        <link rel="prev" href="../tutorial_operating/">
       
       
         <link rel="next" href="../runs_and_debugging/">
@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -1238,6 +1268,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1326,6 +1360,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../../examples/e2e/" class="md-nav__link ">
               
   
@@ -1345,12 +1451,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1556,7 +1734,9 @@ page</strong>:</p>
 so the SPA can show what the live server couldn't honor. This is the same tiered-degrade
 mechanism the dev docs call <code>_FILTER_TIERS</code>.</p>
 <h2 id="environments">Environments<a class="headerlink" href="#environments" title="Permanent link">&para;</a></h2>
-<p>The top bar shows the active <strong>environment</strong> chip with a live <strong>env switcher</strong> (0.4.0):
+<p>The top bar shows the active <strong>environment</strong> chip with a live <strong>env switcher</strong> (0.4.0;
+since <strong>0.8.0</strong> it lists only the environments <strong>your role may use</strong> — an env-restricted
+role never sees an option whose use would <code>403</code>):
 its options come from <strong>Settings › Connections</strong> (each environment → a <code>kneo_client</code>
 profile), and the active env rides on <code>X-Kneo-Env</code> so a single Dashboard serves multiple
 environments. Per-role <strong>environment grants</strong> (Settings › Access) confine which roles may

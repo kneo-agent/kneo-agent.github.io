@@ -2,106 +2,118 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/examples/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/examples/e2e/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-dash/examples/monitoring/</loc>
+         <lastmod>2026-07-21</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-dash/examples/soak/</loc>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/pub/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/pub/kneo-dash-operator-guide/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/accessibility/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/api_reference/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/audit_and_health/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/backup_and_recovery/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/cli/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/connecting/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/cost/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/data_handling/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/deployment/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/environment/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/examples/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/human_in_the_loop/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/observability/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/policies_and_credentials/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/quickstart/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/runs_and_debugging/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/security_hardening/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/settings/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/troubleshooting/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
+    </url>
+    <url>
+         <loc>https://kneo-agent.github.io/kneo-dash/user/tutorial_operating/</loc>
+         <lastmod>2026-07-21</lastmod>
     </url>
     <url>
          <loc>https://kneo-agent.github.io/kneo-dash/user/upgrade/</loc>
-         <lastmod>2026-07-18</lastmod>
+         <lastmod>2026-07-21</lastmod>
     </url>
 </urlset>

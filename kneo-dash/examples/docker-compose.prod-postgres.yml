@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: Dockerfile.postgres
       args:
-        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.8.0}
     entrypoint: ["kneo-dash"]
     command: ["recover", "--status"]
     depends_on:
@@ -30,7 +30,7 @@ services:
       context: .
       dockerfile: Dockerfile.postgres
       args:
-        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
+        BASE_IMAGE: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.8.0}
     restart: unless-stopped
     depends_on:
       db:
@@ -46,8 +46,26 @@ services:
       KNEO_DASH_OIDC_CLIENT_ID: ${KNEO_DASH_OIDC_CLIENT_ID}
       KNEO_DASH_OIDC_CLIENT_SECRET: ${KNEO_DASH_OIDC_CLIENT_SECRET}
       KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL}
-      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP}
+      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP:-}
       KNEO_DASH_DB_URL: postgresql://kneo:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@db:5432/kneo_dash
+      # --- full production config surface (0.8.0 B4; same block as docker-compose.prod.yml,
+      # parity-guarded) — `--env-file` only interpolates; unlisted vars never reach the container.
+      KNEO_DASH_OIDC_SCOPES: ${KNEO_DASH_OIDC_SCOPES:-openid email profile}
+      KNEO_DASH_OIDC_ROLE_CLAIM: ${KNEO_DASH_OIDC_ROLE_CLAIM:-roles}
+      KNEO_DASH_OIDC_BOOTSTRAP_ADMIN: ${KNEO_DASH_OIDC_BOOTSTRAP_ADMIN:-}
+      KNEO_DASH_POST_LOGIN_REDIRECT: ${KNEO_DASH_POST_LOGIN_REDIRECT:-/}
+      KNEO_DASH_SESSION_COOKIE_NAME: ${KNEO_DASH_SESSION_COOKIE_NAME:-kneo_dash_session}
+      KNEO_DASH_SESSION_TTL_SECONDS: ${KNEO_DASH_SESSION_TTL_SECONDS:-43200}
+      KNEO_DASH_SESSION_IDLE_SECONDS: ${KNEO_DASH_SESSION_IDLE_SECONDS:-1800}
+      KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS: ${KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS:-3600}
+      KNEO_DASH_DEFAULT_PROFILE: ${KNEO_DASH_DEFAULT_PROFILE:-}
+      KNEO_DASH_STUCK_RUNNING_SECONDS: ${KNEO_DASH_STUCK_RUNNING_SECONDS:-120}
+      KNEO_DASH_STUCK_BLOCKED_SECONDS: ${KNEO_DASH_STUCK_BLOCKED_SECONDS:-300}
+      KNEO_DASH_HITL_NEAR_DEADLINE_SECONDS: ${KNEO_DASH_HITL_NEAR_DEADLINE_SECONDS:-300}
+      KNEO_DASH_SSE_SEND_TIMEOUT_SECONDS: ${KNEO_DASH_SSE_SEND_TIMEOUT_SECONDS:-30.0}
+      KNEO_DASH_SSE_MAX_STREAMS_PER_OPERATOR: ${KNEO_DASH_SSE_MAX_STREAMS_PER_OPERATOR:-5}
+      KNEO_DASH_METRICS_TOKEN: ${KNEO_DASH_METRICS_TOKEN:-}
+      KNEO_DASH_GRAFANA_URL: ${KNEO_DASH_GRAFANA_URL:-}
     expose: ["8090"]
 
   db:
@@ -65,7 +83,7 @@ services:
       retries: 12
 
   proxy:
-    image: nginx:1.27
+    image: nginx:1.27@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d # digest-pinned (tp2-R3): the soaked fixture must be identifiable — a mutable tag can move under the certification
     restart: unless-stopped
     depends_on: [kneo-dash]
     ports: ["443:443", "80:80"]

@@ -27,7 +27,7 @@ services:
   # (and its sidecar). Also the entrypoint for the operator's recover/reconcile steps:
   # `docker compose … run --rm recover-gate recover …`.
   recover-gate:
-    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.8.0}
     entrypoint: ["kneo-dash"]
     command: ["recover", "--status"]
     environment:
@@ -37,7 +37,7 @@ services:
     restart: "no"
 
   kneo-dash:
-    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.7.0}
+    image: ${KNEO_DASH_IMAGE:-ghcr.io/kneo-agent/kneo-dash:0.8.0}
     restart: unless-stopped
     depends_on:
       recover-gate:
@@ -54,17 +54,42 @@ services:
       KNEO_DASH_OIDC_CLIENT_SECRET: ${KNEO_DASH_OIDC_CLIENT_SECRET}
       KNEO_DASH_OIDC_REDIRECT_URL: ${KNEO_DASH_OIDC_REDIRECT_URL} # https://<host>/api/callback
       # role mapping: IdP group/claim → viewer|operator|admin (see .env.example)
-      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP}
+      KNEO_DASH_OIDC_ROLE_MAP: ${KNEO_DASH_OIDC_ROLE_MAP:-}
       # --- dashboard-local state: SQLite on a persistent volume. The image already defaults
       # KNEO_DASH_DB_URL to sqlite:////var/lib/kneo-dash/state.db; the volume makes it durable.
       KNEO_DASH_DB_URL: ${KNEO_DASH_DB_URL:-sqlite:////var/lib/kneo-dash/state.db}
+      # --- full production config surface (0.8.0 B4) --------------------------------
+      # `--env-file` only supplies INTERPOLATION values — a variable not listed in this
+      # block never reaches the container. So every production-relevant KNEO_DASH_* is
+      # forwarded here (defaults mirror the BFF's own; empty == unset). Deliberately NOT
+      # forwarded (dev-only, guarded by scripts/check_config_parity.py): KNEO_DASH_DEV_MODE,
+      # KNEO_DASH_STATIC_OPERATOR_ROLE, KNEO_DASH_SPA_DIR (baked into the image),
+      # KNEO_DASH_CORS_ORIGINS (same-origin prod keeps it empty).
+      KNEO_DASH_OIDC_SCOPES: ${KNEO_DASH_OIDC_SCOPES:-openid email profile}
+      KNEO_DASH_OIDC_ROLE_CLAIM: ${KNEO_DASH_OIDC_ROLE_CLAIM:-roles}
+      KNEO_DASH_OIDC_BOOTSTRAP_ADMIN: ${KNEO_DASH_OIDC_BOOTSTRAP_ADMIN:-}
+      KNEO_DASH_POST_LOGIN_REDIRECT: ${KNEO_DASH_POST_LOGIN_REDIRECT:-/}
+      KNEO_DASH_SESSION_COOKIE_NAME: ${KNEO_DASH_SESSION_COOKIE_NAME:-kneo_dash_session}
+      KNEO_DASH_SESSION_TTL_SECONDS: ${KNEO_DASH_SESSION_TTL_SECONDS:-43200}
+      KNEO_DASH_SESSION_IDLE_SECONDS: ${KNEO_DASH_SESSION_IDLE_SECONDS:-1800}
+      KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS: ${KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS:-3600}
+      KNEO_DASH_DEFAULT_PROFILE: ${KNEO_DASH_DEFAULT_PROFILE:-}
+      KNEO_DASH_STUCK_RUNNING_SECONDS: ${KNEO_DASH_STUCK_RUNNING_SECONDS:-120}
+      KNEO_DASH_STUCK_BLOCKED_SECONDS: ${KNEO_DASH_STUCK_BLOCKED_SECONDS:-300}
+      KNEO_DASH_HITL_NEAR_DEADLINE_SECONDS: ${KNEO_DASH_HITL_NEAR_DEADLINE_SECONDS:-300}
+      KNEO_DASH_SSE_SEND_TIMEOUT_SECONDS: ${KNEO_DASH_SSE_SEND_TIMEOUT_SECONDS:-30.0}
+      KNEO_DASH_SSE_MAX_STREAMS_PER_OPERATOR: ${KNEO_DASH_SSE_MAX_STREAMS_PER_OPERATOR:-5}
+      # /metrics stays disabled unless a ≥32-char token is supplied (B1 soak harness
+      # scrapes through this — the gap that blocked monitoring pre-B4).
+      KNEO_DASH_METRICS_TOKEN: ${KNEO_DASH_METRICS_TOKEN:-}
+      KNEO_DASH_GRAFANA_URL: ${KNEO_DASH_GRAFANA_URL:-}
       # served same-origin behind the proxy, so no CORS needed
     volumes:
       - dash-state:/var/lib/kneo-dash # the SQLite state DB — survives restarts
     expose: ["8090"] # published only via the reverse proxy, not to the host
 
   proxy:
-    image: nginx:1.27
+    image: nginx:1.27@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d # digest-pinned (tp2-R3): the soaked fixture must be identifiable — a mutable tag can move under the certification
     restart: unless-stopped
     depends_on: [kneo-dash]
     ports: ["443:443", "80:80"]

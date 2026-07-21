@@ -1,0 +1,124 @@
+# THE certification fixture (tp2-R5) — the runnable, fully-locked deployment the 168h
+# Beta soak certifies. Unlike docker-compose.prod.yml (which expects an EXTERNAL
+# kneo-serv and an operator-supplied IdP), this file contains the COMPLETE fixture:
+# dashboard + reverse proxy + mock-OIDC IdP + kneo-serv + Prometheus, every image by
+# DIGEST, with the effective configuration written out below (only true secrets are
+# parameterized). The rc pipeline locks THIS file; `gen_fixture_lock.py --verify`
+# cross-checks every locked identity against it; `--attest` confirms the running
+# containers match before the soak driver may start.
+#
+#   export KNEO_DASH_IMAGE=ghcr.io/kneo-agent/kneo-dash@sha256:<the rc digest>
+#   export SOAK_HOST=<the host browsers reach>          # e.g. soak.example.internal
+#   export SOAK_SESSION_SECRET=<32+ char random secret> # openssl rand -base64 32
+#   export SOAK_METRICS_TOKEN=<32+ char random token>
+#   docker compose -f examples/soak/docker-compose.certification.yml up -d
+#
+# TLS: drop fullchain.pem + privkey.pem in examples/soak/tls/ (self-signed is fine for
+# certification — the browser-security claims are asserted by header, not CA chain).
+services:
+  mock-oidc:
+    image: ghcr.io/navikt/mock-oauth2-server:2.1.10@sha256:65d4ed47ce094cc3849e41e03499bfb32372d69c726ec22b3d5a19eba9bc787e
+    restart: unless-stopped
+    environment:
+      SERVER_PORT: "8080"
+      JSON_CONFIG_PATH: /config/mock-oidc.json
+    volumes:
+      # certification IdP: ONE issuer, interactiveLogin → all three roles
+      # chosen per-login without mid-soak config change (tp2-R6)
+      - ./mock-oidc.certification.json:/config/mock-oidc.json:ro
+    ports: ["8080:8080"] # host-published: the browser redirect needs the same issuer name
+
+  kneo-serv:
+    image: ghcr.io/kneo-agent/kneo-serv:1.2.0@sha256:4fa4bd0d082bf7e1a484b9392812d40046f1485dc0ec0dc8a34037827f9b16b8
+    restart: unless-stopped
+    environment:
+      KNEO_SERV_ADMIN_API_KEY: ${SOAK_SERV_API_KEY:-certification-admin-key}
+    expose: ["8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u,sys; sys.exit(0 if u.urlopen('http://localhost:8000/v1/healthz').status==200 else 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  recover-gate:
+    image: ${KNEO_DASH_IMAGE:?set KNEO_DASH_IMAGE to the rc image BY DIGEST}
+    entrypoint: ["kneo-dash"]
+    command: ["recover", "--status"]
+    environment:
+      KNEO_DASH_DB_URL: sqlite:////var/lib/kneo-dash/state.db
+    volumes:
+      - soak-state:/var/lib/kneo-dash
+    restart: "no"
+
+  kneo-dash:
+    image: ${KNEO_DASH_IMAGE:?set KNEO_DASH_IMAGE to the rc image BY DIGEST}
+    restart: unless-stopped
+    depends_on:
+      recover-gate:
+        condition: service_completed_successfully
+      kneo-serv:
+        condition: service_healthy
+      mock-oidc:
+        condition: service_started
+    environment:
+      # --- platform: the locked in-fixture kneo-serv ---
+      KNEO_URL: http://kneo-serv:8000
+      KNEO_API_KEY: ${SOAK_SERV_API_KEY:-certification-admin-key}
+      # --- auth: real OIDC against the locked mock IdP ---
+      KNEO_DASH_AUTH_MODE: oidc
+      KNEO_DASH_SESSION_SECRET: ${SOAK_SESSION_SECRET:?32+ char random secret}
+      KNEO_DASH_OIDC_ISSUER: http://mock-oidc:8080/dash
+      KNEO_DASH_OIDC_CLIENT_ID: kneo-dash
+      KNEO_DASH_OIDC_CLIENT_SECRET: certification-client-secret
+      KNEO_DASH_OIDC_REDIRECT_URL: https://${SOAK_HOST:?the host browsers reach}/api/callback
+      KNEO_DASH_OIDC_ROLE_CLAIM: roles
+      KNEO_DASH_OIDC_ROLE_MAP: '{"dash-admin":"admin","dash-operator":"operator","dash-viewer":"viewer"}'
+      # --- effective (certified) configuration — the production defaults, explicit ---
+      KNEO_DASH_DB_URL: sqlite:////var/lib/kneo-dash/state.db
+      KNEO_DASH_OIDC_SCOPES: openid email profile
+      KNEO_DASH_POST_LOGIN_REDIRECT: /
+      KNEO_DASH_SESSION_COOKIE_NAME: kneo_dash_session
+      KNEO_DASH_SESSION_TTL_SECONDS: "43200"
+      KNEO_DASH_SESSION_IDLE_SECONDS: "1800"
+      KNEO_DASH_SESSION_PURGE_INTERVAL_SECONDS: "3600"
+      KNEO_DASH_STUCK_RUNNING_SECONDS: "120"
+      KNEO_DASH_STUCK_BLOCKED_SECONDS: "300"
+      KNEO_DASH_HITL_NEAR_DEADLINE_SECONDS: "300"
+      KNEO_DASH_SSE_SEND_TIMEOUT_SECONDS: "30.0"
+      KNEO_DASH_SSE_MAX_STREAMS_PER_OPERATOR: "5"
+      # /metrics enabled — the soak's monitoring-continuity criterion scrapes it
+      KNEO_DASH_METRICS_TOKEN: ${SOAK_METRICS_TOKEN:?32+ char token for /metrics}
+    volumes:
+      - soak-state:/var/lib/kneo-dash
+    expose: ["8090"]
+
+  proxy:
+    # SAME digest as docker-compose.prod.yml — the certified proxy IS the prod proxy;
+    # gen_fixture_lock cross-checks the locked digest against this file.
+    image: nginx:1.27@sha256:6784fb0834aa7dbbe12e3d7471e69c290df3e6ba810dc38b34ae33d3c1c05f7d
+    restart: unless-stopped
+    depends_on: [kneo-dash]
+    ports: ["443:443", "80:80"]
+    volumes:
+      - ../nginx.conf:/etc/nginx/conf.d/kneo-dash.conf:ro
+      - ./tls:/etc/nginx/tls:ro
+
+  prometheus:
+    image: prom/prometheus:v2.53.0@sha256:075b1ba2c4ebb04bc3a6ab86c06ec8d8099f8fda1c96ef6d104d9bb1def1d8bc
+    restart: unless-stopped
+    depends_on: [kneo-dash]
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      # the FIXTURE-wired scrape config (locked); ../monitoring/prometheus.yml stays
+      # the operator template for real deployments
+      - ./prometheus.certification.yml:/etc/prometheus/prometheus.yml:ro
+      - ../monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ./metrics.token:/etc/prometheus/metrics.token:ro # echo -n "$SOAK_METRICS_TOKEN" > examples/soak/metrics.token
+      - soak-prom:/prometheus
+    ports: ["9090:9090"] # the soak verifier exports range queries from here
+
+volumes:
+  soak-state:
+  soak-prom:

@@ -380,6 +380,8 @@
       
         
       
+        
+      
     
     
     
@@ -452,6 +454,34 @@
     
   
     Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial_operating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorial — zero to operating, timed (0.8.0)
   
 
     
@@ -841,6 +871,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prune-operator-safe-retention-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prune — operator-safe retention (0.8.0)
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1255,6 +1296,10 @@
       
         
       
+        
+      
+        
+      
     
     
     
@@ -1343,6 +1388,78 @@
         
           
           <div class="md-nav__link md-nav__container">
+            <a href="../../examples/monitoring/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
             <a href="../../examples/e2e/" class="md-nav__link ">
               
   
@@ -1362,12 +1479,84 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
             <span class="md-nav__icon md-icon"></span>
             
   
     E2e
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/soak/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Soak
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Soak
   
 
           </label>
@@ -1478,6 +1667,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#prune-operator-safe-retention-080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        prune — operator-safe retention (0.8.0)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#exit-codes-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1517,15 +1717,17 @@
 
 
 <h1 id="cli-reference">CLI reference<a class="headerlink" href="#cli-reference" title="Permanent link">&para;</a></h1>
-<p>The <code>kneo-dash</code> console script (installed by <code>pip install kneo-dash</code>) has <strong>two</strong>
-subcommands: <code>serve</code> (the default) and <strong><code>recover</code></strong> — a safety-critical break-glass flow for
-recovering an instance after a database restore. This page documents every subcommand, flag,
+<p>The <code>kneo-dash</code> console script (installed by <code>pip install kneo-dash</code>) has <strong>three</strong>
+subcommands: <code>serve</code> (the default), <strong><code>recover</code></strong> — a safety-critical break-glass flow for
+recovering an instance after a database restore — and <strong><code>prune</code></strong> — operator-safe retention
+for the growth tables (0.8.0). This page documents every subcommand, flag,
 and <strong>exit code</strong>; the recovery model itself is ADR-012 §7
 and the operator runbook is <a href="../backup_and_recovery/">Backup &amp; recovery</a>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kneo-dash [serve]                         # run the BFF (default)
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kneo-dash recover [--reason TEXT]         # ENTER recovery (arm the gate)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>kneo-dash recover --status                # is this instance in recovery? (deployment gate)
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>kneo-dash recover --reconcile --access-map FILE (--connections FILE | --keep-connections) [--reason TEXT]
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>kneo-dash prune --older-than-days N --export-dir DIR --by OPERATOR [--table T] [--vacuum] [--dry-run]
 </code></pre></div>
 <h2 id="serve-default"><code>serve</code> (default)<a class="headerlink" href="#serve-default" title="Permanent link">&para;</a></h2>
 <p><code>kneo-dash</code> with no subcommand (or <code>kneo-dash serve</code>) starts the BFF. It is a <strong>convenience
@@ -1588,6 +1790,40 @@ way out (there is no <code>--clear</code>):</p>
 <strong>recovery is NOT cleared</strong> — the instance stays fenced until a successful reconcile. Requiring
 an explicit connection decision prevents silently serving a restored instance against the
 wrong (possibly stale/foreign) platform credentials.</p>
+<h2 id="prune-operator-safe-retention-080"><code>prune</code> — operator-safe retention (0.8.0)<a class="headerlink" href="#prune-operator-safe-retention-080" title="Permanent link">&para;</a></h2>
+<p>Prunes the two growth tables — the <strong>audit log</strong> and <strong>launch history</strong> — with
+export-before-delete and a self-audit record (design:
+state-store design §Prune &amp; export):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kneo-dash<span class="w"> </span>prune<span class="w"> </span>--older-than-days<span class="w"> </span><span class="m">90</span><span class="w"> </span>--export-dir<span class="w"> </span>/backups/prune<span class="w"> </span>--by<span class="w"> </span>ops@example.com
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># scope / preview / reclaim:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">#   --table audit_log|launches|all   (default all)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">#   --dry-run                        report only; changes nothing</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">#   --vacuum                         SQLite: rebuild the file so space returns to the OS</span>
+</code></pre></div>
+<ul>
+<li><strong>Export first, always:</strong> candidates are written to
+  <code>DIR/&lt;table&gt;-pruned-&lt;utc&gt;.jsonl</code> <strong>plus a <code>.sha256</code> sidecar</strong>; the file's first line
+  is a <code>{"_schema": "kneo-dash-prune-export/1", …}</code> header recording the table, store
+  schema version, cutoff, and row count (explicitly versioned). <strong>Every</strong> target table
+  is exported before <strong>any</strong> row of any table is deleted, so an export failure aborts
+  with nothing deleted. Deletes target exactly the exported id set — rows appended
+  mid-prune are untouchable.</li>
+<li><strong>Self-auditing:</strong> a <code>store.prune</code> audit row records the <code>--by</code> operator, cutoff,
+  and per-table <code>{rows, export filename, sha256}</code> — so the log documents its own
+  pruning and each row can be matched to its exact export artifact.</li>
+<li><strong>A completion receipt lands on disk first:</strong> after the deletes and <strong>before</strong> the
+  audit append, <code>DIR/prune-receipt-&lt;utc&gt;.json</code> records the full per-table outcome — so
+  even if the audit append itself fails, the deletion is never unrepresented.</li>
+<li><strong>If the delete or audit phase fails mid-way</strong> (deletes run as batched transactions):
+  the remaining old rows simply stay put — nothing unexported is ever deleted — a
+  best-effort <code>store.prune.partial</code> audit row records the progress, and <strong>re-running
+  the same prune converges</strong> (the exports, and the receipt if deletes finished, are
+  already on disk).</li>
+<li><strong>Back up first</strong> (a real precondition, not advice), and watch the
+  <code>kneo_dash_store_rows{table=…}</code> gauges to decide <em>when</em> — see
+  <a href="../observability/">Observability</a> for the watch levels.</li>
+<li>Postgres (best-effort lane): <code>--vacuum</code> is a no-op (autovacuum owns reclamation).</li>
+</ul>
 <h2 id="exit-codes-summary">Exit codes (summary)<a class="headerlink" href="#exit-codes-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
