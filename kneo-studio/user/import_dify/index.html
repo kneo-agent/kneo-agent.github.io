@@ -1,0 +1,1259 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kneo Agent Studio — development and migration UI for the Kneo Agent Platform">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-studio/user/import_dify/">
+      
+      
+        <link rel="prev" href="../quickstart/">
+      
+      
+        <link rel="next" href="../debugging/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Importing a Dify app - Kneo Agent Studio</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#importing-a-dify-app" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-header__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis"><a href="https://kneo-agent.github.io/kneo-studio/" style="color:inherit;text-decoration:none">Kneo Agent Studio</a></span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Importing a Dify app
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Kneo Agent Studio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pub/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-nav__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    Kneo Agent Studio
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing a Dify app
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing a Dify app
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#import-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-exports-studio-reads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which exports Studio reads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-support-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The support matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cards-a-dify-import-usually-carries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cards a Dify import usually carries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-expect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to expect
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging a run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hosting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Studio for a team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pub/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/n8n/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    n8n
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    n8n
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/dify/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dify
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dify
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#import-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#which-exports-studio-reads" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which exports Studio reads
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-support-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The support matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-cards-a-dify-import-usually-carries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The cards a Dify import usually carries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-to-expect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to expect
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="importing-a-dify-app">Importing a Dify app<a class="headerlink" href="#importing-a-dify-app" title="Permanent link">&para;</a></h1>
+<p>Studio converts a Dify app export — the YAML file Dify's <strong>Export DSL</strong> writes — into a Kneo
+<code>version: v1</code> spec plus gap cards, the same way it converts an n8n workflow. What converts, what is
+carded and why is below; the <a href="../quickstart/">quickstart</a> walks the rest of the pipeline — review,
+govern and hand-off — which is the same for every source.</p>
+<blockquote>
+<p><strong>Dify import is new in 0.9.0.</strong> 0.8.0 and earlier answer a Dify import with
+<code>501 not_implemented</code>.</p>
+</blockquote>
+<h2 id="import-it">Import it<a class="headerlink" href="#import-it" title="Permanent link">&para;</a></h2>
+<ol>
+<li>In Dify, open the app and choose <strong>Export DSL</strong>. Dify exports the app's <strong>draft</strong>, so unpublished
+   edits are what Studio converts. Keep the secret values out of the export when Dify asks: Studio
+   never carries a credential, and a literal one only adds a blocking card.</li>
+<li>In Studio, choose <strong>Import</strong>, pick <strong>Dify</strong> as the source, and choose the <code>.yml</code> or <code>.yaml</code>
+   file. Over the API it is <code>POST /api/projects/{project}/import/dify</code>, with the same body and
+   alias rules as an n8n import (the examples
+   show both, and carry a Dify app to try first).</li>
+<li>Read the gap cards. <strong>Blocking</strong> ones must be fixed in the draft and attested before the spec
+   can be exported; <strong>manual</strong> ones need an acknowledgement; <strong>info</strong> ones only tell you.</li>
+</ol>
+<h2 id="which-exports-studio-reads">Which exports Studio reads<a class="headerlink" href="#which-exports-studio-reads" title="Permanent link">&para;</a></h2>
+<p>Studio is verified against <strong>Dify 1.17.1</strong>, whose DSL is version <code>0.7.0</code>. It converts every <code>0.x</code>
+DSL version up to <code>0.7.0</code>, including those below <code>0.1.0</code> — the versions Dify itself imports without
+asking for confirmation — and reads an export with no version as <code>0.1.0</code> (absent, <code>null</code> or
+empty alike), as Dify does. A newer version (a newer <code>0.x</code>, or another major such as <code>1.0.0</code> or
+<code>v1</code>), a version that is not a string, and one Studio cannot parse are refused, with a message
+naming which: Studio does not guess at a format it has not verified.</p>
+<h2 id="the-support-matrix">The support matrix<a class="headerlink" href="#the-support-matrix" title="Permanent link">&para;</a></h2>
+<!-- The mode table below is held to `importers/dify.py`'s SUPPORT_MATRIX by
+     backend/tests/test_the_dify_support_matrix_is_published.py. -->
+
+<table>
+<thead>
+<tr>
+<th>App mode</th>
+<th>Studio</th>
+<th>What it becomes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>workflow</code></td>
+<td><strong>converted</strong></td>
+<td>the graph: one Kneo step per node Kneo can run, the rest carded</td>
+</tr>
+<tr>
+<td><code>advanced-chat</code></td>
+<td><strong>converted</strong></td>
+<td>the graph, as for <code>workflow</code>; each LLM's conversation memory is carded</td>
+</tr>
+<tr>
+<td><code>chat</code></td>
+<td><strong>converted</strong></td>
+<td>one Kneo agent: the model and the prompt</td>
+</tr>
+<tr>
+<td><code>agent-chat</code></td>
+<td><strong>converted</strong></td>
+<td>one Kneo agent: the model and the prompt. Its tools and its iteration bound are carded for you to set: a Dify tool has no backing Kneo can call, and the bound is not carried. An app with no strategy, or a router strategy, runs no agent in Dify and is carded, blocking</td>
+</tr>
+<tr>
+<td><code>completion</code></td>
+<td><strong>converted</strong></td>
+<td>one Kneo agent: the model and the prompt</td>
+</tr>
+<tr>
+<td><code>agent</code></td>
+<td><strong>carded</strong></td>
+<td>nothing: its prompt and tools live in the agent package the export carries under <code>agent_packages</code>, which Studio does not read</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Inside a graph</strong>, a node becomes:</p>
+<table>
+<thead>
+<tr>
+<th>Dify node</th>
+<th>In Kneo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start</code>, and the schedule, webhook and plugin triggers</td>
+<td>a start — Kneo runs are created by a caller, so a trigger's schedule or route is carded to recreate outside Kneo</td>
+</tr>
+<tr>
+<td><code>llm</code>, <code>parameter-extractor</code></td>
+<td>an agent that answers once; its prompt is the system prompt, its user messages are run input. Its model is the workflow's shared model variable when its model selector names one; a selector Dify cannot resolve is carded <code>source_cannot_run</code>, blocking</td>
+</tr>
+<tr>
+<td><code>agent</code> on Dify's own <code>function_calling</code> or <code>ReAct</code> strategy</td>
+<td>an agent with its model and instruction; each enabled tool is carded, blocking (see <em>Tools</em> below); any other strategy is carded, blocking</td>
+</tr>
+<tr>
+<td><code>if-else</code>, <code>question-classifier</code></td>
+<td>graph edges, one per case, each condition carded, blocking, for you to write. A branch straight after the start has no step before it to branch from: only its first case is connected, and every other case's step is carded <code>branching_shape</code>, blocking</td>
+</tr>
+<tr>
+<td>a node's error handling (a fail branch, a default value) or its retry</td>
+<td>carded, blocking: a Kneo step fails the run. A fail branch's route is kept as an ordinary edge so there is something to repair</td>
+</tr>
+<tr>
+<td><code>answer</code>, <code>end</code></td>
+<td>nothing — flow passes through. What the caller received is carded, manual, whenever a Kneo run's bare reply is not it: a formatted answer, named outputs, an empty answer, an End with no outputs, and an answer of one reference such as <code>{{#sys.query#}}</code>. The one exception is an answer that is exactly <code>{{#&lt;step&gt;.text#}}</code> for the LLM or agent step just before it, with nothing around it and nothing after it, and no other answer able to reply in the same run: Dify sends the caller every answer a run reaches. That step must also be the last the run takes, since a Kneo run returns its last step's output. A terminal missing its <code>answer</code> or <code>outputs</code> field is one Dify cannot build: carded, blocking</td>
+</tr>
+<tr>
+<td><code>iteration</code>, <code>loop</code> and everything inside them</td>
+<td>one carded region, blocking — never flattened into steps that would run once</td>
+</tr>
+<tr>
+<td><code>code</code>, <code>http-request</code>, <code>tool</code></td>
+<td>carded, blocking: Kneo cannot run an inline body, an HTTP call or a tool as a step</td>
+</tr>
+<tr>
+<td><code>knowledge-retrieval</code>, <code>template-transform</code>, <code>variable-aggregator</code>, <code>assigner</code>, <code>document-extractor</code>, <code>list-operator</code>, <code>human-input</code>, the knowledge-pipeline nodes, Dify's new Agent node (in the export, <code>type: agent</code> with <code>version: "2"</code> and <code>agent_node_kind: dify_agent</code>; the editor titles it <em>Agent</em>, like the strategy agent, and its prompt, model and tools live in the agent package under <code>agent_packages</code>), and any node type Studio does not recognise</td>
+<td>carded, blocking: no Kneo equivalent</td>
+</tr>
+<tr>
+<td>a canvas note</td>
+<td>not imported, info</td>
+</tr>
+</tbody>
+</table>
+<p>The whole mapping, row by row and read from Dify's own source, is
+the Dify mapping table.</p>
+<h2 id="the-cards-a-dify-import-usually-carries">The cards a Dify import usually carries<a class="headerlink" href="#the-cards-a-dify-import-usually-carries" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>The model's settings</strong> (<code>completion_params</code>) — <code>manual</code>. The temperature and token cap are
+  listed with the Kneo field each belongs in; set them by hand or accept the provider's defaults.</li>
+<li><strong>Run input</strong> — <code>manual</code>. A start form's variables, and an LLM's user message, are what each
+  caller must now supply. Kneo runs take their input from the caller.</li>
+<li><strong>A prompt with a variable</strong> — <code>blocking</code>. <code>{{#node.variable#}}</code> in a workflow, <code>{{name}}</code> in a
+  chat or completion app, and any Jinja template are Dify's own syntax. Kneo does not interpolate
+  them, so the prompt is not carried; the card quotes it for you to rewrite.</li>
+<li><strong>Conversation memory</strong> — <code>blocking</code>. Every <code>chat</code> and <code>agent-chat</code> app carries it, because Dify
+  always sends such an app its history, and so does any <code>advanced-chat</code> LLM, parameter extractor or
+  agent node that has memory set. A Kneo agent does not keep earlier turns.</li>
+<li><strong>A model provider Studio does not recognise</strong> — <code>manual</code>. The card names it; set
+  <code>agent.model.provider</code> and <code>agent.model.name</code> yourself.</li>
+<li><strong>Tools</strong> — <code>blocking</code>. A Kneo tool needs a backing — Python, an MCP server or another agent —
+  that no export can carry, so someone with platform access has to supply it.</li>
+<li><strong>A fan-out</strong> — <code>blocking</code>, <code>branching_shape</code>. A node whose output is wired to several steps, or
+  a branch case wired to several, runs them all in Dify. So does a step wired straight on beside a
+  branch: it runs with whichever case fires. A Kneo graph step follows one edge, the first that
+  matches, so the rest would never run. The edges are kept for you to rebuild as one path, and
+  writing the branch's conditions alone does not clear this card. One step per case is a choice,
+  not a fan-out, and draws no card. Dify runs a step that several connections reach once, after
+  all of them, so a start wired to <code>a</code> and to <code>b</code> beside <code>a → b</code> converts as the chain <code>a → b</code>.
+  But if the converted workflow reaches <code>b</code> only through a branch, it is carded.</li>
+<li><strong>The app's features</strong> — one card for each feature the app turns on, because a Kneo spec has no
+  app features.</li>
+<li><strong>Moderation</strong> (<em>content moderation</em>, <code>sensitive_word_avoidance</code>) is <code>blocking</code> in a chat,
+    agent-chat, completion or advanced-chat app. Dify refuses a flagged query and replaces a flagged
+    answer, and the converted agent would do neither, so rebuild the protection first.</li>
+<li>File upload and text to speech are <code>manual</code>. So are the chat features of an advanced-chat
+    app: the opener, the follow-up suggestions and speech to text.</li>
+<li>A feature the app's mode never uses is <code>info</code>, and so are citations beside a knowledge
+    retrieval.</li>
+</ul>
+<h2 id="what-to-expect">What to expect<a class="headerlink" href="#what-to-expect" title="Permanent link">&para;</a></h2>
+<p>Over 614 real Dify exports, 607 convert, and <strong>43 of them — about 7 in 100 — carry no blocking
+card</strong>. All 43 are <code>workflow</code> or <code>advanced-chat</code> apps in which an LLM does the work. No <code>chat</code>,
+<code>agent-chat</code> or <code>completion</code> export converts without one: every chat app carries the memory card,
+and most carry a prompt variable. The blockers you will meet most are:
+- nodes with no Kneo equivalent (<code>code</code>, <code>http-request</code>, knowledge retrieval, templates);
+- prompts and conditions written in Dify's variable syntax;
+- conversation memory;
+- tool steps;
+- branches Kneo cannot hang from a step.</p>
+<p>A clean import shows an <code>info</code> card for the start — on Dify a start is how a caller begins a run,
+which a Kneo run already is — and <code>manual</code> cards for run input and the response format, plus one
+for each app feature it turns on.
+<code>examples/dify/answer-workflow.yml</code>
+is one to compare against.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

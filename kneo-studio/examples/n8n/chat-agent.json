@@ -1,0 +1,38 @@
+{
+  "name": "Chat assistant",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "webhookId": "5c1f2b4e-7d3a-4f0e-9b8c-2a6d1e4f7c90",
+      "parameters": {}
+    },
+    {
+      "id": "2",
+      "name": "Assistant",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [220, 0],
+      "parameters": {
+        "options": { "systemMessage": "You answer questions about our product." }
+      }
+    },
+    {
+      "id": "3",
+      "name": "Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [220, 160],
+      "parameters": { "model": "claude-3-5-sonnet-20240620" }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [[{ "node": "Assistant" }]]
+    },
+    "Model": { "ai_languageModel": [[{ "node": "Assistant" }]] }
+  }
+}

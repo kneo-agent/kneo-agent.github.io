@@ -1,0 +1,2027 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kneo Agent Studio — development and migration UI for the Kneo Agent Platform">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-studio/user/quickstart/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../import_dify/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Quickstart - Kneo Agent Studio</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quickstart" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-header__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis"><a href="https://kneo-agent.github.io/kneo-studio/" style="color:inherit;text-decoration:none">Kneo Agent Studio</a></span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quickstart
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Kneo Agent Studio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pub/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-nav__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    Kneo Agent Studio
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behind-a-reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind a reverse proxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-it-to-a-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect it to a platform
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connect it to a platform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-zero-config-binding-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the zero-config binding grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-studio-keeps-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Studio keeps things
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login attempts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-a-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import a workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Import a workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-how-much-of-n8ns-behaviour-studio-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitation — how much of n8n's behaviour Studio models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#govern-it-then-take-it-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Govern it, then take it out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-on-the-platform-before-you-hand-it-over" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it on the platform, before you hand it over
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run it on the platform, before you hand it over">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-the-hand-off-before-you-make-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the hand-off before you make it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-some-platform-valid-specs-are-refused-before-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitation — some platform-valid specs are refused before submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-means-for-the-editor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this means for the editor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import_dify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing a Dify app
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging a run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hosting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Studio for a team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pub/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/n8n/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    n8n
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    n8n
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/dify/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dify
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dify
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#run-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#behind-a-reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind a reverse proxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connect-it-to-a-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connect it to a platform
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connect it to a platform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-the-zero-config-binding-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the zero-config binding grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-studio-keeps-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Studio keeps things
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-size" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request size
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-attempts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login attempts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#import-a-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import a workflow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Import a workflow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-how-much-of-n8ns-behaviour-studio-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitation — how much of n8n's behaviour Studio models
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#govern-it-then-take-it-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Govern it, then take it out
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-it-on-the-platform-before-you-hand-it-over" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run it on the platform, before you hand it over
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run it on the platform, before you hand it over">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-the-hand-off-before-you-make-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check the hand-off before you make it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-some-platform-valid-specs-are-refused-before-submission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known limitation — some platform-valid specs are refused before submission
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-means-for-the-editor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What this means for the editor
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="quickstart">Quickstart<a class="headerlink" href="#quickstart" title="Permanent link">&para;</a></h1>
+<p>Run Studio, point it at a Kneo Agent Platform, and import your first workflow.</p>
+<blockquote>
+<p><strong>Scope <code>[0.9.0]</code>.</strong> Import, from n8n or <a href="../import_dify/">Dify</a> → govern → <strong>edit</strong> →
+<strong>run</strong> → <strong>export</strong>: you can change a
+spec in Studio, <strong>run it on the platform and read the result back</strong>, and take
+the governed result out as YAML — on your own machine or on a shared host under
+a login mode. The Hand-off page converts the export into the inline JSON the
+Dashboard's Launch accepts, with the paste steps beside it, and reports up front
+whether the target environment can actually receive it. The analysis key can be
+rotated out rather than kept forever (see <a href="../hosting/">hosting</a>).
+<strong>The debug loop is mostly here</strong> <code>[0.7.0]</code>. A run's <strong>graph</strong>, its <strong>trace</strong>,
+its <strong>checkpoints</strong> and their <strong>diff</strong> are served and reachable from the Debug
+page, and a run can be <strong>stopped</strong>. What arrives later is <strong>replay</strong> and
+<strong>resume</strong>, and pushing to the Dashboard without the paste. See the
+roadmap; this page grows with them.</p>
+<p><em>This block listed all six debug operations as "what arrives later" — including
+the four that shipped in 0.7.0 — and carried no cut stamp, so it read as current
+scope on the page a new user starts from <code>[docs-consistency/F-01, fixed 0.8.0
+A1]</code>. It is the second time this banner has outlived the code; the first is
+recorded below. <code>test_the_scope_block_does_not_defer_what_ships.py</code> now holds it
+against the routes that answer.</em></p>
+<p><em>This said "</em><em>0.4.0 scope</em><em>" and "what arrives later is </em><em>test runs</em><em> —
+<code>POST …/test-runs</code> is published and answers a <code>501</code>" until <code>[2026-09-02]</code>,
+after the route began dispatching. It was the start page telling readers that
+the release's headline feature did not exist (touchpoint 2 round 1, F-03).</em></p>
+</blockquote>
+<h2 id="run-it">Run it<a class="headerlink" href="#run-it" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>kneo-studio
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>kneo-studio
+</code></pre></div>
+<p>Studio serves the BFF and the built SPA on <code>http://127.0.0.1:8091</code>.</p>
+<blockquote>
+<p><strong>Which Studio this page describes.</strong> <code>pip install kneo-studio</code> installs the latest
+release, <strong>0.9.0</strong>, which is what this page describes. On 0.8.0 and earlier,
+<code>examples/n8n/chat-agent.json</code> draws a blocking <code>proprietary_node</code> card for its chat
+trigger, and a Dify import answers <code>501 not_implemented</code>.</p>
+</blockquote>
+<p>Both halves of that address are configurable — <code>KNEO_STUDIO_HOST</code> (default
+<code>127.0.0.1</code>) and <code>KNEO_STUDIO_PORT</code> (default <code>8091</code>). The port is worth knowing
+if something else already owns 8091; the host is subject to the rule in the next
+paragraph.</p>
+<p><strong>It will not start on a routable address without authentication.</strong> Under
+<code>auth_mode = none</code> — still the default — every request is the local owner with
+full rights over your working directory, so binding <code>0.0.0.0</code> would publish
+exactly that. Studio <strong>refuses rather than warns</strong>, and names the remedy: bind
+loopback, or set <code>KNEO_STUDIO_AUTH_MODE</code> to <code>static</code> or <code>oidc</code>. Those modes
+shipped in 0.2.0; the refusal is not a placeholder for them, it is what keeps the
+local default local.</p>
+<p>The working directory is the project root. Point somewhere else with
+<code>KNEO_STUDIO_PROJECT_ROOT</code>.</p>
+<h3 id="behind-a-reverse-proxy">Behind a reverse proxy<a class="headerlink" href="#behind-a-reverse-proxy" title="Permanent link">&para;</a></h3>
+<p>Studio checks the <code>Host</code> and <code>Origin</code> of every request, so a proxy that presents
+a different name than the one Studio binds is rejected until you say the name is
+expected:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KNEO_STUDIO_ALLOWED_HOSTS</code></td>
+<td>comma-separated host names to accept <strong>in addition to</strong> the loopback defaults</td>
+</tr>
+<tr>
+<td><code>KNEO_STUDIO_CORS_ORIGINS</code></td>
+<td>comma-separated origins allowed to call <code>/api</code> from a browser; empty by default, which allows none</td>
+</tr>
+<tr>
+<td><code>KNEO_STUDIO_TRUSTED_PROXIES</code></td>
+<td>the addresses your proxy connects from; without it, a forwarded client address is not trusted — see <a href="../hosting/#behind-a-reverse-proxy">hosting</a></td>
+</tr>
+</tbody>
+</table>
+<p>Neither widens what the loopback rule above permits: with <code>auth_mode = none</code>,
+Studio still refuses to bind a routable address. They are documented here
+because they exist and are enforced today — this page described neither, and a
+proxy hop failing a <code>Host</code> check with no setting to reach for is the kind of
+thing you should not have to read the source to solve.</p>
+<p><strong><code>KNEO_STUDIO_CORS_ORIGINS</code> is needed today, by anyone running the frontend
+dev server.</strong> <code>npm run dev</code> serves the SPA from <code>localhost:5174</code> and proxies
+<code>/api</code> to the BFF, so the browser's <code>Origin</code> is the dev server while the
+request arrives at <code>127.0.0.1:8091</code>. The same-origin rule refuses that mismatch
+on every <strong>mutating</strong> call — import, artifact creation and every other
+<code>POST</code>/<code>PUT</code>/<code>PATCH</code>/<code>DELETE</code> answer <code>403 cross_origin_refused</code> while reads work
+fine, which is a confusing way to discover it. <strong>Export is a <code>GET</code>, so it keeps
+working</strong>: the check applies to mutating methods only.</p>
+<p><em>This listed export among the refused calls until <code>[2026-09-06]</code>, in the same
+sentence that says the rule fires on mutating ones — a list that refuted itself,
+on the page that is the only place a reader learns this boundary.</em></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">KNEO_STUDIO_CORS_ORIGINS</span><span class="o">=</span>http://localhost:5174<span class="w"> </span>kneo-studio
+</code></pre></div>
+<p><em>(This paragraph said these settings "matter once <code>static</code> or <code>oidc</code> land and a
+served instance becomes startable" — presenting a variable the documented
+development workflow needs </em><em>now</em><em> as one for later. The <code>README</code>'s own
+<code>npm run dev</code> line pointed at the workflow without mentioning it. Two pages
+each defensible alone, and jointly a dead end.)</em></p>
+<p><code>KNEO_STUDIO_RELOAD=1</code> restarts the BFF on source changes. It is a development
+convenience and belongs nowhere near a shared host.</p>
+<h2 id="connect-it-to-a-platform">Connect it to a platform<a class="headerlink" href="#connect-it-to-a-platform" title="Permanent link">&para;</a></h2>
+<p>Studio talks to <code>kneo_serv</code> through a <strong><code>kneo_client</code> profile</strong>. If you already
+have one, skip to naming it below.</p>
+<p>A profile is a section in <code>~/.config/kneo/client.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">[laptop]</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"https://kneo.example.com"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">api_key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"…"</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">auth_scheme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"bearer"</span><span class="w">   </span><span class="c1"># or "kneo_api_key" for the X-Kneo-Api-Key header</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">30.0</span>
+</code></pre></div>
+<p>Or, without a file at all — the environment is read after the file and
+overrides it, so this is a complete profile too:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_URL</span><span class="o">=</span>https://kneo.example.com
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_API_KEY</span><span class="o">=</span>…
+</code></pre></div>
+<p>Going the environment route, the <strong>profile name is informational</strong>: with no
+<code>client.toml</code>, any name resolves to those variables. Pick one you will
+recognise in a log.</p>
+<p>Then name it for Studio:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_DEFAULT_PROFILE</span><span class="o">=</span>laptop<span class="w">     </span><span class="c1"># a kneo_client profile name</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_DEFAULT_PLATFORM_ENVIRONMENT</span><span class="o">=</span>dev<span class="w">   </span><span class="c1"># optional, defaults to dev</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>kneo-studio
+</code></pre></div>
+<p>That is the whole binding. The profile supplies the URL and the credential;
+Studio never stores either, and the profile name itself never reaches the
+browser.</p>
+<p><strong>Without it, Studio still runs.</strong> The project is created <strong>unbound</strong>: you can
+import workflows and read the generated spec and its gap cards — all of that is
+local. Acknowledging a card needs an artifact, and an artifact needs the binding. What needs a platform is governance (validate, compile, policy
+report), and the UI says the project is unbound rather than failing at the first
+attempt.</p>
+<p><strong>Starting unbound is not a dead end.</strong> Set <code>KNEO_STUDIO_DEFAULT_PROFILE</code> and
+start Studio again; the project picks up the binding on that start, and drafts
+you already imported become governable. Nothing is lost and nothing needs
+deleting — you are back on the path above.</p>
+<p>The reverse is deliberately not automatic. A project that is <strong>already bound</strong>
+is never silently retargeted by an environment change, because its alias
+generation is a snapshot the artifacts governed under it depend on. Changing a
+live binding is an operator action at the host — the same bar as editing the
+profile store — and it is <code>env rotate</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="go">kneo-studio env rotate --project default --alias default --profile corrected</span>
+</code></pre></div>
+<p>That <strong>adds</strong> a generation rather than moving one, so it goes live for new work
+immediately while an artifact frozen at the old generation still resolves the
+binding it was governed against. Once nothing is running against the old one,
+<code>kneo-studio env retire --project default --alias default --generation N</code> stops it
+resolving for new work. The full family is
+<code>env add|rotate|retire|rebind</code>; <code>--help</code> on each explains what it takes.</p>
+<blockquote>
+<p><strong>This has been here since 0.3.0, and until it landed a mistyped profile name bound a
+project permanently</strong> — nothing wrote the retirement column, so there was no
+way to correct a binding short of editing the state database. The previous
+advice here was to retarget "before you have artifacts worth keeping". You no
+longer have to.</p>
+</blockquote>
+<h3 id="what-the-zero-config-binding-grants">What the zero-config binding grants<a class="headerlink" href="#what-the-zero-config-binding-grants" title="Permanent link">&para;</a></h3>
+<p>Deliberately, as little as possible. The alias is created as <strong><code>default</code></strong>
+with transport <strong><code>remote</code></strong>, and
+nothing else is enabled:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Out of the box</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Transport</td>
+<td><code>remote</code>, always</td>
+</tr>
+<tr>
+<td>Host allowlist</td>
+<td>empty</td>
+</tr>
+<tr>
+<td>Secret-ref namespace</td>
+<td>none</td>
+</tr>
+<tr>
+<td>Operator registry</td>
+<td>empty</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>kneo_client</code> profile carries only a name, URL, key, scheme and timeout — it
+<strong>cannot</strong> express a transport or a server root. So there is nothing to infer
+<code>shared_filesystem</code> from, and Studio does not guess: inferring it would hand a
+spec filesystem reach on the strength of an assumption.</p>
+<p>The practical consequence, which is the same under either transport (and has been since 0.2.0):</p>
+<ul>
+<li><strong>Path-free specs and overlays work.</strong> Layering happens in memory, so an
+  overlay never needs to be a path the platform can see.</li>
+<li><strong>Filesystem literals are refused</strong> — <code>skills[].source</code>, <code>mcp_servers.*.cwd</code>,
+  <code>ca_bundle</code>, <code>client_cert</code>, <code>client_key</code>. There is no bounded dependency
+  closure yet to materialise a skill tree into, so a spec that names a local
+  path would be asking the platform to read a file that is not there. The
+  closure is a <strong>later design-first release</strong> — it needs directory semantics,
+  size limits, traversal rules, quotas and staging decided together — so no cut
+  is promised for it; see the roadmap.</li>
+<li><strong>Secret references pass through untouched.</strong> <code>kneo_serv</code> resolves them on its
+  own host, against its own secret material. Studio never expands one — on a
+  remote deployment the value does not exist here at all.</li>
+<li><strong>Anything that executes needs an operator's approval.</strong> An MCP <code>command</code> is
+  arbitrary process execution on the platform host, so it is permitted only as
+  <code>{"$registry": "&lt;name&gt;"}</code> naming an entry the operator approved for that
+  alias. An empty registry — the default — approves nothing.</li>
+</ul>
+<p>Registry entries make a spec <strong>non-portable</strong>: they resolve against <em>this</em>
+environment, and Studio refuses to export an artifact that depends on one.</p>
+<h2 id="where-studio-keeps-things">Where Studio keeps things<a class="headerlink" href="#where-studio-keeps-things" title="Permanent link">&para;</a></h2>
+<p>Two places, and they are deliberately separate:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$KNEO_STUDIO_PROJECT_ROOT</code> (default: the working directory)</td>
+<td>your specs, overlays and imported drafts, under <code>.kneo-studio/</code> — files you edit, commit and back up like source</td>
+</tr>
+<tr>
+<td><code>$XDG_STATE_HOME/kneo-studio/</code> (default <code>~/.local/state/kneo-studio/</code>)</td>
+<td><code>studio.db</code>, the snapshot store and the analysis keyring (<code>analysis-keyring.json</code>) — Studio's own state: projects, principals, analyses, artifacts, audit</td>
+</tr>
+</tbody>
+</table>
+<p>The database is <strong>not</strong> in the project root, which surprises people two ways:
+copying a project directory does not carry its artifacts, and running Studio in
+a different directory still finds the same projects. Point <code>XDG_STATE_HOME</code>
+somewhere else to keep instances separate, and include that directory when you
+back up — an artifact's governance history lives there, not beside the YAML.</p>
+<p>Studio refuses to start if the state store is <em>inside</em> the project root, which
+would make a project directory contain the database describing it.</p>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<p>Studio caps how much it will hold. On a laptop that is <strong>5 GiB, built in</strong> — you
+do not have to choose a number, and Studio still cannot fill your disk by
+accident. Override it with <code>KNEO_STUDIO_DEPLOYMENT_CAP</code> (bytes).</p>
+<p><strong>On anything shared, the cap must be declared and Studio refuses to start
+without it.</strong> "Shared" means any of: <code>KNEO_STUDIO_AUTH_MODE</code> other than <code>none</code>,
+a non-loopback <code>KNEO_STUDIO_HOST</code>, a configured <code>KNEO_STUDIO_WORKSPACE_BASE</code>, or
+a principal other than the local owner in the store. The reasoning is narrow:
+the built-in number was chosen for one person's laptop, and on a shared instance
+the person who would exceed it is not the person who chose it. The startup error
+names the setting and every reason that triggered it, so you fix it once rather
+than one restart at a time.</p>
+<h3 id="request-size">Request size<a class="headerlink" href="#request-size" title="Permanent link">&para;</a></h3>
+<p>Studio refuses a request body over <strong>4 MiB</strong> with <code>413 request_too_large</code>,
+before it reads or parses the body and before it works out who is asking. That
+bound is about protecting the server's memory, so it deliberately sits above the
+limits that describe <em>content</em> — a workflow source, n8n or Dify, over 1 MiB is
+still refused as <code>source_too_large</code>, which tells you what to fix.</p>
+<p>Raise it with <code>KNEO_STUDIO_MAX_REQUEST_BYTES</code> (bytes) if a legitimate payload is
+larger. An unreadable value falls back to the default rather than preventing
+startup.</p>
+<h3 id="login-attempts">Login attempts<a class="headerlink" href="#login-attempts" title="Permanent link">&para;</a></h3>
+<p>Three more bounds, on the one thing an unauthenticated caller can ask Studio to do
+that is genuinely expensive. The first two exist because 0.3.0's audit measured what
+happened without them: 32 concurrent login attempts took an unrelated request's
+median response time from <strong>0.7 ms to 1.2 seconds</strong>, and 300 unauthenticated
+requests to the OIDC start route left 300 rows in the database that nothing
+reclaimed.</p>
+<ul>
+<li><strong>Password checks run two at a time</strong>, in worker threads. A password hash is
+  deliberately expensive — 64 MiB of memory each — so this is what stops a stream
+  of attempts from slowing down everyone who is already signed in. Attempts wait
+  briefly for a slot and are answered <code>503 login_capacity_exhausted</code> if the wait is
+  long. Raise with <code>KNEO_STUDIO_LOGIN_VERIFY_CONCURRENCY</code> if you have the cores and
+  memory for it. Under <code>oidc</code> the same slots and the same setting cover the token
+  verification, whose signing-key fetch waits on your identity provider; a
+  sign-in that finds no slot is sent back to the login page with the same code.</li>
+<li>
+<p><strong>Ten failed attempts</strong> on one account from one address in a minute, then
+  <code>429 too_many_failed_attempts</code> for the rest of that minute. Counted per account
+  <strong>and</strong> per address, so nobody can lock a colleague out by guessing at their
+  name, and a correct password clears the count immediately. Change with
+  <code>KNEO_STUDIO_LOGIN_FAILURE_LIMIT</code>.</p>
+</li>
+<li>
+<p><strong>Twenty OIDC logins started</strong> from one address in a minute, then
+  <code>429 too_many_login_starts</code> with <code>Retry-After: 60</code>. This one counts <strong>per
+  address only</strong> — not per account, because beginning a login does not name an
+  account yet. Change with <code>KNEO_STUDIO_LOGIN_START_LIMIT</code>. Two things worth
+  knowing before you tune it: <strong>if your proxy does not forward the client
+  address, every user counts as one client</strong>, so check
+  <a href="../hosting/#behind-a-reverse-proxy"><code>KNEO_STUDIO_TRUSTED_PROXIES</code></a> first; and the count
+  is held in memory per process, so running several replicas allows the limit
+  <em>each</em>.</p>
+</li>
+</ul>
+<p>On <code>oidc</code>, beginning a login also stores a short-lived row. Studio keeps at most
+<strong>1000</strong> of those in flight and reclaims expired ones on every new login, answering
+<code>503 too_many_login_attempts</code> at the cap; <code>KNEO_STUDIO_MAX_OIDC_ATTEMPTS</code> changes
+the number. That cap and the start limit above are not the same bound and do not
+replace each other: the cap protects the database, and because it is shared, one
+caller filling it would refuse <em>everyone's</em> login — the start limit is what keeps
+one address from doing that. The sign-in link carries the page you were on, so you
+come back to it; that <code>return_to</code> path is capped at 512 bytes and ignored silently
+above it — no real in-app path is close.</p>
+<p>Every one of these falls back to its default on an unreadable value, for the same
+reason the request bound does. What each bound does and does not protect against —
+including why there is deliberately no account lockout — is in
+auth_design.</p>
+<h2 id="import-a-workflow">Import a workflow<a class="headerlink" href="#import-a-workflow" title="Permanent link">&para;</a></h2>
+<p>Open <code>http://127.0.0.1:8091</code>. On <strong>Import</strong>, pick the <strong>Source</strong> — n8n, or Dify
+(see <a href="../import_dify/">Importing a Dify app</a>) — choose the <strong>Workflow export</strong> file,
+and on a bound project give the <strong>Environment alias</strong> (<code>default</code> out of the box).
+Then press <strong>Import</strong>. The rest of this page is the same for both sources.</p>
+<p><strong>If this is your first import, use <code>examples/n8n/chat-agent.json</code>.</strong>
+Every n8n trigger becomes a card, because a Kneo spec has no trigger concept. For a
+webhook, schedule, event or chat trigger that card — <em>Trigger must be recreated
+outside Kneo</em> (<code>entry_mechanism_not_carried</code>) — is <strong>manual</strong>: it must be
+acknowledged before export. A manual trigger's card is <code>info</code>. For
+<code>chat-agent.json</code> the clean outcome is that one manual card plus one <code>info</code> note,
+saying the agent's tool loop runs with n8n's default iteration bound of 10, and
+without knowing that it is indistinguishable from something having gone wrong.
+Do not start from <code>hello-agent.json</code>: n8n itself refuses to run it, so it blocks
+with <code>source_cannot_run</code>. The examples
+directory also says which workflows convert,
+which is worth two minutes before importing something real: a Kneo spec is
+agent-centric, so a workflow that is mostly ordinary steps has little to map on
+to.</p>
+<p>Studio parses it, normalises it to a Kneo v1 spec, and shows you:</p>
+<ul>
+<li>the <strong>draft spec</strong> it produced (YAML is the source of truth);</li>
+<li><strong>gap cards</strong> for everything it could not convert faithfully.</li>
+</ul>
+<p><strong>Create artifact from this draft</strong> opens it in the <strong>Spec editor</strong>, which is where
+you get the <strong>graph</strong>, rendered from the platform's own compiled topology rather
+than from the YAML, so the picture and the spec cannot disagree, and the
+platform's verdict. Both need a bound project.</p>
+<p>Gaps are not warnings to skim. A <code>manual</code> gap must be acknowledged before the
+artifact can be exported, and a <code>blocking</code> one — an unbounded loop, say — has to
+be resolved.</p>
+<p><strong>Clearing them is done on the Gaps page</strong> (the editor's <strong>Review gaps</strong> links
+there), and who may do it depends on your role in the project:</p>
+<ul>
+<li>A <code>manual</code> card needs <strong>Acknowledge this gap</strong>. The acknowledgement is recorded
+  against an artifact, and is for an editor or the owner.</li>
+<li>A <code>blocking</code> card cannot be acknowledged away. Fix it in the draft and have a
+  project owner <strong>Attest</strong> that the edit addressed it, or fix the source and
+  re-import.</li>
+<li><strong>Withdraw</strong> (an attestation) and <strong>Reassociate</strong> (a renamed draft's analysis)
+  are owner actions too.</li>
+</ul>
+<p>A role that cannot use a control sees a sentence saying who can, not the button.</p>
+<h3 id="known-limitation-how-much-of-n8ns-behaviour-studio-models">Known limitation — how much of n8n's behaviour Studio models<a class="headerlink" href="#known-limitation-how-much-of-n8ns-behaviour-studio-models" title="Permanent link">&para;</a></h3>
+<p>To convert faithfully, Studio has to answer questions about the <em>source</em>: which
+node n8n would start from, which nodes that start actually reaches, whether two
+triggers run the same program, and whether an attached model is one it
+understands. <strong>Studio's answers are hand-written against a pinned n8n
+(<code>n8n@1.62.1</code>), and they are known to be incomplete.</strong></p>
+<p>Nine rounds of external review found nine cases where an answer was wrong — a
+disconnected trigger, two webhooks entering a chain at different points, a
+first-party model whose node name lacks <code>Chat</code>. Every one is fixed. The
+limitation is not any of them; it is that the answers were <strong>encoded case by
+case rather than derived from n8n's own rules</strong>, so the next unusual shape may
+find another.</p>
+<p>What that means when you import:</p>
+<ul>
+<li><strong>Ordinary workflows convert, and the gap cards are the contract.</strong> A card
+  says what could not be carried; no card means Studio believes it converted
+  faithfully.</li>
+<li><strong>Studio fails toward refusing.</strong> An unrecognised node, a source with no start,
+  triggers that disagree, an agent the pinned n8n itself fails on every item (no
+  enabled model, a model its executor refuses, an <code>auto</code> prompt with no
+  <code>chatInput</code> to read — <code>source_cannot_run</code>, whose fix belongs in the source),
+  and a <strong>fan-out</strong>, one output wired to several nodes, which the source runs
+  in full while a Kneo graph step follows one edge (<code>branching_shape</code>, since
+  0.9.0) — each is a <strong>blocking</strong> card rather than a quiet conversion. For n8n
+  that includes a trigger wired to two steps, and one step reached by two
+  connections, since n8n runs a step once for every connection that reaches it.
+  A connection that leads back to a step is a loop, even without a loop node, and
+  is blocking until you pick its <code>max_steps</code>. A loop with no step in it, such as a
+  disabled node wired back to itself, is blocking too, because the converted workflow
+  cannot carry it. So is a
+  Switch with <em>Send data to all matching outputs</em> on, which can run several of
+  its outputs at once. You will more often be told "I cannot convert this" than handed
+  something wrong.</li>
+<li><strong>Studio converts first-party n8n only, and that is a decision rather than a
+  backlog.</strong> <code>n8n-nodes-base</code> and <code>@n8n/n8n-nodes-langchain</code>; every other package
+  is refused with a card, community language models included. n8n's ecosystem is
+  largely community nodes, so this refuses a great deal — the alternative is
+  converting a node whose behaviour nobody has read, which means inventing it or
+  dropping it. If you need one, its card says to rebuild the behaviour as a Kneo
+  step; no version of Studio will convert it without a mapping you supply.</li>
+<li><strong>A refused first-party node is a different problem, and the card says so.</strong>
+  <code>n8n-nodes-base.set</code> is inside the pinned release; what Studio lacks is a Kneo
+  construct to convert it into. Those cards do not tell you a version is the
+  boundary, because it is not — changing the pin would not help.</li>
+<li><strong>Three more answers were corrected in 0.5.0, each a silent conversion until
+  then.</strong> A node's <em>error output</em> ("On Error: Continue (using error output)")
+  became an unconditional edge — a pager wired to failures ran on every run; it
+  is now a <strong>blocking</strong> card — <code>error_route_not_carried</code> since 0.9.0, <code>error_output</code>
+  before — and the edge is labelled <code>error</code>.
+  A model node's <code>temperature</code> / <code>maxTokens</code> and an agent's <code>maxIterations</code> were
+  dropped without a word; they are a <strong>manual</strong> <code>parameters_not_carried</code> card
+  naming each value the author set and the Kneo field it belongs in. Since 0.9.0
+  a default n8n applies without the author writing it — the iteration bound of 10
+  — is an <code>info</code> note instead. And a <strong>sticky note</strong> —
+  a canvas comment — drew a <em>blocking</em> card telling you to rebuild it as a step;
+  it is an <code>info</code> card now. Because these change what the import <em>reports</em> for
+  the same bytes, the importer and analyzer contract numbers moved — the current
+  ones are the <code>version</code> and <code>analyzer_version</code> on any analysis you read back, so
+  they are not repeated here, where they would go stale: <strong>re-import a workflow
+  you imported before 0.5.0 and you get a new analysis with the corrected
+  cards</strong>, not the old one back. 0.9.0 moved them again, and renamed seven card
+  kinds (<code>trigger</code> → <code>entry_mechanism_not_carried</code>, <code>no_source_start</code> →
+  <code>no_entry</code>, and five more). A card whose id changed carries no acknowledgement
+  across, so acknowledge it again after re-importing.</li>
+<li><strong>Always read the exported spec before you deploy it.</strong> That is good practice
+  regardless; here it is the backstop for a class of defect that, by
+  construction, this project cannot yet claim to have exhausted.</li>
+</ul>
+<p>0.3.0 derived the node maps from n8n's pinned sources — rather than extending them
+one case at a time — and the reasoning is recorded in
+its tracker in full. The start, reach and
+executor rules above are still read case by case, which is how 0.9.0 came to add
+<code>source_cannot_run</code>. <em>(This said "is 0.3.0's work" for two releases
+after it landed — a reader lost nothing by it, which is why it outlived the cut.)</em></p>
+<h2 id="govern-it-then-take-it-out">Govern it, then take it out<a class="headerlink" href="#govern-it-then-take-it-out" title="Permanent link">&para;</a></h2>
+<p>An import produces a <strong>draft</strong>. To govern it you create an <strong>artifact</strong>, which
+freezes the exact bytes — base, overlays and overrides — so that what gets
+validated is what gets exported, and an edit afterwards cannot change either.</p>
+<p>From there Studio runs the platform's own <code>validate</code>, <code>compile(strict)</code> and
+<code>policy_report</code> against that frozen document, and renders the compiled graph.</p>
+<p>Export is the way out:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>GET /api/projects/{project}/artifacts/{artifact}/export
+</code></pre></div>
+<p>It returns a <strong>JSON envelope</strong> — <code>{artifact_id, base_ref, spec_yaml, filename}</code>,
+where <code>filename</code> is a suggested save name — whose
+<code>spec_yaml</code> field holds the exact layered YAML. Redirecting this URL straight
+into a <code>.yaml</code> file gives you the envelope, not the spec; take <code>.spec_yaml</code> from
+it (<code>… | jq -r .spec_yaml &gt; spec.yaml</code>).</p>
+<p>The envelope is produced only after re-running the full gate on the precise body
+it is about to hand you. A stored verdict would go stale the moment an input
+moved, so there isn't one. It refuses, with the reason, when:</p>
+<ul>
+<li>an analysis is <strong>blocked</strong>, stale or unknown, a <code>blocking</code> gap is unresolved, or
+  a <code>manual</code> gap is unacknowledged (<code>409 artifact_not_ready</code>). The message is one
+  sentence per reason — <em>"1 manual gap(s) need acknowledging on the Gaps board."</em>
+  — and the tokens (<code>artifact_unacknowledged_gaps</code>, <code>artifact_not_ready</code>,
+  <code>analysis_&lt;state&gt;</code>) are under <code>details.reasons</code> for code, beside <code>details.gaps</code>.
+  <code>chat-agent.json</code> meets this on its first export, until its trigger card is
+  acknowledged;</li>
+<li>the spec resolves something <strong>local to this environment</strong> — an operator
+  registry entry — so it would not mean the same thing anywhere else
+  (<code>artifact_not_portable</code>);</li>
+<li>the fresh gate returns a negative verdict (<code>artifact_governance_failed</code>), or
+  the platform itself rejects the spec, in which case its own status and code
+  are forwarded rather than flattened.</li>
+</ul>
+<p>The response is never cached: an export is an attestation about one moment.</p>
+<h2 id="run-it-on-the-platform-before-you-hand-it-over">Run it on the platform, before you hand it over<a class="headerlink" href="#run-it-on-the-platform-before-you-hand-it-over" title="Permanent link">&para;</a></h2>
+<p>An artifact can be <strong>run</strong>, in this project's environment, exactly as export
+would hand it off. Open <strong>Test run</strong> — from an artifact's editor or Hand-off, the
+rail's link opens it for that artifact; otherwise pick one — give it an input, and
+start it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>POST /api/projects/{project}/test-runs      {"artifact_id": "...", "input": "..."}
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>GET  /api/projects/{project}/test-runs/{run_id}
+</code></pre></div>
+<p><strong>You are shown two statuses, and they answer different questions.</strong> <em>Studio's</em>
+says what Studio knows about the dispatch — <code>pending</code> means it has not yet
+confirmed the platform accepted the run; <code>started</code> means it holds exactly one
+platform run id; <code>failed_to_start</code> means the platform refused before anything
+ran; <code>unknown</code> means recovery asked and could not prove a single run; <code>abandoned</code>
+means recovery gave up after repeated attempts. Neither of the last two is
+re-issued. <em>The
+platform's</em> — queued, running, completed, failed, with the output and token
+usage — appears underneath, and only for a run that started. Studio never
+mirrors one into the other, so a queued run is never shown as "running".</p>
+<p><strong>Refresh reads it back;</strong> nothing polls on your behalf.</p>
+<p><strong>A second click is a new run, never a re-issue of the first.</strong> There is no
+replay in this release. If a start fails <em>after</em> the run row was written, the
+refusal names that run and the page opens it — the address carries the run
+(<code>…/test-run/{artifact}?run={run_id}</code>), so a reload or a copied link still reads
+it, and its outcome is settled by recovery rather than by you pressing the
+button again.</p>
+<h3 id="check-the-hand-off-before-you-make-it">Check the hand-off before you make it<a class="headerlink" href="#check-the-hand-off-before-you-make-it" title="Permanent link">&para;</a></h3>
+<p>The <strong>Hand-off</strong> page reads the artifact's frozen binding and reports whether the
+environment it names can actually receive the spec — the policy the target
+applies, and its credential references counted by status: present, missing, or
+with no status Studio can read. A default platform lists its built-in providers
+even when none is configured, so most read <em>missing</em>. Values are never shown. Three answers, and the page says which it got: <strong>available</strong>;
+<strong>unavailable</strong>, which means the alias has <strong>no usable profile configured</strong>
+behind it — the zero-config first run, not an error; and a <strong>refusal</strong>, where the
+platform answered and its own status and code are forwarded unchanged. A
+platform that cannot be reached at all is neither of the first two: it is an
+error, <code>platform_unreachable</code>, because the absence of an answer is not the same
+as an answer. Doing this before the paste is what turns a failed launch into a
+question you can answer while you still have the artifact in front of you.</p>
+<p><em>This said an unreachable environment "is reported as unavailable" until  <!-- doc-consistency: allow -->
+<code>[2026-09-02]</code> — the sentence collapsed a transport failure into the
+no-profile state, which the product, the UI and the API contract all keep
+apart (touchpoint 2 round 2, F-03).</em></p>
+<h3 id="known-limitation-some-platform-valid-specs-are-refused-before-submission">Known limitation — some platform-valid specs are refused before submission<a class="headerlink" href="#known-limitation-some-platform-valid-specs-are-refused-before-submission" title="Permanent link">&para;</a></h3>
+<p>Studio runs its own <strong>capability gate</strong> before it submits anything, and that gate
+classifies every field of your spec against a hand-written manifest. A field the
+manifest does not list is <em>unclassified</em>, and unclassified is <strong>refused</strong> — the
+gate fails closed on purpose, because a field nobody has classified might be one
+that runs code on a host you do not own.</p>
+<p>The cost of failing closed is that the manifest has drifted behind the platform's
+own models. <strong>Specs the platform accepts are currently refused by Studio</strong>, with
+<code>409 spec_capability_refused</code> on all four govern routes — <code>validate</code>, <code>compile</code>,
+<code>policy_report</code> and <code>graph</code> — and there is no override.</p>
+<p><strong>How wide was it: every one of the 25 example specs shipped with <code>kneo_serv</code> 1.2.0 was
+refused</strong> — 25 of 25, including the sequential and graph ones, measured 2026-08-18 by
+running Studio's own scanner over <code>kneo_serv/examples/*.yaml</code>.</p>
+<p><strong>Re-measured 2026-08-19, after the manifest was derived from the platform's models:
+19 of 25.</strong> The six that now pass are the ones that were failing purely on
+<em>classification</em> drift. Most of what remains is not drift at all:</p>
+<ul>
+<li><strong>8 of the 19 carry a <code>components.functions.*.implementation</code> refusal</strong> — Python that
+  runs on the platform host. That is <code>EXECUTE</code>, and a <em>literal</em> value there is refused
+  <strong>regardless of what an operator has approved</strong>: approval attaches to a registry entry,
+  and the only form the scanner admits is a <code>{"$registry": "&lt;name&gt;"}</code> reference to one.
+  These specs get through by rewriting the field as that reference — not by approving the
+  literal, which nothing can approve. <em>(This paragraph said the opposite until 0.6.0 S13;
+  a user following it would have asked for a standing privilege widening on a shared
+  platform and got the identical refusal back.)</em></li>
+<li><strong>2 carry an <code>mcp_servers.*.url</code> refusal</strong> — <code>NETWORK</code>, refused against an empty host
+  allowlist, same reasoning.</li>
+<li><strong>The remaining 9 are a mix, and two of their families are not in the table below.</strong>
+  Three overlay specs refuse on <code>policy_defaults.*</code> and one project-config spec on
+  <code>project.*</code>, <code>service.*</code>, <code>retention.*</code> and <code>environments.*.policy_enforcement.*</code> —
+  neither is the table's top-level <code>policies</code> row, which is a different path. The others
+  are classified refusals working as intended rather than drift: <code>tools.*.implementation</code>
+  and <code>mcp_servers.*.command</code>/<code>.args</code> are <code>EXECUTE</code> literals, <code>skills.*.source</code> is
+  <code>FILESYSTEM</code>, and <code>agent.guardrails.*</code> is the free-form-map row the table does name.</li>
+</ul>
+<p><em>The three counts above were </em><em>12</em><em>, </em><em>one</em><em> and "the rest are the two groups named in
+the table" until <code>[2026-09-06]</code>, and none of the three measured: the first two were
+wrong at every counting, and the third was false for the project-config and
+<code>policy_defaults</code> families. Corrected by re-running the shipped scanner over the corpus
+the paragraph names, and <code>test_published_capability_limits.py</code> now measures the
+breakdown as well as the total — the numbers above cannot rot silently again.</em></p>
+<p><strong>The axis is the field, not the workflow family</strong>, which is what made the reach so wide:
+a single unclassified field anywhere refuses the whole document, and two of the most
+common ones sat in the <code>agent</code> block that nearly every real spec has.</p>
+<table>
+<thead>
+<tr>
+<th>What is in your spec</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>agent.strategy</code> as an <strong>object</strong> — the form the platform documents (<code>type</code>, <code>max_iterations</code>, …)</td>
+<td>accepted <!-- capability-probe: agent.strategy.type = accepted --></td>
+</tr>
+<tr>
+<td><code>agent.strategy</code> as a <strong>bare string</strong></td>
+<td>accepted <!-- capability-probe: agent.strategy = accepted --></td>
+</tr>
+<tr>
+<td><code>agent.runtime_preferences.allowed_modes</code> entries</td>
+<td>accepted <!-- capability-probe: agent.runtime_preferences.allowed_modes.0 = accepted --></td>
+</tr>
+<tr>
+<td><code>workflow.participants.*</code> — the <strong>concurrent</strong>, <strong>group-chat</strong> and <strong>handoff</strong> families</td>
+<td>accepted <!-- capability-probe: workflow.participants.0.id = accepted --></td>
+</tr>
+<tr>
+<td>A <strong>human-in-the-loop</strong> component — all nine <code>components.humans</code> fields</td>
+<td>accepted <!-- capability-probe: components.humans.reviewer.assignee = accepted --></td>
+</tr>
+<tr>
+<td>…including <code>components.humans.*.context</code>, which is classified as data</td>
+<td>accepted <!-- capability-probe: components.humans.reviewer.context = accepted --></td>
+</tr>
+<tr>
+<td><code>tools.*.permissions.*</code> — <code>allow_shell</code> and the other permission flags</td>
+<td><strong>refused</strong> <!-- capability-probe: agent.tools.permissions.allow_shell = refused --></td>
+</tr>
+<tr>
+<td><code>agent.memory</code>, <code>agent.history</code>, <code>agent.guardrails</code>, <code>agent.defaults</code>, top-level <code>policies</code>, <code>agent.model.extra</code>, <code>tools.*.mcp</code> — free-form maps the platform does not model</td>
+<td><strong>refused</strong> <!-- capability-probe: agent.memory.kind = refused --></td>
+</tr>
+</tbody>
+</table>
+<p>Verified differentially against <code>kneo_serv</code> 1.2.0: each refused item above is
+accepted by the platform's own models. This is <strong>pre-existing behaviour, present
+since 0.2.0</strong> and not introduced by a later patch.</p>
+<blockquote>
+<p><strong>This table said "a sequential or graph workflow — accepted" until 2026-08-18</strong>,
+and that was wrong in the direction that matters: a user whose sequential workflow
+came back <code>409 spec_capability_refused</code> had no way to read their refusal as the
+known limitation. It also described the humans row as "all nine fields
+unclassified", which is wrong in the <em>other</em> direction — <code>context</code> passes. Found by
+0.3.0's Phase-1 audit (DOCS-1) by running the shipped scanner rather than by
+reading the manifest. Every row now carries an invisible probe marker, and
+<code>test_published_capability_limits.py</code> checks each one against the code, so a row
+that stops being true reddens a gate instead of misinforming somebody.</p>
+</blockquote>
+<p><strong>What to do meanwhile.</strong> A spec whose every field the manifest classifies governs
+and exports normally — in practice that means hand-written specs that stay inside the
+narrow subset above, not exports from the platform's own examples. There is no flag
+that relaxes the gate, by design.</p>
+<p><strong>The fix is a design change, not a longer list.</strong> A hand-maintained manifest
+tracking a schema it cannot see is the same failure mode that produced this drift
+in the first place, so the manifest is <strong>derived from the platform's own
+models</strong>, with a gate that reddens when the two disagree — <strong>shipped in
+0.3.0</strong>. <em>(This said "is being derived … that
+work is 0.3.0" for two releases after it landed.)</em></p>
+<h3 id="what-this-means-for-the-editor">What this means for the editor<a class="headerlink" href="#what-this-means-for-the-editor" title="Permanent link">&para;</a></h3>
+<p><strong>Saving is not gated. Verdicts are.</strong> The editor writes any text you type: a spec is a
+file, and refusing to save an invalid one would lose your work mid-thought and push you
+into a different editor. So the gate above is met at <strong>Preview</strong>, at the three platform
+verdicts, and at export — never at Save. If your session expires mid-edit, Studio shows
+the sign-in page, and once you are signed in the unsaved edit is restored in its editor.</p>
+<p>That is deliberate, and it is the honest reading of the limitation: you can edit and keep
+any spec, and Studio will tell you it cannot <em>judge</em> one outside the classified subset. A
+<code>409 spec_capability_refused</code> from Preview is that limitation, not a fault in your file
+and not an outage.</p>
+<p><strong>There is no override, and that is the design.</strong> A flag relaxing the gate would let an
+unclassified field — possibly one that runs code on a host you do not own — reach the
+platform unexamined, which is the whole thing failing closed prevents. What is on offer
+instead:</p>
+<ul>
+<li>keep editing and saving; the file is yours and Studio is not holding it;</li>
+<li>ask whoever runs your platform to widen the environment's allowances, if the refusal
+  names a capability rather than an unclassified field;</li>
+<li>re-import the corrected source, which gets you a machine verdict rather than a human
+  one.</li>
+</ul>
+<p><em>The editor's own refusal message says this at the point you meet it, rather than leaving
+you to find this page.</em></p>
+<h2 id="next">Next<a class="headerlink" href="#next" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Importing a Dify app: <a href="../import_dify/">import_dify.md</a>.</li>
+<li>Debugging a run: <a href="../debugging/">debugging</a>.</li>
+<li>Running a shared instance: <a href="../hosting/">hosting</a>.</li>
+</ul>
+<p>The <a href="../">reading order</a> says which task each page covers; separate n8n-import
+and gap-card pages are backlog.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

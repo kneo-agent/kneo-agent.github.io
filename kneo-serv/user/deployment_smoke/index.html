@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1815,7 +1815,7 @@ are incomplete, payload telemetry capture is enabled, provider secret checks
 are disabled, or placeholder values remain.</p>
 <p>For repeatable staging gates, render the local file from secret-backed
 environment variables instead of editing it by hand:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_API_KEYS</span><span class="o">=</span><span class="s2">&quot;operator:&lt;operator-token&gt;:operator;reviewer:&lt;reviewer-token&gt;:reviewer;viewer:&lt;viewer-token&gt;:viewer&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_API_KEYS</span><span class="o">=</span><span class="s2">"operator:&lt;operator-token&gt;:operator;reviewer:&lt;reviewer-token&gt;:reviewer;viewer:&lt;viewer-token&gt;:viewer"</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_ADMIN_API_KEY</span><span class="o">=</span>&lt;admin-token&gt;
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_SPEC_SIGNING_KEY</span><span class="o">=</span>&lt;signing-key&gt;
 <a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STAGING_DATABASE_URL</span><span class="o">=</span>&lt;postgresql-dsn&gt;
@@ -1870,7 +1870,7 @@ been deferred for four releases for want of a staging environment).</p>
 <a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span>KNEO_STAGING_POSTGRES_PASSWORD<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span>KNEO_STAGING_OTEL_EXPORTER_OTLP_ENDPOINT<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">    </span>KNEO_STAGING_OPENAI_API_KEY<span class="w"> </span>KNEO_STAGING_MCP_API_KEY<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>printenv<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$var</span><span class="s2">&quot;</span><span class="w"> </span>--env<span class="w"> </span>staging
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>printenv<span class="w"> </span><span class="s2">"</span><span class="nv">$var</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="s2">"</span><span class="nv">$var</span><span class="s2">"</span><span class="w"> </span>--env<span class="w"> </span>staging
 <a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="k">done</span>
 </code></pre></div>
 <ol>
@@ -1977,7 +1977,7 @@ been deferred for four releases for want of a staging environment).</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

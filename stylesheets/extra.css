@@ -28,9 +28,31 @@
   color: var(--md-default-fg-color--light);
 }
 
+/* The bold tagline sits on its own line above the sentence that follows
+   it, whatever the column width. */
+.md-typeset h1:first-of-type + p > strong:first-child {
+  display: block;
+}
+
 /* Tighten the gap above the card grid and give it room to breathe. */
 .md-typeset .grid.cards {
   margin: 0 auto 2rem;
+}
+
+/* Three columns of product cards on wide screens. Material's default
+   (auto-fit, 16rem minimum) packs only two into the content width; the
+   landing hides its empty sidebars (index.md front matter) to make room.
+   Tablets get two columns and phones keep Material's single column. */
+@media (min-width: 45em) {
+  .md-typeset .grid.cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 60em) {
+  .md-typeset .grid.cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 /* Card polish: subtle lift on hover, softer borders, whole-card clickable. */

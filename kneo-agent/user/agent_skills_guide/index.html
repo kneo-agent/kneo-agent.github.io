@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1682,17 +1682,17 @@
 <p>Use <code>load_skill(...)</code> to activate a single skill:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_skill</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">load_skill</span><span class="p">(</span><span class="s2">&quot;examples/skills/weather&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">load_skill</span><span class="p">(</span><span class="s2">"examples/skills/weather"</span><span class="p">)</span>
 </code></pre></div>
 <p>If the skill declares tools, bind handlers in code:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">with_tool_handlers</span><span class="p">({</span><span class="s2">&quot;get_weather&quot;</span><span class="p">:</span> <span class="n">get_weather</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">with_tool_handlers</span><span class="p">({</span><span class="s2">"get_weather"</span><span class="p">:</span> <span class="n">get_weather</span><span class="p">})</span>
 </code></pre></div>
 <p>That split is deliberate: the standard file defines portable metadata and instructions, while executable handlers stay local to the host application.</p>
 <h2 id="discovering-skills">Discovering Skills<a class="headerlink" href="#discovering-skills" title="Permanent link">&para;</a></h2>
 <p>Use <code>discover_skills(...)</code> to scan one or more directories:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_skills</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">catalog</span> <span class="o">=</span> <span class="n">discover_skills</span><span class="p">([</span><span class="s2">&quot;examples/skills&quot;</span><span class="p">])</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">catalog</span> <span class="o">=</span> <span class="n">discover_skills</span><span class="p">([</span><span class="s2">"examples/skills"</span><span class="p">])</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">catalog</span><span class="p">:</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">entry</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
 </code></pre></div>
@@ -1700,8 +1700,8 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">kneo_agent</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_default_skills</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">catalog</span> <span class="o">=</span> <span class="n">discover_default_skills</span><span class="p">(</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">project_root</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">user_home</span><span class="o">=</span><span class="s2">&quot;~&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">project_root</span><span class="o">=</span><span class="s2">"."</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">user_home</span><span class="o">=</span><span class="s2">"~"</span><span class="p">,</span>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span>
 </code></pre></div>
 <p>The default search covers:</p>
@@ -1720,7 +1720,7 @@
 <p>Resources are discoverable but not injected automatically into every run.</p>
 <p>Use:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">paths</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">resource_paths</span><span class="p">()</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">reference_text</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="s2">&quot;references/REFERENCE.md&quot;</span><span class="p">)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">reference_text</span> <span class="o">=</span> <span class="n">skill</span><span class="o">.</span><span class="n">read_resource</span><span class="p">(</span><span class="s2">"references/REFERENCE.md"</span><span class="p">)</span>
 </code></pre></div>
 <p>This keeps the core skill lightweight while still letting the runtime or host agent load extra material on demand.</p>
 <h2 id="activation-payloads">Activation Payloads<a class="headerlink" href="#activation-payloads" title="Permanent link">&para;</a></h2>
@@ -1762,14 +1762,14 @@ separate execution model.</p>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">registry</span> <span class="o">=</span> <span class="n">ToolRegistry</span><span class="p">()</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="k">await</span> <span class="n">registry</span><span class="o">.</span><span class="n">register_mcp_server</span><span class="p">(</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">MCPServerConfig</span><span class="o">.</span><span class="n">stdio</span><span class="p">(</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;filesystem&quot;</span><span class="p">,</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">command</span><span class="o">=</span><span class="s2">&quot;npx&quot;</span><span class="p">,</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;-y&quot;</span><span class="p">,</span> <span class="s2">&quot;@modelcontextprotocol/server-filesystem&quot;</span><span class="p">,</span> <span class="s2">&quot;/tmp&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="n">name</span><span class="o">=</span><span class="s2">"filesystem"</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="n">command</span><span class="o">=</span><span class="s2">"npx"</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="s2">"-y"</span><span class="p">,</span> <span class="s2">"@modelcontextprotocol/server-filesystem"</span><span class="p">,</span> <span class="s2">"/tmp"</span><span class="p">],</span>
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">),</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;fs_&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">prefix</span><span class="o">=</span><span class="s2">"fs_"</span><span class="p">,</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">)</span>
 <a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">to_skill</span><span class="p">(</span><span class="s2">&quot;filesystem-mcp&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="n">skill</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">to_skill</span><span class="p">(</span><span class="s2">"filesystem-mcp"</span><span class="p">)</span>
 </code></pre></div>
 <p>This keeps MCP tool servers aligned with the same skill and tool packaging
 model described in the rest of this guide.</p>
@@ -1851,7 +1851,7 @@ model described in the rest of this guide.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

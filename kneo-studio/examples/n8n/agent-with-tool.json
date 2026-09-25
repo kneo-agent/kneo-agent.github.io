@@ -1,0 +1,42 @@
+{
+  "name": "Support triage",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "2",
+      "name": "Triage agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [220, 0],
+      "parameters": {}
+    },
+    {
+      "id": "3",
+      "name": "Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [220, 160],
+      "parameters": { "model": "gpt-4o-mini" }
+    },
+    {
+      "id": "4",
+      "name": "Lookup order",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [420, 160],
+      "parameters": { "url": "https://api.example.com/orders" }
+    }
+  ],
+  "connections": {
+    "Webhook": { "main": [[{ "node": "Triage agent" }]] },
+    "Model": { "ai_languageModel": [[{ "node": "Triage agent" }]] },
+    "Lookup order": { "ai_tool": [[{ "node": "Triage agent" }]] }
+  }
+}

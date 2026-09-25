@@ -1,0 +1,2694 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Kneo Agent Studio — development and migration UI for the Kneo Agent Platform">
+      
+      
+      
+        <link rel="canonical" href="https://kneo-agent.github.io/kneo-studio/user/hosting/">
+      
+      
+        <link rel="prev" href="../debugging/">
+      
+      
+        <link rel="next" href="../../pub/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Hosting Studio for a team - Kneo Agent Studio</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hosting-studio-for-a-team" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-header__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis"><a href="https://kneo-agent.github.io/kneo-studio/" style="color:inherit;text-decoration:none">Kneo Agent Studio</a></span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hosting Studio for a team
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Kneo Agent Studio
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pub/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Pub
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="https://kneo-agent.github.io/" title="Kneo Agent" class="md-nav__button md-logo" aria-label="Kneo Agent Studio" data-md-component="logo">
+      
+  <img src="../../assets/kneo_agent_wordmark.png" alt="logo">
+
+    </a>
+    Kneo Agent Studio
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kneo Agent Studio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../import_dify/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Importing a Dify app
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debugging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging a run
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Studio for a team
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hosting Studio for a team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-published-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the published image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the published image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bind-mounts-need-chown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind mounts need chown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-in-the-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL in the image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-a-login-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose a login mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-a-users-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        static — a users file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="static — a users file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#producing-a-hash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Producing a hash
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oidc-a-provider-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        oidc — a provider file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="oidc — a provider file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#admission-who-may-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        admission — who may exist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signing-in-is-two-steps-and-the-first-one-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing in is two steps, and the first one fails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signing in is two steps, and the first one fails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#becoming-the-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Becoming the owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-somebody" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing somebody
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Removing somebody">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-the-owner-is-already-gone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the owner is already gone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behind-a-reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind a reverse proxy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Behind a reverse proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forgetting-it-stops-being-silent-in-070" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forgetting it stops being silent in 0.7.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-your-proxy-setup-stopped-working-when-you-upgraded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If your proxy setup stopped working when you upgraded
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-an-owner-asks-you-to-raise-a-taint-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When an owner asks you to raise a taint cap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attaching-a-directory-that-already-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attaching a directory that already exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attaching a directory that already exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-file-when-nobody-can" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a file when nobody can
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-shared-instance-still-owes-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a shared instance still owes you
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What a shared instance still owes you">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-refuses-to-start-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What refuses to start, and why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-run-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test-run recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-than-one-replica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More than one replica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-studio-stop-the-estate-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading Studio — stop the estate first
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotating-the-analysis-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotating the analysis key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../pub/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pub
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pub
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/n8n/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    n8n
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    n8n
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../examples/dify/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dify
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dify
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-published-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the published image
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the published image">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bind-mounts-need-chown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind mounts need chown
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql-in-the-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL in the image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choose-a-login-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choose a login mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-a-users-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        static — a users file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="static — a users file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#producing-a-hash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Producing a hash
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oidc-a-provider-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        oidc — a provider file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="oidc — a provider file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#admission-who-may-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        admission — who may exist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#signing-in-is-two-steps-and-the-first-one-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signing in is two steps, and the first one fails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Signing in is two steps, and the first one fails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#becoming-the-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Becoming the owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#removing-somebody" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Removing somebody
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Removing somebody">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-the-owner-is-already-gone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When the owner is already gone
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#behind-a-reverse-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind a reverse proxy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Behind a reverse proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forgetting-it-stops-being-silent-in-070" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Forgetting it stops being silent in 0.7.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-your-proxy-setup-stopped-working-when-you-upgraded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If your proxy setup stopped working when you upgraded
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-an-owner-asks-you-to-raise-a-taint-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When an owner asks you to raise a taint cap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attaching-a-directory-that-already-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attaching a directory that already exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attaching a directory that already exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registering-a-file-when-nobody-can" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a file when nobody can
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-a-shared-instance-still-owes-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a shared instance still owes you
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What a shared instance still owes you">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-refuses-to-start-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What refuses to start, and why
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-run-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test-run recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#more-than-one-replica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        More than one replica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-studio-stop-the-estate-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading Studio — stop the estate first
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotating-the-analysis-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotating the analysis key
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="hosting-studio-for-a-team">Hosting Studio for a team<a class="headerlink" href="#hosting-studio-for-a-team" title="Permanent link">&para;</a></h1>
+<p>Studio's default is one developer's laptop, and
+<a href="../quickstart/">the quickstart</a> covers that. This page is the other shape: a
+shared instance that other people sign in to.</p>
+<p><strong>Until 0.2.1 this page did not exist</strong>, and neither
+<code>KNEO_STUDIO_USERS_FILE</code> nor <code>KNEO_STUDIO_OIDC_PROVIDER_FILE</code> appeared in any
+published document — the login modes were 0.2.0's headline feature and could not
+be configured from anything a user could read (audit M6). Everything below is
+transcribed from the loaders that enforce it.</p>
+<h2 id="running-the-published-image">Running the published image<a class="headerlink" href="#running-the-published-image" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-p<span class="w"> </span><span class="m">8091</span>:8091<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-v<span class="w"> </span>kneo-state:/var/lib/kneo-studio/state<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>-v<span class="w"> </span>kneo-default:/var/lib/kneo-studio/default<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>-v<span class="w"> </span>kneo-workspace:/var/lib/kneo-studio/workspace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_AUTH_MODE</span><span class="o">=</span>static<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_USERS_FILE</span><span class="o">=</span>/etc/kneo-studio/users.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_DEPLOYMENT_CAP</span><span class="o">=</span><span class="m">53687091200</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_ALLOWED_HOSTS</span><span class="o">=</span>studio.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span>-v<span class="w"> </span>kneo-secrets:/etc/kneo-studio:ro<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>ghcr.io/kneo-agent/kneo-studio:&lt;version&gt;
+</code></pre></div>
+<p><strong>It will refuse to start without a login mode and a cap, deliberately.</strong> The
+image binds <code>0.0.0.0</code> so it is reachable at all, and Studio refuses an
+unauthenticated routable bind — every request would be the local owner with full
+rights over the project tree. It also refuses a shared deployment with no cap of
+its own, because the built-in one is a laptop number chosen by one person for
+themselves. Both refusals print one line and exit; neither is a bug to work
+around.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Port</strong></td>
+<td><code>8091</code>, inside the container and by default outside it</td>
+</tr>
+<tr>
+<td><strong>State</strong></td>
+<td><code>/var/lib/kneo-studio/state</code> — the store, sessions and the analysis keyring</td>
+</tr>
+<tr>
+<td><strong>Default project</strong></td>
+<td><code>/var/lib/kneo-studio/default</code> — the attached project bootstrap creates</td>
+</tr>
+<tr>
+<td><strong>Workspace</strong></td>
+<td><code>/var/lib/kneo-studio/workspace</code> — where members' own projects are allocated</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The state path doubles, and that surprises people.</strong> <code>XDG_STATE_HOME</code> is
+<code>/var/lib/kneo-studio/state</code>, and Studio puts its own directory <em>inside</em> whatever
+that names — so the database is at
+<code>/var/lib/kneo-studio/state/kneo-studio/studio.db</code>, with <code>kneo-studio</code> appearing
+twice. That is the XDG convention working as intended (the variable names a
+<em>base</em>, not an application directory), but it means a backup script pointed at
+the shorter path copies an empty directory.</p>
+<p><strong>The three volumes may not nest.</strong> The state store inside a project root would
+make a project directory contain the database describing it, and Studio refuses
+to start. <code>workspace</code> inside <code>default</code> makes every managed allocation land in the
+default project's tree, and creation answers <code>409 project_root_overlap</code> for every
+caller. The image's own paths are already separate; keep them so if you remap.</p>
+<h3 id="bind-mounts-need-chown">Bind mounts need <code>chown</code><a class="headerlink" href="#bind-mounts-need-chown" title="Permanent link">&para;</a></h3>
+<p>The container runs as <strong>uid 10001</strong>. A Docker <em>volume</em> is created with the right
+owner and needs nothing; a <strong>bind-mounted host directory</strong> arrives owned by
+whoever owns it on the host, and Studio then cannot create or secure its state
+directory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>chown<span class="w"> </span>-R<span class="w"> </span><span class="m">10001</span>:10001<span class="w"> </span>/srv/kneo-studio/state
+</code></pre></div>
+<p>Studio refuses with a short message naming that command rather than a traceback
+— but it is still the commonest reason a first <code>docker run</code> stops.</p>
+<h3 id="postgresql-in-the-image">PostgreSQL in the image<a class="headerlink" href="#postgresql-in-the-image" title="Permanent link">&para;</a></h3>
+<p>The image installs the <code>postgres</code> extra, so <code>KNEO_STUDIO_DB_URL</code> takes a
+<code>postgresql+psycopg://</code> URL directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_DB_URL</span><span class="o">=</span>postgresql+psycopg://kneo:...@db.internal/kneo_studio
+</code></pre></div>
+<p><em>Before 0.7.0 it did not</em>, and the failure was 47 lines of driver traceback with
+no Studio refusal in it — the one configuration the "more than one replica"
+advice below requires.</p>
+<h3 id="health">Health<a class="headerlink" href="#health" title="Permanent link">&para;</a></h3>
+<p><code>GET /api/readyz</code> answers <code>{"status": "ready", "store": true}</code> with <code>200</code>, or
+<code>503</code> and <code>"degraded"</code> when the store cannot be reached. It is unauthenticated
+and exempt from the <code>Host</code> check so a container health check can reach it; it
+reports nothing about the deployment beyond those two fields.</p>
+<p>It deliberately does <strong>not</strong> check the platform. A Studio whose <code>kneo-serv</code> is
+unreachable is degraded, not unready — taking it out of rotation would remove
+the surface that explains the problem, and restarting it fixes nothing.</p>
+<p>The image carries a <code>HEALTHCHECK</code> pointed at it already.</p>
+<h2 id="choose-a-login-mode">Choose a login mode<a class="headerlink" href="#choose-a-login-mode" title="Permanent link">&para;</a></h2>
+<p><code>KNEO_STUDIO_AUTH_MODE</code> takes one of three values.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Who it is for</th>
+<th>What it needs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>none</code> <em>(default)</em></td>
+<td>one person, on their own machine</td>
+<td>nothing — but <strong>it is refused on a non-loopback bind</strong></td>
+</tr>
+<tr>
+<td><code>static</code></td>
+<td>a small team with a file of accounts</td>
+<td>a users file</td>
+</tr>
+<tr>
+<td><code>oidc</code></td>
+<td>an organisation with an identity provider</td>
+<td>a provider file</td>
+</tr>
+</tbody>
+</table>
+<p><code>none</code> is not a weaker password; it is <em>no</em> authentication — every request is the
+local owner. Studio therefore <strong>refuses to serve <code>none</code> on a routable address</strong>
+rather than trusting you meant it. A shared instance also has to
+<a href="../quickstart/#storage">declare its storage cap</a>.</p>
+<h2 id="static-a-users-file"><code>static</code> — a users file<a class="headerlink" href="#static-a-users-file" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_AUTH_MODE</span><span class="o">=</span>static
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_USERS_FILE</span><span class="o">=</span>/etc/kneo-studio/users.json
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_ALLOWED_HOSTS</span><span class="o">=</span>studio.example.com<span class="w">   </span><span class="c1"># the name people type</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_DEPLOYMENT_CAP</span><span class="o">=</span><span class="m">53687091200</span><span class="w">         </span><span class="c1"># shared: declare it</span>
+</code></pre></div>
+<p><strong>The users file is owner-only, or Studio refuses to start.</strong> It holds password
+hashes, and since 0.5.0 it is held to the same rule as the analysis keyring: a
+file with any group or other permission bit set — read, write or execute — is
+refused at startup, naming the path, the mode and the fix — <code>chmod 600</code>. Owner-only means owned by the account Studio
+runs as; in the published image that is uid <code>10001</code>, so a bind-mounted file
+needs <code>chown 10001</code> as well as the mode (a <code>0600</code> file the process does not own
+is refused as unreadable instead). The image can do the hand-over itself, which
+needs no root on the host:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--user<span class="w"> </span><span class="m">0</span><span class="w"> </span>-v<span class="w"> </span>kneo-secrets:/etc/kneo-studio<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">/users.json:/tmp/users.json:ro"</span><span class="w"> </span>--entrypoint<span class="w"> </span>sh<span class="w"> </span>IMAGE<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s1">'cp /tmp/users.json /etc/kneo-studio/ &amp;&amp; chown 10001:10001 /etc/kneo-studio/users.json &amp;&amp; chmod 600 /etc/kneo-studio/users.json'</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># then mount the volume read-only: -v kneo-secrets:/etc/kneo-studio:ro</span>
+</code></pre></div>
+<p><strong><code>KNEO_STUDIO_ALLOWED_HOSTS</code> is not optional here</strong>, and it is the first thing
+that goes wrong: a request whose <code>Host</code> is not on the list is refused with
+<code>403 host_not_allowed</code> <em>before</em> it reaches the login route, so a mistyped or
+missing entry looks like a broken sign-in rather than a configuration error.
+Studio's Host allowlist is a DNS-rebinding defence and does not read your proxy's
+mind. (Found by running this page's own instructions — the first draft omitted
+it, and every login 403'd.)</p>
+<p>The file is JSON: either a list of users, or an object with a <code>users</code> list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ada"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">"password_hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"$argon2id$v=19$m=65536,t=3,p=4$…"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">"display_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ada Lovelace"</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>username</code> and <code>password_hash</code> are required; <code>display_name</code> defaults to the
+  username.</li>
+<li><strong><code>password_hash</code> must be an argon2id hash.</strong> A plaintext password is
+  <em>refused</em>, not accepted with a warning — "the failure mode is a file of
+  plaintext passwords in a backup".</li>
+<li>A username appearing twice is refused, because which password worked would
+  otherwise depend on file order.</li>
+<li>An empty list is refused: <code>static</code> with no users authenticates nobody.</li>
+</ul>
+<p>All of these are checked <strong>at startup</strong>, not at first login. An instance that
+cannot authenticate anyone should say so before someone tries to sign in.</p>
+<p><strong>What startup checks of the hash is its <code>$argon2id$</code> prefix, and nothing
+more</strong> <code>[0.9.0 Phase-5 docs audit]</code>. A hash that starts correctly but is
+truncated or mangled — a copy-paste that lost its tail — loads without a word,
+and that account then answers <code>401 invalid_credentials</code> to its correct
+password, which looks exactly like a wrong one. If one user cannot sign in and
+the others can, re-mint that user's hash before suspecting the password.</p>
+<p>Failed sign-ins are throttled per account and per address, and password checks
+run a bounded number at a time; the numbers, the codes and the settings are in
+<a href="../quickstart/#login-attempts">the quickstart's Login attempts</a>.</p>
+<h3 id="producing-a-hash">Producing a hash<a class="headerlink" href="#producing-a-hash" title="Permanent link">&para;</a></h3>
+<p><code>argon2-cffi</code> is already installed as a dependency, so the interpreter running
+Studio can mint one:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>python<span class="w"> </span>-c<span class="w"> </span><span class="s1">'from argon2 import PasswordHasher; import getpass; \</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s1">print(PasswordHasher().hash(getpass.getpass("password: ")))'</span>
+</code></pre></div>
+<p><code>getpass</code> rather than an argument, so the password does not land in your shell
+history.</p>
+<p><strong>Hash every password with the same parameters</strong> — mint them all with the same
+command, as above. A sign-in for an unknown username is checked against a decoy
+hash, so that its timing does not reveal which usernames exist. Since 0.9.0,
+that decoy is built with the configured users' argon2
+parameters; when the file holds more than one parameter set it takes the
+costliest and logs a warning, because login time can then tell an account with a
+cheaper hash from an unknown username. 0.8.0 and earlier always build the decoy
+with <code>argon2-cffi</code>'s defaults, which the command above also uses — one more
+reason to mint every hash with it.</p>
+<h2 id="oidc-a-provider-file"><code>oidc</code> — a provider file<a class="headerlink" href="#oidc-a-provider-file" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_AUTH_MODE</span><span class="o">=</span>oidc
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_OIDC_PROVIDER_FILE</span><span class="o">=</span>/etc/kneo-studio/provider.json
+</code></pre></div>
+<p>The provider file holds the client secret, and the rule stated for the users
+file above applies unchanged: <strong>owner-only (<code>chmod 600</code>, owned by the account
+Studio runs as) or Studio refuses to start</strong>, since 0.5.0.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">"provider_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"corp-idp"</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://login.example.com/tenant-id/v2.0"</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">"client_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"…"</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">"client_secret"</span><span class="p">:</span><span class="w"> </span><span class="s2">"…"</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">"callback_origin"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://studio.example.com"</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="nt">"authorization_endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://login.example.com/tenant-id/oauth2/v2.0/authorize"</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">"token_endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://login.example.com/tenant-id/oauth2/v2.0/token"</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="nt">"jwks_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://login.example.com/tenant-id/discovery/v2.0/keys"</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nt">"redirect_allowlist"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="s2">"https://studio.example.com/api/session/oidc/callback"</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="p">],</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="nt">"admission"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"allowlist"</span><span class="p">,</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="nt">"email_domains"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"example.com"</span><span class="p">]</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="nt">"bootstrap"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="nt">"owner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"kind"</span><span class="p">:</span><span class="w"> </span><span class="s2">"oidc"</span><span class="p">,</span><span class="w"> </span><span class="nt">"issuer"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://login.example.com/tenant-id/v2.0"</span><span class="p">,</span><span class="w"> </span><span class="nt">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"…"</span><span class="p">}</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Required:</strong> <code>provider_id</code>, <code>issuer</code>, <code>client_id</code>, <code>client_secret</code>,
+<code>callback_origin</code>, the three endpoints <strong><code>authorization_endpoint</code></strong>,
+<strong><code>token_endpoint</code></strong> and <strong><code>jwks_uri</code></strong>, a non-empty <strong><code>redirect_allowlist</code></strong>,
+and an <code>admission</code> block.</p>
+<blockquote>
+<p><strong>This example was missing the last four until 2026-08-15</strong>, so an operator who
+copied it got <code>ProviderConfigError</code> and no bound port. The page claimed to have
+been written by running it; that was true of the <code>static</code> path and not of this
+one. The block above now loads — checked by feeding it to <code>load_provider()</code>,
+not by reading the loader.</p>
+</blockquote>
+<p><strong>There is no <code>discovery</code> shortcut.</strong> This release does not fetch
+<code>.well-known/openid-configuration</code>; naming a <code>discovery</code> key is refused outright
+rather than ignored, because a metadata document silently overriding what you
+configured is worse than being told to write three URLs. Copy them from your
+provider's published metadata.</p>
+<p><strong><code>redirect_allowlist</code> must contain the derived callback URI exactly</strong> —
+<code>&lt;callback_origin&gt;/api/session/oidc/callback</code>. Registering it with your provider
+is necessary and not sufficient: Studio builds its own redirect from
+<code>callback_origin</code>, checks that it is in this list, and refuses to start if it is
+not. That catches a <code>callback_origin</code> typo at startup instead of at somebody's
+first sign-in, where it surfaces as the provider's opaque
+<code>redirect_uri_mismatch</code> and sends you to the wrong console.</p>
+<p><em>It is a startup cross-check and nothing else.</em> Studio never accepts a redirect
+target from a request, so <strong>any entry beyond the derived URI is inert</strong> — listing
+three does not permit three. Nothing here is what stops an open redirect; the
+post-login return path is bounded separately, by
+<code>safe_return_to</code>, which admits only same-origin paths.</p>
+<ul>
+<li><strong><code>issuer</code> is the exact <code>iss</code> your provider stamps into tokens</strong>, and it is
+  required because it cannot be derived. Providers that scope the issuer per
+  tenant (Azure AD among them) publish an issuer that is not the URL you
+  configured discovery with, and a mismatch is refused at verification.</li>
+<li><strong><code>callback_origin</code> is where the browser lands</strong>, and Studio builds the
+  redirect URI as <code>&lt;callback_origin&gt;/api/session/oidc/callback</code>. Register that
+  exact URI with the provider.</li>
+<li>Every configured URL is checked for transport before it is used, and a
+  configured endpoint whose own query would shadow a protocol parameter
+  (<code>state</code>, <code>nonce</code>, <code>code_challenge</code>, <code>grant_type</code>, …) is refused at load
+  rather than at the first login.</li>
+<li><strong>Signing keys are cached for five minutes</strong> and fetched with a 15-second
+  timeout, in a worker thread, so a slow key endpoint delays the sign-in that
+  needs it and nobody else. Rotating a key at the provider needs no restart: a
+  token signed with a new <code>kid</code> triggers a fresh read at once; a key you remove
+  from the set keeps verifying for at most those five minutes.</li>
+<li><strong>The ID token must be signed with an asymmetric algorithm</strong>: <code>RS256</code>,
+  <code>RS384</code>, <code>RS512</code>, <code>ES256</code>, <code>ES384</code> or <code>ES512</code>, and, since 0.9.0, <code>PS256</code>,
+  <code>PS384</code> or <code>PS512</code>. <code>none</code> and the <code>HS*</code> family
+  are refused, since an HMAC "signed" with the provider's published key would
+  verify. Any other algorithm fails the sign-in as <code>provider_error</code>, with the
+  reason in Studio's log; on 0.8.0 and earlier that includes a provider signing
+  with RSA-PSS.</li>
+</ul>
+<h3 id="admission-who-may-exist"><code>admission</code> — who may exist<a class="headerlink" href="#admission-who-may-exist" title="Permanent link">&para;</a></h3>
+<p>A valid token is not permission to have an account, so there is <strong>no default</strong>;
+the block is required.</p>
+<table>
+<thead>
+<tr>
+<th><code>mode</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>allowlist</code></td>
+<td>only identities matching a rule may become principals; a matching identity becomes an <strong>active</strong> principal at its first sign-in</td>
+</tr>
+<tr>
+<td><code>provision</code></td>
+<td>any identity the provider authenticates becomes a <strong>pending</strong> principal, which an operator approves with <code>kneo-studio principal approve</code></td>
+</tr>
+</tbody>
+</table>
+<p>Allowlist rules — <code>hosted_domains</code>, <code>email_domains</code>, <code>groups</code>, <code>subjects</code> — are
+lists, and an identity matching any one rule is admitted. Each reads one claim
+of the verified ID token <code>[0.9.0 Phase-5 docs audit]</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Reads</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hosted_domains</code></td>
+<td><code>hd</code></td>
+</tr>
+<tr>
+<td><code>email_domains</code></td>
+<td>the domain of <code>email</code>, <strong>only</strong> when the token also carries <code>email_verified: true</code>; an unverified or absent flag never matches</td>
+</tr>
+<tr>
+<td><code>groups</code></td>
+<td><code>groups</code>, or <code>roles</code> when there is no <code>groups</code> claim</td>
+</tr>
+<tr>
+<td><code>subjects</code></td>
+<td><code>sub</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>hosted_domains</code>, <code>email_domains</code> and <code>groups</code> are matched
+case-insensitively. <strong><code>subjects</code> is matched exactly</strong>, because an OIDC <code>sub</code> is a
+case-sensitive opaque identifier: <code>Ada</code> and <code>ada</code> are different accounts, and
+Studio must not fold one into the other.</p>
+<p><strong>The allowlist is checked at every sign-in, not only the first.</strong> An active
+principal whose claims no longer match — removed from the group at the IdP, or
+outside a rule you narrowed — is refused its next login.</p>
+<p>Two refusals are worth knowing before you hit them: <strong><code>allowlist</code> with no rules
+is refused</strong> (it admits nobody, and "empty means allow everything" is the other
+defensible reading, which is exactly why you may not have to guess), and
+<strong><code>provision</code> <em>with</em> rules is refused</strong> rather than ignoring them, because an
+operator who wrote both believes they apply.</p>
+<h2 id="signing-in-is-two-steps-and-the-first-one-fails">Signing in is two steps, and the first one fails<a class="headerlink" href="#signing-in-is-two-steps-and-the-first-one-fails" title="Permanent link">&para;</a></h2>
+<p><strong>Authenticating is not the same as being allowed to exist.</strong> In <code>static</code> mode,
+and in <code>oidc</code> under <code>provision</code>, the first sign-in <em>registers</em> the identity as
+<strong>pending</strong>, and an operator admits it <code>[0.9.0 Phase-5 docs audit — this said
+"</code>oidc<code>under</code>allowlist<code>", which is backwards]</code>. Under <code>static</code> a correct
+password gets you:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>403 not_admitted
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>this account is awaiting admission; an operator approves it with
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>`kneo-studio principal approve`
+</code></pre></div>
+<p>Under <code>oidc</code> the sign-in is a browser redirect, so there is no <code>403</code>: the
+browser is sent back to the sign-in page with <code>?error=not_admitted</code>, which reads
+<em>"Your account is not admitted to this instance yet."</em> Under <code>oidc</code> <strong><code>allowlist</code></strong>
+there is no pending step: an identity that matches a rule is an active principal
+at its first sign-in, and one that matches none is sent back with the same
+<code>not_admitted</code> and no principal is created (the refusal is audited) — there is
+nothing to approve, and the fix is the allowlist.</p>
+<p>That is the design, not a fault. Walked through, for <code>static</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>principal<span class="w"> </span>list
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="go">active    operator     host</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="go">pending   ada          kneo-studio:static</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="go">active    local-owner  local</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>principal<span class="w"> </span>approve<span class="w"> </span>--subject<span class="w"> </span>ada<span class="w"> </span>--as<span class="w"> </span><span class="s2">"your name"</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="go">approved ada (kneo-studio:static)</span>
+</code></pre></div>
+<p>Now the same credentials return <code>200</code>. <code>--as</code> is a label recorded on the audit
+row for the human running the command; it is never treated as identity. <code>--issuer</code>
+is needed only when one subject exists under more than one issuer.</p>
+<p><em>(This section exists because running the page's own instructions produced a 403
+where the draft promised a login. A hosting guide that has not been executed is
+a guess.)</em></p>
+<h3 id="becoming-the-owner">Becoming the owner<a class="headerlink" href="#becoming-the-owner" title="Permanent link">&para;</a></h3>
+<p>A fresh shared instance has no owner, and approving a principal does not make
+one. One way per login mode <code>[0.9.0 Phase-5 docs audit]</code>:</p>
+<ul>
+<li><strong><code>oidc</code>: <code>bootstrap.owner</code></strong> in the provider file names <code>{kind, issuer,
+  subject}</code> in advance; that login becomes the owner. It is the only way an
+  <code>oidc</code> instance gains an owner, because the OIDC callback carries no claim
+  token. All three fields are required and <code>kind</code> must be <code>"oidc"</code>; a partial or
+  mistyped block is <strong>refused at startup</strong> (<code>ProviderConfigError</code>), not left to
+  match nothing. <code>subject</code> is taken <strong>exactly as written</strong>, case and surrounding
+  whitespace included: it must equal the <code>sub</code> your provider signs, byte for
+  byte. A non-string value is refused rather than converted. Under <code>allowlist</code>
+  the owner adopts at their first sign-in; under <code>provision</code> that first sign-in
+  is pending, and they adopt at the next one, after you approve them.</li>
+<li><strong><code>static</code>: <code>kneo-studio bootstrap-token</code></strong> mints a one-time claim. It is
+  printed once; paste it into the sign-in form's <strong>I have an adoption token</strong>
+  field on the sign-in that should become the owner, <strong>before</strong> that person
+  signs in for the first time — a sign-in without it registers them as pending,
+  and a pending account cannot adopt. The command refuses under <code>oidc</code>.</li>
+</ul>
+<p>Both <code>principal</code> and <code>bootstrap-token</code> are audited <strong>host</strong> commands: they run on
+the machine, never through the API.</p>
+<p><strong>Adoption is one-way.</strong> It disables the local owner, which is the identity every
+request is under <code>auth_mode = none</code>, so an adopted instance restarted under
+<code>none</code> has nobody to act as. <code>GET /api/me</code> answers <code>503</code> ("no active principal"),
+and, since 0.9.0, so do <code>GET</code> and <code>POST /api/projects</code>.
+On 0.8.0 and earlier those two routes still act for the disabled local owner:
+listing its projects, and creating new ones owned by and charged to it. Keep an
+adopted instance on <code>static</code> or <code>oidc</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Set <code>KNEO_STUDIO_PROJECT_ROOT</code> before the first host command</p>
+<p>The default project is attached to a directory the <strong>first</strong> process to open the
+store picks, and host commands open the store. With the variable unset that
+directory is whatever shell you happened to run the command from — and whoever
+adopts the instance becomes the owner of <em>that</em> tree and can read files out of
+it.</p>
+<p>Export it alongside the other settings, in the same shell you run
+<code>bootstrap-token</code> from and in the service's own environment:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_PROJECT_ROOT</span><span class="o">=</span>/srv/kneo/projects
+</code></pre></div>
+<p>A shared instance refuses to start without it rather than guessing, and refuses
+to move an existing project to a different tree — the people granted access were
+granted it against the old one. To work with a second tree, attach it as its own
+project with <a href="#attaching-a-directory-that-already-exists"><code>project attach</code></a>.</p>
+</div>
+<h2 id="removing-somebody">Removing somebody<a class="headerlink" href="#removing-somebody" title="Permanent link">&para;</a></h2>
+<p><strong>Deleting someone's entry from <code>users.json</code> is not enough.</strong> Studio reads that file
+only when somebody signs in. Removing an entry refuses their <em>next</em> login, and a
+session they already hold keeps working until it expires. To end their access now,
+disable them as below, which also ends their sessions.</p>
+<p><strong>Under <code>oidc</code> the same holds for the identity provider.</strong> Removing somebody's
+account at the IdP refuses their next login, and so, under <code>allowlist</code>, does removing
+them from the group or domain it admits, because the allowlist is checked at every
+sign-in. Neither touches a session they
+already hold: Studio receives no event from the IdP. <code>principal disable</code> is what
+ends a live session.</p>
+<p><strong>New in 0.3.0.</strong> Disabling a principal ends every session it holds and refuses it a
+login, in one transaction:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>kneo-studio<span class="w"> </span>principal<span class="w"> </span>disable<span class="w"> </span>--subject<span class="w"> </span>ada<span class="w"> </span>--as<span class="w"> </span><span class="s2">"your name"</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>disabled<span class="w"> </span>ada<span class="p">;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>session<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>ended,<span class="w"> </span><span class="m">0</span><span class="w"> </span>pending<span class="w"> </span>invitation<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>revoked
+</code></pre></div>
+<p>It also revokes every pending invitation that principal issued, and says how many.</p>
+<p>If that person is the <strong>only active owner</strong> of a project, or the project's storage is
+<strong>charged</strong> to them, the command refuses and names what is blocking it — because a
+project with no active owner has nobody who can add one, and a charge on a disabled
+principal is a bill nobody can move. Name who inherits and the whole thing lands
+together:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>$<span class="w"> </span>kneo-studio<span class="w"> </span>principal<span class="w"> </span>disable<span class="w"> </span>--subject<span class="w"> </span>ada
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>error<span class="w"> </span><span class="o">[</span>sole_owner<span class="o">]</span>:<span class="w"> </span><span class="s1">'p-ada'</span><span class="w"> </span>is<span class="w"> </span>the<span class="w"> </span>only<span class="w"> </span>active<span class="w"> </span>owner<span class="w"> </span>of<span class="w"> </span>proj-7<span class="p">;</span><span class="w"> </span>name<span class="w"> </span>a<span class="w"> </span>principal<span class="w"> </span>to<span class="w"> </span>inherit<span class="w"> </span>ownership
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>$<span class="w"> </span>kneo-studio<span class="w"> </span>principal<span class="w"> </span>disable<span class="w"> </span>--subject<span class="w"> </span>ada<span class="w"> </span>--transfer-to<span class="w"> </span>grace<span class="w"> </span>--as<span class="w"> </span><span class="s2">"your name"</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>disabled<span class="w"> </span>ada<span class="p">;</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>session<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>ended,<span class="w"> </span><span class="m">0</span><span class="w"> </span>pending<span class="w"> </span>invitation<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>revoked
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span>ownership<span class="w"> </span>of<span class="w"> </span>proj-7<span class="w"> </span>-&gt;<span class="w"> </span>grace
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span>charge<span class="w"> </span><span class="k">for</span><span class="w"> </span>proj-7<span class="w"> </span>-&gt;<span class="w"> </span>grace<span class="w"> </span><span class="o">(</span><span class="m">48213</span><span class="w"> </span>bytes<span class="o">)</span>
+</code></pre></div>
+<p><code>--transfer-to</code> covers both moves, which is nearly always what you want: whoever
+created a project is usually both its owner and the account it is charged to. Use
+<code>--owner-to</code> and <code>--quota-to</code> when they should go to different people.</p>
+<p><strong>Who can inherit:</strong> an <strong>active member of that project</strong>. This is deliberate — the
+command overrides who may <em>decide</em>, never who is <em>involved</em>, and handing a project to
+a stranger gives them something they cannot see. Add them as a member first.</p>
+<p><strong>If a write is in progress</strong>, the charge will not move and you will see
+<code>[quota_transfer_busy]</code>. Wait and retry: the writer's lease expires and the reservation
+is reconciled, which is bounded. Forcing the move would land the bytes on whichever
+side finished last.</p>
+<h3 id="when-the-owner-is-already-gone">When the owner is already gone<a class="headerlink" href="#when-the-owner-is-already-gone" title="Permanent link">&para;</a></h3>
+<p>Two break-glass commands for the case where there is nobody to ask — no session, no
+password, no cooperation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>$<span class="w"> </span>kneo-studio<span class="w"> </span>project<span class="w"> </span>reassign-owner<span class="w"> </span>--project<span class="w"> </span>proj-7<span class="w"> </span>--to<span class="w"> </span>grace<span class="w"> </span>--as<span class="w"> </span><span class="s2">"your name"</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>$<span class="w"> </span>kneo-studio<span class="w"> </span>project<span class="w"> </span>reassign-quota<span class="w"> </span>--project<span class="w"> </span>proj-7<span class="w"> </span>--to<span class="w"> </span>grace<span class="w"> </span>--as<span class="w"> </span><span class="s2">"your name"</span>
+</code></pre></div>
+<p>Both are operator-only and <strong>audited</strong>, like every host command. <code>reassign-owner</code>
+promotes without removing anyone: guaranteeing the project has an active owner is one
+decision, and removing the old one is another that <code>principal disable</code> handles.
+<code>reassign-quota</code> is the only path that moves a charge without the target agreeing
+and without disabling anyone — <code>principal disable --quota-to</code> or <code>--transfer-to</code>
+also moves one without asking, as part of the disable.</p>
+<h2 id="behind-a-reverse-proxy">Behind a reverse proxy<a class="headerlink" href="#behind-a-reverse-proxy" title="Permanent link">&para;</a></h2>
+<p>Four settings <code>[0.9.0 Phase-5 docs audit — this said "three"]</code>. A login mode is
+<strong>required</strong> behind a proxy (from 0.3.0), and <code>KNEO_STUDIO_TRUSTED_PROXIES</code> is what
+lets sign-in through a forwarding proxy succeed (from 0.7.0):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_ALLOWED_HOSTS</span><span class="o">=</span>studio.example.com
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_HOST</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w">        </span><span class="c1"># proxy talks to loopback</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_TRUSTED_PROXIES</span><span class="o">=</span><span class="m">127</span>.0.0.1<span class="w">   </span><span class="c1"># the address the proxy connects FROM</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_AUTH_MODE</span><span class="o">=</span>static<span class="w">      </span><span class="c1"># or oidc — see above</span>
+</code></pre></div>
+<p><code>KNEO_STUDIO_TRUSTED_PROXIES</code> takes IP addresses and CIDR blocks, not hostnames.
+Set it to the address <strong>Studio sees your proxy coming from</strong> — <code>127.0.0.1</code> for a
+same-host proxy, the container-network address for a sidecar. Studio believes
+<code>X-Forwarded-*</code> headers, or an RFC 7239 <code>Forwarded</code> header, only from a peer on
+this list, which is why the setting exists: without it any caller could claim to be
+a proxy. If your proxy sends both and they disagree, Studio believes neither.</p>
+<p>With it set, the session cookie is marked <code>Secure</code> when your proxy reports
+<code>X-Forwarded-Proto: https</code> (or <code>Forwarded: proto=https</code>), and <strong>only</strong> then:
+arriving on a routable interface is not evidence that anything was encrypted, and
+0.7.0 stopped treating it as such. Keep <code>Strict-Transport-Security</code> at the proxy —
+Studio does not send it.</p>
+<h3 id="forgetting-it-stops-being-silent-in-070">Forgetting it stops being silent in 0.7.0<a class="headerlink" href="#forgetting-it-stops-being-silent-in-070" title="Permanent link">&para;</a></h3>
+<p>Until 0.7.0 an authenticated instance behind a proxy with no policy started, served
+and issued session cookies <strong>without</strong> <code>Secure</code> — silently, on a connection that was
+HTTPS all the way to the browser. From 0.7.0 that configuration is refused <strong>at
+sign-in</strong>: any request carrying forwarding headers from a peer the policy does not
+name answers <code>403 untrusted_forwarding</code> and says which variable to set.</p>
+<p>Signing in is refused; nothing else is. Sessions already established keep working,
+and every other route keeps exactly the checks it had.</p>
+<p><strong>The variable stays optional, and unset, blank and empty are one state</strong> — no proxy
+is trusted:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nv">KNEO_STUDIO_TRUSTED_PROXIES</span><span class="o">=</span><span class="w">            </span><span class="c1"># same as not setting it at all</span>
+</code></pre></div>
+<p>There is no keyword for "no proxy", deliberately. This field takes IP addresses and
+CIDR blocks — a hostname is refused, because it resolves to something else at some
+later moment — and a magic word inside a field of addresses is a word that could one
+day collide with a host somebody named. If nothing forwards to your instance, leave
+the variable out; a container needs no new setting to run.</p>
+<p>If you set the variable correctly and sign-in is still refused, the peer Studio sees
+is not your proxy — check the launch command below.</p>
+<p><strong>Start Studio with <code>kneo-studio</code></strong>, as the container does. The console script
+starts the server so that Studio, not the server, reads the forwarding headers.
+Launching the application with a bare <code>uvicorn kneo_studio.app:app</code> command line
+turns uvicorn's own header handling back on: it rewrites the peer address from
+<code>X-Forwarded-For</code> before Studio sees it, <code>KNEO_STUDIO_TRUSTED_PROXIES</code> then never
+matches, the cookie loses <code>Secure</code>, and a caller on the same host can pick its own
+login-throttle key with one header. That launch is not supported.</p>
+<h3 id="if-your-proxy-setup-stopped-working-when-you-upgraded">If your proxy setup stopped working when you upgraded<a class="headerlink" href="#if-your-proxy-setup-stopped-working-when-you-upgraded" title="Permanent link">&para;</a></h3>
+<p><strong><code>auth_mode = none</code> behind a proxy is refused from 0.3.0</strong>, and this is the one
+upgrade in this release that can stop a working deployment. Two shapes:</p>
+<ul>
+<li>Studio <strong>will not start</strong>: <code>KNEO_STUDIO_TRUSTED_PROXIES</code> is set while
+  <code>KNEO_STUDIO_AUTH_MODE</code> is <code>none</code> (or unset, which means <code>none</code>).</li>
+<li>Requests come back <strong><code>403 unauthenticated_proxy</code></strong>: no policy is configured, but
+  requests are arriving with forwarding headers, so something is proxying them.</li>
+</ul>
+<p>Both mean the same thing. Under <code>auth_mode = none</code> every request <strong>is</strong> the local
+owner with no credential required, so a proxy in front of Studio published the
+owner's API — including writes into the project tree — to everyone who could reach
+the proxy. It was reported as a security defect against 0.2.1 and fixed rather than
+warned about, because the guarantee on the security page is
+written unconditionally.</p>
+<p>The fix is to choose one: set <code>KNEO_STUDIO_AUTH_MODE=static</code> or <code>oidc</code> and keep the
+proxy, or take the proxy out of the path and reach Studio directly on loopback. If
+you are sure no proxy is involved, something in front of Studio is adding
+<code>X-Forwarded-*</code> or <code>Forwarded</code> headers; stop it sending them.</p>
+<p>The full rules are
+the transport trust policy.</p>
+<h2 id="when-an-owner-asks-you-to-raise-a-taint-cap">When an owner asks you to raise a taint cap<a class="headerlink" href="#when-an-owner-asks-you-to-raise-a-taint-cap" title="Permanent link">&para;</a></h2>
+<p>Studio bounds how much analysis provenance a project may hold. An owner who runs into
+one of those bounds sees their usage and headroom on the project's limits screen and
+then has to ask you, because a cap an owner could raise themselves is not a cap.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="go">kneo-studio quota set-taint-cap --project alpha --project-cap 20000</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="go">kneo-studio quota set-taint-cap --project alpha --per-principal 2000 --retained-max 200000</span>
+</code></pre></div>
+<p>Any one flag alone, or several together. There are <strong>three bounds, and they answer
+different questions</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>flag</th>
+<th>bounds</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--project-cap</code></td>
+<td>live associations the project holds</td>
+<td>superseded ones excluded, so repairing is free</td>
+</tr>
+<tr>
+<td><code>--per-principal</code></td>
+<td>live associations any one member holds</td>
+<td>so one editor exhausts their own share, not the project's</td>
+</tr>
+<tr>
+<td><code>--retained-max</code></td>
+<td>every association ever recorded</td>
+<td>cannot go below the rows already retained, and those are never evicted, so in practice it only <strong>rises</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Each is refused below what the project already holds, with that number in the message,
+so a refusal tells you what you <em>can</em> set. <code>--per-principal</code> is checked against the
+<strong>busiest</strong> member rather than the total, since a value that is fine on average can
+already be violated for one person.</p>
+<p><code>--retained-max</code> has its own flag rather than following <code>--project-cap</code> automatically:
+a bound that moved as a side effect of changing a different bound is the kind of
+coupling you would discover by surprise. If a project keeps hitting it, that is churn —
+a repair loop or a heavily upgraded analyzer — not a project holding too much, and the
+refusal code says which.</p>
+<p>Every change is audited with the <strong>old and new</strong> values for all three.</p>
+<h2 id="attaching-a-directory-that-already-exists">Attaching a directory that already exists<a class="headerlink" href="#attaching-a-directory-that-already-exists" title="Permanent link">&para;</a></h2>
+<p>Members can create projects, and when they do <strong>Studio chooses the path</strong> —
+beneath <code>KNEO_STUDIO_WORKSPACE_BASE</code>, named after the allocated project id. The
+client sends a name and never a path, which is what makes it safe for anyone to
+call: there is no input to traverse with, and collisions cannot happen.</p>
+<blockquote>
+<p><strong>Set <code>KNEO_STUDIO_WORKSPACE_BASE</code>, or that capability does not exist.</strong>
+There is no default — on a laptop the single project is the developer's own
+attached checkout, so nothing needs one — and an unset value is not a
+half-configured state but a disabled feature: <code>POST /api/projects</code> refuses
+with <code>409 project_creation_disabled</code>, and a member who tries gets a refusal
+about server configuration they cannot change.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>-e<span class="w"> </span><span class="nv">KNEO_STUDIO_WORKSPACE_BASE</span><span class="o">=</span>/var/lib/kneo-studio/workspace
+</code></pre></div>
+<p>The published image sets it already (and gives it its own volume). This
+paragraph used to describe the allocation as though the variable were always
+configured, which is true of the image and of nothing else.</p>
+<p><strong>Not the same directory as <code>KNEO_STUDIO_PROJECT_ROOT</code>.</strong> Every managed
+allocation would then land inside the default project's tree, and creation
+would answer <code>409 project_root_overlap</code> for every caller, always.</p>
+</blockquote>
+<p>Pointing Studio at a tree that <strong>already exists</strong> is a different proposition. An
+arbitrary directory may hold credentials, another team's work, or your <code>/etc</code>,
+and a project root is a directory Studio then reads, writes, exposes to the
+project's members and hashes into an exposure digest. So it is a host command,
+never an API route, and it works only against a list you declare:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="go">export KNEO_STUDIO_ATTACHABLE_ROOTS=/srv/teams,/srv/archive</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="go">kneo-studio project attach --path /srv/teams/payments --owner ada</span>
+</code></pre></div>
+<ul>
+<li><strong>Comma-separated absolute directories.</strong> Any subtree of a listed directory may
+  be attached, and a listed directory may be attached itself. A relative entry is
+  refused rather than resolved against whatever directory Studio was started
+  from, and a path containing a comma cannot be expressed.</li>
+<li><strong>Unset means the command is disabled</strong>, and says so. There is no default,
+  for the same reason <code>KNEO_STUDIO_WORKSPACE_BASE</code> has none: a guess here would be
+  a guess about which of your files Studio may read and hand to somebody else.</li>
+<li><strong>The allowlist is about the filesystem, not the string you typed.</strong> A symlink
+  inside a listed directory pointing somewhere outside it is refused.</li>
+<li><strong><code>--owner</code> takes a subject who already exists</strong> — they get the owner role and
+  the project's storage charge. Overlap with any existing project's root is
+  refused in both directions: one tree belongs to one project.</li>
+</ul>
+<p>Every attach writes an audit row naming the <strong>resolved</strong> path, because <em>which</em>
+tree was attached is the question anyone reviewing it later will have.</p>
+<h3 id="registering-a-file-when-nobody-can">Registering a file when nobody can<a class="headerlink" href="#registering-a-file-when-nobody-can" title="Permanent link">&para;</a></h3>
+<p>Registering a pre-existing file is an <strong>owner</strong> action, and it does not happen in the
+browser: Studio's UI offers no register control on purpose. An owner registers through
+the API route, and the host command below covers the cases the route cannot — because
+adding a manifest entry widens what sharing the project exposes, and the flow makes the
+owner accept the whole aggregate rather than one file at a time.</p>
+<p>That leaves the case where there is no owner able to ask — an attached tree whose
+owner has gone, or one you registered before inviting anybody. The host fallback is
+deliberately two commands:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="go">kneo-studio draft register --project alpha --path agent.yaml</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="gp"># </span>prints<span class="w"> </span>the<span class="w"> </span>root<span class="w"> </span>identity,<span class="w"> </span>the<span class="w"> </span>current<span class="w"> </span>exposure<span class="w"> </span>digest,<span class="w"> </span>what<span class="w"> </span>is<span class="w"> </span>already
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="gp"># </span>registered,<span class="w"> </span>and<span class="w"> </span>exits<span class="w"> </span>without<span class="w"> </span>changing<span class="w"> </span>anything
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="go">kneo-studio draft register --project alpha --path agent.yaml \</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="go">    --exposure-digest 4f3c…</span>
+</code></pre></div>
+<p>The second run refuses if the digest has moved since you were shown it, which is what
+stops your registration slipping past somebody else's confirmation. The entry is
+attributed to the <strong>operator</strong>, never to a Studio user — a host command has no session,
+and the manifest is not a table to put a guess in.</p>
+<h2 id="what-a-shared-instance-still-owes-you">What a shared instance still owes you<a class="headerlink" href="#what-a-shared-instance-still-owes-you" title="Permanent link">&para;</a></h2>
+<ul>
+<li>A <strong>declared storage cap</strong> — <code>KNEO_STUDIO_DEPLOYMENT_CAP</code>; Studio refuses to
+  start shared without one (<a href="../quickstart/#storage">why</a>).</li>
+<li>A <strong>project-count bound per principal</strong> — <code>KNEO_STUDIO_PROJECT_LIMIT</code>, which
+  defaults to <strong>100</strong> live projects and may be set to any positive whole number,
+  higher or lower; zero, a negative or a non-number refuses to start. Unlike the storage cap
+  this does <em>not</em> refuse to start when unset: a byte cap is a resource one
+  principal can exhaust for everyone, while a project count is per-principal, so
+  an unset limit degrades to a generous default rather than a shared cliff.</li>
+</ul>
+<p><strong>Which projects count:</strong> those where the principal is the <strong>quota
+  principal</strong> — the one charged for the bytes — not the ones they created and not
+  the ones they are a member of. A project has no singular owner, so counting by
+  membership would multiply-count a project with two owners. A charge moves by
+  accepted transfer or by operator reassignment, and the count follows it.</p>
+<p><strong>What is refused at the bound:</strong> creating a project, accepting a transfer into
+  a full principal, an operator reassignment or a bulk <code>principal disable</code> that
+  would move an estate into one, and <code>project attach</code>. The refusal is
+  <code>409 project_limit_reached</code> and it names both the count and the limit, because
+  the remedy depends on which of the two is wrong.</p>
+<p><strong>What is never refused:</strong> an estate that is <em>already</em> over the limit. A
+  bootstrapped first project and an adopted estate are grandfathered — an
+  inherited over-limit principal starts and signs in normally, and only its next
+  acquisition is refused. Raising the limit is always safe; lowering it below
+  what principals already hold does not retroactively break them.
+- A <strong>state store outside every project root</strong>, which Studio also enforces.
+- <strong>Backups of three things, not two.</strong> The project directories, the database,
+  <strong>and <code>$XDG_STATE_HOME/kneo-studio/analysis-keyring.json</code></strong>.</p>
+<p>An artifact's governance history lives in the database, so project directories
+  alone are not a backup. But the analysis payloads in that database are sealed
+  with AES-256-GCM, and the key is <strong>not in it</strong> — <code>load_keyring(state_home())</code>
+  resolves the keyring from the state home independently of where the database
+  lives. On the default SQLite deployment they sit side by side and copying the
+  directory gets both. <strong>Under the PostgreSQL option below they are in different
+  places by construction</strong>, and an operator who backs up Postgres plus the
+  project directories has everything except the key.</p>
+<p>Restoring without it is not a degraded instance, it is a stopped one: the
+  keyring is validated against the live rows <em>before</em> serving, so Studio refuses
+  to start and the sealed payloads are unrecoverable. This bullet named two
+  things until 2026-08-15.</p>
+<h3 id="what-refuses-to-start-and-why">What refuses to start, and why<a class="headerlink" href="#what-refuses-to-start-and-why" title="Permanent link">&para;</a></h3>
+<p>One rule, stated once: <strong>when configuration is missing, contradictory or
+unreadable, Studio refuses to start rather than guess.</strong> Every such refusal is a
+<code>StartupRefusal</code>; <code>kneo-studio serve</code> prints its message as one line — what is
+wrong, and what to set — and exits non-zero, with no traceback. Nothing below is
+a degraded mode. The causes, by the setting that fixes them:</p>
+<table>
+<thead>
+<tr>
+<th>Refusal</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A shared instance with no project root, while no default project has been attached yet; or one asked to move an existing default project to a different tree. <em>Shared</em> means any of: a login mode other than <code>none</code>, a non-loopback <code>KNEO_STUDIO_HOST</code>, <code>KNEO_STUDIO_WORKSPACE_BASE</code> set, or a principal other than the local owner in the store</td>
+<td><code>KNEO_STUDIO_PROJECT_ROOT</code></td>
+</tr>
+<tr>
+<td>A shared instance (as above) with no storage cap, or a cap that is not a whole number greater than zero</td>
+<td><code>KNEO_STUDIO_DEPLOYMENT_CAP</code></td>
+</tr>
+<tr>
+<td>A project limit that is not a whole number greater than zero</td>
+<td><code>KNEO_STUDIO_PROJECT_LIMIT</code></td>
+</tr>
+<tr>
+<td>A login mode other than <code>none</code>, <code>static</code> or <code>oidc</code></td>
+<td><code>KNEO_STUDIO_AUTH_MODE</code></td>
+</tr>
+<tr>
+<td>Login mode <code>none</code> on a non-loopback bind</td>
+<td><code>KNEO_STUDIO_HOST</code>, <code>KNEO_STUDIO_AUTH_MODE</code></td>
+</tr>
+<tr>
+<td>A port that is not a number</td>
+<td><code>KNEO_STUDIO_PORT</code></td>
+</tr>
+<tr>
+<td><code>KNEO_STUDIO_TRUSTED_PROXIES</code> set while the login mode is <code>none</code></td>
+<td><code>KNEO_STUDIO_AUTH_MODE</code></td>
+</tr>
+<tr>
+<td>A <code>KNEO_STUDIO_TRUSTED_PROXIES</code> entry that is not an IP address or CIDR block, such as a hostname</td>
+<td><code>KNEO_STUDIO_TRUSTED_PROXIES</code></td>
+</tr>
+<tr>
+<td>A state directory Studio cannot create or secure — the bind-mount case in <a href="#bind-mounts-need-chown">Bind mounts need <code>chown</code></a>, whose message runs to a few lines because it carries the command</td>
+<td><code>XDG_STATE_HOME</code>, or the directory's owner</td>
+</tr>
+<tr>
+<td>A state store inside the project root</td>
+<td><code>XDG_STATE_HOME</code>, <code>KNEO_STUDIO_PROJECT_ROOT</code></td>
+</tr>
+<tr>
+<td>A <code>static</code> users file or <code>oidc</code> provider file that is missing, unreadable, malformed, or has any group or other permission bit set (<code>chmod 600</code>, owned by the account Studio runs as — uid <code>10001</code> in the image)</td>
+<td><code>KNEO_STUDIO_USERS_FILE</code>, <code>KNEO_STUDIO_OIDC_PROVIDER_FILE</code></td>
+</tr>
+<tr>
+<td>A recovery interval or lease that is zero, negative or unreadable</td>
+<td><code>KNEO_STUDIO_RECOVERY_INTERVAL_SECONDS</code>, <code>KNEO_STUDIO_RECOVERY_LEASE_SECONDS</code></td>
+</tr>
+<tr>
+<td>A key id that cannot be read back, no active key id whenever <code>KNEO_STUDIO_ANALYSIS_KEYS</code> is set (even with a single key), an active key id that names none of the configured keys, or a keyring that is world- or group-readable or does not open the live rows</td>
+<td><code>KNEO_STUDIO_ANALYSIS_KEYS</code>, <code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code></td>
+</tr>
+<tr>
+<td>A store whose schema the migrations cannot read, or an analysis-key rotation left in a state the code cannot continue from</td>
+<td>none — the message names the recovery command</td>
+</tr>
+</tbody>
+</table>
+<p>The sections that describe each setting mention its refusal where it matters to
+the reader; <strong>this table is the definition</strong>, and the rule does not vary by row.
+<em>(Until 0.5.0 four of these were described one at a time, each as if it were its
+own kind of failure — the 0.4.0 audit's deferral "one statement would cover
+them", pulled forward.)</em></p>
+<h3 id="test-run-recovery">Test-run recovery<a class="headerlink" href="#test-run-recovery" title="Permanent link">&para;</a></h3>
+<p>A test run that Studio dispatched but never heard back about — the process died
+mid-call, or the response was lost — is settled by a background task the server owns:
+one pass at startup, then one every <code>KNEO_STUDIO_RECOVERY_INTERVAL_SECONDS</code>
+(default <strong>60</strong>). It asks the platform whether a run with the dispatch's session
+exists and adopts exactly one match; every other answer settles the run as <code>unknown</code>.
+<strong>It never re-issues a run</strong> — a duplicate LLM run is worse than an unresolved
+status line.</p>
+<p><code>KNEO_STUDIO_RECOVERY_LEASE_SECONDS</code> (default <strong>300</strong>) is how long one worker's
+claim on a run lasts. Two Studio processes over one PostgreSQL store will both see a
+stale run; the lease is what stops them both settling it, and a worker that dies
+mid-recovery parks its run for this long before another may take it over. Set it
+longer than a correlation should ever take and shorter than you would wait for a
+run's status.</p>
+<p>Both must be positive numbers of seconds. <strong>A zero, negative or unreadable value
+refuses to start</strong> rather than silently falling back to the default — a lease of <code>0</code>
+is a fence any second worker walks straight through, and an operator who typed it
+meant something.</p>
+<h3 id="postgresql">PostgreSQL<a class="headerlink" href="#postgresql" title="Permanent link">&para;</a></h3>
+<p><code>KNEO_STUDIO_DB_URL</code> points the state store at PostgreSQL instead of the default
+SQLite file — the escape hatch
+ADR-013 exists for, and the
+reason a shared instance can outgrow a single file. Install the extra and set the
+URL:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'kneo-studio[postgres]'</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_DB_URL</span><span class="o">=</span>postgresql+psycopg://user:pass@host/kneo_studio
+</code></pre></div>
+<p>The schema is created and migrated by Studio itself on first start, the same
+migrations the SQLite default runs. <strong>Remember the keyring</strong>: see the bullet
+above — this is exactly the deployment where the database and the key stop being
+in the same place.</p>
+<h3 id="more-than-one-replica">More than one replica<a class="headerlink" href="#more-than-one-replica" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Read this first.</strong> <strong>Single-instance shared hosting is the supported
+baseline</strong> — one Studio process, any number of people signing in to it. Running
+several replicas needs everything below <em>and</em> one condition this page did not
+state until 0.8.0: <strong>every replica's project mounts must report the same
+device and inode</strong>, not merely the same contents.</p>
+<p>A confirmed exposure is pinned to the project root's <strong>device number, inode and
+canonical path</strong>. A replica whose mount disagrees — which is the ordinary case
+for two hosts mounting one NFS export — refuses content reads on every project
+whose exposure was confirmed elsewhere, saying <em>"this project's root has
+changed since its exposure was confirmed"</em>. Nothing has changed; that replica
+is simply somewhere else, and the message cannot tell the difference.</p>
+<p>So: <strong>a shared database and shared storage are necessary and are not
+sufficient.</strong> Several processes on <strong>one host</strong> see the same identity and are
+fine. Across hosts, verify it before relying on it — <code>stat -c '%d %i'</code> on the
+project root from each replica must agree — and treat a disagreement as
+unsupported rather than as something to work around. Loosening the check is
+not the workaround: it is what stops a re-pointed root inheriting someone
+else's confirmation.</p>
+</blockquote>
+<p>A single instance generates its analysis key on first run and keeps it beside the
+state store with owner-only permissions. <strong>Two replicas cannot each do that</strong> —
+they would write payloads the other cannot read — so the key comes from the
+environment instead, and both replicas must be given the same one:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_ANALYSIS_KEYS</span><span class="o">=</span><span class="s1">'k1:&lt;base64 32 bytes&gt;'</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</span><span class="o">=</span>k1
+</code></pre></div>
+<ul>
+<li><code>KNEO_STUDIO_ANALYSIS_KEYS</code> is a comma-separated list of
+  <code>&lt;key-id&gt;:&lt;base64 material&gt;</code> entries. Setting it replaces the on-disk keyring
+  entirely; the file is not consulted. A key id is 1–64 characters and may not
+  contain <code>.</code> (it delimits the stored envelope's fields), <code>,</code> or <code>:</code> (they
+  delimit this variable's entries) or control characters; anything else —
+  <code>tenant@prod</code>, <code>k/1</code> — is fine. Studio refuses to start on an id it could not
+  read back rather than sealing payloads under it.</li>
+<li><code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code> names the key used for <strong>writes</strong>, and is
+  required rather than defaulting to "the only one" — a deployment that later
+  added a second key would otherwise silently change which key writes.</li>
+<li><strong>Startup refuses, rather than degrading, when the keyring is incomplete</strong>: if a
+  stored payload names a key id the keyring does not carry, Studio does not start.
+  That is deliberate — reaching a per-row decision with an incomplete keyring is
+  the one thing that must not happen, since a missing key is a configuration fault
+  and corrupt ciphertext under a <em>complete</em> keyring is a data fault, and they need
+  different answers.</li>
+</ul>
+<p><strong>The login bounds are per process, not per deployment.</strong> The failed-attempt
+throttle, the OIDC start limit and the number of password checks run at once
+(<a href="../quickstart/#login-attempts">Login attempts</a>) are each held in one process's
+memory, so N replicas allow N times each limit. Size them per replica, or put a
+rate limit at the load balancer if you need one bound across the estate.</p>
+<h3 id="upgrading-studio-stop-the-estate-first">Upgrading Studio — stop the estate first<a class="headerlink" href="#upgrading-studio-stop-the-estate-first" title="Permanent link">&para;</a></h3>
+<p><strong>A schema upgrade requires a quiescent estate. Stop every Studio process before
+upgrading, and start them again only on the new version.</strong></p>
+<p>This is a precondition, not advice. Studio already refuses to <em>start</em> against a
+store newer than the running version — <em>"state store is at schema version N, but
+this Studio supports at most M"</em> — so a replica you forget to upgrade fails closed
+on its next restart. What that refusal cannot do is stop a process <strong>already
+running</strong> when the migration lands: it holds an open connection and never
+re-checks, so it can keep writing under the old release's assumptions.</p>
+<p><strong>Two replicas starting the new version at the same moment is safe, though</strong>
+<code>[0.6.0]</code>. Their first starts serialize on a database lock: one applies each pending
+migration and seeds the default rows, the other waits, sees the work already done,
+and comes up clean. Before this, a simultaneous first start could crash the loser on
+a duplicate-key error and leave you restarting it by hand. You still stop the old
+processes first; you no longer have to stagger the new ones.</p>
+<p>For most migrations the cost of that is a lost write. For the analysis keyring it is
+worse and permanent: an old process can create a payload under a key the upgrade is
+retiring, and retiring the key then makes that payload unreadable. So the
+requirement is stated here rather than left to inference.</p>
+<p><strong>One part of it is now enforced rather than requested <code>[0.4.0]</code>:</strong> a schema migration
+<strong>refuses to run while an analysis-key rotation session is open</strong>, naming the session
+and telling you to complete or cancel it first. Nothing is applied and the store is
+unchanged. That closes the worst case — a migration rebuilding the very table that
+holds the rotation's ownership record, so that afterwards nothing could tell a
+completed rotation from an interrupted one. It does <strong>not</strong> replace stopping the
+estate: a running old process is still invisible to the store, which is why the
+paragraphs above are a precondition and not a suggestion.</p>
+<p>If you run a single instance on a laptop, stopping it is what you were going to do
+anyway. If you run replicas, take them all down together — a rolling upgrade is
+<strong>not</strong> supported for schema changes.</p>
+<p><strong>What the 0.6.0 upgrade changes in a 0.5.0 store, and why</strong> <code>[0.6.0]</code>. One data
+migration runs alongside the schema changes: it <strong>reclaims the gap detail of every
+0.5.0 analysis whose <em>parameters not carried</em> card could quote a credential</strong>. That
+card listed the model options an import could not carry — <code>temperature</code>, <code>maxTokens</code>
+and the rest — and in 0.5.0 it quoted their values verbatim, including an <code>apiKey</code> the
+importer had already identified as a secret and refused to carry anywhere else. So a
+0.5.0 store can hold a credential in review content, encrypted at rest and readable by
+any viewer of the project. After the upgrade, such an analysis keeps its blocking and
+manual counts and its acknowledgements, and opening its detail answers <em>gap detail was
+reclaimed; re-import to see it again</em> — the repair the product already names for a
+reclaimed payload. Re-importing the same export produces a fresh analysis whose card
+shows the option's name and <code>&lt;redacted&gt;</code>. Analyses of workflows with no model options,
+and every analysis written by 0.6.0, are untouched.</p>
+<p><strong>A credential a pre-0.6.0 import may have written into a draft</strong> <code>[0.6.0]</code>. Before
+0.6.0, if a workflow repeated one of its own credentials in an agent's system prompt,
+its model identifier, or a node name, Studio carried that value into the <strong>generated
+spec</strong> — so it was returned by the import API and written into a plaintext draft under
+the project root, beside a gap card stating the value had not been carried. 0.6.0 does
+not carry it, cards it as a blocking gap, and refuses the import outright if any other
+position still would.</p>
+<p>No migration can undo the ones already written, and none is attempted: a generated
+draft is an artifact's governed base, and rewriting it would move bytes an artifact's
+revision pins. What to do, in this order:</p>
+<ol>
+<li><strong>Search your project roots</strong> for the secret, not for the workflow:
+   <code>grep -rIl '&lt;the credential&gt;' /path/to/projects</code>. Drafts are plaintext YAML.</li>
+<li><strong>Treat any hit as a disclosed credential and rotate it.</strong> It was written to disk
+   unencrypted, so it is in your filesystem backups and in anything that read them;
+   deleting the file does not undo that.</li>
+<li><strong>Delete the affected draft and re-import the workflow.</strong> 0.6.0's analyzer produces
+   the blocking card, so the re-import tells you which position to fix in the source.</li>
+<li>Artifacts built on such a draft keep pointing at it. Retract or recreate them after
+   the re-import, or the artifact's own snapshot still carries the value.</li>
+</ol>
+<p><strong>One thing the upgrade cannot repair for you</strong> <code>[0.6.0]</code>. Before 0.6.0, an agent that
+carried both a system message and a per-run prompt (<code>promptType: define</code> with <code>text</code>)
+was analysed with its system prompt and <strong>without</strong> the <em>per-run prompt becomes run
+input</em> card, so such an artifact could be handed off with no acknowledgement and no
+word about the request it dropped. No migration can find those analyses — the defect
+is a card that is absent, inside an encrypted payload — so an artifact created before
+the upgrade keeps the analysis it has. <strong>Re-import the workflow</strong>: 0.6.0's analyzer
+produces the card, hand-off then waits for the acknowledgement, and the exported spec
+carries the system prompt as before.</p>
+<p><strong>Disable supervisors and autoscalers for the whole window, not just until the last
+old process exits.</strong> The refusal above can only fire once the schema version has
+actually advanced, so anything that restarts a process <em>during</em> the migration can
+bring an old binary back against a store that has not finished moving. systemd
+<code>Restart=</code>, a container orchestrator's replica count, or an autoscaler will all do
+exactly that. Turn them off, upgrade, then turn them back on.</p>
+<p><em>Added 2026-08-24 by maintainer decision, after an external design review found that
+this page documented no upgrade precondition while the design assumed one.</em></p>
+<h3 id="rotating-the-analysis-key">Rotating the analysis key<a class="headerlink" href="#rotating-the-analysis-key" title="Permanent link">&para;</a></h3>
+<p><strong>You can, from 0.4.0</strong> — and the route is a sequence of deliberate steps rather than
+an environment variable, because a rotation that begins by changing configuration is
+one that can be half-applied across a fleet. <strong>Configuration still has to follow the
+store, though, and when is the whole runbook</strong> <code>[corrected 2026-09-05, 0.6.0 S4]</code>.</p>
+<p><strong>The rule the sequence is built around.</strong> Every process is configured with a
+<em>preferred</em> write key, <code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code>, and the store checks it
+for intent at every startup and every admission refresh — it never <em>uses</em> it; the
+store chooses the write identity. What the check accepts depends on the rotation
+phase:</p>
+<table>
+<thead>
+<tr>
+<th>Store phase</th>
+<th><code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code> may name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>stable (no session)</td>
+<td><strong>only the active id</strong></td>
+</tr>
+<tr>
+<td>prepared, or rewriting</td>
+<td><strong>the source <em>or</em> the target</strong></td>
+</tr>
+<tr>
+<td>any phase</td>
+<td>never a retired id</td>
+</tr>
+</tbody>
+</table>
+<p>A process whose configured id is outside that set <strong>refuses</strong>: it exits non-zero at
+startup, and a running one fails its next analysis access with <code>503</code>. So the moment
+to move the configured id is <strong>while the session is open</strong> — prepared or rewriting —
+when both answers are accepted and each replica can be rolled one at a time. Move it
+after <code>complete</code> and the store is stable on the new id while every replica still
+names the old, retired one: the whole estate refuses at once.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>keys<span class="w"> </span>status<span class="w">          </span><span class="c1"># phase, active id, and what live rows still name</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>keys<span class="w"> </span>prepare<span class="w"> </span>--target<span class="w"> </span>new-key
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="go">prepared. session &lt;id&gt;</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="go">Every process must now hold BOTH keys. Writes stay on the old id until `keys cut-over`.</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="gp">#   </span><span class="m">1</span>.<span class="w"> </span>put<span class="w"> </span>BOTH<span class="w"> </span>keys<span class="w"> </span><span class="k">in</span><span class="w"> </span>KNEO_STUDIO_ANALYSIS_KEYS<span class="w"> </span>on<span class="w"> </span>every<span class="w"> </span>replica<span class="w"> </span><span class="o">(</span>restart<span class="w"> </span>each<span class="o">)</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>keys<span class="w"> </span>cut-over<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="gp">#   </span><span class="m">2</span>.<span class="w"> </span>now<span class="w"> </span>roll<span class="w"> </span><span class="nv">KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</span><span class="o">=</span>new-key<span class="w"> </span>across<span class="w"> </span>the<span class="w"> </span>replicas,<span class="w"> </span>one
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="gp">#      </span>at<span class="w"> </span>a<span class="w"> </span><span class="nb">time</span><span class="w"> </span>—<span class="w"> </span>the<span class="w"> </span>store<span class="w"> </span>is<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>phase<span class="w"> </span>that<span class="w"> </span>accepts<span class="w"> </span>either<span class="w"> </span>id,<span class="w"> </span>so<span class="w"> </span>nothing<span class="w"> </span>refuses
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>keys<span class="w"> </span>rewrite<span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">   </span><span class="c1"># repeat until it reports nothing left to move</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="gp">$ </span>kneo-studio<span class="w"> </span>keys<span class="w"> </span><span class="nb">complete</span><span class="w"> </span>--session<span class="w"> </span>&lt;id&gt;<span class="w">  </span><span class="c1"># LAST: only once every replica names new-key</span>
+<a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="go">retired the source. …</span>
+<a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="gp">#   </span><span class="m">3</span>.<span class="w"> </span>only<span class="w"> </span>now<span class="w"> </span>remove<span class="w"> </span>old-key<span class="w"> </span>from<span class="w"> </span>KNEO_STUDIO_ANALYSIS_KEYS
+</code></pre></div>
+<p><em>The four-step form of this runbook — with no mention of the configured id — was
+executed verbatim on a two-replica deployment during 0.6.0's Phase-1 audit: after
+<code>complete</code>, every import and every analysis read answered <code>503</code> and every restart
+exited non-zero, until the operator worked out which variable to change. The same
+rotation with the configured id rolled during the rewrite window was measured at zero
+interruption, both replicas serving <code>201</code> through cut-over and rewrite. Nothing in the
+product changed; the runbook had left out the step that decides the outcome.</em></p>
+<p>There is no initialization step: a store upgraded from an earlier release adopts
+the key it is already using <strong>automatically at startup</strong> (<code>keys init</code> exists as
+the idempotent operator surface, and a fresh store initializes itself the same
+way). The one store startup will not adopt is a <strong>mixed-id</strong> predecessor — live
+rows under more than one key — which is refused unchanged with the way out
+named.</p>
+<p><strong>Keep the session id.</strong> <code>cut-over</code>, <code>complete</code> and <code>cancel</code> all require it, and none
+of them infers which rotation you meant from anything else — that inference is what
+made an earlier attempt unable to tell "released" from "still held".</p>
+<p><strong>Both keys must be in every process's keyring between <code>prepare</code> and <code>complete</code>.</strong> That
+is what <code>prepare</code> is for: it makes the new key mandatory <em>before</em> anything writes under
+it, so a process that has not been given the key fails its next analysis access rather
+than discovering the gap halfway through.</p>
+<p><strong><code>complete</code> refuses until every live payload names the new key</strong> and retires the old
+one in the same transaction — there is no step that proves the old key is unreferenced
+and then separately releases it, because that gap is a window in which the proof stops
+being true. Quarantined analyses are counted and excluded: they carry no live key
+dependency, so a store that has had a corrupt analysis can still retire a key.</p>
+<p><strong>Cancelling is safe only when the configured id agrees with what stays active.</strong>
+Rows already rewritten stay rewritten, nothing is retired, and
+<code>keys resume --source old-key</code> picks the rotation back up — that part holds in either
+phase. But a cancel ends the session, and a stable store accepts <em>only</em> its active id:
+cancel while <strong>prepared</strong> and the old key stays active, so a replica already rolled to
+the new id refuses; cancel while <strong>rewriting</strong> and the new key stays active, so a
+replica still on the old id refuses. Before cancelling, set every replica's
+<code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code> to the id the cancel will leave active — or resume
+instead of cancelling. <em>This paragraph said "safe at any point" until 2026-09-05; it was
+false in both cancellable phases.</em></p>
+<blockquote>
+<p><strong>Before 0.4.0 this section said "you cannot, in this release."</strong> Changing
+<code>KNEO_STUDIO_ANALYSIS_ACTIVE_KEY_ID</code> on a store holding sealed payloads made the
+service refuse to start. That refusal still exists and is still right — configuration
+is not how a rotation is performed — but it is no longer the end of the road.</p>
+</blockquote>
+<p><strong>Why configuration alone was never going to be enough.</strong> Reads work across a mixed
+store already — every payload records the key that sealed it — so the problem was never
+reading. It was that writes would begin under the new key while old rows kept naming
+the old one, with no way to rewrite them, so the keyring had to keep holding a key you
+rotated away from <em>because it leaked</em>, indefinitely, with nothing in the product saying
+so. The startup refusal existed to stop you reaching that state. Rotation is what
+finally gets you out of it.</p>
+<p><strong>Where each key lives is unchanged:</strong></p>
+<ul>
+<li>on a single-instance install the first key is generated on first run and kept in the
+  state home;</li>
+<li>on a hosted deployment it is whatever <code>KNEO_STUDIO_ANALYSIS_KEYS</code> names, and during a
+  rotation that variable must name <strong>both</strong> keys — <strong>until <code>complete</code> has committed</strong>,
+  never earlier: between a cancel and a <code>resume</code> the old key is still authorized and
+  still named by live rows, so admission requires it, and removing it refuses the
+  estate with the missing id named.</li>
+</ul>
+<blockquote>
+<p><strong>This capability was built for 0.3.0 and withdrawn from it</strong>, after five rounds of
+external implementation review each found defects in the previous round's fixes and
+the fifth recommended withdrawal rather than a sixth attempt. <strong>Nothing from that
+attempt was ever released</strong>, so no store carries a trace of it. What ships in 0.4.0
+was rebuilt against a written state-transition contract — the thing the withdrawn
+attempt lacked, and the reviewer's actual diagnosis: there was no model, so each round
+repaired the instance in front of it.</p>
+<p><strong>One thing you should know about that contract</strong>: it was reviewed extensively but
+never confirmed by a party with no stake in it, because this project has no such
+party available. That is recorded as an explicit waiver rather than glossed, and what
+stands in for the missing read is executable evidence — the acceptance controls the
+release lane runs.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

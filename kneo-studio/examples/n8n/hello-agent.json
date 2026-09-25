@@ -1,0 +1,33 @@
+{
+  "name": "Daily digest",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Every morning",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0],
+      "parameters": {}
+    },
+    {
+      "id": "2",
+      "name": "Digest agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [220, 0],
+      "parameters": {}
+    },
+    {
+      "id": "3",
+      "name": "Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [220, 160],
+      "parameters": { "model": "gpt-4o-mini" }
+    }
+  ],
+  "connections": {
+    "Every morning": { "main": [[{ "node": "Digest agent" }]] },
+    "Model": { "ai_languageModel": [[{ "node": "Digest agent" }]] }
+  }
+}

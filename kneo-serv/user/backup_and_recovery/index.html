@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1975,22 +1975,22 @@ continuations and artifacts when PostgreSQL is not configured.</p>
 lives in PostgreSQL.</p>
 <h3 id="take-a-backup">Take a backup<a class="headerlink" href="#take-a-backup" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;kneo_serv-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">.sql.gz&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_USER</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_DB</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span><span class="s2">"kneo_serv-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">.sql.gz"</span>
 </code></pre></div>
 <p>For a host-level Postgres install, run <code>pg_dump</code> directly as the
 <code>postgres</code> user; the data shape is the same.</p>
 <h3 id="restore-from-a-backup-destructive-wipes-current-state">Restore from a backup <em>(destructive — wipes current state)</em><a class="headerlink" href="#restore-from-a-backup-destructive-wipes-current-state" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_USER</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_DB</span><span class="s2">"</span>
 </code></pre></div>
 <p>Restore replaces every row in the database. Stop the API container first
 so no in-flight write races the restore:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>stop<span class="w"> </span>api
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>gunzip<span class="w"> </span>-c<span class="w"> </span>kneo_serv-YYYYmmDD-HHMM.sql.gz<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">      </span>psql<span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_USER</span><span class="s2">"</span><span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_DB</span><span class="s2">"</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>start<span class="w"> </span>api
 </code></pre></div>
 <h3 id="off-site-rotation">Off-site rotation<a class="headerlink" href="#off-site-rotation" title="Permanent link">&para;</a></h3>
@@ -2009,10 +2009,10 @@ volume, the service handles schema migrations on startup. Capture a
 data-only dump and exclude the <code>schema_migrations</code> rows so the new
 volume's migration state isn't overwritten:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span>--data-only<span class="w"> </span>--inserts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_USER</span><span class="s2">"</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_DB</span><span class="s2">"</span><span class="w"> </span>--data-only<span class="w"> </span>--inserts<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data.sql
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>docker<span class="w"> </span>cp<span class="w"> </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data.sql<span class="w"> </span>/tmp/kneo_serv_data.sql
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;INSERT INTO public.schema_migrations&quot;</span><span class="w"> </span>/tmp/kneo_serv_data.sql<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"INSERT INTO public.schema_migrations"</span><span class="w"> </span>/tmp/kneo_serv_data.sql<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
 </code></pre></div>
 <p>Restore into a clean volume after the API has come up at least once (so
@@ -2022,7 +2022,7 @@ migrations have run):</p>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>docker<span class="w"> </span>cp<span class="w"> </span>/tmp/kneo_serv_data_restore.sql<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>&lt;db-container-id&gt;:/tmp/kneo_serv_data_restore.sql
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>db<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>psql<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_USER</span><span class="s2">&quot;</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$POSTGRES_DB</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>psql<span class="w"> </span>-v<span class="w"> </span><span class="nv">ON_ERROR_STOP</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_USER</span><span class="s2">"</span><span class="w"> </span>-d<span class="w"> </span><span class="s2">"</span><span class="nv">$POSTGRES_DB</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-f<span class="w"> </span>/tmp/kneo_serv_data_restore.sql
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>docker<span class="w"> </span>compose<span class="w"> </span>--env-file<span class="w"> </span>deploy/production.env<span class="w"> </span>restart<span class="w"> </span>api
 </code></pre></div>
@@ -2036,14 +2036,14 @@ service ships an online backup helper:</p>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Online — safe while the service is running</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">backup_sqlite_database</span><span class="p">(</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">&quot;.kneo/kneo_runs.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="s2">".kneo/kneo_runs.sqlite"</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">".kneo/backups/kneo_runs-2026-05-12.sqlite"</span><span class="p">,</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">)</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Restore into a new location, then swap into place during a window</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="n">restore_sqlite_database</span><span class="p">(</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">&quot;.kneo/backups/kneo_runs-2026-05-12.sqlite&quot;</span><span class="p">,</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">&quot;.kneo/kneo_runs.restored.sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="s2">".kneo/backups/kneo_runs-2026-05-12.sqlite"</span><span class="p">,</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>    <span class="s2">".kneo/kneo_runs.restored.sqlite"</span><span class="p">,</span>
 <a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="p">)</span>
 </code></pre></div>
 <p><code>backup_sqlite_database</code> uses SQLite's <code>backup()</code> API and is safe to run
@@ -2088,18 +2088,18 @@ schedule below, not after a real incident.</p>
 <li>Provision a scratch host or namespace and restore the backup into it.</li>
 <li>Start <code>kneo-serv</code> against the restored database.</li>
 <li>Verify dependencies:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.metadata.ready&#39;</span><span class="w">   </span><span class="c1"># → true</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://127.0.0.1:8000/readyz<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.metadata.ready'</span><span class="w">   </span><span class="c1"># → true</span>
 </code></pre></div></li>
 <li>Verify a known run survived:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/runs?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.runs[].run_id&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">"http://127.0.0.1:8000/v1/runs?limit=5"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.runs[].run_id'</span>
 </code></pre></div></li>
 <li>Run the deployment smoke against the restored stack
    (<a href="../deployment_smoke/"><code>deployment_smoke.md</code></a>). It exercises
    run create → fetch → cancel and confirms checkpoints persist.</li>
 <li>Verify audit events from before the backup are present:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;http://127.0.0.1:8000/v1/audit-events?limit=5&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.events[].event_type&#39;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">"http://127.0.0.1:8000/v1/audit-events?limit=5"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">"Authorization: Bearer </span><span class="nv">$OP_TOKEN</span><span class="s2">"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">'.events[].event_type'</span>
 </code></pre></div></li>
 </ol>
 <p>Recommended cadence: monthly restore drill into a scratch environment,
@@ -2224,7 +2224,7 @@ through at least one business cycle.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.expand", "content.code.copy", "search.highlight", "search.share"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
